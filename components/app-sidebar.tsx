@@ -30,16 +30,13 @@ const navigation = [
       { name: "Home", href: "/", icon: Home },
       { name: "Discover", href: "/discover", icon: Compass },
       { name: "Use", href: "/use", icon: Play },
-      { name: "Build", href: "/layer4/workspace", icon: Wrench },
+      { name: "Build", href: "/layer4/projects", icon: Wrench },
     ],
   },
   {
     title: "Layer 4 - Vibe Coding",
     items: [
-      { name: "Project Workspace", href: "/layer4/workspace", icon: Code2 },
-      { name: "No-Code Builder", href: "/layer4/no-code", icon: Sparkles },
-      { name: "Workflow Builder", href: "/layer4/workflow", icon: Workflow },
-      { name: "Dev Studio", href: "/layer4/dev-studio", icon: Code2 },
+      { name: "My Projects", href: "/layer4/projects", icon: Workflow },
       { name: "Prompt Studio", href: "/layer4/prompt-studio", icon: Terminal },
     ],
   },

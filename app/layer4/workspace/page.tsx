@@ -1,17 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Label } from "@/components/ui/label"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Play,
   Rocket,
@@ -30,23 +29,43 @@ import {
   FolderOpen,
   ChevronRight,
   ChevronDown,
+  ChevronLeft,
   Terminal,
-  RefreshCw,
-  Cpu,
-  HardDrive,
-  Activity,
-  Search,
-  Star,
-  Download,
-  X,
+  Workflow,
+  Code2,
   Pencil,
   Check,
   Puzzle,
+  Search,
+  Star,
+  Download,
+  ZoomIn,
+  ZoomOut,
+  Maximize2,
+  MessageSquare,
+  Copy,
+  CheckCheck,
+  User,
 } from "lucide-react"
 
-type Mode = "no-code" | "low-code" | "high-code"
+type Mode = "workflow" | "code"
 
-// Mock marketplace components
+// Mock team members
+const teamMembers = [
+  { id: 1, name: "Sarah Chen", email: "sarah@example.com", role: "Admin", initials: "SC" },
+  { id: 2, name: "Mike Johnson", email: "mike@example.com", role: "Editor", initials: "MJ" },
+  { id: 3, name: "Emily Davis", email: "emily@example.com", role: "Viewer", initials: "ED" },
+]
+
+// Workflow nodes
+const workflowNodes = [
+  { id: 1, type: "trigger", name: "Email Trigger", x: 100, y: 150, icon: "📧" },
+  { id: 2, type: "action", name: "LLM Processor", x: 350, y: 150, icon: "🤖" },
+  { id: 3, type: "action", name: "Slack Notify", x: 600, y: 100, icon: "💬" },
+  { id: 4, type: "output", name: "Save to DB", x: 600, y: 220, icon: "💾" },
+]
+
+// Marketplace components
 const marketplaceComponents = [
   { id: 1, name: "Email Parser", icon: "📧", rating: 4.8, downloads: "12.3K", category: "Data" },
   { id: 2, name: "Slack Notifier", icon: "💬", rating: 4.9, downloads: "8.7K", category: "Communication" },
@@ -56,31 +75,15 @@ const marketplaceComponents = [
   { id: 6, name: "AI Summarizer", icon: "🤖", rating: 4.9, downloads: "20.1K", category: "AI" },
 ]
 
-// Mock team members
-const teamMembers = [
-  { id: 1, name: "Sarah Chen", email: "sarah@example.com", role: "Admin", avatar: "/avatars/01.png" },
-  { id: 2, name: "Mike Johnson", email: "mike@example.com", role: "Editor", avatar: "/avatars/02.png" },
-  { id: 3, name: "Emily Davis", email: "emily@example.com", role: "Viewer", avatar: "/avatars/03.png" },
-]
-
-// Workflow nodes for Low-Code view
-const workflowNodes = [
-  { id: 1, type: "Trigger", name: "Email Received", x: 80, y: 120 },
-  { id: 2, type: "Condition", name: "Is Important?", x: 280, y: 120 },
-  { id: 3, type: "Action", name: "Summarize Content", x: 480, y: 70 },
-  { id: 4, type: "Action", name: "Archive Email", x: 480, y: 170 },
-  { id: 5, type: "Output", name: "Send Notification", x: 680, y: 120 },
-]
-
-// File tree for High-Code view
+// File tree for Code mode
 const fileTree = [
   {
     name: "src",
     type: "folder",
     expanded: true,
     children: [
-      { name: "agent.py", type: "file", active: true },
-      { name: "config.yaml", type: "file" },
+      { name: "agent.ts", type: "file", active: true },
+      { name: "workflow.json", type: "file" },
       { name: "utils.py", type: "file" },
     ],
   },
@@ -90,67 +93,124 @@ const fileTree = [
     expanded: false,
     children: [{ name: "test_agent.py", type: "file" }],
   },
-  { name: "requirements.txt", type: "file" },
+  { name: "config.yaml", type: "file" },
   { name: "README.md", type: "file" },
 ]
 
-const codeContent = `import openai
-from typing import List, Dict
+const codeContent = `import { OpenAI } from 'openai';
+import { z } from 'zod';
 
-class EmailSummarizerAgent:
-    """AI Agent for summarizing emails"""
-    
-    def __init__(self, api_key: str):
-        self.client = openai.OpenAI(api_key=api_key)
-        self.model = "gpt-4"
-    
-    async def summarize(self, emails: List[Dict]) -> str:
-        """Summarize a list of emails"""
-        prompt = self._build_prompt(emails)
-        
-        response = await self.client.chat.completions.create(
-            model=self.model,
-            messages=[
-                {"role": "system", "content": "You are an email summarizer."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.3
-        )
-        
-        return response.choices[0].message.content
+const EmailSchema = z.object({
+  subject: z.string(),
+  body: z.string(),
+  sender: z.string().email(),
+  timestamp: z.date(),
+});
 
-# Initialize agent
-agent = EmailSummarizerAgent(api_key="sk-...")
+export class EmailSummarizerAgent {
+  private client: OpenAI;
+  private model = "gpt-4-turbo";
+
+  constructor(apiKey: string) {
+    this.client = new OpenAI({ apiKey });
+  }
+
+  async summarize(emails: z.infer<typeof EmailSchema>[]) {
+    const prompt = this.buildPrompt(emails);
+    
+    const response = await this.client.chat.completions.create({
+      model: this.model,
+      messages: [
+        { role: "system", content: "You are an email summarizer." },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.3
+    });
+    
+    return response.choices[0].message.content;
+  }
+
+  private buildPrompt(emails: z.infer<typeof EmailSchema>[]) {
+    return emails.map(e => \`From: \${e.sender}\\nSubject: \${e.subject}\\n\${e.body}\`).join('\\n---\\n');
+  }
+}
+
+// Initialize agent
+const agent = new EmailSummarizerAgent(process.env.OPENAI_API_KEY!);
 `
 
+// Chat messages mock
+const initialWorkflowChat = [
+  { role: "assistant", content: "Hello! I'm your AI assistant. I can help you build and modify workflows. Try asking me to add nodes, connect components, or explain how things work." },
+  { role: "user", content: "Add a sentiment analysis step after the email trigger" },
+  { role: "assistant", content: "I've added a Sentiment Analysis node after the Email Trigger. The workflow now analyzes the emotional tone of incoming emails before processing them further. Would you like me to configure the sentiment thresholds?" },
+]
+
+const initialCodeChat = [
+  { role: "assistant", content: "Hello! I'm your AI coding assistant. I can help you write, refactor, and debug code. Ask me anything about your codebase." },
+  { role: "user", content: "Can you refactor the summarize function to use async/await properly?" },
+  { role: "assistant", content: "Here's the refactored code with proper async/await pattern:\n\n```typescript\nasync summarize(emails: Email[]): Promise<string> {\n  const prompt = await this.buildPrompt(emails);\n  const response = await this.client.chat.completions.create({\n    model: this.model,\n    messages: [/* ... */]\n  });\n  return response.choices[0].message.content ?? '';\n}\n```\n\nWould you like me to apply this change?" },
+]
+
 export default function ProjectWorkspacePage() {
-  const [mode, setMode] = useState<Mode>("low-code")
-  const [projectName, setProjectName] = useState("Email Summarizer Agent")
+  const router = useRouter()
+  const [mode, setMode] = useState<Mode>("workflow")
+  const [projectName, setProjectName] = useState("Enterprise Sales Agent")
   const [isEditingName, setIsEditingName] = useState(false)
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
   const [showMarketplace, setShowMarketplace] = useState(false)
   const [showInvite, setShowInvite] = useState(false)
-  const [nlPrompt, setNlPrompt] = useState("")
-  const [placedComponents, setPlacedComponents] = useState<typeof marketplaceComponents>([])
+  const [chatInput, setChatInput] = useState("")
+  const [chatMessages, setChatMessages] = useState(initialWorkflowChat)
+  const [isLoading, setIsLoading] = useState(false)
+  const chatEndRef = useRef<HTMLDivElement>(null)
 
-  const handleAddComponent = (component: (typeof marketplaceComponents)[0]) => {
-    setPlacedComponents([...placedComponents, component])
-    setShowMarketplace(false)
+  useEffect(() => {
+    setChatMessages(mode === "workflow" ? initialWorkflowChat : initialCodeChat)
+  }, [mode])
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [chatMessages])
+
+  const handleSendMessage = () => {
+    if (!chatInput.trim()) return
+    
+    setChatMessages((prev) => [...prev, { role: "user", content: chatInput }])
+    setChatInput("")
+    setIsLoading(true)
+    
+    // Simulate AI response
+    setTimeout(() => {
+      const response = mode === "workflow"
+        ? "I've updated the workflow based on your request. The changes have been applied to the canvas."
+        : "I've analyzed your code and prepared the changes. Click 'Apply' to implement them."
+      setChatMessages((prev) => [...prev, { role: "assistant", content: response }])
+      setIsLoading(false)
+    }, 1500)
   }
 
   return (
     <AppLayout>
       <div className="flex h-[calc(100vh-4rem)] flex-col">
-        {/* Project Header */}
-        <div className="flex items-center justify-between border-b border-border bg-card px-6 py-3">
-          {/* Left: Project Name + Status */}
+        {/* Workspace Header */}
+        <div className="flex items-center justify-between border-b border-[#E5E7EB] bg-white px-6 py-3">
+          {/* Left: Breadcrumb + Project Name */}
           <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => router.push("/layer4/projects")}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
             {isEditingName ? (
               <div className="flex items-center gap-2">
                 <Input
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
-                  className="h-8 w-64"
+                  className="h-8 w-64 border-[#E5E7EB]"
                   autoFocus
                 />
                 <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setIsEditingName(false)}>
@@ -165,45 +225,50 @@ export default function ProjectWorkspacePage() {
                 </Button>
               </div>
             )}
-            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700">
-              Draft
-            </Badge>
           </div>
 
           {/* Center: Mode Switcher */}
           <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
-            {(["no-code", "low-code", "high-code"] as Mode[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                className={`px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
-                  mode === m
-                    ? "bg-[#ee3224] text-white shadow-sm"
-                    : "text-[#333] hover:bg-white/50"
-                }`}
-              >
-                {m === "no-code" ? "No-Code" : m === "low-code" ? "Low-Code" : "High-Code"}
-              </button>
-            ))}
+            <button
+              onClick={() => setMode("workflow")}
+              className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
+                mode === "workflow"
+                  ? "bg-[#ee3224] text-white shadow-sm"
+                  : "text-[#333] hover:bg-white/50"
+              }`}
+            >
+              <Workflow className="h-4 w-4" />
+              Workflow
+            </button>
+            <button
+              onClick={() => setMode("code")}
+              className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
+                mode === "code"
+                  ? "bg-[#ee3224] text-white shadow-sm"
+                  : "text-[#333] hover:bg-white/50"
+              }`}
+            >
+              <Code2 className="h-4 w-4" />
+              Code
+            </button>
           </div>
 
           {/* Right: Team + Actions */}
           <div className="flex items-center gap-3">
             {/* Avatar Stack */}
-            <div className="flex items-center -space-x-2.5">
+            <div className="flex items-center -space-x-2">
               {teamMembers.slice(0, 3).map((member) => (
                 <Avatar key={member.id} className="h-8 w-8 border-2 border-white">
-                  <AvatarFallback className="text-xs bg-primary/10 text-primary">
-                    {member.name.split(" ").map((n) => n[0]).join("")}
+                  <AvatarFallback className="text-xs bg-muted text-muted-foreground">
+                    {member.initials}
                   </AvatarFallback>
                 </Avatar>
               ))}
             </div>
 
-            {/* Invite Button */}
             <Dialog open={showInvite} onOpenChange={setShowInvite}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-1.5">
+                <Button variant="outline" size="sm" className="gap-1.5 border-[#E5E7EB]">
                   <UserPlus className="h-4 w-4" />
                   Invite
                 </Button>
@@ -211,15 +276,13 @@ export default function ProjectWorkspacePage() {
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle>Invite Team Members</DialogTitle>
-                  <DialogDescription>
-                    Add collaborators to this project
-                  </DialogDescription>
+                  <DialogDescription>Add collaborators to this project</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="flex gap-2">
-                    <Input placeholder="Enter email address" className="flex-1" />
+                    <Input placeholder="Enter email address" className="flex-1 border-[#E5E7EB]" />
                     <Select defaultValue="editor">
-                      <SelectTrigger className="w-28">
+                      <SelectTrigger className="w-28 border-[#E5E7EB]">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -233,11 +296,11 @@ export default function ProjectWorkspacePage() {
                   <div className="space-y-2">
                     <Label className="text-sm text-muted-foreground">Current Team</Label>
                     {teamMembers.map((member) => (
-                      <div key={member.id} className="flex items-center justify-between rounded-lg border border-border p-3">
+                      <div key={member.id} className="flex items-center justify-between rounded border border-[#E5E7EB] p-3">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-8 w-8">
-                            <AvatarFallback className="text-xs bg-primary/10 text-primary">
-                              {member.name.split(" ").map((n) => n[0]).join("")}
+                            <AvatarFallback className="text-xs bg-muted text-muted-foreground">
+                              {member.initials}
                             </AvatarFallback>
                           </Avatar>
                           <div>
@@ -253,11 +316,11 @@ export default function ProjectWorkspacePage() {
               </DialogContent>
             </Dialog>
 
-            <Button variant="outline" size="sm" className="gap-1.5">
+            <Button size="sm" className="gap-1.5 bg-[#ee3224] hover:bg-[#cc2a1e]">
               <Play className="h-4 w-4" />
               Run
             </Button>
-            <Button size="sm" className="gap-1.5 bg-[#ee3224] hover:bg-[#cc2a1e]">
+            <Button variant="outline" size="sm" className="gap-1.5 border-[#E5E7EB]">
               <Rocket className="h-4 w-4" />
               Deploy
             </Button>
@@ -267,20 +330,156 @@ export default function ProjectWorkspacePage() {
           </div>
         </div>
 
-        {/* Mode-Adaptive Canvas */}
-        <div className="flex-1 overflow-hidden">
-          {mode === "no-code" && (
-            <NoCodeView prompt={nlPrompt} setPrompt={setNlPrompt} />
-          )}
-          {mode === "low-code" && (
-            <LowCodeView
-              selectedNode={selectedNode}
-              setSelectedNode={setSelectedNode}
-              onOpenMarketplace={() => setShowMarketplace(true)}
-              placedComponents={placedComponents}
-            />
-          )}
-          {mode === "high-code" && <HighCodeView />}
+        {/* Main Canvas - Split Layout */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Left Panel - Canvas (70%) */}
+          <div className="flex w-[70%] flex-col border-r border-[#E5E7EB]">
+            {mode === "workflow" ? (
+              <WorkflowCanvas
+                selectedNode={selectedNode}
+                setSelectedNode={setSelectedNode}
+                onOpenMarketplace={() => setShowMarketplace(true)}
+              />
+            ) : (
+              <CodeEditor />
+            )}
+          </div>
+
+          {/* Right Panel - AI Chat (30%) */}
+          <div className="flex w-[30%] flex-col bg-[#F5F7FA]">
+            {/* Chat Header */}
+            <div className="flex items-center gap-2 border-b border-[#E5E7EB] bg-white px-4 py-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ee3224]">
+                <Bot className="h-4 w-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-foreground">AI Assistant</p>
+                <p className="text-xs text-muted-foreground">
+                  {mode === "workflow" ? "Workflow Builder" : "Code Helper"}
+                </p>
+              </div>
+            </div>
+
+            {/* Chat Messages */}
+            <ScrollArea className="flex-1 p-4">
+              <div className="space-y-4">
+                {chatMessages.map((msg, idx) => (
+                  <div
+                    key={idx}
+                    className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
+                  >
+                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                      msg.role === "user" ? "bg-muted" : "bg-[#ee3224]"
+                    }`}>
+                      {msg.role === "user" ? (
+                        <User className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Bot className="h-4 w-4 text-white" />
+                      )}
+                    </div>
+                    <div
+                      className={`max-w-[80%] rounded-lg p-3 text-sm leading-relaxed ${
+                        msg.role === "user"
+                          ? "bg-[#ee3224] text-white"
+                          : "bg-white border border-[#E5E7EB] text-foreground shadow-sm"
+                      }`}
+                    >
+                      {msg.content.includes("```") ? (
+                        <div className="space-y-2">
+                          {msg.content.split("```").map((part, i) => (
+                            i % 2 === 0 ? (
+                              <p key={i}>{part}</p>
+                            ) : (
+                              <div key={i} className="relative rounded bg-zinc-900 p-3 font-mono text-xs text-zinc-100">
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="absolute right-2 top-2 h-6 w-6 text-zinc-400 hover:text-white"
+                                >
+                                  <Copy className="h-3 w-3" />
+                                </Button>
+                                <pre className="overflow-x-auto">{part.replace(/^typescript\n/, "")}</pre>
+                              </div>
+                            )
+                          ))}
+                          <Button size="sm" className="mt-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+                            Apply Changes
+                          </Button>
+                        </div>
+                      ) : (
+                        msg.content
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="flex gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ee3224]">
+                      <Bot className="h-4 w-4 text-white" />
+                    </div>
+                    <div className="rounded-lg border border-[#E5E7EB] bg-white p-3 shadow-sm">
+                      <div className="flex items-center gap-1">
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-[#ee3224]" style={{ animationDelay: "0ms" }} />
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-[#ee3224]" style={{ animationDelay: "150ms" }} />
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-[#ee3224]" style={{ animationDelay: "300ms" }} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div ref={chatEndRef} />
+              </div>
+            </ScrollArea>
+
+            {/* Quick Actions */}
+            <div className="border-t border-[#E5E7EB] bg-white p-3">
+              <div className="mb-3 flex flex-wrap gap-2">
+                {mode === "workflow" ? (
+                  <>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Test workflow")}>
+                      Test Workflow
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Debug issues")}>
+                      Debug
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Add a new node")}>
+                      Add Node
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Explain this code")}>
+                      Explain
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Refactor selected code")}>
+                      Refactor
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Fix bugs in this file")}>
+                      Fix Bugs
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              {/* Chat Input */}
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Describe changes..."
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                  className="flex-1 border-[#E5E7EB]"
+                />
+                <Button
+                  size="icon"
+                  className="h-9 w-9 bg-[#ee3224] hover:bg-[#cc2a1e]"
+                  onClick={handleSendMessage}
+                  disabled={!chatInput.trim() || isLoading}
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Marketplace Modal */}
@@ -288,20 +487,24 @@ export default function ProjectWorkspacePage() {
           <DialogContent className="sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle>Browse Marketplace Components</DialogTitle>
-              <DialogDescription>
-                Find agents, tools, and templates to add to your workflow
-              </DialogDescription>
+              <DialogDescription>Find agents, tools, and templates to add to your workflow</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input placeholder="Search agents, tools, templates..." className="pl-9" />
+                <Input placeholder="Search components..." className="pl-9 border-[#E5E7EB]" />
+              </div>
+              <div className="flex gap-2">
+                <Badge variant="secondary" className="cursor-pointer hover:bg-[#ee3224]/10">All</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-muted">Data</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-muted">AI</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-muted">Communication</Badge>
               </div>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                 {marketplaceComponents.map((component) => (
                   <div
                     key={component.id}
-                    className="flex flex-col gap-2 rounded-lg border border-border p-3 transition-all hover:border-[#ee3224] hover:shadow-sm"
+                    className="flex flex-col gap-2 rounded border border-[#E5E7EB] bg-white p-3 transition-all hover:border-[#ee3224] hover:shadow-sm"
                   >
                     <div className="flex items-start justify-between">
                       <span className="text-2xl">{component.icon}</span>
@@ -323,7 +526,7 @@ export default function ProjectWorkspacePage() {
                     <Button
                       size="sm"
                       className="mt-auto bg-[#ee3224] hover:bg-[#cc2a1e]"
-                      onClick={() => handleAddComponent(component)}
+                      onClick={() => setShowMarketplace(false)}
                     >
                       Add
                     </Button>
@@ -338,404 +541,221 @@ export default function ProjectWorkspacePage() {
   )
 }
 
-// No-Code View Component
-function NoCodeView({ prompt, setPrompt }: { prompt: string; setPrompt: (v: string) => void }) {
-  const [showGraph, setShowGraph] = useState(false)
-
-  const handleGenerate = () => {
-    if (prompt.trim()) {
-      setShowGraph(true)
-    }
-  }
-
-  return (
-    <div className="flex h-full flex-col">
-      {/* Natural Language Input */}
-      <div className="border-b border-border bg-card p-6">
-        <div className="mx-auto max-w-3xl">
-          <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="h-5 w-5 text-[#ee3224]" />
-            <span className="font-medium text-foreground">Describe your agent workflow</span>
-          </div>
-          <div className="flex gap-3">
-            <Textarea
-              placeholder="Example: Create an agent that monitors my inbox, summarizes important emails, and sends me a daily digest at 9 AM..."
-              className="min-h-24 resize-none flex-1"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-            />
-            <Button
-              className="self-end bg-[#ee3224] hover:bg-[#cc2a1e]"
-              onClick={handleGenerate}
-            >
-              <Send className="mr-2 h-4 w-4" />
-              Generate
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Auto-generated Node Graph */}
-      <div className="flex-1 bg-[#F5F7FA] p-6">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-4 flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Generated Workflow (Read-Only)</span>
-            {showGraph && (
-              <Badge className="bg-emerald-100 text-emerald-700">AI Generated</Badge>
-            )}
-          </div>
-          <div
-            className="relative h-80 rounded-lg border border-border bg-white"
-            style={{
-              backgroundImage: "radial-gradient(circle, #e5e7eb 1px, transparent 1px)",
-              backgroundSize: "20px 20px",
-            }}
-          >
-            {showGraph ? (
-              <>
-                {workflowNodes.map((node) => (
-                  <div
-                    key={node.id}
-                    className="absolute flex items-center gap-2 rounded border-2 border-border bg-white px-3 py-2 shadow-sm"
-                    style={{ left: node.x, top: node.y }}
-                  >
-                    <div className={`flex h-6 w-6 items-center justify-center rounded ${
-                      node.type === "Trigger" ? "bg-amber-500" :
-                      node.type === "Condition" ? "bg-blue-500" :
-                      node.type === "Action" ? "bg-[#ee3224]" :
-                      "bg-emerald-500"
-                    }`}>
-                      {node.type === "Trigger" && <Circle className="h-3 w-3 text-white" />}
-                      {node.type === "Condition" && <Diamond className="h-3 w-3 text-white" />}
-                      {node.type === "Action" && <Square className="h-3 w-3 text-white" />}
-                      {node.type === "Output" && <ArrowRight className="h-3 w-3 text-white" />}
-                    </div>
-                    <span className="text-xs font-medium text-foreground">{node.name}</span>
-                  </div>
-                ))}
-                <svg className="absolute inset-0 pointer-events-none">
-                  <path d="M 160 135 Q 220 135 260 135" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-                  <path d="M 380 135 Q 430 100 460 85" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-                  <path d="M 380 135 Q 430 170 460 185" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-                  <path d="M 600 85 Q 640 110 660 135" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-                  <path d="M 600 185 Q 640 160 660 135" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-                </svg>
-              </>
-            ) : (
-              <div className="flex h-full items-center justify-center">
-                <div className="text-center">
-                  <Bot className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Describe your workflow above to generate a visual graph
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Low-Code View Component
-function LowCodeView({
+// Workflow Canvas Component
+function WorkflowCanvas({
   selectedNode,
   setSelectedNode,
   onOpenMarketplace,
-  placedComponents,
 }: {
   selectedNode: number | null
   setSelectedNode: (id: number | null) => void
   onOpenMarketplace: () => void
-  placedComponents: typeof marketplaceComponents
 }) {
-  const nodeTypes = [
-    { name: "Trigger", icon: Circle, color: "bg-amber-500" },
-    { name: "Action", icon: Square, color: "bg-[#ee3224]" },
-    { name: "Condition", icon: Diamond, color: "bg-blue-500" },
-    { name: "Output", icon: ArrowRight, color: "bg-emerald-500" },
-  ]
+  const getNodeStyle = (type: string) => {
+    switch (type) {
+      case "trigger":
+        return "border-amber-500 bg-amber-50"
+      case "action":
+        return "border-[#ee3224] bg-red-50"
+      case "output":
+        return "border-emerald-500 bg-emerald-50"
+      default:
+        return "border-[#E5E7EB] bg-white"
+    }
+  }
 
   return (
-    <div className="flex h-full">
-      {/* Node Palette */}
-      <div className="w-56 border-r border-border bg-card p-4">
-        <h3 className="mb-3 text-sm font-medium text-foreground">Node Types</h3>
-        <div className="space-y-2">
-          {nodeTypes.map((node) => (
-            <div
-              key={node.name}
-              className="flex cursor-grab items-center gap-3 rounded border border-border bg-white p-2.5 transition-colors hover:border-[#ee3224] active:cursor-grabbing"
-              draggable
-            >
-              <div className={`flex h-7 w-7 items-center justify-center rounded ${node.color}`}>
-                <node.icon className="h-3.5 w-3.5 text-white" />
-              </div>
-              <span className="text-sm font-medium text-foreground">{node.name}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Marketplace Component Button */}
-        <div className="mt-6">
-          <h3 className="mb-3 text-sm font-medium text-foreground">Marketplace</h3>
-          <button
-            onClick={onOpenMarketplace}
-            className="flex w-full cursor-pointer items-center gap-3 rounded border-2 border-dashed border-[#ee3224]/30 bg-[#ee3224]/5 p-2.5 transition-colors hover:border-[#ee3224] hover:bg-[#ee3224]/10"
-          >
-            <div className="flex h-7 w-7 items-center justify-center rounded bg-[#ee3224]/20">
-              <Puzzle className="h-3.5 w-3.5 text-[#ee3224]" />
-            </div>
-            <span className="text-sm font-medium text-[#ee3224]">Add Component</span>
-          </button>
-        </div>
-
-        {/* Placed Components */}
-        {placedComponents.length > 0 && (
-          <div className="mt-4 space-y-2">
-            {placedComponents.map((comp, idx) => (
-              <div key={idx} className="flex items-center gap-2 rounded border border-border bg-white p-2 text-sm">
-                <span>{comp.icon}</span>
-                <span className="truncate">{comp.name}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
+    <div className="relative flex-1 overflow-hidden">
       {/* Canvas */}
       <div
-        className="relative flex-1"
+        className="absolute inset-0"
         style={{
           backgroundColor: "#F5F7FA",
           backgroundImage: "radial-gradient(circle, #d1d5db 1px, transparent 1px)",
           backgroundSize: "20px 20px",
         }}
       >
+        {/* Connection Lines */}
+        <svg className="absolute inset-0 pointer-events-none">
+          <path d="M 200 165 C 275 165, 275 165, 330 165" fill="none" stroke="#C0C6CA" strokeWidth="2" />
+          <path d="M 450 165 C 525 130, 525 115, 580 115" fill="none" stroke="#C0C6CA" strokeWidth="2" />
+          <path d="M 450 165 C 525 200, 525 235, 580 235" fill="none" stroke="#C0C6CA" strokeWidth="2" />
+          <circle cx="200" cy="165" r="4" fill="#C0C6CA" />
+          <circle cx="330" cy="165" r="4" fill="#C0C6CA" />
+          <circle cx="450" cy="165" r="4" fill="#C0C6CA" />
+          <circle cx="580" cy="115" r="4" fill="#C0C6CA" />
+          <circle cx="580" cy="235" r="4" fill="#C0C6CA" />
+        </svg>
+
         {/* Workflow Nodes */}
         {workflowNodes.map((node) => (
           <div
             key={node.id}
-            className={`absolute flex cursor-pointer items-center gap-2 rounded border-2 bg-white px-3 py-2 shadow-sm transition-all ${
-              selectedNode === node.id ? "border-[#ee3224]" : "border-border hover:border-[#ee3224]/50"
+            className={`absolute flex cursor-pointer items-center gap-3 rounded border-2 px-4 py-3 shadow-sm transition-all ${
+              selectedNode === node.id
+                ? "border-[#ee3224] ring-2 ring-[#ee3224]/20"
+                : getNodeStyle(node.type)
             }`}
             style={{ left: node.x, top: node.y }}
             onClick={() => setSelectedNode(node.id)}
           >
-            <div className={`flex h-6 w-6 items-center justify-center rounded ${
-              node.type === "Trigger" ? "bg-amber-500" :
-              node.type === "Condition" ? "bg-blue-500" :
-              node.type === "Action" ? "bg-[#ee3224]" :
-              "bg-emerald-500"
-            }`}>
-              {node.type === "Trigger" && <Circle className="h-3 w-3 text-white" />}
-              {node.type === "Condition" && <Diamond className="h-3 w-3 text-white" />}
-              {node.type === "Action" && <Square className="h-3 w-3 text-white" />}
-              {node.type === "Output" && <ArrowRight className="h-3 w-3 text-white" />}
+            <span className="text-xl">{node.icon}</span>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase">{node.type}</p>
+              <p className="text-sm font-medium text-foreground">{node.name}</p>
             </div>
-            <span className="text-xs font-medium text-foreground">{node.name}</span>
           </div>
         ))}
 
         {/* Marketplace Component Node */}
         <div
           onClick={onOpenMarketplace}
-          className="absolute flex cursor-pointer items-center gap-2 rounded border-2 border-dashed border-[#ee3224]/50 bg-white px-3 py-2 shadow-sm transition-all hover:border-[#ee3224]"
-          style={{ left: 280, top: 250 }}
+          className="absolute flex cursor-pointer items-center gap-3 rounded border-2 border-dashed border-[#ee3224]/50 bg-white px-4 py-3 shadow-sm transition-all hover:border-[#ee3224] hover:bg-[#ee3224]/5"
+          style={{ left: 350, top: 280 }}
         >
-          <div className="flex h-6 w-6 items-center justify-center rounded bg-[#ee3224]/20">
-            <Puzzle className="h-3 w-3 text-[#ee3224]" />
+          <div className="flex h-8 w-8 items-center justify-center rounded bg-[#ee3224]/10">
+            <Puzzle className="h-4 w-4 text-[#ee3224]" />
           </div>
-          <span className="text-xs font-medium text-[#ee3224]">Marketplace Component</span>
+          <div>
+            <p className="text-xs font-medium text-[#ee3224]">Add from Marketplace</p>
+            <p className="text-xs text-muted-foreground">Browse components</p>
+          </div>
         </div>
+      </div>
 
-        {/* Connection lines */}
-        <svg className="absolute inset-0 pointer-events-none">
-          <path d="M 160 135 Q 220 135 260 135" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-          <path d="M 380 135 Q 430 100 460 85" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-          <path d="M 380 135 Q 430 170 460 185" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-          <path d="M 600 85 Q 640 110 660 135" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-          <path d="M 600 185 Q 640 160 660 135" fill="none" stroke="#C0C6CA" strokeWidth="2" strokeDasharray="5,5" />
-        </svg>
-
-        {/* Add node button */}
-        <Button
-          size="icon"
-          className="absolute bottom-4 right-4 h-10 w-10 rounded-full bg-[#ee3224] hover:bg-[#cc2a1e]"
-        >
-          <Plus className="h-5 w-5" />
+      {/* Toolbar */}
+      <div className="absolute bottom-4 left-4 flex items-center gap-1 rounded-lg border border-[#E5E7EB] bg-white p-1 shadow-sm">
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <ZoomIn className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <ZoomOut className="h-4 w-4" />
+        </Button>
+        <div className="mx-1 h-4 w-px bg-[#E5E7EB]" />
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Maximize2 className="h-4 w-4" />
         </Button>
       </div>
 
-      {/* Properties Panel */}
-      <div className="w-64 border-l border-border bg-card p-4">
-        <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
-          <Settings className="h-4 w-4" /> Properties
-        </h3>
-        {selectedNode ? (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="nodeName" className="text-xs">Node Name</Label>
-              <Input
-                id="nodeName"
-                defaultValue={workflowNodes.find((n) => n.id === selectedNode)?.name}
-                className="h-8 text-sm"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="nodeType" className="text-xs">Type</Label>
-              <Select defaultValue={workflowNodes.find((n) => n.id === selectedNode)?.type}>
-                <SelectTrigger className="h-8 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Trigger">Trigger</SelectItem>
-                  <SelectItem value="Action">Action</SelectItem>
-                  <SelectItem value="Condition">Condition</SelectItem>
-                  <SelectItem value="Output">Output</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs">Connections</Label>
-              <div className="rounded border border-border bg-muted/50 p-2 text-xs text-muted-foreground">
-                <p>Input: Node {selectedNode > 1 ? selectedNode - 1 : "—"}</p>
-                <p>Output: Node {selectedNode < 5 ? selectedNode + 1 : "—"}</p>
-              </div>
-            </div>
-            <Badge variant="secondary">Configured</Badge>
-          </div>
-        ) : (
-          <div className="flex h-40 items-center justify-center text-center text-xs text-muted-foreground">
-            Click on a node to view and edit its properties
-          </div>
-        )}
-      </div>
+      {/* Add Node FAB */}
+      <Button
+        size="icon"
+        className="absolute bottom-4 right-4 h-12 w-12 rounded-full bg-[#ee3224] hover:bg-[#cc2a1e] shadow-md"
+      >
+        <Plus className="h-5 w-5" />
+      </Button>
     </div>
   )
 }
 
-// High-Code View Component
-function HighCodeView() {
-  const [isRunning, setIsRunning] = useState(false)
+// Code Editor Component
+function CodeEditor() {
+  const [expandedFolders, setExpandedFolders] = useState<string[]>(["src"])
+  const [activeFile, setActiveFile] = useState("agent.ts")
+  const [terminalExpanded, setTerminalExpanded] = useState(true)
 
   const consoleOutput = [
     { type: "info", message: "[INFO] Agent initialized successfully", time: "10:23:45" },
-    { type: "info", message: "[INFO] Loading configuration from config.yaml", time: "10:23:46" },
+    { type: "info", message: "[INFO] Loading configuration...", time: "10:23:46" },
     { type: "success", message: "[SUCCESS] Connected to OpenAI API", time: "10:23:47" },
     { type: "info", message: "[INFO] Processing 5 emails...", time: "10:23:48" },
     { type: "success", message: "[SUCCESS] Summary generated in 1.2s", time: "10:23:49" },
   ]
 
+  const toggleFolder = (name: string) => {
+    setExpandedFolders((prev) =>
+      prev.includes(name) ? prev.filter((f) => f !== name) : [...prev, name]
+    )
+  }
+
   return (
     <div className="flex h-full">
       {/* File Explorer */}
-      <div className="w-56 border-r border-border bg-card p-3">
+      <div className="w-56 border-r border-[#E5E7EB] bg-[#F5F7FA] p-3">
         <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
           <Folder className="h-4 w-4" /> Explorer
         </div>
         <div className="space-y-0.5">
           {fileTree.map((item) => (
-            <FileTreeItem key={item.name} item={item} depth={0} />
+            <FileTreeItem
+              key={item.name}
+              item={item}
+              depth={0}
+              expandedFolders={expandedFolders}
+              toggleFolder={toggleFolder}
+              activeFile={activeFile}
+              setActiveFile={setActiveFile}
+            />
           ))}
         </div>
       </div>
 
-      {/* Code Editor + Terminal */}
+      {/* Editor + Terminal */}
       <div className="flex flex-1 flex-col">
         {/* Editor Header */}
-        <div className="flex items-center justify-between border-b border-border bg-card px-4 py-2">
+        <div className="flex items-center justify-between border-b border-[#E5E7EB] bg-white px-4 py-2">
           <div className="flex items-center gap-2">
-            <FileCode className="h-4 w-4 text-[#ee3224]" />
-            <span className="text-sm font-medium">agent.py</span>
-            <Badge variant="secondary" className="text-xs">Python</Badge>
+            <div className="flex items-center gap-1 rounded bg-muted px-2 py-1">
+              <FileCode className="h-4 w-4 text-[#ee3224]" />
+              <span className="text-sm font-medium">{activeFile}</span>
+              <button className="ml-2 text-muted-foreground hover:text-foreground">
+                <span className="text-xs">×</span>
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="h-7 w-7">
-              <RefreshCw className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              size="sm"
-              className="h-7 gap-1 bg-[#ee3224] hover:bg-[#cc2a1e] text-xs"
-            >
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="text-xs">TypeScript</Badge>
+            <Button size="sm" className="h-7 gap-1.5 bg-[#ee3224] hover:bg-[#cc2a1e] text-xs">
               <Sparkles className="h-3 w-3" />
-              Refactor with AI
+              AI Refactor
             </Button>
           </div>
         </div>
 
         {/* Code Editor */}
         <div className="flex-1 overflow-auto">
-          <pre className="h-full bg-zinc-900 p-4 font-mono text-xs text-zinc-100">
-            <code>{codeContent}</code>
-          </pre>
+          <div className="flex h-full">
+            {/* Line Numbers */}
+            <div className="flex-shrink-0 select-none bg-zinc-900 py-4 text-right font-mono text-xs text-zinc-500">
+              {codeContent.split("\n").map((_, i) => (
+                <div key={i} className="px-3 leading-5">{i + 1}</div>
+              ))}
+            </div>
+            {/* Code */}
+            <pre className="flex-1 overflow-auto bg-zinc-900 p-4 font-mono text-xs text-zinc-100 leading-5">
+              <code>{codeContent}</code>
+            </pre>
+          </div>
         </div>
 
         {/* Terminal */}
-        <div className="h-40 border-t border-border">
-          <div className="flex items-center gap-2 border-b border-zinc-700 bg-zinc-800 px-3 py-1.5">
+        <div className={`border-t border-[#E5E7EB] ${terminalExpanded ? "h-40" : "h-8"}`}>
+          <div
+            className="flex cursor-pointer items-center gap-2 border-b border-zinc-700 bg-zinc-800 px-3 py-1.5"
+            onClick={() => setTerminalExpanded(!terminalExpanded)}
+          >
             <Terminal className="h-3.5 w-3.5 text-zinc-400" />
             <span className="text-xs font-medium text-zinc-300">Terminal</span>
+            <ChevronDown className={`ml-auto h-3 w-3 text-zinc-400 transition-transform ${!terminalExpanded ? "-rotate-90" : ""}`} />
           </div>
-          <div className="h-[calc(100%-32px)] overflow-auto bg-zinc-900 p-3 font-mono text-xs">
-            {consoleOutput.map((line, index) => (
-              <div key={index} className="flex items-start gap-2">
-                <span className="text-zinc-500">{line.time}</span>
-                <span
-                  className={
-                    line.type === "success" ? "text-green-400" :
-                    line.type === "error" ? "text-red-400" :
-                    "text-zinc-300"
-                  }
-                >
-                  {line.message}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Performance Monitor */}
-      <div className="w-52 border-l border-border bg-card p-4">
-        <h3 className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
-          <Activity className="h-4 w-4" /> Monitor
-        </h3>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1 text-muted-foreground">
-                <Cpu className="h-3 w-3" /> CPU
-              </span>
-              <span className="font-medium text-foreground">34%</span>
+          {terminalExpanded && (
+            <div className="h-[calc(100%-32px)] overflow-auto bg-zinc-900 p-3 font-mono text-xs">
+              {consoleOutput.map((line, index) => (
+                <div key={index} className="flex items-start gap-2">
+                  <span className="text-zinc-500">{line.time}</span>
+                  <span
+                    className={
+                      line.type === "success" ? "text-green-400" :
+                      line.type === "error" ? "text-red-400" :
+                      "text-zinc-300"
+                    }
+                  >
+                    {line.message}
+                  </span>
+                </div>
+              ))}
             </div>
-            <div className="h-1.5 rounded-full bg-muted">
-              <div className="h-1.5 w-1/3 rounded-full bg-[#ee3224]" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1 text-muted-foreground">
-                <HardDrive className="h-3 w-3" /> Memory
-              </span>
-              <span className="font-medium text-foreground">512MB</span>
-            </div>
-            <div className="h-1.5 rounded-full bg-muted">
-              <div className="h-1.5 w-1/2 rounded-full bg-blue-500" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1 text-muted-foreground">
-                <Activity className="h-3 w-3" /> GPU
-              </span>
-              <span className="font-medium text-foreground">78%</span>
-            </div>
-            <div className="h-1.5 rounded-full bg-muted">
-              <div className="h-1.5 w-3/4 rounded-full bg-amber-500" />
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
@@ -743,26 +763,47 @@ function HighCodeView() {
 }
 
 // File Tree Item Component
-function FileTreeItem({ item, depth }: { item: any; depth: number }) {
-  const [expanded, setExpanded] = useState(item.expanded || false)
+function FileTreeItem({
+  item,
+  depth,
+  expandedFolders,
+  toggleFolder,
+  activeFile,
+  setActiveFile,
+}: {
+  item: any
+  depth: number
+  expandedFolders: string[]
+  toggleFolder: (name: string) => void
+  activeFile: string
+  setActiveFile: (name: string) => void
+}) {
+  const isExpanded = expandedFolders.includes(item.name)
+  const isActive = item.type === "file" && item.name === activeFile
 
   return (
     <div>
       <div
-        className={`flex cursor-pointer items-center gap-1 rounded px-2 py-1 text-sm transition-colors hover:bg-muted ${
-          item.active ? "bg-[#ee3224]/10 text-[#ee3224]" : "text-foreground"
+        className={`flex cursor-pointer items-center gap-1 rounded px-2 py-1 text-sm transition-colors hover:bg-white ${
+          isActive ? "bg-[#ee3224]/10 text-[#ee3224]" : "text-foreground"
         }`}
         style={{ paddingLeft: `${depth * 12 + 8}px` }}
-        onClick={() => item.type === "folder" && setExpanded(!expanded)}
+        onClick={() => {
+          if (item.type === "folder") {
+            toggleFolder(item.name)
+          } else {
+            setActiveFile(item.name)
+          }
+        }}
       >
         {item.type === "folder" ? (
           <>
-            {expanded ? (
+            {isExpanded ? (
               <ChevronDown className="h-3 w-3 text-muted-foreground" />
             ) : (
               <ChevronRight className="h-3 w-3 text-muted-foreground" />
             )}
-            {expanded ? (
+            {isExpanded ? (
               <FolderOpen className="h-4 w-4 text-amber-500" />
             ) : (
               <Folder className="h-4 w-4 text-amber-500" />
@@ -776,10 +817,18 @@ function FileTreeItem({ item, depth }: { item: any; depth: number }) {
         )}
         <span className="ml-1 text-xs">{item.name}</span>
       </div>
-      {item.type === "folder" && expanded && item.children && (
+      {item.type === "folder" && isExpanded && item.children && (
         <div>
           {item.children.map((child: any) => (
-            <FileTreeItem key={child.name} item={child} depth={depth + 1} />
+            <FileTreeItem
+              key={child.name}
+              item={child}
+              depth={depth + 1}
+              expandedFolders={expandedFolders}
+              toggleFolder={toggleFolder}
+              activeFile={activeFile}
+              setActiveFile={setActiveFile}
+            />
           ))}
         </div>
       )}
