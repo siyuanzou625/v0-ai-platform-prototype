@@ -30,12 +30,13 @@ const navigation = [
       { name: "Home", href: "/", icon: Home },
       { name: "Discover", href: "/discover", icon: Compass },
       { name: "Use", href: "/use", icon: Play },
-      { name: "Build", href: "/build", icon: Wrench },
+      { name: "Build", href: "/layer4/workspace", icon: Wrench },
     ],
   },
   {
     title: "Layer 4 - Vibe Coding",
     items: [
+      { name: "Project Workspace", href: "/layer4/workspace", icon: Code2 },
       { name: "No-Code Builder", href: "/layer4/no-code", icon: Sparkles },
       { name: "Workflow Builder", href: "/layer4/workflow", icon: Workflow },
       { name: "Dev Studio", href: "/layer4/dev-studio", icon: Code2 },
@@ -69,8 +70,8 @@ export function AppSidebar() {
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-border bg-sidebar">
       <div className="flex h-16 items-center gap-2 border-b border-border px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded bg-primary">
-          <Sparkles className="h-4 w-4 text-primary-foreground" />
+        <div className="flex h-8 w-8 items-center justify-center rounded bg-[#ee3224]">
+          <Sparkles className="h-4 w-4 text-white" />
         </div>
         <span className="text-lg font-semibold text-sidebar-foreground">AI Agent OS</span>
       </div>
@@ -90,7 +91,7 @@ export function AppSidebar() {
                       className={cn(
                         "flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
                         isActive
-                          ? "bg-primary text-primary-foreground"
+                          ? "bg-[#ee3224] text-white"
                           : "text-sidebar-foreground hover:bg-sidebar-accent"
                       )}
                     >
