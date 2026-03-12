@@ -636,14 +636,17 @@ function WorkflowCanvas({
   // Calculate bezier curve path between two nodes
   const getConnectionPath = (fromNode: typeof workflowNodes[0], toNode: typeof workflowNodes[0]) => {
     const nodeWidth = 180
-    const nodeHeight = 80
+    const nodeHeight = 100 // Approximate height including header + body
     
     const startX = fromNode.x + nodeWidth
     const startY = fromNode.y + nodeHeight / 2
     const endX = toNode.x
     const endY = toNode.y + nodeHeight / 2
     
-    const controlPointOffset = Math.abs(endX - startX) * 0.5
+    // Calculate control point offset based on distance
+    const dx = endX - startX
+    const controlPointOffset = Math.min(Math.abs(dx) * 0.4, 80)
+    
     const cp1X = startX + controlPointOffset
     const cp1Y = startY
     const cp2X = endX - controlPointOffset
@@ -651,10 +654,6 @@ function WorkflowCanvas({
     
     return {
       path: `M ${startX} ${startY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${endX} ${endY}`,
-      startX,
-      startY,
-      endX,
-      endY,
     }
   }
 
@@ -774,38 +773,22 @@ function WorkflowCanvas({
         >
           {/* Connection Lines SVG */}
           <svg className="absolute inset-0 pointer-events-none" style={{ width: "1200px", height: "600px" }}>
-            <defs>
-              <marker
-                id="arrowhead"
-                markerWidth="10"
-                markerHeight="7"
-                refX="9"
-                refY="3.5"
-                orient="auto"
-              >
-                <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
-              </marker>
-            </defs>
             {workflowConnections.map((conn, idx) => {
               const fromNode = workflowNodes.find((n) => n.id === conn.from)
               const toNode = workflowNodes.find((n) => n.id === conn.to)
               if (!fromNode || !toNode) return null
               
-              const { path, startX, startY, endX, endY } = getConnectionPath(fromNode, toNode)
+              const { path } = getConnectionPath(fromNode, toNode)
               
               return (
-                <g key={idx}>
-                  {/* Connection line */}
-                  <path
-                    d={path}
-                    fill="none"
-                    stroke="#6366f1"
-                    strokeWidth="2"
-                    markerEnd="url(#arrowhead)"
-                  />
-                  {/* Start port */}
-                  <circle cx={startX} cy={startY} r="4" fill="#6366f1" />
-                </g>
+                <path
+                  key={idx}
+                  d={path}
+                  fill="none"
+                  stroke="#C0C6D0"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               )
             })}
           </svg>
@@ -868,13 +851,7 @@ function WorkflowCanvas({
                   )}
                 </div>
 
-                {/* Connection Ports */}
-                {node.inputs.length > 0 && (
-                  <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full border-2 border-[#6366f1] bg-white" />
-                )}
-                {node.outputs.length > 0 && (
-                  <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full border-2 border-[#6366f1] bg-white" />
-                )}
+                
               </div>
             )
           })}
