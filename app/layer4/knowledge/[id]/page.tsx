@@ -168,7 +168,7 @@ export default function KnowledgeDetailPage() {
               variant="ghost"
               size="sm"
               className="gap-1 text-muted-foreground hover:text-foreground"
-              onClick={() => router.push("/layer4/projects")}
+              onClick={() => router.push("/layer4/knowledge")}
             >
               <ChevronLeft className="h-4 w-4" />
               Back
