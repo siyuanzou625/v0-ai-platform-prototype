@@ -67,7 +67,7 @@ const projects = [
     name: "Enterprise Sales Agent",
     description: "Automating lead qualification and outreach for enterprise sales teams",
     mode: "workflow" as const,
-    owner: { name: "Siyuan", initials: "SY" },
+    owner: { name: "Zoey", initials: "ZD" },
     environment: "production" as const,
     status: "deployed" as const,
     progress: 100,
@@ -77,7 +77,7 @@ const projects = [
     lastActivity: "2 hours ago",
     lastActivityTimestamp: Date.now() - 2 * 60 * 60 * 1000,
     members: [
-      { name: "Siyuan", initials: "SY" },
+      { name: "Zoey", initials: "ZD" },
       { name: "Sarah Chen", initials: "SC" },
       { name: "Mike Johnson", initials: "MJ" },
     ],
@@ -159,7 +159,7 @@ const projects = [
     name: "Invoice Processor",
     description: "Automated invoice parsing and accounting system integration",
     mode: "workflow" as const,
-    owner: { name: "Siyuan", initials: "SY" },
+    owner: { name: "Zoey", initials: "ZD" },
     environment: "staging" as const,
     status: "blocked" as const,
     progress: 60,
@@ -169,7 +169,7 @@ const projects = [
     lastActivity: "2 days ago",
     lastActivityTimestamp: Date.now() - 2 * 24 * 60 * 60 * 1000,
     members: [
-      { name: "Siyuan", initials: "SY" },
+      { name: "Zoey", initials: "ZD" },
       { name: "David Brown", initials: "DB" },
       { name: "Nina Patel", initials: "NP" },
     ],
@@ -205,11 +205,11 @@ const projects = [
 
 // Activity timeline entries
 const activityTimeline = [
-  { id: 1, user: "Siyuan", initials: "SY", action: "updated workflow in", project: "Enterprise Sales Agent", projectId: "proj-001", timestamp: "2 hours ago", isCurrentUser: true },
+  { id: 1, user: "Zoey", initials: "ZD", action: "updated workflow in", project: "Enterprise Sales Agent", projectId: "proj-001", timestamp: "2 hours ago", isCurrentUser: true },
   { id: 2, user: "Alex", initials: "AK", action: "deployed", project: "Customer Support Bot", projectId: "proj-003", timestamp: "1 day ago", isCurrentUser: false },
   { id: 3, user: "Sarah", initials: "SC", action: "added knowledge base to", project: "Data Pipeline v2", projectId: "proj-002", timestamp: "5 hours ago", isCurrentUser: false },
   { id: 4, user: "Michael", initials: "MJ", action: "created new API endpoint in", project: "Analytics Dashboard API", projectId: "proj-004", timestamp: "3 hours ago", isCurrentUser: false },
-  { id: 5, user: "Siyuan", initials: "SY", action: "commented on", project: "Invoice Processor", projectId: "proj-005", timestamp: "2 days ago", isCurrentUser: true },
+  { id: 5, user: "Zoey", initials: "ZD", action: "commented on", project: "Invoice Processor", projectId: "proj-005", timestamp: "2 days ago", isCurrentUser: true },
   { id: 6, user: "Alex", initials: "AK", action: "updated connections in", project: "Notification Service", projectId: "proj-006", timestamp: "30 minutes ago", isCurrentUser: false },
   { id: 7, user: "Sarah", initials: "SC", action: "resolved bug in", project: "Data Pipeline v2", projectId: "proj-002", timestamp: "6 hours ago", isCurrentUser: false },
 ]
