@@ -46,6 +46,16 @@ import {
   Copy,
   CheckCheck,
   User,
+  Braces,
+  Database,
+  GitBranch,
+  Variable,
+  BookOpen,
+  Globe,
+  Mail,
+  Clock,
+  Filter,
+  MoreHorizontal,
 } from "lucide-react"
 
 type Mode = "workflow" | "code"
@@ -69,12 +79,47 @@ const teamMembers = [
   { id: 3, name: "Emily Davis", email: "emily@example.com", role: "Viewer", initials: "ED" },
 ]
 
-// Workflow nodes
+// Tool palette categories
+const toolPaletteCategories = [
+  {
+    name: "Basic Nodes",
+    items: [
+      { id: "llm", name: "LLM", icon: Bot, color: "bg-purple-500", description: "Invoke the large language model to generate responses using variables and prompts" },
+      { id: "code", name: "Code", icon: Braces, color: "bg-blue-500", description: "Write code to process input variables and generate return values" },
+      { id: "knowledge", name: "Knowledge", icon: BookOpen, color: "bg-amber-500", description: "Retrieve and match information from selected knowledge bases" },
+      { id: "condition", name: "Condition", icon: GitBranch, color: "bg-emerald-500", description: "Connect branches based on set conditions" },
+      { id: "variable", name: "Variable", icon: Variable, color: "bg-pink-500", description: "Read and write variables in your workflow" },
+      { id: "database", name: "Database", icon: Database, color: "bg-cyan-500", description: "Query and store data in databases" },
+    ],
+  },
+  {
+    name: "Integrations",
+    items: [
+      { id: "http", name: "HTTP Request", icon: Globe, color: "bg-orange-500", description: "Make HTTP requests to external APIs" },
+      { id: "email", name: "Email", icon: Mail, color: "bg-red-500", description: "Send and receive emails" },
+      { id: "scheduler", name: "Scheduler", icon: Clock, color: "bg-indigo-500", description: "Schedule tasks to run at specific times" },
+    ],
+  },
+]
+
+// Workflow nodes with connections
 const workflowNodes = [
-  { id: 1, type: "trigger", name: "Email Trigger", x: 100, y: 150, icon: "📧" },
-  { id: 2, type: "action", name: "LLM Processor", x: 350, y: 150, icon: "🤖" },
-  { id: 3, type: "action", name: "Slack Notify", x: 600, y: 100, icon: "💬" },
-  { id: 4, type: "output", name: "Save to DB", x: 600, y: 220, icon: "💾" },
+  { id: 1, type: "start", name: "Start", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["trigger"] },
+  { id: 2, type: "llm", name: "LLM Processor", x: 300, y: 120, color: "bg-purple-500", inputs: ["content"], outputs: ["response", "tokens"] },
+  { id: 3, type: "http", name: "API Request", x: 300, y: 280, color: "bg-orange-500", inputs: ["url", "params"], outputs: ["data", "status"] },
+  { id: 4, type: "condition", name: "Check Status", x: 560, y: 180, color: "bg-emerald-500", inputs: ["value"], outputs: ["true", "false"] },
+  { id: 5, type: "database", name: "Save Result", x: 800, y: 120, color: "bg-cyan-500", inputs: ["data"], outputs: ["id"] },
+  { id: 6, type: "end", name: "End", x: 800, y: 260, color: "bg-gray-500", inputs: ["output"], outputs: [] },
+]
+
+// Connections between nodes
+const workflowConnections = [
+  { from: 1, to: 2, fromPort: "trigger", toPort: "content" },
+  { from: 1, to: 3, fromPort: "trigger", toPort: "url" },
+  { from: 2, to: 4, fromPort: "response", toPort: "value" },
+  { from: 3, to: 4, fromPort: "data", toPort: "value" },
+  { from: 4, to: 5, fromPort: "true", toPort: "data" },
+  { from: 4, to: 6, fromPort: "false", toPort: "output" },
 ]
 
 // Marketplace components
@@ -586,99 +631,278 @@ function WorkflowCanvas({
   setSelectedNode: (id: number | null) => void
   onOpenMarketplace: () => void
 }) {
-  const getNodeStyle = (type: string) => {
+  const [toolPaletteCollapsed, setToolPaletteCollapsed] = useState<boolean>(false)
+
+  // Calculate bezier curve path between two nodes
+  const getConnectionPath = (fromNode: typeof workflowNodes[0], toNode: typeof workflowNodes[0]) => {
+    const nodeWidth = 180
+    const nodeHeight = 80
+    
+    const startX = fromNode.x + nodeWidth
+    const startY = fromNode.y + nodeHeight / 2
+    const endX = toNode.x
+    const endY = toNode.y + nodeHeight / 2
+    
+    const controlPointOffset = Math.abs(endX - startX) * 0.5
+    const cp1X = startX + controlPointOffset
+    const cp1Y = startY
+    const cp2X = endX - controlPointOffset
+    const cp2Y = endY
+    
+    return {
+      path: `M ${startX} ${startY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${endX} ${endY}`,
+      startX,
+      startY,
+      endX,
+      endY,
+    }
+  }
+
+  // Get node icon component
+  const getNodeIcon = (type: string) => {
     switch (type) {
-      case "trigger":
-        return "border-amber-500 bg-amber-50"
-      case "action":
-        return "border-[#ee3224] bg-red-50"
-      case "output":
-        return "border-emerald-500 bg-emerald-50"
-      default:
-        return "border-[#E5E7EB] bg-white"
+      case "start": return Play
+      case "end": return Square
+      case "llm": return Bot
+      case "http": return Globe
+      case "condition": return GitBranch
+      case "database": return Database
+      case "code": return Braces
+      default: return Circle
     }
   }
 
   return (
-    <div className="relative flex-1 overflow-hidden">
-      {/* Canvas */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundColor: "#F5F7FA",
-          backgroundImage: "radial-gradient(circle, #d1d5db 1px, transparent 1px)",
-          backgroundSize: "20px 20px",
-        }}
-      >
-        {/* Connection Lines */}
-        <svg className="absolute inset-0 pointer-events-none">
-          <path d="M 200 165 C 275 165, 275 165, 330 165" fill="none" stroke="#C0C6CA" strokeWidth="2" />
-          <path d="M 450 165 C 525 130, 525 115, 580 115" fill="none" stroke="#C0C6CA" strokeWidth="2" />
-          <path d="M 450 165 C 525 200, 525 235, 580 235" fill="none" stroke="#C0C6CA" strokeWidth="2" />
-          <circle cx="200" cy="165" r="4" fill="#C0C6CA" />
-          <circle cx="330" cy="165" r="4" fill="#C0C6CA" />
-          <circle cx="450" cy="165" r="4" fill="#C0C6CA" />
-          <circle cx="580" cy="115" r="4" fill="#C0C6CA" />
-          <circle cx="580" cy="235" r="4" fill="#C0C6CA" />
-        </svg>
-
-        {/* Workflow Nodes */}
-        {workflowNodes.map((node) => (
-          <div
-            key={node.id}
-            className={`absolute flex cursor-pointer items-center gap-3 rounded border-2 px-4 py-3 shadow-sm transition-all ${
-              selectedNode === node.id
-                ? "border-[#ee3224] ring-2 ring-[#ee3224]/20"
-                : getNodeStyle(node.type)
-            }`}
-            style={{ left: node.x, top: node.y }}
-            onClick={() => setSelectedNode(node.id)}
+    <div className="relative flex flex-1 overflow-hidden">
+      {/* Tool Palette */}
+      <div className={`flex flex-col border-r border-[#E5E7EB] bg-white transition-all ${toolPaletteCollapsed ? "w-12" : "w-56"}`}>
+        {/* Palette Header */}
+        <div className="flex items-center justify-between border-b border-[#E5E7EB] px-3 py-2">
+          {!toolPaletteCollapsed && (
+            <span className="text-sm font-medium text-foreground">Nodes</span>
+          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            onClick={() => setToolPaletteCollapsed(!toolPaletteCollapsed)}
           >
-            <span className="text-xl">{node.icon}</span>
-            <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase">{node.type}</p>
-              <p className="text-sm font-medium text-foreground">{node.name}</p>
-            </div>
-          </div>
-        ))}
+            {toolPaletteCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
+        </div>
 
-        {/* Marketplace Component Node */}
+        {/* Palette Content */}
+        <ScrollArea className="flex-1">
+          {toolPaletteCollapsed ? (
+            // Collapsed view - just icons
+            <div className="flex flex-col items-center gap-1 p-2">
+              {toolPaletteCategories.flatMap((cat) =>
+                cat.items.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <div
+                      key={item.id}
+                      className={`flex h-8 w-8 cursor-grab items-center justify-center rounded ${item.color} text-white transition-transform hover:scale-110`}
+                      title={item.name}
+                      draggable
+                    >
+                      <Icon className="h-4 w-4" />
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          ) : (
+            // Expanded view
+            <div className="p-3 space-y-4">
+              {toolPaletteCategories.map((category) => (
+                <div key={category.name}>
+                  <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">{category.name}</p>
+                  <div className="space-y-1">
+                    {category.items.map((item) => {
+                      const Icon = item.icon
+                      return (
+                        <div
+                          key={item.id}
+                          className="group flex cursor-grab items-start gap-2.5 rounded-lg border border-transparent p-2 transition-all hover:border-[#E5E7EB] hover:bg-[#F5F7FA]"
+                          draggable
+                        >
+                          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded ${item.color} text-white`}>
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-medium text-foreground">{item.name}</p>
+                              <Plus className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{item.description}</p>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              {/* Marketplace Link */}
+              <div
+                onClick={onOpenMarketplace}
+                className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-dashed border-[#ee3224]/40 p-3 transition-all hover:border-[#ee3224] hover:bg-[#ee3224]/5"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded bg-[#ee3224]/10">
+                  <Puzzle className="h-4 w-4 text-[#ee3224]" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-[#ee3224]">Marketplace</p>
+                  <p className="text-xs text-muted-foreground">Browse more components</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </ScrollArea>
+      </div>
+
+      {/* Canvas Area */}
+      <div className="relative flex-1">
         <div
-          onClick={onOpenMarketplace}
-          className="absolute flex cursor-pointer items-center gap-3 rounded border-2 border-dashed border-[#ee3224]/50 bg-white px-4 py-3 shadow-sm transition-all hover:border-[#ee3224] hover:bg-[#ee3224]/5"
-          style={{ left: 350, top: 280 }}
+          className="absolute inset-0 overflow-auto"
+          style={{
+            backgroundColor: "#F5F7FA",
+            backgroundImage: "radial-gradient(circle, #d1d5db 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
+          }}
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded bg-[#ee3224]/10">
-            <Puzzle className="h-4 w-4 text-[#ee3224]" />
-          </div>
-          <div>
-            <p className="text-xs font-medium text-[#ee3224]">Add from Marketplace</p>
-            <p className="text-xs text-muted-foreground">Browse components</p>
-          </div>
+          {/* Connection Lines SVG */}
+          <svg className="absolute inset-0 pointer-events-none" style={{ width: "1200px", height: "600px" }}>
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="9"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
+              </marker>
+            </defs>
+            {workflowConnections.map((conn, idx) => {
+              const fromNode = workflowNodes.find((n) => n.id === conn.from)
+              const toNode = workflowNodes.find((n) => n.id === conn.to)
+              if (!fromNode || !toNode) return null
+              
+              const { path, startX, startY, endX, endY } = getConnectionPath(fromNode, toNode)
+              
+              return (
+                <g key={idx}>
+                  {/* Connection line */}
+                  <path
+                    d={path}
+                    fill="none"
+                    stroke="#6366f1"
+                    strokeWidth="2"
+                    markerEnd="url(#arrowhead)"
+                  />
+                  {/* Start port */}
+                  <circle cx={startX} cy={startY} r="4" fill="#6366f1" />
+                </g>
+              )
+            })}
+          </svg>
+
+          {/* Workflow Nodes */}
+          {workflowNodes.map((node) => {
+            const NodeIcon = getNodeIcon(node.type)
+            const isSelected = selectedNode === node.id
+            
+            return (
+              <div
+                key={node.id}
+                className={`absolute cursor-pointer rounded-lg border-2 bg-white shadow-sm transition-all hover:shadow-md ${
+                  isSelected
+                    ? "border-[#ee3224] ring-2 ring-[#ee3224]/20"
+                    : "border-[#E5E7EB]"
+                }`}
+                style={{ left: node.x, top: node.y, width: "180px" }}
+                onClick={() => setSelectedNode(node.id)}
+              >
+                {/* Node Header */}
+                <div className="flex items-center gap-2 border-b border-[#E5E7EB] px-3 py-2">
+                  <div className={`flex h-6 w-6 items-center justify-center rounded ${node.color} text-white`}>
+                    <NodeIcon className="h-3.5 w-3.5" />
+                  </div>
+                  <span className="flex-1 text-sm font-medium text-foreground truncate">{node.name}</span>
+                  <button className="text-muted-foreground hover:text-foreground">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </button>
+                </div>
+                
+                {/* Node Body */}
+                <div className="p-2 space-y-1.5">
+                  {/* Inputs */}
+                  {node.inputs.length > 0 && (
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-medium text-muted-foreground uppercase">Input</p>
+                      <div className="flex flex-wrap gap-1">
+                        {node.inputs.map((input, i) => (
+                          <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0 h-5 bg-blue-50 text-blue-600 border border-blue-200">
+                            {input}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Outputs */}
+                  {node.outputs.length > 0 && (
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-medium text-muted-foreground uppercase">Output</p>
+                      <div className="flex flex-wrap gap-1">
+                        {node.outputs.map((output, i) => (
+                          <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0 h-5 bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            {output}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Connection Ports */}
+                {node.inputs.length > 0 && (
+                  <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full border-2 border-[#6366f1] bg-white" />
+                )}
+                {node.outputs.length > 0 && (
+                  <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full border-2 border-[#6366f1] bg-white" />
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Canvas Toolbar */}
+        <div className="absolute bottom-4 left-4 flex items-center gap-1 rounded-lg border border-[#E5E7EB] bg-white p-1 shadow-sm">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <ZoomOut className="h-4 w-4" />
+          </Button>
+          <span className="px-2 text-xs text-muted-foreground">100%</span>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+          <div className="mx-1 h-4 w-px bg-[#E5E7EB]" />
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Maximize2 className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Run Button */}
+        <div className="absolute bottom-4 right-4">
+          <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e] shadow-md">
+            <Play className="h-4 w-4" />
+            Run Workflow
+          </Button>
         </div>
       </div>
-
-      {/* Toolbar */}
-      <div className="absolute bottom-4 left-4 flex items-center gap-1 rounded-lg border border-[#E5E7EB] bg-white p-1 shadow-sm">
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <ZoomIn className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <ZoomOut className="h-4 w-4" />
-        </Button>
-        <div className="mx-1 h-4 w-px bg-[#E5E7EB]" />
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Maximize2 className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Add Node FAB */}
-      <Button
-        size="icon"
-        className="absolute bottom-4 right-4 h-12 w-12 rounded-full bg-[#ee3224] hover:bg-[#cc2a1e] shadow-md"
-      >
-        <Plus className="h-5 w-5" />
-      </Button>
     </div>
   )
 }
