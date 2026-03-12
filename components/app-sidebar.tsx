@@ -38,7 +38,7 @@ const navigation = [
     title: "Layer 4 - Vibe Coding",
     items: [
       { name: "My Projects", href: "/layer4/projects", icon: Workflow },
-      { name: "My Knowledge", href: "/layer4/projects#knowledge", icon: BookOpen },
+      { name: "My Knowledge", href: "/layer4/knowledge", icon: BookOpen },
       { name: "Prompt Studio", href: "/layer4/prompt-studio", icon: Terminal },
     ],
   },
