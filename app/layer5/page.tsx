@@ -391,20 +391,16 @@ export default function Layer5OverviewPage() {
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-4 text-xs">
                       <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded-full bg-blue-500" />
-                        <span className="text-muted-foreground">Native Apps</span>
+                        <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                        <span className="text-muted-foreground">All systems operational</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded-full bg-purple-500" />
-                        <span className="text-muted-foreground">Personal Agents</span>
+                        <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                        <span className="text-muted-foreground">Minor issue detected</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded-full bg-orange-500" />
-                        <span className="text-muted-foreground">Enterprise Agents</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded-full bg-teal-500" />
-                        <span className="text-muted-foreground">Cross-Device</span>
+                        <div className="h-2.5 w-2.5 rounded-full bg-[#ee3224]" />
+                        <span className="text-muted-foreground">Critical alert</span>
                       </div>
                     </div>
                   </div>
@@ -445,19 +441,29 @@ export default function Layer5OverviewPage() {
                       return (
                         <div
                           key={idx}
-                          className="absolute cursor-pointer transition-transform hover:scale-125"
+                          className="absolute cursor-pointer transition-transform hover:scale-125 group/marker"
                           style={{
                             left: `${(event.x / 900) * 100}%`,
                             top: `${(yPos / 80) * (100 - 40)}%`,
                             transform: "translate(-50%, -50%)",
                           }}
                           onClick={() => handleTimelineEventClick(event)}
-                          title={event.label}
                         >
                           <div
                             className="h-4 w-4 rounded-full border-2 border-white shadow-sm"
                             style={{ backgroundColor: getStatusColor(event.status) }}
                           />
+                          {/* Hover Tooltip */}
+                          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover/marker:opacity-100 transition-opacity pointer-events-none z-10">
+                            <div className="bg-foreground text-white text-xs px-3 py-2 rounded shadow-lg whitespace-nowrap max-w-[200px]">
+                              <p className="font-medium">{event.time}</p>
+                              <p className="text-white/80">{event.label}</p>
+                              {event.status !== "ok" && (
+                                <p className="text-white/60 text-[10px] mt-1">Click for details</p>
+                              )}
+                            </div>
+                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-foreground" />
+                          </div>
                         </div>
                       )
                     })}
@@ -477,10 +483,24 @@ export default function Layer5OverviewPage() {
 
                 {/* Action buttons */}
                 <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
-                  <Button variant="outline" size="sm" className="border-[#E5E7EB]">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-[#E5E7EB]"
+                    onClick={() => router.push("/layer5/incidents")}
+                  >
                     View Incident Details
                   </Button>
-                  <Button variant="outline" size="sm" className="border-[#E5E7EB]">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-[#E5E7EB]"
+                    onClick={() => {
+                      // Create a simple export notification - in production would generate PNG/PDF
+                      const format = window.confirm("Click OK to export as PNG, Cancel for PDF") ? "PNG" : "PDF"
+                      alert(`Exporting timeline as ${format}. In production, this would download the chart.`)
+                    }}
+                  >
                     <Download className="h-4 w-4 mr-2" />
                     Export Timeline
                   </Button>
