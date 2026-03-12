@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -49,6 +49,18 @@ import {
 } from "lucide-react"
 
 type Mode = "workflow" | "code"
+type ProjectType = "workflow" | "code"
+
+// Mock projects data to determine project type
+const projectsData: Record<string, { name: string; type: ProjectType }> = {
+  "1": { name: "Enterprise Sales Agent", type: "workflow" },
+  "2": { name: "Data Pipeline v2", type: "code" },
+  "3": { name: "Customer Support Bot", type: "workflow" },
+  "4": { name: "Analytics Dashboard API", type: "code" },
+  "5": { name: "Invoice Processor", type: "workflow" },
+  "6": { name: "Notification Service", type: "code" },
+  "new": { name: "New Project", type: "workflow" },
+}
 
 // Mock team members
 const teamMembers = [
@@ -154,8 +166,17 @@ const initialCodeChat = [
 
 export default function ProjectWorkspacePage() {
   const router = useRouter()
-  const [mode, setMode] = useState<Mode>("workflow")
-  const [projectName, setProjectName] = useState("Enterprise Sales Agent")
+  const searchParams = useSearchParams()
+  const projectId = searchParams.get("id") || "1"
+  const urlMode = searchParams.get("mode") as ProjectType | null
+  
+  // Determine project type from data or URL param (for new projects)
+  const projectData = projectsData[projectId] || projectsData["1"]
+  const projectType: ProjectType = urlMode || projectData.type
+  
+  // For code projects, always show code mode. For workflow projects, default to workflow mode
+  const [mode, setMode] = useState<Mode>(projectType === "code" ? "code" : "workflow")
+  const [projectName, setProjectName] = useState(projectData.name)
   const [isEditingName, setIsEditingName] = useState(false)
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
   const [showMarketplace, setShowMarketplace] = useState(false)
@@ -166,8 +187,13 @@ export default function ProjectWorkspacePage() {
   const chatEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setChatMessages(mode === "workflow" ? initialWorkflowChat : initialCodeChat)
-  }, [mode])
+    // For code projects, always use code chat. For workflow projects, depends on current mode
+    if (projectType === "code") {
+      setChatMessages(initialCodeChat)
+    } else {
+      setChatMessages(mode === "workflow" ? initialWorkflowChat : initialCodeChat)
+    }
+  }, [mode, projectType])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -227,31 +253,38 @@ export default function ProjectWorkspacePage() {
             )}
           </div>
 
-          {/* Center: Mode Switcher */}
-          <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
-            <button
-              onClick={() => setMode("workflow")}
-              className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
-                mode === "workflow"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <Workflow className="h-4 w-4" />
-              Workflow
-            </button>
-            <button
-              onClick={() => setMode("code")}
-              className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
-                mode === "code"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <Code2 className="h-4 w-4" />
-              Code
-            </button>
-          </div>
+          {/* Center: Mode Switcher (only for workflow projects) or Project Type Badge */}
+          {projectType === "workflow" ? (
+            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
+              <button
+                onClick={() => setMode("workflow")}
+                className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  mode === "workflow"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <Workflow className="h-4 w-4" />
+                Workflow
+              </button>
+              <button
+                onClick={() => setMode("code")}
+                className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  mode === "code"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <Code2 className="h-4 w-4" />
+                Code
+              </button>
+            </div>
+          ) : (
+            <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 px-3 py-1.5">
+              <Code2 className="h-4 w-4 mr-1.5" />
+              Code Project
+            </Badge>
+          )}
 
           {/* Right: Team + Actions */}
           <div className="flex items-center gap-3">
@@ -334,7 +367,9 @@ export default function ProjectWorkspacePage() {
         <div className="flex flex-1 overflow-hidden">
           {/* Left Panel - Canvas (70%) */}
           <div className="flex w-[70%] flex-col border-r border-[#E5E7EB]">
-            {mode === "workflow" ? (
+            {projectType === "code" ? (
+              <CodeEditor />
+            ) : mode === "workflow" ? (
               <WorkflowCanvas
                 selectedNode={selectedNode}
                 setSelectedNode={setSelectedNode}
@@ -355,7 +390,7 @@ export default function ProjectWorkspacePage() {
               <div>
                 <p className="text-sm font-medium text-foreground">AI Assistant</p>
                 <p className="text-xs text-muted-foreground">
-                  {mode === "workflow" ? "Workflow Builder" : "Code Helper"}
+                  {projectType === "code" ? "Code Assistant" : (mode === "workflow" ? "Workflow Builder" : "Code Helper")}
                 </p>
               </div>
             </div>
@@ -433,19 +468,7 @@ export default function ProjectWorkspacePage() {
             {/* Quick Actions */}
             <div className="border-t border-[#E5E7EB] bg-white p-3">
               <div className="mb-3 flex flex-wrap gap-2">
-                {mode === "workflow" ? (
-                  <>
-                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Test workflow")}>
-                      Test Workflow
-                    </Button>
-                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Debug issues")}>
-                      Debug
-                    </Button>
-                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Add a new node")}>
-                      Add Node
-                    </Button>
-                  </>
-                ) : (
+                {projectType === "code" || mode === "code" ? (
                   <>
                     <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Explain this code")}>
                       Explain
@@ -455,6 +478,18 @@ export default function ProjectWorkspacePage() {
                     </Button>
                     <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Fix bugs in this file")}>
                       Fix Bugs
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Test workflow")}>
+                      Test Workflow
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Debug issues")}>
+                      Debug
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-7 text-xs border-[#E5E7EB]" onClick={() => setChatInput("Add a new node")}>
+                      Add Node
                     </Button>
                   </>
                 )}
