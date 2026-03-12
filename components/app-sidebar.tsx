@@ -8,13 +8,8 @@ import {
   Compass,
   Play,
   Wrench,
-  Code2,
   Workflow,
-  Terminal,
   Sparkles,
-  AppWindow,
-  Users,
-  Building2,
   Smartphone,
   Store,
   FileCode,
@@ -22,6 +17,7 @@ import {
   Trophy,
   Briefcase,
   BookOpen,
+  LayoutGrid,
 } from "lucide-react"
 
 const navigation = [
@@ -44,10 +40,7 @@ const navigation = [
   {
     title: "Layer 5 - AI Apps",
     items: [
-      { name: "Overview", href: "/layer5", icon: Home },
-      { name: "Native Apps", href: "/layer5/native-apps", icon: AppWindow },
-      { name: "Personal Agents", href: "/layer5/personal-agents", icon: Users },
-      { name: "Enterprise Agents", href: "/layer5/enterprise-agents", icon: Building2 },
+      { name: "My Apps", href: "/layer5", icon: LayoutGrid },
       { name: "Cross-Device", href: "/layer5/cross-device", icon: Smartphone },
     ],
   },

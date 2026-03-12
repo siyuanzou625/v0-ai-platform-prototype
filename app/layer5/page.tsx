@@ -1,789 +1,1040 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Card, CardContent } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
-  Layers,
-  CheckCircle,
-  AlertTriangle,
-  DollarSign,
-  Smartphone,
-  User,
-  Building,
-  RefreshCw,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  LayoutGrid,
+  List,
   Search,
-  Download,
-  X,
   Clock,
-  ArrowRight,
-  Settings,
+  ChevronDown,
+  ChevronUp,
+  Star,
+  Pencil,
+  X,
+  Send,
   ExternalLink,
+  AlertCircle,
+  Mic,
+  Mail,
+  Network,
+  Target,
+  BookOpen,
+  PenTool,
+  Heart,
+  Plane,
+  GraduationCap,
+  Briefcase,
+  Headphones,
+  UserPlus,
+  Shield,
+  BarChart3,
+  Presentation,
 } from "lucide-react"
 
-// Portfolio metrics
-const portfolioMetrics = {
-  totalDeployed: 24,
-  healthy: 21,
-  attentionNeeded: 3,
-  costToday: 47.20,
-  lastUpdated: "2025-03-12T14:30:00Z",
+// Type definitions
+type AppStatus = "ready" | "updating" | "offline"
+type AppSource = "Built-In" | "My Agent" | "Team"
+
+interface AppData {
+  id: string
+  name: string
+  tagline: string
+  category: string
+  source: AppSource
+  status: AppStatus
+  icon: string
+  lastUsed: string
+  owner?: string
+  editable?: boolean
+  requiresAccess?: boolean
+  quickActions: string[]
+  welcomeMessage: string
 }
 
-// App type metrics
-const appTypeMetrics = {
-  nativeApps: {
-    deployed: 8,
-    avgLoadTime: "1.2s",
-    errorRate: "0.3%",
-    status: "healthy",
-  },
-  personalAgents: {
-    active: 12,
-    avgTokens: 450,
-    satisfaction: 4.7,
-    status: "warning",
-    warningCount: 2,
-  },
-  enterpriseAgents: {
-    running: 3,
-    sla: "99.95%",
-    compliance: "verified",
-    status: "warning",
-    warningCount: 1,
-  },
-  crossDevice: {
-    synced: 5,
-    avgSyncLatency: "245ms",
-    handoffSuccess: "98.2%",
-    status: "healthy",
-  },
+interface RecentApp {
+  appId: string
+  name: string
+  lastUsed: string
+  taskInProgress: string
+  progress: number | null
+  icon: string
 }
 
-// Timeline events
-const timelineEvents = [
-  { time: "02:00", status: "ok", label: "All systems operational", x: 50 },
-  { time: "06:00", status: "warning", label: "Native Apps latency spike", affectedType: "nativeApps", x: 200 },
-  { time: "10:00", status: "critical", label: "Enterprise Agent SLA breach", affectedType: "enterpriseAgents", x: 350 },
-  { time: "14:00", status: "warning", label: "Cross-Device sync delay", affectedType: "crossDevice", x: 500 },
-  { time: "18:00", status: "ok", label: "All systems operational", x: 650 },
-  { time: "22:00", status: "warning", label: "Personal Agent token limit warning", affectedType: "personalAgents", x: 800 },
+// Built-In Apps Data
+const builtInApps: AppData[] = [
+  {
+    id: "app-001",
+    name: "Briefly AI",
+    tagline: "Meetings, summarized.",
+    category: "Productivity",
+    source: "Built-In",
+    status: "ready",
+    icon: "Mic",
+    lastUsed: "2 hours ago",
+    quickActions: ["Start Live Transcription", "Upload Recording", "View Past Summaries", "Export to Email"],
+    welcomeMessage: "Ready to summarize your next meeting. Upload a recording or start live transcription."
+  },
+  {
+    id: "app-002",
+    name: "InboxIQ AI",
+    tagline: "Your inbox, intelligently managed.",
+    category: "Productivity",
+    source: "Built-In",
+    status: "ready",
+    icon: "Mail",
+    lastUsed: "5 hours ago",
+    quickActions: ["Summarize Unread", "Draft Reply to Top 3", "Flag Urgent Emails", "Clean Up Inbox"],
+    welcomeMessage: "Your inbox, intelligently managed. What would you like to do?"
+  },
+  {
+    id: "app-003",
+    name: "MindLink AI",
+    tagline: "Connect your ideas.",
+    category: "Knowledge",
+    source: "Built-In",
+    status: "ready",
+    icon: "Network",
+    lastUsed: "1 day ago",
+    quickActions: ["Summarize Web Page", "Link Related Notes", "Create Knowledge Graph", "Export to Presentation"],
+    welcomeMessage: "Connect your ideas. What content would you like to organize?"
+  },
+  {
+    id: "app-004",
+    name: "FocusFlow AI",
+    tagline: "Work smarter, not harder.",
+    category: "Productivity",
+    source: "Built-In",
+    status: "updating",
+    icon: "Target",
+    lastUsed: "2 days ago",
+    quickActions: ["Show Priority Tasks", "Schedule Focus Time", "Weekly Productivity Report", "Balance Workload"],
+    welcomeMessage: "Work smarter, not harder. What's on your plate today?"
+  },
+  {
+    id: "app-005",
+    name: "LocalLens AI",
+    tagline: "Find anything. Privately.",
+    category: "Knowledge",
+    source: "Built-In",
+    status: "ready",
+    icon: "Search",
+    lastUsed: "3 days ago",
+    quickActions: ["Search Recent Files", "Find Photos from Last Month", "Locate Email Attachments", "Search Across All Apps"],
+    welcomeMessage: "Find anything. Privately. What are you looking for?"
+  },
+  {
+    id: "app-006",
+    name: "SlideCraft AI",
+    tagline: "From notes to slides, instantly.",
+    category: "Content",
+    source: "Built-In",
+    status: "ready",
+    icon: "Presentation",
+    lastUsed: "4 days ago",
+    quickActions: ["Convert Document to Slides", "Suggest Visuals", "Generate Speaker Notes", "Refine for Clarity"],
+    welcomeMessage: "From notes to slides, instantly. What would you like to present?"
+  },
 ]
 
-// Activity feed
-const activityFeed = [
-  { id: 1, user: "Zoey", initials: "ZD", action: "deployed", app: "Enterprise Sales Agent", environment: "Production", timestamp: "2 hours ago", status: "success" },
-  { id: 2, user: "Alex", initials: "AK", action: "updated configuration", app: "Personal Support Bot", environment: "Production", timestamp: "5 hours ago", status: "success" },
-  { id: 3, user: "System", initials: "SY", action: "detected high latency", app: "Native App Dashboard", environment: "Production", timestamp: "1 day ago", status: "warning" },
-  { id: 4, user: "Sarah", initials: "SC", action: "resolved SLA breach", app: "Enterprise Data Pipeline", environment: "Production", timestamp: "1 day ago", status: "success" },
-  { id: 5, user: "System", initials: "SY", action: "sync failed", app: "Cross-Device Handoff", environment: "Production", timestamp: "2 days ago", status: "error" },
-  { id: 6, user: "Michael", initials: "MJ", action: "added new template", app: "Personal Agent Template", environment: "Development", timestamp: "3 days ago", status: "success" },
-  { id: 7, user: "System", initials: "SY", action: "completed backup", app: "All Enterprise Agents", environment: "Production", timestamp: "3 days ago", status: "success" },
+// Personal Agents Data
+const personalAgents: AppData[] = [
+  {
+    id: "agent-001",
+    name: "Research Assistant",
+    tagline: "Deep dive into any topic.",
+    category: "Personal Assistants",
+    source: "My Agent",
+    status: "ready",
+    icon: "BookOpen",
+    owner: "Current User",
+    lastUsed: "1 day ago",
+    editable: true,
+    quickActions: ["Research Topic", "Summarize Sources", "Create Bibliography", "Fact Check"],
+    welcomeMessage: "Ready to help you research. What topic would you like to explore?"
+  },
+  {
+    id: "agent-002",
+    name: "Writing Coach",
+    tagline: "Improve your writing style.",
+    category: "Personal Assistants",
+    source: "My Agent",
+    status: "ready",
+    icon: "PenTool",
+    owner: "Current User",
+    lastUsed: "3 days ago",
+    editable: true,
+    quickActions: ["Review Draft", "Suggest Improvements", "Check Grammar", "Adjust Tone"],
+    welcomeMessage: "Let's improve your writing together. Paste your text to get started."
+  },
+  {
+    id: "agent-003",
+    name: "Fitness Bot",
+    tagline: "Your personal health companion.",
+    category: "Personal Assistants",
+    source: "My Agent",
+    status: "ready",
+    icon: "Heart",
+    owner: "Current User",
+    lastUsed: "1 week ago",
+    editable: true,
+    quickActions: ["Log Workout", "Suggest Exercise", "Track Progress", "Meal Ideas"],
+    welcomeMessage: "Ready to help you stay healthy. What's your fitness goal today?"
+  },
+  {
+    id: "agent-004",
+    name: "Travel Planner",
+    tagline: "Plan trips with AI precision.",
+    category: "Personal Assistants",
+    source: "My Agent",
+    status: "ready",
+    icon: "Plane",
+    owner: "Current User",
+    lastUsed: "2 weeks ago",
+    editable: true,
+    quickActions: ["Plan Itinerary", "Find Flights", "Book Hotels", "Local Recommendations"],
+    welcomeMessage: "Where would you like to go? I'll help plan the perfect trip."
+  },
+  {
+    id: "agent-005",
+    name: "Learning Companion",
+    tagline: "Master new skills faster.",
+    category: "Personal Assistants",
+    source: "My Agent",
+    status: "ready",
+    icon: "GraduationCap",
+    owner: "Current User",
+    lastUsed: "3 weeks ago",
+    editable: true,
+    quickActions: ["Create Study Plan", "Quiz Me", "Explain Concept", "Track Progress"],
+    welcomeMessage: "What would you like to learn today? I'll create a personalized path."
+  },
 ]
 
-// Mock incident data
-const mockIncident = {
-  title: "Enterprise Agent SLA Breach",
-  severity: "critical",
-  affectedApps: ["Enterprise Sales Agent", "Data Pipeline v2"],
-  rootCause: "Database connection pool exhausted during peak load",
-  detected: "2025-03-12 10:15 AM",
-  alerted: "2025-03-12 10:17 AM",
-  resolved: "2025-03-12 11:30 AM",
-  resolutionSteps: [
-    "Increased connection pool size from 50 to 100",
-    "Restarted affected agent instances",
-    "Added auto-scaling rule for future peak loads",
-  ],
+// Enterprise Agents Data
+const enterpriseAgents: AppData[] = [
+  {
+    id: "ent-001",
+    name: "Sales Qualifier",
+    tagline: "Automate lead qualification.",
+    category: "Work Tools",
+    source: "Team",
+    status: "ready",
+    icon: "Briefcase",
+    owner: "Sales Team",
+    lastUsed: "1 week ago",
+    requiresAccess: false,
+    quickActions: ["Qualify Lead", "Score Prospect", "Generate Report", "Schedule Follow-up"],
+    welcomeMessage: "Ready to qualify leads. Paste lead information to get started."
+  },
+  {
+    id: "ent-002",
+    name: "Support Router",
+    tagline: "Intelligent ticket routing.",
+    category: "Work Tools",
+    source: "Team",
+    status: "ready",
+    icon: "Headphones",
+    owner: "Support Team",
+    lastUsed: "2 weeks ago",
+    requiresAccess: false,
+    quickActions: ["Route Ticket", "Suggest Response", "Escalate Issue", "View Analytics"],
+    welcomeMessage: "Paste a support ticket and I'll route it to the right team."
+  },
+  {
+    id: "ent-003",
+    name: "HR Onboarding Bot",
+    tagline: "Streamline new hire setup.",
+    category: "Work Tools",
+    source: "Team",
+    status: "ready",
+    icon: "UserPlus",
+    owner: "HR Team",
+    lastUsed: "1 month ago",
+    requiresAccess: false,
+    quickActions: ["Start Onboarding", "Check Checklist", "Schedule Training", "Send Welcome Kit"],
+    welcomeMessage: "Welcome! Let's get your new hire set up. Enter their details to begin."
+  },
+  {
+    id: "ent-004",
+    name: "Compliance Checker",
+    tagline: "Ensure regulatory compliance.",
+    category: "Work Tools",
+    source: "Team",
+    status: "ready",
+    icon: "Shield",
+    owner: "Legal Team",
+    lastUsed: "3 days ago",
+    requiresAccess: false,
+    quickActions: ["Check Document", "Audit Trail", "Flag Issues", "Generate Report"],
+    welcomeMessage: "Upload a document and I'll check it for compliance issues."
+  },
+  {
+    id: "ent-005",
+    name: "Data Analyst",
+    tagline: "Insights from your data.",
+    category: "Work Tools",
+    source: "Team",
+    status: "ready",
+    icon: "BarChart3",
+    owner: "Analytics Team",
+    lastUsed: "5 days ago",
+    requiresAccess: false,
+    quickActions: ["Analyze Dataset", "Create Visualization", "Find Trends", "Export Report"],
+    welcomeMessage: "Ready to analyze your data. Upload a file or describe what you need."
+  },
+]
+
+// Recently Used Apps
+const recentlyUsed: RecentApp[] = [
+  { appId: "app-001", name: "Briefly AI", lastUsed: "2 hours ago", taskInProgress: "Meeting summary in progress", progress: 65, icon: "Mic" },
+  { appId: "app-002", name: "InboxIQ AI", lastUsed: "5 hours ago", taskInProgress: "3 drafts pending review", progress: null, icon: "Mail" },
+  { appId: "app-003", name: "MindLink AI", lastUsed: "1 day ago", taskInProgress: "Knowledge graph updated", progress: 100, icon: "Network" },
+  { appId: "app-004", name: "FocusFlow AI", lastUsed: "2 days ago", taskInProgress: "Weekly review ready", progress: 100, icon: "Target" },
+  { appId: "app-005", name: "LocalLens AI", lastUsed: "3 days ago", taskInProgress: "Search history available", progress: null, icon: "Search" },
+]
+
+// Favorites (user-pinned apps)
+const defaultFavorites = ["app-001", "agent-001", "ent-004"]
+
+// Icon mapping
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Mic,
+  Mail,
+  Network,
+  Target,
+  Search,
+  Presentation,
+  BookOpen,
+  PenTool,
+  Heart,
+  Plane,
+  GraduationCap,
+  Briefcase,
+  Headphones,
+  UserPlus,
+  Shield,
+  BarChart3,
 }
 
-export default function Layer5OverviewPage() {
+// Get status color
+const getStatusColor = (status: AppStatus) => {
+  switch (status) {
+    case "ready": return "bg-emerald-500"
+    case "updating": return "bg-amber-500"
+    case "offline": return "bg-gray-400"
+  }
+}
+
+// Get source badge style
+const getSourceBadgeStyle = (source: AppSource) => {
+  switch (source) {
+    case "Built-In": return "bg-[#F5F7FA] text-[#374151]"
+    case "My Agent": return "bg-blue-50 text-blue-600"
+    case "Team": return "bg-purple-50 text-purple-600"
+  }
+}
+
+export default function MyAppsPage() {
   const router = useRouter()
-  const [appTypeFilter, setAppTypeFilter] = useState("all")
-  const [environmentFilter, setEnvironmentFilter] = useState("all")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [dateRangeFilter, setDateRangeFilter] = useState("24h")
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  
+  // View and filter state
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
-  const [showIncidentModal, setShowIncidentModal] = useState(false)
-  const [selectedEvent, setSelectedEvent] = useState<typeof timelineEvents[0] | null>(null)
-  const [isRefreshing, setIsRefreshing] = useState(false)
-
-  const hasActiveFilters = appTypeFilter !== "all" || environmentFilter !== "all" || statusFilter !== "all" || searchQuery !== ""
-
-  const clearFilters = () => {
-    setAppTypeFilter("all")
-    setEnvironmentFilter("all")
-    setStatusFilter("all")
-    setSearchQuery("")
+  const [activeFilters, setActiveFilters] = useState<AppSource[]>([])
+  const [recentSearches, setRecentSearches] = useState<string[]>(["meeting notes", "sales report", "inbox"])
+  const [showRecentSearches, setShowRecentSearches] = useState(false)
+  
+  // Category collapse state
+  const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({})
+  
+  // Favorites state
+  const [favorites, setFavorites] = useState<string[]>(defaultFavorites)
+  
+  // App launch modal state
+  const [selectedApp, setSelectedApp] = useState<AppData | null>(null)
+  const [chatMessages, setChatMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([])
+  const [chatInput, setChatInput] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
+  
+  // Keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault()
+        searchInputRef.current?.focus()
+      }
+      if (e.key === "Escape" && selectedApp) {
+        setSelectedApp(null)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [selectedApp])
+  
+  // Get all apps
+  const allApps = [...builtInApps, ...personalAgents, ...enterpriseAgents]
+  
+  // Filter apps
+  const filteredApps = allApps.filter(app => {
+    const matchesSearch = !searchQuery || 
+      app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.tagline.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesFilter = activeFilters.length === 0 || activeFilters.includes(app.source)
+    return matchesSearch && matchesFilter
+  })
+  
+  // Get apps by category
+  const productivityApps = filteredApps.filter(app => app.source === "Built-In")
+  const personalApps = filteredApps.filter(app => app.source === "My Agent")
+  const workApps = filteredApps.filter(app => app.source === "Team")
+  const favoriteApps = allApps.filter(app => favorites.includes(app.id))
+  
+  // Toggle filter
+  const toggleFilter = (source: AppSource) => {
+    setActiveFilters(prev => 
+      prev.includes(source) 
+        ? prev.filter(s => s !== source)
+        : [...prev, source]
+    )
   }
-
-  const handleRefresh = () => {
-    setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 1000)
+  
+  // Toggle category collapse
+  const toggleCategory = (category: string) => {
+    setCollapsedCategories(prev => ({ ...prev, [category]: !prev[category] }))
   }
-
-  const handleTimelineEventClick = (event: typeof timelineEvents[0]) => {
-    if (event.status !== "ok") {
-      setSelectedEvent(event)
-      setShowIncidentModal(true)
+  
+  // Toggle favorite
+  const toggleFavorite = (appId: string) => {
+    setFavorites(prev => 
+      prev.includes(appId)
+        ? prev.filter(id => id !== appId)
+        : [...prev, appId]
+    )
+  }
+  
+  // Launch app
+  const launchApp = (app: AppData, resume = false) => {
+    setSelectedApp(app)
+    setChatMessages([
+      { role: "assistant", content: app.welcomeMessage }
+    ])
+    if (resume) {
+      setChatMessages(prev => [...prev, { role: "assistant", content: "Resuming your previous session..." }])
     }
   }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "ok":
-      case "healthy":
-      case "success":
-        return "#22C55E"
-      case "warning":
-        return "#F59E0B"
-      case "critical":
-      case "error":
-        return "#ee3224"
-      default:
-        return "#6B7280"
-    }
+  
+  // Send chat message
+  const sendMessage = () => {
+    if (!chatInput.trim() || !selectedApp) return
+    
+    const userMessage = chatInput.trim()
+    setChatMessages(prev => [...prev, { role: "user", content: userMessage }])
+    setChatInput("")
+    setIsTyping(true)
+    
+    // Simulate AI response
+    setTimeout(() => {
+      setIsTyping(false)
+      const responses: Record<string, string> = {
+        "app-001": "I've analyzed your meeting from March 12. Key decisions: 1) Q2 budget approved, 2) New hire starting April 1. Action items: 3 tasks assigned to you.",
+        "app-002": "You have 47 unread emails. Top 3 require attention: 1) Budget approval from Finance (due today), 2) Client meeting request, 3) Team feedback deadline.",
+        "app-003": "I found 12 related notes about 'Q2 Planning'. Would you like me to create a structured outline or connect them to your meeting notes?",
+        "app-004": "Based on your deadlines, here are your top 3 priorities: 1) Complete project proposal (due tomorrow), 2) Review team feedback (due EOD), 3) Schedule client call (flexible).",
+        "app-005": "I found 8 files matching your search edited last week. 3 are in Downloads, 4 in Documents, 1 attached to an email from Sarah.",
+        "app-006": "I've created 12 slides from your document. Suggested improvements: 1) Add chart on slide 5, 2) Simplify text on slide 8, 3) Include summary slide at end.",
+      }
+      setChatMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: responses[selectedApp.id] || "I understand. How can I help you with that?"
+      }])
+    }, 1500)
   }
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "success":
-        return <Badge className="bg-emerald-50 text-emerald-600 border border-emerald-200">Success</Badge>
-      case "warning":
-        return <Badge className="bg-amber-50 text-amber-600 border border-amber-200">Warning</Badge>
-      case "error":
-        return <Badge className="bg-red-50 text-red-600 border border-red-200">Error</Badge>
-      default:
-        return null
+  
+  // Handle search submit
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim() && !recentSearches.includes(searchQuery.trim())) {
+      setRecentSearches(prev => [searchQuery.trim(), ...prev.slice(0, 4)])
     }
+    setShowRecentSearches(false)
+  }
+  
+  // App Card Component
+  const AppCard = ({ app, showEditButton = false }: { app: AppData; showEditButton?: boolean }) => {
+    const IconComponent = iconMap[app.icon] || Briefcase
+    const isFavorite = favorites.includes(app.id)
+    
+    return (
+      <Card 
+        className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224] hover:shadow-md"
+      >
+        <CardContent className="p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB] shadow-sm">
+                <IconComponent className="h-6 w-6 text-[#ee3224]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-foreground truncate">{app.name}</h3>
+                  <div className={`h-2 w-2 rounded-full ${getStatusColor(app.status)}`} />
+                </div>
+                <p className="text-sm text-muted-foreground truncate">{app.tagline}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-7 w-7"
+                onClick={(e) => { e.stopPropagation(); toggleFavorite(app.id) }}
+              >
+                <Star className={`h-4 w-4 ${isFavorite ? "fill-amber-400 text-amber-400" : "text-muted-foreground"}`} />
+              </Button>
+              {showEditButton && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-7 w-7"
+                  onClick={(e) => { e.stopPropagation(); router.push("/layer4/projects") }}
+                >
+                  <Pencil className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              )}
+            </div>
+          </div>
+          
+          <div className="mt-3 flex items-center justify-between">
+            <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(app.source)}`}>
+              {app.source}
+            </Badge>
+            {app.owner && app.source === "Team" && (
+              <span className="text-xs text-muted-foreground">Owned by: {app.owner}</span>
+            )}
+          </div>
+          
+          <div className="mt-4">
+            <Button 
+              className="w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+              variant="outline"
+              onClick={() => launchApp(app)}
+            >
+              {app.requiresAccess ? "Request Access" : "Launch"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+  
+  // Category Section Component
+  const CategorySection = ({ 
+    title, 
+    apps, 
+    categoryKey,
+    showEditButton = false 
+  }: { 
+    title: string
+    apps: AppData[]
+    categoryKey: string
+    showEditButton?: boolean
+  }) => {
+    const isCollapsed = collapsedCategories[categoryKey]
+    
+    if (apps.length === 0) return null
+    
+    return (
+      <div className="mb-6">
+        <button 
+          className="flex items-center gap-2 w-full text-left mb-4 group"
+          onClick={() => toggleCategory(categoryKey)}
+        >
+          {isCollapsed ? (
+            <ChevronUp className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          )}
+          <span className="text-lg font-semibold text-foreground">{title}</span>
+          <Badge variant="secondary" className="bg-[#F5F7FA] text-muted-foreground text-xs">
+            {apps.length} apps
+          </Badge>
+        </button>
+        
+        {!isCollapsed && (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {apps.map(app => (
+              <AppCard key={app.id} app={app} showEditButton={showEditButton} />
+            ))}
+          </div>
+        )}
+      </div>
+    )
   }
 
   return (
     <AppLayout>
-      <div className="flex flex-col h-full">
-        {/* Top Header Bar */}
-        <div className="border-b border-[#E5E7EB] bg-white px-6 py-4">
-          {/* Breadcrumb */}
-          <div className="mb-4">
-            <span className="text-sm text-muted-foreground">Layer 5 / </span>
-            <span className="text-sm font-medium text-foreground">Overview</span>
-          </div>
-
-          {/* Global Filter Bar */}
-          <div className="flex items-center gap-3 flex-wrap">
-            <Select value={appTypeFilter} onValueChange={setAppTypeFilter}>
-              <SelectTrigger className="w-[160px] h-9 border-[#E5E7EB]">
-                <SelectValue placeholder="App Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="native">Native Apps</SelectItem>
-                <SelectItem value="personal">Personal Agents</SelectItem>
-                <SelectItem value="enterprise">Enterprise Agents</SelectItem>
-                <SelectItem value="crossdevice">Cross-Device</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={environmentFilter} onValueChange={setEnvironmentFilter}>
-              <SelectTrigger className="w-[140px] h-9 border-[#E5E7EB]">
-                <SelectValue placeholder="Environment" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Environments</SelectItem>
-                <SelectItem value="development">Development</SelectItem>
-                <SelectItem value="staging">Staging</SelectItem>
-                <SelectItem value="production">Production</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[130px] h-9 border-[#E5E7EB]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="healthy">Healthy</SelectItem>
-                <SelectItem value="warning">Warning</SelectItem>
-                <SelectItem value="critical">Critical</SelectItem>
-                <SelectItem value="paused">Paused</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={dateRangeFilter} onValueChange={setDateRangeFilter}>
-              <SelectTrigger className="w-[140px] h-9 border-[#E5E7EB]">
-                <SelectValue placeholder="Date Range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1h">Last Hour</SelectItem>
-                <SelectItem value="24h">Last 24 Hours</SelectItem>
-                <SelectItem value="7d">Last 7 Days</SelectItem>
-                <SelectItem value="30d">Last 30 Days</SelectItem>
-                <SelectItem value="custom">Custom</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="relative flex-1 min-w-[200px] max-w-[300px]">
+      <div className="flex flex-col h-full bg-[#F5F7FA]">
+        {/* Header */}
+        <div className="bg-white border-b border-[#E5E7EB] px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Left: Title */}
+            <div className="flex items-center gap-2">
+              <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
+              <h1 className="text-xl font-semibold text-foreground">My Apps</h1>
+            </div>
+            
+            {/* Center: Search */}
+            <div className="relative w-[400px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search apps by name, owner, or tag"
+                ref={searchInputRef}
+                placeholder="Search apps... (Cmd/Ctrl+K)"
+                className="pl-10 pr-8 border-[#E5E7EB]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 h-9 border-[#E5E7EB]"
+                onFocus={() => setShowRecentSearches(true)}
+                onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
               />
-            </div>
-
-            {hasActiveFilters && (
-              <Button variant="ghost" size="sm" onClick={clearFilters} className="h-9 text-muted-foreground">
-                <X className="h-4 w-4 mr-1" />
-                Clear Filters
-              </Button>
-            )}
-
-            <div className="flex-1" />
-
-            <Button variant="outline" size="sm" className="h-9 border-[#E5E7EB]" onClick={handleRefresh} disabled={isRefreshing}>
-              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
-              Refresh
-            </Button>
-
-            <Button variant="outline" size="sm" className="h-9 border-[#E5E7EB]">
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
-
-            <Avatar className="h-9 w-9 border border-[#E5E7EB]">
-              <AvatarFallback className="bg-muted text-muted-foreground text-sm">ZD</AvatarFallback>
-            </Avatar>
-          </div>
-
-          {/* Active Filter Badges */}
-          {hasActiveFilters && (
-            <div className="flex items-center gap-2 mt-3">
-              {appTypeFilter !== "all" && (
-                <Badge variant="secondary" className="bg-[#F5F7FA] text-foreground">
-                  Type: {appTypeFilter}
-                  <button onClick={() => setAppTypeFilter("all")} className="ml-1.5 hover:text-[#ee3224]">
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              )}
-              {environmentFilter !== "all" && (
-                <Badge variant="secondary" className="bg-[#F5F7FA] text-foreground">
-                  Env: {environmentFilter}
-                  <button onClick={() => setEnvironmentFilter("all")} className="ml-1.5 hover:text-[#ee3224]">
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              )}
-              {statusFilter !== "all" && (
-                <Badge variant="secondary" className="bg-[#F5F7FA] text-foreground">
-                  Status: {statusFilter}
-                  <button onClick={() => setStatusFilter("all")} className="ml-1.5 hover:text-[#ee3224]">
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              )}
               {searchQuery && (
-                <Badge variant="secondary" className="bg-[#F5F7FA] text-foreground">
-                  Search: {searchQuery}
-                  <button onClick={() => setSearchQuery("")} className="ml-1.5 hover:text-[#ee3224]">
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
+                <button 
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  onClick={() => setSearchQuery("")}
+                >
+                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                </button>
+              )}
+              
+              {/* Recent Searches Dropdown */}
+              {showRecentSearches && recentSearches.length > 0 && !searchQuery && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#E5E7EB] rounded shadow-md z-10">
+                  <div className="p-2">
+                    <p className="text-xs text-muted-foreground px-2 mb-1">Recent Searches</p>
+                    {recentSearches.map((search, idx) => (
+                      <button
+                        key={idx}
+                        className="w-full text-left px-2 py-1.5 text-sm text-foreground hover:bg-[#F5F7FA] rounded"
+                        onClick={() => setSearchQuery(search)}
+                      >
+                        {search}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
-          )}
+            
+            {/* Right: View Toggle + Avatar */}
+            <div className="flex items-center gap-4">
+              {/* View Toggle */}
+              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "grid"
+                      ? "bg-white text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "list"
+                      ? "bg-white text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <List className="h-4 w-4" />
+                </button>
+              </div>
+              
+              {/* User Avatar */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8 border border-[#E5E7EB]">
+                      <AvatarFallback className="text-xs bg-[#ee3224] text-white">ZD</AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/layer6/creator-hub")}>Creator Hub</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+          
+          {/* Filter Chips */}
+          <div className="flex items-center gap-2 mt-4">
+            <button
+              onClick={() => setActiveFilters([])}
+              className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                activeFilters.length === 0
+                  ? "bg-[#ee3224] text-white"
+                  : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+              }`}
+            >
+              All
+            </button>
+            {(["Built-In", "My Agent", "Team"] as AppSource[]).map(source => (
+              <button
+                key={source}
+                onClick={() => toggleFilter(source)}
+                className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                  activeFilters.includes(source)
+                    ? "bg-[#ee3224] text-white"
+                    : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+                }`}
+              >
+                {source === "My Agent" ? "My Agents" : source === "Team" ? "Team Agents" : source}
+              </button>
+            ))}
+            {activeFilters.length > 0 && (
+              <button 
+                onClick={() => setActiveFilters([])}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
-
+        
         {/* Main Content */}
         <ScrollArea className="flex-1">
-          <div className="p-6 space-y-6">
-            {/* Section 1: Portfolio Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Total Deployed */}
-              <Card className="border border-[#E5E7EB] bg-white shadow-sm transition-all hover:shadow-md hover:border-[#ee3224]/30 cursor-pointer group">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-gray-100">
-                      <Layers className="h-5 w-5 text-gray-600" />
+          <div className="p-6">
+            {viewMode === "grid" ? (
+              <>
+                {/* Continue Section (Recently Used) */}
+                {!searchQuery && activeFilters.length === 0 && (
+                  <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <h2 className="text-lg font-semibold text-foreground">Continue</h2>
                     </div>
-                    <div className="h-2.5 w-2.5 rounded-full bg-gray-400" />
+                    <div className="flex gap-4 overflow-x-auto pb-2">
+                      {recentlyUsed.map(recent => {
+                        const app = allApps.find(a => a.id === recent.appId)
+                        if (!app) return null
+                        const IconComponent = iconMap[recent.icon] || Briefcase
+                        
+                        return (
+                          <Card 
+                            key={recent.appId}
+                            className="flex-shrink-0 w-[280px] cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224] hover:shadow-md"
+                          >
+                            <CardContent className="p-4">
+                              <div className="flex items-center gap-3">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB] shadow-sm">
+                                  <IconComponent className="h-6 w-6 text-[#ee3224]" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-foreground truncate">{recent.name}</h3>
+                                  <p className="text-xs text-muted-foreground">{recent.lastUsed}</p>
+                                </div>
+                              </div>
+                              <p className="mt-2 text-sm text-muted-foreground truncate">{recent.taskInProgress}</p>
+                              {recent.progress !== null && recent.progress < 100 && (
+                                <Progress value={recent.progress} className="h-1 mt-2" />
+                              )}
+                              <Button 
+                                className="w-full mt-3 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => launchApp(app, true)}
+                              >
+                                Resume
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        )
+                      })}
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-1">Total Deployed</p>
-                  <p className="text-3xl font-bold text-foreground">{portfolioMetrics.totalDeployed}</p>
-                  <button className="mt-3 text-sm font-medium text-[#ee3224] group-hover:underline flex items-center gap-1">
-                    View All <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </CardContent>
+                )}
+                
+                {/* Favorites Section */}
+                {favoriteApps.length > 0 && !searchQuery && activeFilters.length === 0 && (
+                  <CategorySection 
+                    title="Favorites" 
+                    apps={favoriteApps} 
+                    categoryKey="favorites"
+                  />
+                )}
+                
+                {/* Productivity (Built-In Apps) */}
+                <CategorySection 
+                  title="Productivity" 
+                  apps={productivityApps} 
+                  categoryKey="productivity"
+                />
+                
+                {/* Personal Assistants */}
+                <CategorySection 
+                  title="Personal Assistants" 
+                  apps={personalApps} 
+                  categoryKey="personal"
+                  showEditButton
+                />
+                
+                {/* Work Tools */}
+                <CategorySection 
+                  title="Work Tools" 
+                  apps={workApps} 
+                  categoryKey="work"
+                />
+                
+                {/* No Results */}
+                {filteredApps.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <Search className="h-12 w-12 text-muted-foreground mb-4" />
+                    <h3 className="text-lg font-medium text-foreground mb-2">No apps match '{searchQuery}'</h3>
+                    <p className="text-muted-foreground">Try browsing categories or adjusting your filters.</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              /* List View */
+              <Card className="border border-[#E5E7EB]">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-[#F5F7FA]">
+                      <TableHead className="w-12">
+                        <Checkbox />
+                      </TableHead>
+                      <TableHead>App Name</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Source</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Last Used</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredApps.map(app => {
+                      const IconComponent = iconMap[app.icon] || Briefcase
+                      const isFavorite = favorites.includes(app.id)
+                      
+                      return (
+                        <TableRow 
+                          key={app.id}
+                          className="group hover:bg-[#F5F7FA] hover:border-l-2 hover:border-l-[#ee3224]"
+                        >
+                          <TableCell>
+                            <Checkbox />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB]">
+                                <IconComponent className="h-4 w-4 text-[#ee3224]" />
+                              </div>
+                              <span className="font-medium">{app.name}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">{app.category}</TableCell>
+                          <TableCell>
+                            <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(app.source)}`}>
+                              {app.source}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <div className={`h-2 w-2 rounded-full ${getStatusColor(app.status)}`} />
+                              <span className="text-sm capitalize">{app.status}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">{app.lastUsed}</TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                className="border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+                                onClick={() => launchApp(app)}
+                              >
+                                Launch
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => toggleFavorite(app.id)}
+                              >
+                                <Star className={`h-4 w-4 ${isFavorite ? "fill-amber-400 text-amber-400" : "text-muted-foreground"}`} />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
               </Card>
-
-              {/* Healthy */}
-              <Card className="border border-[#E5E7EB] bg-white shadow-sm transition-all hover:shadow-md hover:border-[#ee3224]/30 cursor-pointer group">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-emerald-50">
-                      <CheckCircle className="h-5 w-5 text-emerald-500" />
-                    </div>
-                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-1">Healthy</p>
-                  <p className="text-3xl font-bold text-foreground">{portfolioMetrics.healthy}</p>
-                  <button 
-                    className="mt-3 text-sm font-medium text-[#ee3224] group-hover:underline flex items-center gap-1"
-                    onClick={() => setStatusFilter("healthy")}
-                  >
-                    View Healthy <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </CardContent>
-              </Card>
-
-              {/* Attention Needed */}
-              <Card className="border border-[#E5E7EB] bg-white shadow-sm transition-all hover:shadow-md hover:border-[#ee3224]/30 cursor-pointer group">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-red-50">
-                      <AlertTriangle className="h-5 w-5 text-[#ee3224]" />
-                    </div>
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#ee3224]" />
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-1">Attention Needed</p>
-                  <p className="text-3xl font-bold text-foreground">{portfolioMetrics.attentionNeeded}</p>
-                  <button 
-                    className="mt-3 text-sm font-medium text-[#ee3224] group-hover:underline flex items-center gap-1"
-                    onClick={() => setStatusFilter("warning")}
-                  >
-                    Fix Issues <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </CardContent>
-              </Card>
-
-              {/* Cost Today */}
-              <Card className="border border-[#E5E7EB] bg-white shadow-sm transition-all hover:shadow-md hover:border-[#ee3224]/30 cursor-pointer group">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-gray-100">
-                      <DollarSign className="h-5 w-5 text-gray-600" />
-                    </div>
-                    <div className="h-2.5 w-2.5 rounded-full bg-gray-400" />
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-1">Cost Today</p>
-                  <p className="text-3xl font-bold text-foreground">${portfolioMetrics.costToday.toFixed(2)}</p>
-                  <button className="mt-3 text-sm font-medium text-[#ee3224] group-hover:underline flex items-center gap-1">
-                    Cost Report <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Section 2: Cross-Type Health Timeline */}
-            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg font-semibold">System Health Timeline (Last 24 Hours)</CardTitle>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-4 text-xs">
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                        <span className="text-muted-foreground">All systems operational</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-                        <span className="text-muted-foreground">Minor issue detected</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded-full bg-[#ee3224]" />
-                        <span className="text-muted-foreground">Critical alert</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {/* Timeline Chart */}
-                <div className="relative h-32 mt-4">
-                  {/* Y-axis labels */}
-                  <div className="absolute left-0 top-0 bottom-8 w-20 flex flex-col justify-between text-xs text-muted-foreground">
-                    <span>Critical</span>
-                    <span>Minor</span>
-                    <span>All OK</span>
-                  </div>
-
-                  {/* Chart area */}
-                  <div className="ml-24 mr-4 h-full relative">
-                    {/* Chart content area (excludes x-axis labels) */}
-                    <div className="absolute inset-0 bottom-6">
-                      {/* Grid lines */}
-                      <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                        <div className="border-b border-dashed border-[#E5E7EB]" />
-                        <div className="border-b border-dashed border-[#E5E7EB]" />
-                        <div className="border-b border-[#E5E7EB]" />
-                      </div>
-
-                      {/* Timeline line and event markers as SVG */}
-                      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 900 80" preserveAspectRatio="none">
-                        {/* Timeline path */}
-                        <path
-                          d="M 50 60 L 200 40 L 350 10 L 500 40 L 650 60 L 800 40"
-                          fill="none"
-                          stroke="#ee3224"
-                          strokeWidth="2"
-                        />
-                      </svg>
-
-                      {/* Event markers as SVG overlay for perfect alignment */}
-                      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 900 80" preserveAspectRatio="none" style={{ overflow: "visible" }}>
-                        {timelineEvents.map((event, idx) => {
-                          const yPos = event.status === "ok" ? 60 : event.status === "warning" ? 40 : 10
-                          const fillColor = event.status === "ok" ? "#10b981" : event.status === "warning" ? "#f59e0b" : "#ee3224"
-                          return (
-                            <g key={idx} className="cursor-pointer" onClick={() => handleTimelineEventClick(event)}>
-                              <circle
-                                cx={event.x}
-                                cy={yPos}
-                                r="8"
-                                fill={fillColor}
-                                stroke="white"
-                                strokeWidth="2"
-                                className="transition-transform hover:scale-125"
-                                style={{ transformOrigin: `${event.x}px ${yPos}px` }}
-                              />
-                              <title>{`${event.time}: ${event.label}`}</title>
-                            </g>
-                          )
-                        })}
-                      </svg>
-                    </div>
-
-                    {/* X-axis labels */}
-                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground">
-                      <span>00:00</span>
-                      <span>04:00</span>
-                      <span>08:00</span>
-                      <span>12:00</span>
-                      <span>16:00</span>
-                      <span>20:00</span>
-                      <span>24:00</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action buttons */}
-                <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="border-[#E5E7EB]"
-                    onClick={() => router.push("/layer5/incidents")}
-                  >
-                    View Incident Details
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="border-[#E5E7EB]"
-                    onClick={() => {
-                      // Create a simple export notification - in production would generate PNG/PDF
-                      const format = window.confirm("Click OK to export as PNG, Cancel for PDF") ? "PNG" : "PDF"
-                      alert(`Exporting timeline as ${format}. In production, this would download the chart.`)
-                    }}
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Export Timeline
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Section 3: Type-Specific Quick View Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Native Apps */}
-              <Card className="border border-[#E5E7EB] bg-white shadow-sm transition-all hover:shadow-md hover:border-[#ee3224]/30 group">
-                <CardContent className="p-5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-blue-50">
-                      <Smartphone className="h-5 w-5 text-blue-500" />
-                    </div>
-                    <h3 className="font-semibold text-foreground">Native Applications</h3>
-                  </div>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Deployed</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-medium">{appTypeMetrics.nativeApps.deployed}</span>
-                        <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Avg Load</span>
-                      <span className="font-medium">{appTypeMetrics.nativeApps.avgLoadTime}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Error Rate</span>
-                      <span className="font-medium">{appTypeMetrics.nativeApps.errorRate}</span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-emerald-600 mb-4">All systems operational</p>
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white transition-colors"
-                    onClick={() => router.push("/layer5/native-apps")}
-                  >
-                    View Details
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Personal Agents */}
-              <Card className="border border-[#E5E7EB] bg-white shadow-sm transition-all hover:shadow-md hover:border-[#ee3224]/30 group">
-                <CardContent className="p-5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-purple-50">
-                      <User className="h-5 w-5 text-purple-500" />
-                    </div>
-                    <h3 className="font-semibold text-foreground">Personal Agents</h3>
-                  </div>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Active</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-medium">{appTypeMetrics.personalAgents.active}</span>
-                        <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Avg Tokens</span>
-                      <span className="font-medium">{appTypeMetrics.personalAgents.avgTokens}/conv</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Satisfaction</span>
-                      <span className="font-medium">{appTypeMetrics.personalAgents.satisfaction} stars</span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-amber-600 mb-4">{appTypeMetrics.personalAgents.warningCount} agents need retraining</p>
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white transition-colors"
-                    onClick={() => router.push("/layer5/personal-agents")}
-                  >
-                    View Details
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Enterprise Agents */}
-              <Card className="border border-[#E5E7EB] bg-white shadow-sm transition-all hover:shadow-md hover:border-[#ee3224]/30 group">
-                <CardContent className="p-5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-orange-50">
-                      <Building className="h-5 w-5 text-orange-500" />
-                    </div>
-                    <h3 className="font-semibold text-foreground">Enterprise Agents</h3>
-                  </div>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Running</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-medium">{appTypeMetrics.enterpriseAgents.running}</span>
-                        <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">SLA</span>
-                      <span className="font-medium">{appTypeMetrics.enterpriseAgents.sla}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Compliance</span>
-                      <span className="font-medium capitalize">{appTypeMetrics.enterpriseAgents.compliance}</span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-amber-600 mb-4">{appTypeMetrics.enterpriseAgents.warningCount} SLA warning (response time)</p>
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white transition-colors"
-                    onClick={() => router.push("/layer5/enterprise-agents")}
-                  >
-                    View Details
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Cross-Device */}
-              <Card className="border border-[#E5E7EB] bg-white shadow-sm transition-all hover:shadow-md hover:border-[#ee3224]/30 group">
-                <CardContent className="p-5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-teal-50">
-                      <RefreshCw className="h-5 w-5 text-teal-500" />
-                    </div>
-                    <h3 className="font-semibold text-foreground">Cross-Device Services</h3>
-                  </div>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Synced</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-medium">{appTypeMetrics.crossDevice.synced}</span>
-                        <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Avg Sync</span>
-                      <span className="font-medium">{appTypeMetrics.crossDevice.avgSyncLatency}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Handoff</span>
-                      <span className="font-medium">{appTypeMetrics.crossDevice.handoffSuccess}</span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-emerald-600 mb-4">All devices synchronized</p>
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white transition-colors"
-                    onClick={() => router.push("/layer5/cross-device")}
-                  >
-                    View Details
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Section 4: Recent Activity Feed */}
-            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold">Recent Activity (Last 7 Days)</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-1">
-                  {activityFeed.map((activity) => (
-                    <div
-                      key={activity.id}
-                      className="flex items-center gap-4 p-3 rounded transition-colors hover:bg-[#F5F7FA] cursor-pointer"
-                    >
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="text-xs bg-muted text-muted-foreground">
-                          {activity.initials}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-foreground">
-                          <span className="font-medium">{activity.user}</span>{" "}
-                          <span className="text-muted-foreground">{activity.action}</span>{" "}
-                          <span className="font-medium text-[#ee3224]">{activity.app}</span>
-                        </p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <Clock className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
-                          <span className="text-xs text-muted-foreground">•</span>
-                          <span className="text-xs text-muted-foreground">{activity.environment}</span>
-                        </div>
-                      </div>
-                      {getStatusBadge(activity.status)}
-                    </div>
-                  ))}
-                </div>
-                <Button variant="ghost" className="w-full mt-4 text-[#ee3224] hover:text-[#ee3224] hover:bg-[#ee3224]/5">
-                  View Full Activity Log
-                  <ExternalLink className="h-4 w-4 ml-2" />
-                </Button>
-              </CardContent>
-            </Card>
+            )}
           </div>
         </ScrollArea>
+        
+        {/* App Launch Modal */}
+        <Dialog open={!!selectedApp} onOpenChange={(open) => !open && setSelectedApp(null)}>
+          <DialogContent className="max-w-[900px] h-[80vh] flex flex-col p-0">
+            {selectedApp && (
+              <>
+                {/* Modal Header */}
+                <DialogHeader className="px-6 py-4 border-b border-[#E5E7EB]">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {(() => {
+                        const IconComponent = iconMap[selectedApp.icon] || Briefcase
+                        return (
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#E5E7EB]">
+                            <IconComponent className="h-5 w-5 text-[#ee3224]" />
+                          </div>
+                        )
+                      })()}
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <DialogTitle className="text-lg">{selectedApp.name}</DialogTitle>
+                          <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(selectedApp.source)}`}>
+                            {selectedApp.source}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                          <div className={`h-2 w-2 rounded-full ${getStatusColor(selectedApp.status)}`} />
+                          <span className="capitalize">{selectedApp.status}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                {/* Chat Interface */}
+                <div className="flex-1 overflow-hidden flex flex-col">
+                  {/* Messages */}
+                  <ScrollArea className="flex-1 p-6">
+                    <div className="space-y-4">
+                      {chatMessages.map((msg, idx) => (
+                        <div 
+                          key={idx}
+                          className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                        >
+                          <div 
+                            className={`max-w-[70%] rounded-lg px-4 py-3 ${
+                              msg.role === "user" 
+                                ? "bg-[#F5F7FA] text-foreground" 
+                                : "bg-white border border-[#E5E7EB] text-foreground"
+                            }`}
+                          >
+                            {msg.content}
+                          </div>
+                        </div>
+                      ))}
+                      {isTyping && (
+                        <div className="flex justify-start">
+                          <div className="bg-white border border-[#E5E7EB] rounded-lg px-4 py-3">
+                            <div className="flex gap-1">
+                              <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                              <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                              <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
+                  
+                  {/* Quick Actions */}
+                  <div className="px-6 py-3 border-t border-[#E5E7EB] bg-[#F5F7FA]">
+                    <div className="flex flex-wrap gap-2">
+                      {selectedApp.quickActions.map((action, idx) => (
+                        <Button
+                          key={idx}
+                          variant="outline"
+                          size="sm"
+                          className="text-xs border-[#E5E7EB] bg-white hover:border-[#ee3224] hover:text-[#ee3224]"
+                          onClick={() => setChatInput(action)}
+                        >
+                          {action}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Input Area */}
+                  <div className="px-6 py-4 border-t border-[#E5E7EB]">
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Type your message..."
+                        className="flex-1 border-[#E5E7EB]"
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                      />
+                      <Button 
+                        className="bg-[#ee3224] hover:bg-[#cc2a1e]"
+                        onClick={sendMessage}
+                        disabled={!chatInput.trim()}
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Modal Footer */}
+                <div className="px-6 py-3 border-t border-[#E5E7EB] flex items-center justify-between bg-[#F5F7FA]">
+                  <div className="flex items-center gap-4">
+                    <Button variant="outline" size="sm" className="gap-2 border-[#ee3224] text-[#ee3224]">
+                      <ExternalLink className="h-4 w-4" />
+                      Open in Full Window
+                    </Button>
+                    <button className="text-sm text-[#ee3224] hover:underline">View Details</button>
+                  </div>
+                  <button className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
+                    <AlertCircle className="h-4 w-4" />
+                    Report Issue
+                  </button>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Incident Detail Modal */}
-      <Dialog open={showIncidentModal} onOpenChange={setShowIncidentModal}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <div className="flex items-center gap-3">
-              <DialogTitle>{mockIncident.title}</DialogTitle>
-              <Badge className="bg-red-50 text-[#ee3224] border border-red-200">Critical</Badge>
-            </div>
-            <DialogDescription>
-              Incident details and resolution information
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-5 py-4">
-            {/* Affected Applications */}
-            <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">Affected Applications</h4>
-              <div className="flex flex-wrap gap-2">
-                {mockIncident.affectedApps.map((app, idx) => (
-                  <Badge key={idx} variant="secondary" className="bg-[#F5F7FA]">
-                    {app}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            {/* Root Cause */}
-            <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">Root Cause</h4>
-              <p className="text-sm text-muted-foreground bg-[#F5F7FA] p-3 rounded">
-                {mockIncident.rootCause}
-              </p>
-            </div>
-
-            {/* Timeline */}
-            <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">Timeline</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Detected</span>
-                  <span className="font-mono">{mockIncident.detected}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Alerted</span>
-                  <span className="font-mono">{mockIncident.alerted}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Resolved</span>
-                  <span className="font-mono text-emerald-600">{mockIncident.resolved}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Resolution Steps */}
-            <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">Resolution Steps</h4>
-              <ol className="space-y-2 text-sm text-muted-foreground list-decimal list-inside">
-                {mockIncident.resolutionSteps.map((step, idx) => (
-                  <li key={idx}>{step}</li>
-                ))}
-              </ol>
-            </div>
-
-            {/* Related Logs */}
-            <div>
-              <Button variant="link" className="p-0 h-auto text-[#ee3224]">
-                View full logs in monitoring panel
-                <ExternalLink className="h-3.5 w-3.5 ml-1" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex justify-between pt-4 border-t border-[#E5E7EB]">
-            <Button variant="ghost" onClick={() => setShowIncidentModal(false)}>
-              Close
-            </Button>
-            <div className="flex gap-2">
-              <Button variant="outline" className="border-[#E5E7EB]">
-                Escalate
-              </Button>
-              <Button className="bg-[#ee3224] hover:bg-[#cc2a1e]">
-                Mark as Resolved
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </AppLayout>
   )
 }
