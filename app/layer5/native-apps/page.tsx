@@ -42,7 +42,6 @@ import {
 } from "@/components/ui/table"
 import {
   ArrowLeft,
-  Smartphone,
   Search,
   RefreshCw,
   Download,
@@ -313,10 +312,7 @@ export default function NativeAppsDashboardPage() {
                 <span>/</span>
                 <span className="text-foreground">Native Applications</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Smartphone className="h-5 w-5 text-[#ee3224]" />
-                <h1 className="text-2xl font-semibold text-foreground">Native Applications Monitoring</h1>
-              </div>
+              <h1 className="text-2xl font-semibold text-foreground">Native Applications Monitoring</h1>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -886,10 +882,9 @@ export default function NativeAppsDashboardPage() {
               <h2 className="text-lg font-semibold text-foreground">Deployed Native Applications</h2>
               <Badge variant="secondary">({filteredApps.length} apps)</Badge>
             </div>
-            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
-              <Smartphone className="h-4 w-4" />
-              Add New App
-            </Button>
+<Button className="bg-[#ee3224] hover:bg-[#cc2a1e]">
+                  Add New App
+                  </Button>
           </div>
 
           <Card className="border-[#E5E7EB]">
@@ -932,12 +927,9 @@ export default function NativeAppsDashboardPage() {
                         }}
                       />
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Smartphone className="h-4 w-4 text-muted-foreground" />
-                        <span className="font-medium">{app.name}</span>
-                      </div>
-                    </TableCell>
+<TableCell>
+                  <span className="font-medium">{app.name}</span>
+                  </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {app.platform.map((p) => (
@@ -1028,10 +1020,9 @@ export default function NativeAppsDashboardPage() {
         {/* App Detail Modal */}
         <Dialog open={showAppDetailModal} onOpenChange={setShowAppDetailModal}>
           <DialogContent className="max-w-[1200px] max-h-[90vh] overflow-hidden flex flex-col">
-            <DialogHeader>
-              <div className="flex items-center gap-3">
-                <Smartphone className="h-6 w-6 text-[#ee3224]" />
-                <div>
+<DialogHeader>
+                  <div className="flex items-center gap-3">
+                  <div>
                   <DialogTitle className="text-xl">{selectedApp?.name}</DialogTitle>
                   <div className="flex items-center gap-2 mt-1">
                     {selectedApp?.platform.map((p) => (
