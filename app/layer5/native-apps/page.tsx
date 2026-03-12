@@ -475,10 +475,6 @@ export default function NativeAppsDashboardPage() {
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-[#E5E7EB]">
-                  <div className="h-px flex-1 border-t-2 border-dashed border-[#ee3224]" />
-                  <span className="text-xs text-[#ee3224] font-medium">Median: 1.24s</span>
-                </div>
               </CardContent>
             </Card>
 
