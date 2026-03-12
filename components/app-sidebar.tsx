@@ -44,6 +44,7 @@ const navigation = [
   {
     title: "Layer 5 - AI Apps",
     items: [
+      { name: "Overview", href: "/layer5", icon: Home },
       { name: "Native Apps", href: "/layer5/native-apps", icon: AppWindow },
       { name: "Personal Agents", href: "/layer5/personal-agents", icon: Users },
       { name: "Enterprise Agents", href: "/layer5/enterprise-agents", icon: Building2 },
