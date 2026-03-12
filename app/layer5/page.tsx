@@ -418,58 +418,52 @@ export default function Layer5OverviewPage() {
 
                   {/* Chart area */}
                   <div className="ml-24 mr-4 h-full relative">
-                    {/* Grid lines */}
-                    <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                      <div className="border-b border-dashed border-[#E5E7EB]" />
-                      <div className="border-b border-dashed border-[#E5E7EB]" />
-                      <div className="border-b border-[#E5E7EB]" />
+                    {/* Chart content area (excludes x-axis labels) */}
+                    <div className="absolute inset-0 bottom-6">
+                      {/* Grid lines */}
+                      <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                        <div className="border-b border-dashed border-[#E5E7EB]" />
+                        <div className="border-b border-dashed border-[#E5E7EB]" />
+                        <div className="border-b border-[#E5E7EB]" />
+                      </div>
+
+                      {/* Timeline line and event markers as SVG */}
+                      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 900 80" preserveAspectRatio="none">
+                        {/* Timeline path */}
+                        <path
+                          d="M 50 60 L 200 40 L 350 10 L 500 40 L 650 60 L 800 40"
+                          fill="none"
+                          stroke="#ee3224"
+                          strokeWidth="2"
+                        />
+                      </svg>
+
+                      {/* Event markers as SVG overlay for perfect alignment */}
+                      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 900 80" preserveAspectRatio="none" style={{ overflow: "visible" }}>
+                        {timelineEvents.map((event, idx) => {
+                          const yPos = event.status === "ok" ? 60 : event.status === "warning" ? 40 : 10
+                          const fillColor = event.status === "ok" ? "#10b981" : event.status === "warning" ? "#f59e0b" : "#ee3224"
+                          return (
+                            <g key={idx} className="cursor-pointer" onClick={() => handleTimelineEventClick(event)}>
+                              <circle
+                                cx={event.x}
+                                cy={yPos}
+                                r="8"
+                                fill={fillColor}
+                                stroke="white"
+                                strokeWidth="2"
+                                className="transition-transform hover:scale-125"
+                                style={{ transformOrigin: `${event.x}px ${yPos}px` }}
+                              />
+                              <title>{`${event.time}: ${event.label}`}</title>
+                            </g>
+                          )
+                        })}
+                      </svg>
                     </div>
 
-                    {/* Timeline line */}
-                    <svg className="absolute inset-0 w-full h-[calc(100%-32px)]" viewBox="0 0 900 80" preserveAspectRatio="none">
-                      <path
-                        d="M 50 60 L 200 40 L 350 10 L 500 40 L 650 60 L 800 40"
-                        fill="none"
-                        stroke="#ee3224"
-                        strokeWidth="2"
-                      />
-                    </svg>
-
-                    {/* Event markers */}
-                    {timelineEvents.map((event, idx) => {
-                      const yPos = event.status === "ok" ? 60 : event.status === "warning" ? 40 : 10
-                      return (
-                        <div
-                          key={idx}
-                          className="absolute cursor-pointer transition-transform hover:scale-125 group/marker"
-                          style={{
-                            left: `${(event.x / 900) * 100}%`,
-                            top: `${(yPos / 80) * (100 - 40)}%`,
-                            transform: "translate(-50%, -50%)",
-                          }}
-                          onClick={() => handleTimelineEventClick(event)}
-                        >
-                          <div
-                            className="h-4 w-4 rounded-full border-2 border-white shadow-sm"
-                            style={{ backgroundColor: getStatusColor(event.status) }}
-                          />
-                          {/* Hover Tooltip */}
-                          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover/marker:opacity-100 transition-opacity pointer-events-none z-10">
-                            <div className="bg-foreground text-white text-xs px-3 py-2 rounded shadow-lg whitespace-nowrap max-w-[200px]">
-                              <p className="font-medium">{event.time}</p>
-                              <p className="text-white/80">{event.label}</p>
-                              {event.status !== "ok" && (
-                                <p className="text-white/60 text-[10px] mt-1">Click for details</p>
-                              )}
-                            </div>
-                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-foreground" />
-                          </div>
-                        </div>
-                      )
-                    })}
-
                     {/* X-axis labels */}
-                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground pt-2">
+                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground">
                       <span>00:00</span>
                       <span>04:00</span>
                       <span>08:00</span>
