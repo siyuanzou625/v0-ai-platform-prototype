@@ -140,29 +140,32 @@ export default function TemplatesPage() {
           </Button>
         </div>
 
-        {/* Search */}
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search templates..."
-            className="pl-10"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        {/* Search and Filters */}
+        <Card>
+          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+            <div className="relative flex-1 min-w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search templates..."
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+              <TabsList>
+                {categories.map((category) => (
+                  <TabsTrigger key={category} value={category}>
+                    {category}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </CardContent>
+        </Card>
 
-        {/* Categories */}
-        <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-          <TabsList>
-            {categories.map((category) => (
-              <TabsTrigger key={category} value={category}>
-                {category}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          <TabsContent value={activeCategory} className="mt-6">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {/* Template Grid */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               {filteredTemplates.map((template) => (
                 <Card
                   key={template.id}
@@ -222,9 +225,7 @@ export default function TemplatesPage() {
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+        </div>
 
         {/* Featured Templates Banner */}
         <Card className="border-primary bg-primary/5">
