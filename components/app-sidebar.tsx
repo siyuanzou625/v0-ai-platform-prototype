@@ -45,13 +45,9 @@ const navigation = [
     ],
   },
   {
-    title: "Layer 6 - Ecosystem",
+    title: "Layer 6 - Discover",
     items: [
-      { name: "Agent Marketplace", href: "/layer6/marketplace", icon: Store },
-      { name: "Template Library", href: "/layer6/templates", icon: FileCode },
-      { name: "Plugin Store", href: "/layer6/plugins", icon: Puzzle },
-      { name: "Creator Hub", href: "/layer6/creator-hub", icon: Trophy },
-      { name: "Enterprise Hub", href: "/layer6/enterprise-hub", icon: Briefcase },
+      { name: "Discover", href: "/layer6", icon: Store },
     ],
   },
 ]
