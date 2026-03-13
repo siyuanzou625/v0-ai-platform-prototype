@@ -616,7 +616,7 @@ export default function MyAppsPage() {
           {/* Controls Row: Search + Filter Chips + View Toggle */}
           <div className="flex items-center gap-4">
             {/* Search */}
-            <div className="relative w-[300px]">
+            <div className="relative flex-1 min-w-[50%]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 ref={searchInputRef}
@@ -690,9 +690,6 @@ export default function MyAppsPage() {
                 </button>
               )}
             </div>
-            
-            {/* Spacer */}
-            <div className="flex-1" />
             
             {/* View Toggle */}
             <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
