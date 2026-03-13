@@ -148,7 +148,7 @@ export function TopBar() {
     <>
       <header className="sticky top-0 z-[1000] flex h-16 items-center justify-between border-b border-[#E5E7EB] bg-white px-6">
         {/* Left Section: Global Search Bar */}
-        <div className="relative w-full max-w-[400px]">
+        <div className="relative flex-1 min-w-[50%] max-w-[60%]">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
           <Input
             ref={searchInputRef}
@@ -171,7 +171,7 @@ export function TopBar() {
 
           {/* Search Dropdown */}
           {searchFocused && (
-            <div className="absolute left-0 top-full z-10 mt-1 w-[400px] rounded border border-[#E5E7EB] bg-white shadow-lg">
+            <div className="absolute left-0 top-full z-10 mt-1 w-full rounded border border-[#E5E7EB] bg-white shadow-lg">
               {/* Recent Searches */}
               <div className="border-b border-[#E5E7EB] p-3">
                 <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#6B7280]">Recent Searches</p>
