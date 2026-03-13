@@ -264,31 +264,33 @@ export default function KnowledgePage() {
     <AppLayout>
       <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
         {/* Header */}
-        <div className="border-b border-border bg-card">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div>
-              <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
-              <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-                Upload and organize documents to give your agents context and expertise.
-              </p>
+        <div className="border-b border-border bg-card px-6 py-4">
+          {/* Title Row */}
+          <div className="mb-4">
+            <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
+            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+              Upload and organize documents to give your agents context and expertise.
+            </p>
+          </div>
+          
+          {/* Controls Row: Search + Button */}
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1 min-w-[50%]">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search knowledge bases..."
+                className="pl-9"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Search knowledge bases..."
-                  className="w-64 pl-9"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              <Dialog open={showNewKnowledge} onOpenChange={setShowNewKnowledge}>
-                <DialogTrigger asChild>
-                  <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
-                    <Plus className="h-4 w-4" />
-                    New Knowledge Base
-                  </Button>
-                </DialogTrigger>
+            <Dialog open={showNewKnowledge} onOpenChange={setShowNewKnowledge}>
+              <DialogTrigger asChild>
+                <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+                  <Plus className="h-4 w-4" />
+                  New Knowledge Base
+                </Button>
+              </DialogTrigger>
                 <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>Create Knowledge Base</DialogTitle>
