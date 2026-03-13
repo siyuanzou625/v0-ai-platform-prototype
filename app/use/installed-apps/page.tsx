@@ -6,7 +6,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -655,48 +655,28 @@ export default function MyAppsPage() {
               )}
             </div>
             
-            {/* Right: View Toggle + Avatar */}
-            <div className="flex items-center gap-4">
-              {/* View Toggle */}
-              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                    viewMode === "grid"
-                      ? "bg-white text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                    viewMode === "list"
-                      ? "bg-white text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <List className="h-4 w-4" />
-                </button>
-              </div>
-              
-              {/* User Avatar */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8 border border-[#E5E7EB]">
-                      <AvatarFallback className="text-xs bg-[#ee3224] text-white">ZD</AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push("/layer6/creator-hub")}>Creator Hub</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Logout</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            {/* Right: View Toggle */}
+            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "grid"
+                    ? "bg-white text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "list"
+                    ? "bg-white text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <List className="h-4 w-4" />
+              </button>
             </div>
           </div>
           
