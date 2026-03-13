@@ -476,7 +476,7 @@ export function TopBar() {
             </Tabs>
           </SheetHeader>
 
-          <ScrollArea className="h-[calc(100vh-280px)]">
+          <ScrollArea className="h-[calc(100vh-64px-200px-140px)] overflow-y-auto">
             <div className="p-4">
               {filteredDiscussions.map((discussion) => (
                 <div
