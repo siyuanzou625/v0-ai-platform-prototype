@@ -566,7 +566,8 @@ export default function ProjectsPage() {
           </div>
 
           {/* Row 3: View Toggle */}
-          <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 w-fit">
+          <div className="flex justify-center">
+            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
             <button
               onClick={() => handleViewChange("dashboard")}
               className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
@@ -600,6 +601,7 @@ export default function ProjectsPage() {
               <List className="h-4 w-4" />
               List
             </button>
+            </div>
           </div>
         </div>
 
