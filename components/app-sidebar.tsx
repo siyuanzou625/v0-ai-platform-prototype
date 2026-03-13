@@ -74,15 +74,10 @@ export function AppSidebar() {
         {/* Home Link */}
         <Link
           href="/"
-          className={cn(
-            "mb-4 flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
-            pathname === "/"
-              ? "border-l-[3px] border-[#ee3224] bg-[#ee3224] text-white"
-              : "text-[#333] hover:bg-[#F5F7FA]"
-          )}
+          className="mb-4 flex items-center gap-2 px-3 text-xs font-medium uppercase tracking-wider text-[#6B7280] hover:text-[#ee3224] transition-colors"
         >
           <Home className="h-4 w-4" />
-          Home
+          HOME
         </Link>
         
         {navigation.map((section) => (
