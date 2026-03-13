@@ -302,13 +302,13 @@ export default function NativeAppsDashboardPage() {
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-              onClick={() => router.push("/layer5")}
+              onClick={() => router.push("/use/installed-apps")}
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                <span>Layer 5</span>
+                <span>Use</span>
                 <span>/</span>
                 <span className="text-foreground">Native Applications</span>
               </div>

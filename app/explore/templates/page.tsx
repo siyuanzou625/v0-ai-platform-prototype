@@ -131,7 +131,7 @@ export default function TemplatesPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Templates</h1>
+            <h1 className="text-xl font-semibold text-foreground">Templates</h1>
             <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
               Browse ready-made workflows to accelerate your agent development.
             </p>

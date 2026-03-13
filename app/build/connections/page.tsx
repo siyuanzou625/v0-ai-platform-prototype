@@ -286,7 +286,7 @@ export default function ConnectionsPage() {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-semibold text-foreground">Connections</h1>
+              <h1 className="text-xl font-semibold text-foreground">Connections</h1>
             </div>
             <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
               Securely connect your favorite tools and services to power your workflows.

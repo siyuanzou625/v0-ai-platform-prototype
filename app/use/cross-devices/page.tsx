@@ -90,7 +90,7 @@ export default function CrossDevicePage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Cross Devices</h1>
+            <h1 className="text-xl font-semibold text-foreground">Cross Devices</h1>
             <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
               Seamlessly continue your tasks across phone, tablet, and computer.
             </p>

@@ -133,7 +133,7 @@ export default function CreatorStatusPage() {
             <div>
               <div className="flex items-center gap-2">
                 <Award className="h-6 w-6 text-[#ee3224]" />
-                <h1 className="text-2xl font-semibold text-foreground">Creator Status</h1>
+                <h1 className="text-xl font-semibold text-foreground">Creator Status</h1>
               </div>
               <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
                 Track your achievements, tier progress, and earnings as a creator.
