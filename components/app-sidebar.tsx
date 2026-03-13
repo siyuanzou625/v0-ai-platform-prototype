@@ -5,9 +5,6 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
   Home,
-  Compass,
-  Play,
-  Wrench,
   Workflow,
   Sparkles,
   Smartphone,
@@ -26,9 +23,6 @@ const navigation = [
     title: "Main",
     items: [
       { name: "Home", href: "/", icon: Home },
-      { name: "Discover", href: "/discover", icon: Compass },
-      { name: "Use", href: "/use", icon: Play },
-      { name: "Build", href: "/layer4/projects", icon: Wrench },
     ],
   },
   {
