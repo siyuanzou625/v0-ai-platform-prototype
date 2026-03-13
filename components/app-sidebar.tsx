@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
   Home,
@@ -47,29 +47,15 @@ const navigation = [
   {
     title: "Layer 6 - Discover",
     items: [
-      { name: "Agent Marketplace", href: "/layer6", icon: Store },
-      { name: "Template Library", href: "/layer6?tab=templates", icon: FileCode },
-      { name: "Plugin Store", href: "/layer6?tab=plugins", icon: Puzzle },
+      { name: "Agent Marketplace", href: "/layer6/marketplace", icon: Store },
+      { name: "Template Library", href: "/layer6/templates", icon: FileCode },
+      { name: "Plugin Store", href: "/layer6/plugins", icon: Puzzle },
     ],
   },
 ]
 
 export function AppSidebar() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const currentTab = searchParams.get("tab")
-
-  const isLinkActive = (href: string) => {
-    const [path, query] = href.split("?")
-    if (pathname !== path) return false
-    if (!query) {
-      // For links without query params, only active if no tab param in URL
-      return pathname === "/layer6" ? !currentTab : true
-    }
-    const params = new URLSearchParams(query)
-    const tabParam = params.get("tab")
-    return currentTab === tabParam
-  }
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-border bg-sidebar">
@@ -87,7 +73,7 @@ export function AppSidebar() {
             </h3>
             <ul className="space-y-1">
               {section.items.map((item) => {
-                const isActive = isLinkActive(item.href)
+                const isActive = pathname === item.href
                 return (
                   <li key={item.name}>
                     <Link
