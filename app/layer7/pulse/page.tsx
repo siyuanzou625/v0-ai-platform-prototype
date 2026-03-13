@@ -285,25 +285,33 @@ export default function PulsePage() {
                     <span className="text-muted-foreground">MAU</span>
                   </div>
                 </div>
-                <div className="relative h-48">
+<div className="relative h-48">
                   <svg className="h-full w-full" viewBox="0 0 400 150" preserveAspectRatio="none">
                     {/* Grid lines */}
                     <line x1="0" y1="37.5" x2="400" y2="37.5" stroke="#E5E7EB" strokeDasharray="4" />
                     <line x1="0" y1="75" x2="400" y2="75" stroke="#E5E7EB" strokeDasharray="4" />
                     <line x1="0" y1="112.5" x2="400" y2="112.5" stroke="#E5E7EB" strokeDasharray="4" />
                     
-                    {/* MAU line (dashed) */}
+                    {/* MAU line (dashed) - dynamically generated */}
                     <path
-                      d="M 0 30 L 66 25 L 133 20 L 200 17 L 266 15 L 333 12 L 400 10"
+                      d={activeUsersData.map((d, i) => {
+                        const x = (i / 6) * 400
+                        const y = 150 - ((d.mau - 24000) / 6000) * 120
+                        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+                      }).join(' ')}
                       fill="none"
                       stroke="#C0C6CA"
                       strokeWidth="2"
                       strokeDasharray="6"
                     />
                     
-                    {/* WAU line (solid) */}
+                    {/* WAU line (solid) - dynamically generated */}
                     <path
-                      d="M 0 95 L 66 85 L 133 75 L 200 70 L 266 65 L 333 62 L 400 60"
+                      d={activeUsersData.map((d, i) => {
+                        const x = (i / 6) * 400
+                        const y = 150 - ((d.wau - 9000) / 4000) * 100
+                        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+                      }).join(' ')}
                       fill="none"
                       stroke="#ee3224"
                       strokeWidth="2"
@@ -367,17 +375,25 @@ export default function PulsePage() {
                     {/* Threshold line for error rate 1% */}
                     <line x1="0" y1="50" x2="400" y2="50" stroke="#ee3224" strokeDasharray="4" opacity="0.5" />
                     
-                    {/* Latency line */}
+                    {/* Latency line - dynamically generated */}
                     <path
-                      d="M 0 85 L 66 95 L 133 55 L 200 87 L 266 100 L 333 110 L 400 105"
+                      d={errorLatencyData.map((d, i) => {
+                        const x = (i / 6) * 400
+                        const y = 150 - ((d.latency - 1000) / 700) * 80
+                        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+                      }).join(' ')}
                       fill="none"
                       stroke="#C0C6CA"
                       strokeWidth="2"
                     />
                     
-                    {/* Error Rate line */}
+                    {/* Error Rate line - dynamically generated */}
                     <path
-                      d="M 0 115 L 66 118 L 133 100 L 200 113 L 266 120 L 333 125 L 400 122"
+                      d={errorLatencyData.map((d, i) => {
+                        const x = (i / 6) * 400
+                        const y = 150 - (d.errorRate / 0.5) * 50
+                        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+                      }).join(' ')}
                       fill="none"
                       stroke="#ee3224"
                       strokeWidth="2"
