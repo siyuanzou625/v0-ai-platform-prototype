@@ -453,7 +453,7 @@ export function TopBar() {
 
       {/* Community Slide-Over Panel */}
       <Sheet open={communityOpen} onOpenChange={setCommunityOpen}>
-        <SheetContent className="w-[450px] border-l border-[#E5E7EB] p-0 sm:max-w-[450px]">
+        <SheetContent className="top-16 h-[calc(100vh-64px)] w-[450px] border-l border-[#E5E7EB] p-0 sm:max-w-[450px]">
           <SheetHeader className="border-b border-[#E5E7EB] p-4">
             <div className="flex items-center justify-between">
               <SheetTitle className="text-lg font-semibold">Community Discussions</SheetTitle>
