@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,8 +29,9 @@ import {
 import {
   Search,
   Store,
-  LayoutGrid,
-  List,
+  Bot,
+  FileText,
+  Puzzle,
   CheckCircle2,
   Star,
   Download,
@@ -53,21 +55,21 @@ import {
   Copy,
   CheckCheck,
   Clock,
-  ArrowUpRight,
-  Plus,
+  GitBranch,
+  Calendar,
+  Tag,
+  Shield,
+  Zap,
 } from "lucide-react"
 
-// Asset types
-type AssetType = "Agent" | "Template" | "Plugin"
-type AssetCategory = "Productivity" | "Knowledge" | "Development" | "Enterprise"
-type AssetPrice = "Free" | string
+// Types
 type CreatorTier = "Platinum" | "Gold" | "Silver" | "Bronze"
 
-interface Asset {
+interface Agent {
   id: string
   name: string
-  type: AssetType
-  category: AssetCategory
+  tagline: string
+  category: string
   creator: string
   creatorInitials: string
   verified: boolean
@@ -75,49 +77,52 @@ interface Asset {
   rating: number
   reviews: number
   installs: string
-  price: AssetPrice
-  license: string
+  price: string
   tags: string[]
   description: string
   compatibility: string[]
-  enterpriseOnly?: boolean
+}
+
+interface Template {
+  id: string
+  name: string
+  description: string
+  category: string
+  complexity: string
+  industry: string
+  creator: string
+  creatorInitials: string
+  featured: boolean
+  forks: number
+  uses: string
   lastUpdated: string
+  tags: string[]
+  preview: string
+}
+
+interface Plugin {
+  id: string
+  name: string
+  description: string
+  category: string
+  platform: string
+  creator: string
+  creatorInitials: string
+  verified: boolean
+  tier: CreatorTier
+  downloads: string
   version: string
+  compatible: boolean
+  permissions: string[]
+  tags: string[]
 }
 
-interface Discussion {
-  id: string
-  assetId: string
-  title: string
-  author: string
-  authorInitials: string
-  authorTier: CreatorTier
-  timestamp: string
-  type: "Q&A" | "Ideas" | "Bugs" | "Showcases"
-  upvotes: number
-  replies: number
-  acceptedAnswer: boolean
-  excerpt: string
-  isCreator?: boolean
-}
-
-interface GlobalDiscussion {
-  id: string
-  title: string
-  assetBadge: string
-  author: string
-  authorInitials: string
-  timestamp: string
-  upvotes: number
-  replies: number
-}
-
-// Mock asset data
-const assets: Asset[] = [
+// Mock Agent Data (9 agents)
+const agents: Agent[] = [
   {
-    id: "asset-001",
+    id: "agent-001",
     name: "Briefly AI",
-    type: "Agent",
+    tagline: "Meetings, summarized.",
     category: "Productivity",
     creator: "Platform Team",
     creatorInitials: "PT",
@@ -127,17 +132,14 @@ const assets: Asset[] = [
     reviews: 342,
     installs: "12.4K",
     price: "Free",
-    license: "MIT",
     tags: ["Meetings", "Transcription", "Offline"],
     description: "Real-time meeting transcription, auto-summaries, and action item extraction",
     compatibility: ["Desktop", "Web"],
-    lastUpdated: "2025-03-10",
-    version: "2.4.1",
   },
   {
-    id: "asset-002",
+    id: "agent-002",
     name: "InboxIQ AI",
-    type: "Agent",
+    tagline: "Your inbox, intelligently managed.",
     category: "Productivity",
     creator: "Platform Team",
     creatorInitials: "PT",
@@ -147,97 +149,82 @@ const assets: Asset[] = [
     reviews: 521,
     installs: "18.2K",
     price: "Free",
-    license: "MIT",
     tags: ["Email", "Drafting", "Privacy"],
     description: "Privately triage, summarize, and draft email responses with context-aware AI",
     compatibility: ["Web", "Desktop", "Mobile"],
-    lastUpdated: "2025-03-11",
-    version: "3.1.0",
   },
   {
-    id: "asset-003",
+    id: "agent-003",
     name: "MindLink AI",
-    type: "Agent",
-    category: "Knowledge",
-    creator: "Platform Team",
-    creatorInitials: "PT",
-    verified: true,
-    tier: "Platinum",
-    rating: 4.8,
-    reviews: 289,
-    installs: "9.7K",
-    price: "Free",
-    license: "MIT",
-    tags: ["Notes", "Knowledge", "Graph"],
-    description: "Bi-directional sync with Notion, Obsidian, and other knowledge bases",
-    compatibility: ["Desktop", "Web"],
-    lastUpdated: "2025-03-09",
-    version: "1.8.3",
-  },
-  {
-    id: "asset-004",
-    name: "FocusFlow AI",
-    type: "Agent",
-    category: "Productivity",
-    creator: "Platform Team",
-    creatorInitials: "PT",
-    verified: true,
-    tier: "Platinum",
-    rating: 4.6,
-    reviews: 198,
-    installs: "7.3K",
-    price: "Free",
-    license: "MIT",
-    tags: ["Focus", "Productivity", "Wellness"],
-    description: "Smart focus sessions with distraction blocking and productivity insights",
-    compatibility: ["Desktop", "Mobile"],
-    lastUpdated: "2025-03-08",
-    version: "2.0.5",
-  },
-  {
-    id: "asset-005",
-    name: "LocalLens AI",
-    type: "Agent",
+    tagline: "Connect your ideas.",
     category: "Knowledge",
     creator: "Platform Team",
     creatorInitials: "PT",
     verified: true,
     tier: "Platinum",
     rating: 4.5,
-    reviews: 156,
-    installs: "5.1K",
+    reviews: 189,
+    installs: "5.6K",
     price: "Free",
-    license: "MIT",
-    tags: ["Local", "Search", "Privacy"],
-    description: "Search and analyze local files with on-device AI processing",
-    compatibility: ["Desktop"],
-    lastUpdated: "2025-03-07",
-    version: "1.5.2",
+    tags: ["Notes", "Knowledge Graph", "Search"],
+    description: "Auto-summarize content and link related notes into a personal knowledge graph",
+    compatibility: ["Desktop", "Web", "Mobile"],
   },
   {
-    id: "asset-006",
-    name: "SlideCraft AI",
-    type: "Agent",
+    id: "agent-004",
+    name: "FocusFlow AI",
+    tagline: "Work smarter, not harder.",
     category: "Productivity",
     creator: "Platform Team",
     creatorInitials: "PT",
     verified: true,
     tier: "Platinum",
-    rating: 4.7,
-    reviews: 267,
-    installs: "8.9K",
+    rating: 4.3,
+    reviews: 156,
+    installs: "4.3K",
     price: "Free",
-    license: "MIT",
-    tags: ["Presentations", "Design", "Export"],
-    description: "Generate professional presentations from briefs with smart layouts",
-    compatibility: ["Web", "Desktop"],
-    lastUpdated: "2025-03-06",
-    version: "2.2.0",
+    tags: ["Tasks", "Time Management", "Productivity"],
+    description: "Smart task management and time optimization based on your work patterns",
+    compatibility: ["Desktop", "Mobile"],
   },
   {
-    id: "asset-007",
+    id: "agent-005",
+    name: "LocalLens AI",
+    tagline: "Find anything. Privately.",
+    category: "Knowledge",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    verified: true,
+    tier: "Platinum",
+    rating: 4.1,
+    reviews: 98,
+    installs: "2.1K",
+    price: "Free",
+    tags: ["Search", "Privacy", "Local"],
+    description: "Private, on-device semantic search across all your files, emails, and messages",
+    compatibility: ["Desktop", "Web", "Mobile"],
+  },
+  {
+    id: "agent-006",
+    name: "SlideCraft AI",
+    tagline: "From notes to slides, instantly.",
+    category: "Content",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    verified: true,
+    tier: "Platinum",
+    rating: 4.8,
+    reviews: 267,
+    installs: "6.8K",
+    price: "Free",
+    tags: ["Presentations", "Design", "Automation"],
+    description: "Generate beautiful presentations from your notes with AI-powered design",
+    compatibility: ["Web", "Desktop"],
+  },
+  {
+    id: "agent-007",
     name: "Research Companion",
-    type: "Agent",
+    tagline: "Deep dive into any topic.",
     category: "Knowledge",
     creator: "Academic Labs",
     creatorInitials: "AL",
@@ -247,226 +234,340 @@ const assets: Asset[] = [
     reviews: 156,
     installs: "5.6K",
     price: "Free",
-    license: "Apache 2.0",
-    tags: ["Research", "Citations", "PDF"],
-    description: "Deep dive into any topic with AI-assisted literature review",
+    tags: ["Research", "Citations", "Academic"],
+    description: "AI-powered literature review and research synthesis tool",
     compatibility: ["Web"],
-    lastUpdated: "2025-03-05",
-    version: "1.2.4",
   },
   {
-    id: "asset-008",
+    id: "agent-008",
     name: "Code Reviewer",
-    type: "Agent",
+    tagline: "AI-powered code analysis.",
     category: "Development",
     creator: "DevTools Inc",
     creatorInitials: "DT",
     verified: false,
     tier: "Gold",
-    rating: 4.4,
+    rating: 4.6,
     reviews: 203,
-    installs: "6.2K",
+    installs: "3.2K",
     price: "Free",
-    license: "MIT",
     tags: ["Code", "Review", "GitHub"],
     description: "Automated code review with security scanning and best practices",
     compatibility: ["Web", "Desktop"],
-    lastUpdated: "2025-03-04",
-    version: "1.6.1",
   },
   {
-    id: "asset-009",
+    id: "agent-009",
     name: "Social Media Scheduler",
-    type: "Agent",
-    category: "Productivity",
+    tagline: "Auto-post across platforms.",
+    category: "Content",
     creator: "Marketing Pro",
     creatorInitials: "MP",
     verified: false,
     tier: "Silver",
     rating: 4.2,
     reviews: 134,
-    installs: "4.8K",
+    installs: "2.8K",
     price: "$4.99/mo",
-    license: "Commercial",
     tags: ["Social", "Scheduling", "Analytics"],
-    description: "Schedule and analyze social media posts across platforms",
+    description: "Schedule and analyze social media posts across multiple platforms",
     compatibility: ["Web", "Mobile"],
-    lastUpdated: "2025-03-03",
-    version: "2.1.0",
+  },
+]
+
+// Mock Template Data (9 templates)
+const templates: Template[] = [
+  {
+    id: "template-001",
+    name: "Meeting Notes Automation",
+    description: "Auto-summarize and distribute meeting notes to all participants",
+    category: "Workflow",
+    complexity: "No-Code",
+    industry: "General",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    featured: true,
+    forks: 234,
+    uses: "1.2K",
+    lastUpdated: "2d ago",
+    tags: ["No-Code", "Meetings", "Slack"],
+    preview: "trigger: meeting_end -> summarize -> notify_slack",
   },
   {
-    id: "asset-010",
-    name: "Sales Qualifier",
-    type: "Agent",
-    category: "Enterprise",
-    creator: "Sales Team",
+    id: "template-002",
+    name: "Email Triage Workflow",
+    description: "Categorize and prioritize incoming emails automatically",
+    category: "Automation",
+    complexity: "No-Code",
+    industry: "General",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    featured: true,
+    forks: 312,
+    uses: "2.3K",
+    lastUpdated: "5d ago",
+    tags: ["No-Code", "Email", "Priority"],
+    preview: "trigger: new_email -> classify -> route_to_folder",
+  },
+  {
+    id: "template-003",
+    name: "Lead Qualification Pipeline",
+    description: "Score and route sales leads based on custom criteria",
+    category: "Data Pipeline",
+    complexity: "Low-Code",
+    industry: "Sales",
+    creator: "Sales Ops",
+    creatorInitials: "SO",
+    featured: false,
+    forks: 156,
+    uses: "892",
+    lastUpdated: "1w ago",
+    tags: ["Low-Code", "CRM", "Salesforce"],
+    preview: "trigger: new_lead -> score -> if(score > 80) -> assign_rep",
+  },
+  {
+    id: "template-004",
+    name: "Customer Support Router",
+    description: "Auto-assign support tickets to the right team members",
+    category: "Automation",
+    complexity: "Low-Code",
+    industry: "Support",
+    creator: "Support Team",
     creatorInitials: "ST",
-    verified: true,
-    tier: "Gold",
-    rating: 4.5,
-    reviews: 89,
-    installs: "1.2K",
-    price: "Enterprise License",
-    license: "Proprietary",
-    tags: ["CRM", "Leads", "Automation"],
-    description: "Automate lead qualification and outreach for enterprise sales teams",
-    compatibility: ["Web", "Desktop"],
-    enterpriseOnly: true,
-    lastUpdated: "2025-03-08",
-    version: "3.0.2",
+    featured: true,
+    forks: 189,
+    uses: "1.5K",
+    lastUpdated: "3d ago",
+    tags: ["Low-Code", "Zendesk", "Routing"],
+    preview: "trigger: new_ticket -> categorize -> assign_by_skill",
   },
   {
-    id: "asset-011",
-    name: "Compliance Checker",
-    type: "Agent",
-    category: "Enterprise",
-    creator: "Legal Tech",
-    creatorInitials: "LT",
-    verified: true,
-    tier: "Gold",
-    rating: 4.6,
-    reviews: 67,
-    installs: "890",
-    price: "Enterprise License",
-    license: "Proprietary",
-    tags: ["Compliance", "Legal", "Audit"],
-    description: "Automated compliance monitoring and policy enforcement",
-    compatibility: ["Web", "Desktop"],
-    enterpriseOnly: true,
-    lastUpdated: "2025-03-02",
-    version: "2.3.1",
+    id: "template-005",
+    name: "Data ETL Pipeline",
+    description: "Extract, transform, and load data from multiple sources",
+    category: "Data Pipeline",
+    complexity: "High-Code",
+    industry: "General",
+    creator: "Data Team",
+    creatorInitials: "DT",
+    featured: false,
+    forks: 98,
+    uses: "456",
+    lastUpdated: "1w ago",
+    tags: ["High-Code", "PostgreSQL", "API"],
+    preview: "sources: [api, db, csv] -> transform -> load_warehouse",
   },
   {
-    id: "asset-012",
-    name: "HR Onboarding Bot",
-    type: "Agent",
-    category: "Enterprise",
+    id: "template-006",
+    name: "Weekly Report Generator",
+    description: "Aggregate metrics and send weekly summary reports",
+    category: "Reporting",
+    complexity: "No-Code",
+    industry: "General",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    featured: true,
+    forks: 423,
+    uses: "3.1K",
+    lastUpdated: "4d ago",
+    tags: ["No-Code", "Reports", "Email"],
+    preview: "schedule: weekly -> aggregate_metrics -> send_report",
+  },
+  {
+    id: "template-007",
+    name: "Social Media Cross-Post",
+    description: "Publish content to multiple social platforms simultaneously",
+    category: "Automation",
+    complexity: "No-Code",
+    industry: "Marketing",
+    creator: "Marketing Hub",
+    creatorInitials: "MH",
+    featured: false,
+    forks: 87,
+    uses: "678",
+    lastUpdated: "2w ago",
+    tags: ["No-Code", "Social", "Buffer"],
+    preview: "trigger: new_post -> adapt_format -> publish_all",
+  },
+  {
+    id: "template-008",
+    name: "Invoice Processing Flow",
+    description: "Parse, categorize, and process incoming invoices",
+    category: "Data Pipeline",
+    complexity: "Low-Code",
+    industry: "Finance",
+    creator: "Finance Ops",
+    creatorInitials: "FO",
+    featured: false,
+    forks: 45,
+    uses: "234",
+    lastUpdated: "3w ago",
+    tags: ["Low-Code", "OCR", "QuickBooks"],
+    preview: "trigger: new_invoice -> extract_data -> validate -> sync",
+  },
+  {
+    id: "template-009",
+    name: "Employee Onboarding Checklist",
+    description: "Automated new hire setup and task assignment",
+    category: "Workflow",
+    complexity: "No-Code",
+    industry: "HR",
     creator: "HR Solutions",
     creatorInitials: "HR",
+    featured: false,
+    forks: 267,
+    uses: "1.8K",
+    lastUpdated: "1w ago",
+    tags: ["No-Code", "HR", "Onboarding"],
+    preview: "trigger: new_hire -> create_accounts -> assign_tasks",
+  },
+]
+
+// Mock Plugin Data (9 plugins)
+const plugins: Plugin[] = [
+  {
+    id: "plugin-001",
+    name: "Slack Connector",
+    description: "Send notifications and messages to Slack channels",
+    category: "Integration",
+    platform: "Cross-Platform",
+    creator: "Platform Team",
+    creatorInitials: "PT",
     verified: true,
+    tier: "Platinum",
+    downloads: "45.2K",
+    version: "v2.1.0",
+    compatible: true,
+    permissions: ["Send Messages", "Read Channels"],
+    tags: ["Slack", "Notifications", "OAuth"],
+  },
+  {
+    id: "plugin-002",
+    name: "Google Workspace Integration",
+    description: "Connect to Gmail, Calendar, and Drive",
+    category: "Integration",
+    platform: "Web",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    verified: true,
+    tier: "Platinum",
+    downloads: "38.7K",
+    version: "v3.0.1",
+    compatible: true,
+    permissions: ["Gmail Access", "Calendar Access", "Drive Access"],
+    tags: ["Google", "Email", "Calendar"],
+  },
+  {
+    id: "plugin-003",
+    name: "Salesforce API Wrapper",
+    description: "CRUD operations on Salesforce objects",
+    category: "Data Source",
+    platform: "Web",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    verified: true,
+    tier: "Platinum",
+    downloads: "12.3K",
+    version: "v1.8.3",
+    compatible: true,
+    permissions: ["Salesforce API Access"],
+    tags: ["Salesforce", "CRM", "REST API"],
+  },
+  {
+    id: "plugin-004",
+    name: "PostgreSQL Connector",
+    description: "Query and write to PostgreSQL databases",
+    category: "Data Source",
+    platform: "Cross-Platform",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    verified: true,
+    tier: "Platinum",
+    downloads: "23.1K",
+    version: "v2.0.0",
+    compatible: true,
+    permissions: ["Database Access"],
+    tags: ["PostgreSQL", "Database", "SQL"],
+  },
+  {
+    id: "plugin-005",
+    name: "OpenAI API Plugin",
+    description: "Access GPT models for text generation",
+    category: "Utility",
+    platform: "Cross-Platform",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    verified: true,
+    tier: "Platinum",
+    downloads: "67.8K",
+    version: "v1.5.2",
+    compatible: true,
+    permissions: ["API Key Storage"],
+    tags: ["OpenAI", "GPT", "LLM"],
+  },
+  {
+    id: "plugin-006",
+    name: "Webhook Trigger",
+    description: "Receive and process webhook payloads",
+    category: "Integration",
+    platform: "Cross-Platform",
+    creator: "Platform Team",
+    creatorInitials: "PT",
+    verified: true,
+    tier: "Platinum",
+    downloads: "34.5K",
+    version: "v1.2.0",
+    compatible: true,
+    permissions: ["Webhook Endpoint"],
+    tags: ["Webhooks", "HTTP", "Triggers"],
+  },
+  {
+    id: "plugin-007",
+    name: "Notion Integration",
+    description: "Read and write Notion pages and databases",
+    category: "Integration",
+    platform: "Web",
+    creator: "Community Dev",
+    creatorInitials: "CD",
+    verified: false,
+    tier: "Gold",
+    downloads: "8.9K",
+    version: "v1.1.0",
+    compatible: true,
+    permissions: ["Notion API Access"],
+    tags: ["Notion", "Pages", "Databases"],
+  },
+  {
+    id: "plugin-008",
+    name: "Stripe Payment Processor",
+    description: "Handle payments and subscriptions",
+    category: "Output",
+    platform: "Web",
+    creator: "FinTech Labs",
+    creatorInitials: "FL",
+    verified: false,
+    tier: "Gold",
+    downloads: "5.6K",
+    version: "v2.3.1",
+    compatible: true,
+    permissions: ["Stripe API Access", "Payment Processing"],
+    tags: ["Stripe", "Payments", "Subscriptions"],
+  },
+  {
+    id: "plugin-009",
+    name: "Twilio SMS Gateway",
+    description: "Send and receive SMS messages",
+    category: "Output",
+    platform: "Cross-Platform",
+    creator: "Comm Tools",
+    creatorInitials: "CT",
+    verified: false,
     tier: "Silver",
-    rating: 4.4,
-    reviews: 45,
-    installs: "650",
-    price: "Enterprise License",
-    license: "Proprietary",
-    tags: ["HR", "Onboarding", "Training"],
-    description: "Streamline employee onboarding with interactive AI guidance",
-    compatibility: ["Web"],
-    enterpriseOnly: true,
-    lastUpdated: "2025-03-01",
-    version: "1.4.0",
+    downloads: "11.2K",
+    version: "v1.4.0",
+    compatible: true,
+    permissions: ["Twilio API Access", "SMS Send/Receive"],
+    tags: ["Twilio", "SMS", "Messaging"],
   },
-]
-
-// Mock discussions data
-const assetDiscussions: Discussion[] = [
-  {
-    id: "disc-001",
-    assetId: "asset-001",
-    title: "How to export summaries to Notion?",
-    author: "John Doe",
-    authorInitials: "JD",
-    authorTier: "Silver",
-    timestamp: "2 hours ago",
-    type: "Q&A",
-    upvotes: 12,
-    replies: 3,
-    acceptedAnswer: true,
-    excerpt: "I love Briefly AI but can't find the Notion integration...",
-  },
-  {
-    id: "disc-002",
-    assetId: "asset-001",
-    title: "Feature Request: Multi-language support",
-    author: "Maria Garcia",
-    authorInitials: "MG",
-    authorTier: "Bronze",
-    timestamp: "1 day ago",
-    type: "Ideas",
-    upvotes: 45,
-    replies: 8,
-    acceptedAnswer: false,
-    excerpt: "Would be great to have transcription in Spanish and French...",
-  },
-  {
-    id: "disc-003",
-    assetId: "asset-001",
-    title: "Bug: Audio lag on M1 Macs",
-    author: "Alex Chen",
-    authorInitials: "AC",
-    authorTier: "Gold",
-    timestamp: "3 days ago",
-    type: "Bugs",
-    upvotes: 8,
-    replies: 2,
-    acceptedAnswer: false,
-    excerpt: "Experiencing 2-second lag during live transcription...",
-    isCreator: true,
-  },
-]
-
-// Global discussions
-const globalDiscussions: GlobalDiscussion[] = [
-  {
-    id: "global-001",
-    title: "Best practices for RAG agent optimization?",
-    assetBadge: "General",
-    author: "Sarah Kim",
-    authorInitials: "SK",
-    timestamp: "30 minutes ago",
-    upvotes: 23,
-    replies: 7,
-  },
-  {
-    id: "global-002",
-    title: "Briefly AI vs Traditional Recording Tools",
-    assetBadge: "Briefly AI",
-    author: "Mike Ross",
-    authorInitials: "MR",
-    timestamp: "2 hours ago",
-    upvotes: 15,
-    replies: 4,
-  },
-  {
-    id: "global-003",
-    title: "Enterprise licensing questions",
-    assetBadge: "Sales Qualifier",
-    author: "Jennifer Lee",
-    authorInitials: "JL",
-    timestamp: "5 hours ago",
-    upvotes: 5,
-    replies: 1,
-  },
-  {
-    id: "global-004",
-    title: "How to build custom integrations?",
-    assetBadge: "Development",
-    author: "Chris Taylor",
-    authorInitials: "CT",
-    timestamp: "1 day ago",
-    upvotes: 18,
-    replies: 6,
-  },
-  {
-    id: "global-005",
-    title: "Showcase: My automated research workflow",
-    assetBadge: "Research Companion",
-    author: "Emma Wilson",
-    authorInitials: "EW",
-    timestamp: "2 days ago",
-    upvotes: 42,
-    replies: 12,
-  },
-]
-
-// Version history mock
-const versionHistory = [
-  { version: "2.4.1", date: "Mar 10, 2025", summary: "Bug fixes and performance improvements", size: "12.4 MB", current: true },
-  { version: "2.4.0", date: "Mar 5, 2025", summary: "Added multi-language transcription support", size: "12.2 MB", current: false },
-  { version: "2.3.2", date: "Feb 28, 2025", summary: "Fixed audio sync issues on M1 Macs", size: "12.1 MB", current: false },
-  { version: "2.3.1", date: "Feb 20, 2025", summary: "Improved Notion export formatting", size: "12.0 MB", current: false },
-  { version: "2.3.0", date: "Feb 15, 2025", summary: "Added action item detection", size: "11.8 MB", current: false },
 ]
 
 // Tier badge colors
@@ -479,34 +580,65 @@ const getTierColor = (tier: CreatorTier) => {
   }
 }
 
-// Discussion type colors
-const getDiscussionTypeColor = (type: Discussion["type"]) => {
-  switch (type) {
-    case "Q&A": return "bg-blue-50 text-blue-600 border-blue-200"
-    case "Ideas": return "bg-purple-50 text-purple-600 border-purple-200"
-    case "Bugs": return "bg-red-50 text-red-600 border-red-200"
-    case "Showcases": return "bg-emerald-50 text-emerald-600 border-emerald-200"
+// Complexity badge colors
+const getComplexityColor = (complexity: string) => {
+  switch (complexity) {
+    case "No-Code": return "bg-emerald-50 text-emerald-600 border-emerald-200"
+    case "Low-Code": return "bg-blue-50 text-blue-600 border-blue-200"
+    case "High-Code": return "bg-purple-50 text-purple-600 border-purple-200"
+    default: return "bg-gray-50 text-gray-600 border-gray-200"
   }
 }
 
 export default function DiscoverPage() {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const router = useRouter()
+  const [activeTab, setActiveTab] = useState<"agents" | "templates" | "plugins">("agents")
   const [searchQuery, setSearchQuery] = useState("")
-  const [assetTypeFilter, setAssetTypeFilter] = useState<string>("all")
-  const [categoryFilter, setCategoryFilter] = useState<string>("all")
-  const [priceFilter, setPriceFilter] = useState<string>("all")
-  const [sortBy, setSortBy] = useState<string>("trending")
-  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null)
-  const [showAssetModal, setShowAssetModal] = useState(false)
   const [showCommunityPanel, setShowCommunityPanel] = useState(false)
-  const [assetModalTab, setAssetModalTab] = useState("overview")
   const [communityTab, setCommunityTab] = useState("trending")
-  const [discussionTypeFilter, setDiscussionTypeFilter] = useState<string>("all")
-  const [installingAsset, setInstallingAsset] = useState<string | null>(null)
-  const [installedAssets, setInstalledAssets] = useState<string[]>(["asset-001", "asset-002"])
-  const [copiedCode, setCopiedCode] = useState(false)
+  const [installingId, setInstallingId] = useState<string | null>(null)
+  const [installedIds, setInstalledIds] = useState<string[]>(["agent-001", "agent-002", "template-001", "plugin-001"])
   const [currentPage, setCurrentPage] = useState(1)
-  const assetsPerPage = 12
+  
+  // Agent filters
+  const [agentCategory, setAgentCategory] = useState("all")
+  const [agentPrice, setAgentPrice] = useState("all")
+  const [agentCompatibility, setAgentCompatibility] = useState("all")
+  const [agentRating, setAgentRating] = useState("all")
+  const [agentSort, setAgentSort] = useState("trending")
+  
+  // Template filters
+  const [templateCategory, setTemplateCategory] = useState("all")
+  const [templateComplexity, setTemplateComplexity] = useState("all")
+  const [templateIndustry, setTemplateIndustry] = useState("all")
+  const [templateSort, setTemplateSort] = useState("popular")
+  
+  // Plugin filters
+  const [pluginCategory, setPluginCategory] = useState("all")
+  const [pluginPlatform, setPluginPlatform] = useState("all")
+  const [pluginCompatibility, setPluginCompatibility] = useState("all")
+  const [pluginSort, setPluginSort] = useState("popular")
+
+  // Modal state
+  const [selectedAsset, setSelectedAsset] = useState<Agent | Template | Plugin | null>(null)
+  const [showAssetModal, setShowAssetModal] = useState(false)
+  const [assetModalTab, setAssetModalTab] = useState("overview")
+
+  // Save tab to localStorage and sync with URL
+  useEffect(() => {
+    const savedTab = localStorage.getItem("discover-tab")
+    const hash = window.location.hash.replace("#", "")
+    if (hash === "agents" || hash === "templates" || hash === "plugins") {
+      setActiveTab(hash)
+    } else if (savedTab === "agents" || savedTab === "templates" || savedTab === "plugins") {
+      setActiveTab(savedTab)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("discover-tab", activeTab)
+    window.history.replaceState(null, "", `#${activeTab}`)
+  }, [activeTab])
 
   // Keyboard shortcut for search
   useEffect(() => {
@@ -520,105 +652,140 @@ export default function DiscoverPage() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [])
 
-  // Filter assets
-  const filteredAssets = assets.filter((asset) => {
-    const matchesSearch = searchQuery === "" || 
-      asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      asset.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      asset.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-    const matchesType = assetTypeFilter === "all" || asset.type.toLowerCase() === assetTypeFilter
-    const matchesCategory = categoryFilter === "all" || asset.category.toLowerCase() === categoryFilter
-    const matchesPrice = priceFilter === "all" || 
-      (priceFilter === "free" && asset.price === "Free") ||
-      (priceFilter === "paid" && asset.price !== "Free" && !asset.enterpriseOnly) ||
-      (priceFilter === "enterprise" && asset.enterpriseOnly)
-    return matchesSearch && matchesType && matchesCategory && matchesPrice
-  })
+  // Reset filters when switching tabs
+  const handleTabChange = (tab: "agents" | "templates" | "plugins") => {
+    setActiveTab(tab)
+    setSearchQuery("")
+    setCurrentPage(1)
+    // Reset filters for the new tab
+    if (tab === "agents") {
+      setAgentCategory("all")
+      setAgentPrice("all")
+      setAgentCompatibility("all")
+      setAgentRating("all")
+    } else if (tab === "templates") {
+      setTemplateCategory("all")
+      setTemplateComplexity("all")
+      setTemplateIndustry("all")
+    } else {
+      setPluginCategory("all")
+      setPluginPlatform("all")
+      setPluginCompatibility("all")
+    }
+  }
 
-  // Sort assets
-  const sortedAssets = [...filteredAssets].sort((a, b) => {
-    switch (sortBy) {
-      case "trending": return parseFloat(b.installs.replace("K", "000")) - parseFloat(a.installs.replace("K", "000"))
-      case "newest": return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+  // Filter agents
+  const filteredAgents = agents.filter((agent) => {
+    const matchesSearch = searchQuery === "" || 
+      agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      agent.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory = agentCategory === "all" || agent.category.toLowerCase() === agentCategory
+    const matchesPrice = agentPrice === "all" || 
+      (agentPrice === "free" && agent.price === "Free") ||
+      (agentPrice === "paid" && agent.price !== "Free")
+    const matchesCompatibility = agentCompatibility === "all" || 
+      agent.compatibility.some(c => c.toLowerCase() === agentCompatibility)
+    const matchesRating = agentRating === "all" || 
+      (agentRating === "4" && agent.rating >= 4) ||
+      (agentRating === "3" && agent.rating >= 3)
+    return matchesSearch && matchesCategory && matchesPrice && matchesCompatibility && matchesRating
+  }).sort((a, b) => {
+    switch (agentSort) {
+      case "newest": return 0 // Would use dates in real implementation
       case "toprated": return b.rating - a.rating
-      case "mostinstalled": return parseFloat(b.installs.replace("K", "000")) - parseFloat(a.installs.replace("K", "000"))
-      default: return 0
+      case "mostinstalled": return parseFloat(b.installs) - parseFloat(a.installs)
+      default: return parseFloat(b.installs) - parseFloat(a.installs)
     }
   })
 
-  // Pagination
-  const totalPages = Math.ceil(sortedAssets.length / assetsPerPage)
-  const paginatedAssets = sortedAssets.slice((currentPage - 1) * assetsPerPage, currentPage * assetsPerPage)
+  // Filter templates
+  const filteredTemplates = templates.filter((template) => {
+    const matchesSearch = searchQuery === "" || 
+      template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory = templateCategory === "all" || template.category.toLowerCase() === templateCategory.toLowerCase()
+    const matchesComplexity = templateComplexity === "all" || template.complexity.toLowerCase().replace("-", "") === templateComplexity
+    const matchesIndustry = templateIndustry === "all" || template.industry.toLowerCase() === templateIndustry
+    return matchesSearch && matchesCategory && matchesComplexity && matchesIndustry
+  }).sort((a, b) => {
+    switch (templateSort) {
+      case "newest": return 0
+      case "mostforked": return b.forks - a.forks
+      case "editorspicks": return a.featured ? -1 : 1
+      default: return parseFloat(b.uses) - parseFloat(a.uses)
+    }
+  })
 
-  // Handle asset click
-  const handleAssetClick = (asset: Asset) => {
+  // Filter plugins
+  const filteredPlugins = plugins.filter((plugin) => {
+    const matchesSearch = searchQuery === "" || 
+      plugin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      plugin.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory = pluginCategory === "all" || plugin.category.toLowerCase() === pluginCategory.toLowerCase()
+    const matchesPlatform = pluginPlatform === "all" || plugin.platform.toLowerCase().replace("-", "") === pluginPlatform
+    const matchesCompatibility = pluginCompatibility === "all" || plugin.compatible
+    return matchesSearch && matchesCategory && matchesPlatform && matchesCompatibility
+  }).sort((a, b) => {
+    switch (pluginSort) {
+      case "newest": return 0
+      case "mostcompatible": return a.compatible ? -1 : 1
+      case "recentlyupdated": return 0
+      default: return parseFloat(b.downloads) - parseFloat(a.downloads)
+    }
+  })
+
+  // Handle install
+  const handleInstall = (id: string, e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    if (installedIds.includes(id)) return
+    setInstallingId(id)
+    setTimeout(() => {
+      setInstalledIds(prev => [...prev, id])
+      setInstallingId(null)
+    }, 1500)
+  }
+
+  // Open asset modal
+  const openAssetModal = (asset: Agent | Template | Plugin) => {
     setSelectedAsset(asset)
     setAssetModalTab("overview")
     setShowAssetModal(true)
   }
 
-  // Handle install
-  const handleInstall = useCallback((assetId: string, e?: React.MouseEvent) => {
-    e?.stopPropagation()
-    if (installedAssets.includes(assetId)) return
-    
-    setInstallingAsset(assetId)
-    setTimeout(() => {
-      setInstalledAssets(prev => [...prev, assetId])
-      setInstallingAsset(null)
-    }, 2000)
-  }, [installedAssets])
-
-  // Copy code
-  const handleCopyCode = (code: string) => {
-    navigator.clipboard.writeText(code)
-    setCopiedCode(true)
-    setTimeout(() => setCopiedCode(false), 2000)
-  }
-
-  // Get discussions for selected asset
-  const currentAssetDiscussions = selectedAsset 
-    ? assetDiscussions.filter(d => d.assetId === selectedAsset.id)
-    : []
-
-  // Check if any filters are active
-  const hasActiveFilters = assetTypeFilter !== "all" || categoryFilter !== "all" || priceFilter !== "all" || searchQuery !== ""
+  // Global discussions mock data
+  const globalDiscussions = [
+    { id: "1", title: "Best practices for RAG agent optimization?", assetBadge: "General", author: "Sarah K.", authorInitials: "SK", timestamp: "30 min ago", upvotes: 23, replies: 7 },
+    { id: "2", title: "Briefly AI vs Traditional Recording Tools", assetBadge: "Briefly AI", author: "Mike R.", authorInitials: "MR", timestamp: "2 hours ago", upvotes: 15, replies: 4 },
+    { id: "3", title: "How to build custom integrations?", assetBadge: "Development", author: "Chris T.", authorInitials: "CT", timestamp: "1 day ago", upvotes: 18, replies: 6 },
+  ]
 
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
         {/* Top Utility Bar */}
         <div className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-[#E5E7EB] bg-white px-6 py-3">
-          {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-muted-foreground">Discover</span>
-            <span className="text-muted-foreground">/</span>
-            <span className="font-medium text-foreground">AI Asset Marketplace</span>
+            <Store className="h-4 w-4 text-[#ee3224]" />
+            <span className="font-semibold text-foreground">Discover</span>
           </div>
 
-          {/* Global Search */}
           <div className="relative w-[400px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="global-search"
-              placeholder="Search assets, docs, discussions... (Cmd/Ctrl+K)"
+              placeholder="Search assets... (Cmd/Ctrl+K)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 pr-10 border-[#E5E7EB]"
             />
             {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
+              <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
 
-          {/* Right Actions */}
           <div className="flex items-center gap-3">
-            {/* Resources Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-1.5">
@@ -627,1005 +794,755 @@ export default function DiscoverPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[200px]">
-                <DropdownMenuItem className="gap-2">
-                  <Book className="h-4 w-4" />
-                  Documentation
-                </DropdownMenuItem>
-                <DropdownMenuItem className="gap-2">
-                  <GraduationCap className="h-4 w-4" />
-                  Tutorials
-                </DropdownMenuItem>
-                <DropdownMenuItem className="gap-2">
-                  <Video className="h-4 w-4" />
-                  Webinars & Events
-                </DropdownMenuItem>
-                <DropdownMenuItem className="gap-2">
-                  <FileCode className="h-4 w-4" />
-                  API Reference
-                </DropdownMenuItem>
-                <DropdownMenuItem className="gap-2">
-                  <Megaphone className="h-4 w-4" />
-                  Release Notes
-                </DropdownMenuItem>
+                <DropdownMenuItem className="gap-2"><Book className="h-4 w-4" />Documentation</DropdownMenuItem>
+                <DropdownMenuItem className="gap-2"><GraduationCap className="h-4 w-4" />Tutorials</DropdownMenuItem>
+                <DropdownMenuItem className="gap-2"><Video className="h-4 w-4" />Webinars & Events</DropdownMenuItem>
+                <DropdownMenuItem className="gap-2"><FileCode className="h-4 w-4" />API Reference</DropdownMenuItem>
+                <DropdownMenuItem className="gap-2"><Megaphone className="h-4 w-4" />Release Notes</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="gap-2">
-                  <HelpCircle className="h-4 w-4" />
-                  Contact Support
-                </DropdownMenuItem>
+                <DropdownMenuItem className="gap-2"><HelpCircle className="h-4 w-4" />Contact Support</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Community */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="gap-1.5"
-              onClick={() => setShowCommunityPanel(true)}
-            >
-              <Users className="h-4 w-4" />
+            <Button variant="ghost" size="sm" onClick={() => setShowCommunityPanel(true)}>
               Community
             </Button>
 
-            {/* User Avatar */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-[#ee3224] text-white text-xs">ZD</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Creator Studio</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button variant="outline" size="sm" className="border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/5">
+              Publish Asset
+            </Button>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 overflow-auto bg-[#F5F7FA] p-6">
-          {/* Page Header */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <Store className="h-6 w-6 text-[#ee3224]" />
-                <h1 className="text-2xl font-semibold text-foreground">Discover AI Assets</h1>
-              </div>
-              <div className="flex items-center gap-3">
-                {/* View Toggle */}
-                <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1">
-                  <button
-                    onClick={() => setViewMode("grid")}
-                    className={`flex items-center gap-1.5 rounded px-3 py-1.5 text-sm font-medium transition-colors ${
-                      viewMode === "grid" ? "bg-[#ee3224] text-white" : "text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    <LayoutGrid className="h-4 w-4" />
-                    Grid
-                  </button>
-                  <button
-                    onClick={() => setViewMode("list")}
-                    className={`flex items-center gap-1.5 rounded px-3 py-1.5 text-sm font-medium transition-colors ${
-                      viewMode === "list" ? "bg-[#ee3224] text-white" : "text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    <List className="h-4 w-4" />
-                    List
-                  </button>
+        {/* Page Header with Tabs */}
+        <div className="border-b border-[#E5E7EB] bg-white px-6 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground">Discover</h1>
+              <p className="text-sm text-muted-foreground mt-1">Browse and install AI agents, templates, and plugins</p>
+            </div>
+          </div>
+
+          {/* Three-Tab Navigation */}
+          <div className="flex items-center gap-1 rounded-lg bg-[#F5F7FA] p-1 w-fit">
+            <button
+              onClick={() => handleTabChange("agents")}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                activeTab === "agents" ? "bg-[#ee3224] text-white shadow-sm" : "text-[#333] hover:bg-white/50"
+              }`}
+            >
+              <Bot className="h-4 w-4" />
+              Agent Marketplace
+            </button>
+            <button
+              onClick={() => handleTabChange("templates")}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                activeTab === "templates" ? "bg-[#ee3224] text-white shadow-sm" : "text-[#333] hover:bg-white/50"
+              }`}
+            >
+              <FileText className="h-4 w-4" />
+              Template Library
+            </button>
+            <button
+              onClick={() => handleTabChange("plugins")}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                activeTab === "plugins" ? "bg-[#ee3224] text-white shadow-sm" : "text-[#333] hover:bg-white/50"
+              }`}
+            >
+              <Puzzle className="h-4 w-4" />
+              Plugin Store
+            </button>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        <ScrollArea className="flex-1">
+          <div className="p-6">
+            {/* TAB 1: Agent Marketplace */}
+            {activeTab === "agents" && (
+              <div className="space-y-6 animate-in fade-in duration-200">
+                {/* Agent Filters */}
+                <div className="flex items-center gap-3 flex-wrap">
+                  <Select value={agentCategory} onValueChange={setAgentCategory}>
+                    <SelectTrigger className="w-[140px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="productivity">Productivity</SelectItem>
+                      <SelectItem value="knowledge">Knowledge</SelectItem>
+                      <SelectItem value="content">Content</SelectItem>
+                      <SelectItem value="enterprise">Enterprise</SelectItem>
+                      <SelectItem value="development">Development</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={agentPrice} onValueChange={setAgentPrice}>
+                    <SelectTrigger className="w-[120px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Price" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Prices</SelectItem>
+                      <SelectItem value="free">Free</SelectItem>
+                      <SelectItem value="paid">Paid</SelectItem>
+                      <SelectItem value="enterprise">Enterprise</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={agentCompatibility} onValueChange={setAgentCompatibility}>
+                    <SelectTrigger className="w-[140px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Platform" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Platforms</SelectItem>
+                      <SelectItem value="web">Web</SelectItem>
+                      <SelectItem value="desktop">Desktop</SelectItem>
+                      <SelectItem value="mobile">Mobile</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={agentRating} onValueChange={setAgentRating}>
+                    <SelectTrigger className="w-[120px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Rating" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Any Rating</SelectItem>
+                      <SelectItem value="4">4+ Stars</SelectItem>
+                      <SelectItem value="3">3+ Stars</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <div className="flex-1" />
+
+                  <Select value={agentSort} onValueChange={setAgentSort}>
+                    <SelectTrigger className="w-[150px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="trending">Trending</SelectItem>
+                      <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="toprated">Top Rated</SelectItem>
+                      <SelectItem value="mostinstalled">Most Installed</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Button variant="outline" className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/5">
-                  <Plus className="h-4 w-4" />
-                  Publish Asset
-                </Button>
+
+                {/* Agent Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredAgents.map((agent) => (
+                    <Card
+                      key={agent.id}
+                      className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224]/30 hover:shadow-md"
+                      onClick={() => openAssetModal(agent)}
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB]">
+                            <Bot className="h-6 w-6 text-[#ee3224]" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold text-foreground truncate">{agent.name}</h3>
+                              {agent.verified && <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />}
+                            </div>
+                            <p className="text-sm text-muted-foreground">{agent.tagline}</p>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{agent.description}</p>
+
+                        <div className="flex items-center gap-2 mb-3">
+                          <Avatar className="h-6 w-6">
+                            <AvatarFallback className="text-xs bg-muted">{agent.creatorInitials}</AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm text-muted-foreground">{agent.creator}</span>
+                          <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${getTierColor(agent.tier)}`}>
+                            {agent.tier}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                          <div className="flex items-center gap-1">
+                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                            <span>{agent.rating}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Download className="h-3.5 w-3.5" />
+                            <span>{agent.installs}</span>
+                          </div>
+                          <span className={agent.price === "Free" ? "text-emerald-600 font-medium" : "text-foreground"}>
+                            {agent.price}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {agent.tags.map((tag, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-xs bg-[#F5F7FA] text-muted-foreground">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            className={`flex-1 ${installedIds.includes(agent.id) ? "bg-emerald-500 hover:bg-emerald-600" : "bg-[#ee3224] hover:bg-[#cc2a1e]"}`}
+                            onClick={(e) => handleInstall(agent.id, e)}
+                            disabled={installingId === agent.id}
+                          >
+                            {installingId === agent.id ? "Installing..." : installedIds.includes(agent.id) ? "Installed" : "Install"}
+                          </Button>
+                          <Button variant="outline" className="border-[#E5E7EB]" onClick={(e) => { e.stopPropagation(); openAssetModal(agent) }}>
+                            Preview
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-between pt-4">
+                  <p className="text-sm text-muted-foreground">Showing 1-{filteredAgents.length} of 127 agents</p>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" disabled><ChevronLeft className="h-4 w-4" /></Button>
+                    <Button variant="outline" size="sm" className="bg-[#ee3224] text-white border-[#ee3224]">1</Button>
+                    <Button variant="outline" size="sm">2</Button>
+                    <Button variant="outline" size="sm">3</Button>
+                    <Button variant="outline" size="sm"><ChevronRight className="h-4 w-4" /></Button>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Filter Bar */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <Select value={assetTypeFilter} onValueChange={setAssetTypeFilter}>
-                <SelectTrigger className="w-[130px] border-[#E5E7EB] bg-white">
-                  <SelectValue placeholder="Asset Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="agent">Agents</SelectItem>
-                  <SelectItem value="template">Templates</SelectItem>
-                  <SelectItem value="plugin">Plugins</SelectItem>
-                </SelectContent>
-              </Select>
+            {/* TAB 2: Template Library */}
+            {activeTab === "templates" && (
+              <div className="space-y-6 animate-in fade-in duration-200">
+                {/* Template Filters */}
+                <div className="flex items-center gap-3 flex-wrap">
+                  <Select value={templateCategory} onValueChange={setTemplateCategory}>
+                    <SelectTrigger className="w-[140px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="workflow">Workflow</SelectItem>
+                      <SelectItem value="automation">Automation</SelectItem>
+                      <SelectItem value="data pipeline">Data Pipeline</SelectItem>
+                      <SelectItem value="integration">Integration</SelectItem>
+                      <SelectItem value="reporting">Reporting</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-[140px] border-[#E5E7EB] bg-white">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="productivity">Productivity</SelectItem>
-                  <SelectItem value="knowledge">Knowledge</SelectItem>
-                  <SelectItem value="development">Development</SelectItem>
-                  <SelectItem value="enterprise">Enterprise</SelectItem>
-                </SelectContent>
-              </Select>
+                  <Select value={templateComplexity} onValueChange={setTemplateComplexity}>
+                    <SelectTrigger className="w-[130px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Complexity" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Levels</SelectItem>
+                      <SelectItem value="nocode">No-Code</SelectItem>
+                      <SelectItem value="lowcode">Low-Code</SelectItem>
+                      <SelectItem value="highcode">High-Code</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-              <Select value={priceFilter} onValueChange={setPriceFilter}>
-                <SelectTrigger className="w-[130px] border-[#E5E7EB] bg-white">
-                  <SelectValue placeholder="Price" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Prices</SelectItem>
-                  <SelectItem value="free">Free</SelectItem>
-                  <SelectItem value="paid">Paid</SelectItem>
-                  <SelectItem value="enterprise">Enterprise</SelectItem>
-                </SelectContent>
-              </Select>
+                  <Select value={templateIndustry} onValueChange={setTemplateIndustry}>
+                    <SelectTrigger className="w-[130px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Industry" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Industries</SelectItem>
+                      <SelectItem value="general">General</SelectItem>
+                      <SelectItem value="sales">Sales</SelectItem>
+                      <SelectItem value="support">Support</SelectItem>
+                      <SelectItem value="hr">HR</SelectItem>
+                      <SelectItem value="finance">Finance</SelectItem>
+                      <SelectItem value="marketing">Marketing</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[150px] border-[#E5E7EB] bg-white">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="trending">Trending</SelectItem>
-                  <SelectItem value="newest">Newest</SelectItem>
-                  <SelectItem value="toprated">Top Rated</SelectItem>
-                  <SelectItem value="mostinstalled">Most Installed</SelectItem>
-                </SelectContent>
-              </Select>
+                  <div className="flex-1" />
 
-              {hasActiveFilters && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setAssetTypeFilter("all")
-                    setCategoryFilter("all")
-                    setPriceFilter("all")
-                    setSearchQuery("")
-                  }}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Reset All
-                </Button>
-              )}
-            </div>
+                  <Select value={templateSort} onValueChange={setTemplateSort}>
+                    <SelectTrigger className="w-[150px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="popular">Popular</SelectItem>
+                      <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="mostforked">Most Forked</SelectItem>
+                      <SelectItem value="editorspicks">Editor's Picks</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            {/* Active Filter Badges */}
-            {hasActiveFilters && (
-              <div className="flex items-center gap-2 mt-3">
-                {searchQuery && (
-                  <Badge variant="secondary" className="gap-1 pr-1">
-                    Search: {searchQuery}
-                    <button onClick={() => setSearchQuery("")} className="ml-1 hover:text-foreground">
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )}
-                {assetTypeFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1 pr-1">
-                    Type: {assetTypeFilter}
-                    <button onClick={() => setAssetTypeFilter("all")} className="ml-1 hover:text-foreground">
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )}
-                {categoryFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1 pr-1">
-                    Category: {categoryFilter}
-                    <button onClick={() => setCategoryFilter("all")} className="ml-1 hover:text-foreground">
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )}
-                {priceFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1 pr-1">
-                    Price: {priceFilter}
-                    <button onClick={() => setPriceFilter("all")} className="ml-1 hover:text-foreground">
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )}
+                {/* Template Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredTemplates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224]/30 hover:shadow-md"
+                      onClick={() => openAssetModal(template)}
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB]">
+                            <FileText className="h-6 w-6 text-[#ee3224]" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold text-foreground truncate">{template.name}</h3>
+                              {template.featured && <Star className="h-4 w-4 fill-amber-400 text-amber-400 shrink-0" />}
+                            </div>
+                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 mt-1 ${getComplexityColor(template.complexity)}`}>
+                              {template.complexity}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{template.description}</p>
+
+                        <div className="flex items-center gap-2 mb-3">
+                          <Avatar className="h-6 w-6">
+                            <AvatarFallback className="text-xs bg-muted">{template.creatorInitials}</AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm text-muted-foreground">{template.creator}</span>
+                          <button className="text-xs text-[#ee3224] hover:underline ml-auto">View Profile</button>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                          <div className="flex items-center gap-1">
+                            <GitBranch className="h-3.5 w-3.5" />
+                            <span>{template.forks}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Users className="h-3.5 w-3.5" />
+                            <span>{template.uses}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3.5 w-3.5" />
+                            <span>{template.lastUpdated}</span>
+                          </div>
+                        </div>
+
+                        {/* Preview Section */}
+                        <div className="bg-[#F5F7FA] rounded p-2 mb-3 font-mono text-xs text-muted-foreground overflow-hidden">
+                          {template.preview}
+                        </div>
+
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {template.tags.map((tag, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-xs bg-[#F5F7FA] text-muted-foreground">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            className={`flex-1 ${installedIds.includes(template.id) ? "bg-emerald-500 hover:bg-emerald-600" : "bg-[#ee3224] hover:bg-[#cc2a1e]"}`}
+                            onClick={(e) => handleInstall(template.id, e)}
+                            disabled={installingId === template.id}
+                          >
+                            {installingId === template.id ? "Loading..." : installedIds.includes(template.id) ? "Open" : "Use Template"}
+                          </Button>
+                          <Button variant="outline" className="border-[#E5E7EB]" onClick={(e) => { e.stopPropagation(); openAssetModal(template) }}>
+                            View Details
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-between pt-4">
+                  <p className="text-sm text-muted-foreground">Showing 1-{filteredTemplates.length} of 89 templates</p>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" disabled><ChevronLeft className="h-4 w-4" /></Button>
+                    <Button variant="outline" size="sm" className="bg-[#ee3224] text-white border-[#ee3224]">1</Button>
+                    <Button variant="outline" size="sm">2</Button>
+                    <Button variant="outline" size="sm">3</Button>
+                    <Button variant="outline" size="sm"><ChevronRight className="h-4 w-4" /></Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: Plugin Store */}
+            {activeTab === "plugins" && (
+              <div className="space-y-6 animate-in fade-in duration-200">
+                {/* Plugin Filters */}
+                <div className="flex items-center gap-3 flex-wrap">
+                  <Select value={pluginCategory} onValueChange={setPluginCategory}>
+                    <SelectTrigger className="w-[140px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="integration">Integration</SelectItem>
+                      <SelectItem value="data source">Data Source</SelectItem>
+                      <SelectItem value="output">Output</SelectItem>
+                      <SelectItem value="authentication">Authentication</SelectItem>
+                      <SelectItem value="utility">Utility</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={pluginPlatform} onValueChange={setPluginPlatform}>
+                    <SelectTrigger className="w-[140px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Platform" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Platforms</SelectItem>
+                      <SelectItem value="web">Web</SelectItem>
+                      <SelectItem value="desktop">Desktop</SelectItem>
+                      <SelectItem value="mobile">Mobile</SelectItem>
+                      <SelectItem value="crossplatform">Cross-Platform</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={pluginCompatibility} onValueChange={setPluginCompatibility}>
+                    <SelectTrigger className="w-[140px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Compatibility" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Versions</SelectItem>
+                      <SelectItem value="v1">v1.x</SelectItem>
+                      <SelectItem value="v2">v2.x</SelectItem>
+                      <SelectItem value="latest">Latest</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <div className="flex-1" />
+
+                  <Select value={pluginSort} onValueChange={setPluginSort}>
+                    <SelectTrigger className="w-[160px] border-[#E5E7EB]">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="popular">Popular</SelectItem>
+                      <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="mostcompatible">Most Compatible</SelectItem>
+                      <SelectItem value="recentlyupdated">Recently Updated</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Plugin Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredPlugins.map((plugin) => (
+                    <Card
+                      key={plugin.id}
+                      className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224]/30 hover:shadow-md"
+                      onClick={() => openAssetModal(plugin)}
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB]">
+                            <Puzzle className="h-6 w-6 text-[#ee3224]" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold text-foreground truncate">{plugin.name}</h3>
+                              {plugin.verified && <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />}
+                            </div>
+                            <p className="text-xs text-muted-foreground">{plugin.category}</p>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{plugin.description}</p>
+
+                        <div className="flex items-center gap-2 mb-3">
+                          <Avatar className="h-6 w-6">
+                            <AvatarFallback className="text-xs bg-muted">{plugin.creatorInitials}</AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm text-muted-foreground">{plugin.creator}</span>
+                          <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${getTierColor(plugin.tier)}`}>
+                            {plugin.tier}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                          <div className="flex items-center gap-1">
+                            <Download className="h-3.5 w-3.5" />
+                            <span>{plugin.downloads}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Tag className="h-3.5 w-3.5" />
+                            <span>{plugin.version}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {plugin.compatible ? (
+                              <>
+                                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                                <span className="text-emerald-600">Compatible</span>
+                              </>
+                            ) : (
+                              <span className="text-amber-600">Check version</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Technical Specs */}
+                        <div className="bg-[#F5F7FA] rounded p-2 mb-3 text-xs space-y-1">
+                          <div className="flex items-center gap-2">
+                            <Shield className="h-3 w-3 text-muted-foreground" />
+                            <span className="text-muted-foreground">Permissions:</span>
+                            <span className="font-medium">{plugin.permissions.length}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Zap className="h-3 w-3 text-muted-foreground" />
+                            <span className="text-muted-foreground">Platform:</span>
+                            <span className="font-medium">{plugin.platform}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {plugin.tags.map((tag, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-xs bg-[#F5F7FA] text-muted-foreground">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            className={`flex-1 ${installedIds.includes(plugin.id) ? "bg-emerald-500 hover:bg-emerald-600" : "bg-[#ee3224] hover:bg-[#cc2a1e]"}`}
+                            onClick={(e) => handleInstall(plugin.id, e)}
+                            disabled={installingId === plugin.id}
+                          >
+                            {installingId === plugin.id ? "Installing..." : installedIds.includes(plugin.id) ? "Installed" : "Install Plugin"}
+                          </Button>
+                          <Button variant="outline" className="border-[#E5E7EB]" onClick={(e) => { e.stopPropagation(); openAssetModal(plugin) }}>
+                            View Docs
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-between pt-4">
+                  <p className="text-sm text-muted-foreground">Showing 1-{filteredPlugins.length} of 234 plugins</p>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" disabled><ChevronLeft className="h-4 w-4" /></Button>
+                    <Button variant="outline" size="sm" className="bg-[#ee3224] text-white border-[#ee3224]">1</Button>
+                    <Button variant="outline" size="sm">2</Button>
+                    <Button variant="outline" size="sm">3</Button>
+                    <Button variant="outline" size="sm"><ChevronRight className="h-4 w-4" /></Button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
+        </ScrollArea>
 
-          {/* Asset Grid */}
-          {filteredAssets.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Search className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">No assets match your search</h3>
-              <p className="text-muted-foreground mb-4">Try browsing categories or starting a discussion</p>
-              <Button variant="outline" onClick={() => setShowCommunityPanel(true)}>
-                Browse Community
+        {/* Asset Detail Modal */}
+        <Dialog open={showAssetModal} onOpenChange={setShowAssetModal}>
+          <DialogContent className="max-w-[900px] max-h-[85vh] overflow-hidden flex flex-col">
+            <DialogHeader className="pb-4 border-b border-[#E5E7EB]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB]">
+                    {activeTab === "agents" && <Bot className="h-6 w-6 text-[#ee3224]" />}
+                    {activeTab === "templates" && <FileText className="h-6 w-6 text-[#ee3224]" />}
+                    {activeTab === "plugins" && <Puzzle className="h-6 w-6 text-[#ee3224]" />}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <DialogTitle className="text-xl">{selectedAsset && "name" in selectedAsset ? selectedAsset.name : ""}</DialogTitle>
+                      {"verified" in (selectedAsset || {}) && (selectedAsset as Agent | Plugin)?.verified && (
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {"version" in (selectedAsset || {}) ? (selectedAsset as Plugin).version : "v2.4.1"}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="bg-emerald-50 text-emerald-600 border-emerald-200">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
+                    Available
+                  </Badge>
+                  <Button variant="ghost" size="icon"><Share2 className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="icon"><Flag className="h-4 w-4" /></Button>
+                </div>
+              </div>
+            </DialogHeader>
+
+            <Tabs value={assetModalTab} onValueChange={setAssetModalTab} className="flex-1 flex flex-col overflow-hidden">
+              <TabsList className="w-full justify-start border-b border-[#E5E7EB] rounded-none bg-transparent h-auto p-0">
+                <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent">Overview</TabsTrigger>
+                <TabsTrigger value="documentation" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent">Documentation</TabsTrigger>
+                <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent">Reviews</TabsTrigger>
+                <TabsTrigger value="discussions" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent">Discussions</TabsTrigger>
+                <TabsTrigger value="versions" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent">Versions</TabsTrigger>
+              </TabsList>
+
+              <ScrollArea className="flex-1">
+                <TabsContent value="overview" className="p-4 m-0 space-y-4">
+                  <div className="aspect-video bg-[#F5F7FA] rounded-lg flex items-center justify-center">
+                    <p className="text-muted-foreground">Screenshot Carousel</p>
+                  </div>
+                  <div className="prose prose-sm max-w-none">
+                    <h3>Description</h3>
+                    <p className="text-muted-foreground">{selectedAsset && "description" in selectedAsset ? selectedAsset.description : ""}</p>
+                    <h3>Key Features</h3>
+                    <ul>
+                      <li>Real-time processing with low latency</li>
+                      <li>Privacy-first design with on-device processing</li>
+                      <li>Seamless integration with existing workflows</li>
+                      <li>Cross-platform compatibility</li>
+                    </ul>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="documentation" className="p-4 m-0">
+                  <div className="prose prose-sm max-w-none">
+                    <h3>Quick Start</h3>
+                    <p className="text-muted-foreground">Get started with this asset in minutes.</p>
+                    <pre className="bg-[#F5F7FA] p-4 rounded-lg overflow-x-auto">
+                      <code>// Example usage code here</code>
+                    </pre>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="reviews" className="p-4 m-0">
+                  <div className="flex items-center gap-6 mb-6 p-4 bg-[#F5F7FA] rounded-lg">
+                    <div className="text-center">
+                      <p className="text-4xl font-bold text-foreground">4.7</p>
+                      <div className="flex items-center gap-0.5 justify-center my-1">
+                        {[1,2,3,4,5].map(i => <Star key={i} className={`h-4 w-4 ${i <= 4 ? "fill-amber-400 text-amber-400" : "text-gray-300"}`} />)}
+                      </div>
+                      <p className="text-sm text-muted-foreground">342 reviews</p>
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      {[5,4,3,2,1].map(rating => (
+                        <div key={rating} className="flex items-center gap-2">
+                          <span className="text-sm w-3">{rating}</span>
+                          <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
+                            <div className="h-full bg-amber-400 rounded-full" style={{ width: `${rating === 5 ? 60 : rating === 4 ? 25 : rating === 3 ? 10 : 5}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <Button className="bg-[#ee3224] hover:bg-[#cc2a1e]">Write a Review</Button>
+                </TabsContent>
+
+                <TabsContent value="discussions" className="p-4 m-0">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-sm text-muted-foreground">Discussions about this asset</p>
+                    <Button className="bg-[#ee3224] hover:bg-[#cc2a1e]">Start New Discussion</Button>
+                  </div>
+                  <div className="space-y-3">
+                    {[1,2,3].map(i => (
+                      <Card key={i} className="border-[#E5E7EB]">
+                        <CardContent className="p-4">
+                          <h4 className="font-medium">Sample discussion title {i}</h4>
+                          <p className="text-sm text-muted-foreground mt-1">Discussion excerpt goes here...</p>
+                          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1"><ThumbsUp className="h-3.5 w-3.5" /> 12</span>
+                            <span className="flex items-center gap-1"><MessageSquare className="h-3.5 w-3.5" /> 5</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="versions" className="p-4 m-0">
+                  <div className="space-y-2">
+                    {[
+                      { version: "v2.4.1", date: "Mar 10, 2025", summary: "Bug fixes and performance improvements", current: true },
+                      { version: "v2.4.0", date: "Mar 5, 2025", summary: "Added multi-language support", current: false },
+                      { version: "v2.3.2", date: "Feb 28, 2025", summary: "Fixed sync issues", current: false },
+                    ].map((v, i) => (
+                      <div key={i} className={`flex items-center justify-between p-3 rounded-lg ${v.current ? "bg-emerald-50 border border-emerald-200" : "bg-[#F5F7FA]"}`}>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{v.version}</span>
+                            {v.current && <Badge className="bg-emerald-500 text-white">Current</Badge>}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{v.summary}</p>
+                        </div>
+                        <span className="text-sm text-muted-foreground">{v.date}</span>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+              </ScrollArea>
+            </Tabs>
+
+            <div className="pt-4 border-t border-[#E5E7EB] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="border-[#E5E7EB]">Add to Collection</Button>
+                <Button variant="outline" className="border-[#E5E7EB]">Notify on Update</Button>
+              </div>
+              <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] px-6">
+                {activeTab === "agents" ? "Install Agent" : activeTab === "templates" ? "Use Template" : "Install Plugin"}
               </Button>
             </div>
-          ) : viewMode === "grid" ? (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {paginatedAssets.map((asset) => (
-                <Card
-                  key={asset.id}
-                  className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224]/30 hover:shadow-md"
-                  onClick={() => handleAssetClick(asset)}
-                >
-                  <CardContent className="p-5">
-                    {/* Header */}
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5F7FA] text-lg font-semibold text-foreground">
-                        {asset.name.substring(0, 2)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-foreground truncate group-hover:text-[#ee3224] transition-colors">
-                            {asset.name}
-                          </h3>
-                          {asset.verified && (
-                            <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                          )}
-                          {asset.enterpriseOnly && (
-                            <Lock className="h-4 w-4 text-amber-500 shrink-0" />
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <Avatar className="h-5 w-5">
-                            <AvatarFallback className="text-[10px] bg-muted">{asset.creatorInitials}</AvatarFallback>
-                          </Avatar>
-                          <span className="text-xs text-muted-foreground">{asset.creator}</span>
-                          <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-4 ${getTierColor(asset.tier)}`}>
-                            {asset.tier}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
+          </DialogContent>
+        </Dialog>
 
-                    {/* Description */}
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
-                      {asset.description}
-                    </p>
+        {/* Community Slide-Over Panel */}
+        <Sheet open={showCommunityPanel} onOpenChange={setShowCommunityPanel}>
+          <SheetContent className="w-[400px] p-0">
+            <SheetHeader className="p-4 border-b border-[#E5E7EB]">
+              <div className="flex items-center justify-between">
+                <SheetTitle>Community Discussions</SheetTitle>
+              </div>
+              <Input placeholder="Search discussions..." className="mt-2 border-[#E5E7EB]" />
+            </SheetHeader>
 
-                    {/* Metrics */}
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                        <span className="font-medium text-foreground">{asset.rating}</span>
-                        <span>({asset.reviews})</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Download className="h-3.5 w-3.5" />
-                        <span>{asset.installs}</span>
-                      </div>
-                      <div className="font-medium text-foreground">
-                        {asset.price}
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {asset.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-[10px] px-2 py-0 h-5 bg-[#F5F7FA]">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    {/* Footer */}
-                    <div className="flex gap-2">
-                      <Button
-                        className={`flex-1 ${
-                          installedAssets.includes(asset.id)
-                            ? "bg-emerald-500 hover:bg-emerald-600"
-                            : "bg-[#ee3224] hover:bg-[#cc2a1e]"
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          if (installedAssets.includes(asset.id)) {
-                            // Open in My Apps
-                          } else if (asset.enterpriseOnly) {
-                            alert("Enterprise license required. Contact sales for access.")
-                          } else {
-                            handleInstall(asset.id, e)
-                          }
-                        }}
-                        disabled={installingAsset === asset.id}
-                      >
-                        {installingAsset === asset.id ? (
-                          "Installing..."
-                        ) : installedAssets.includes(asset.id) ? (
-                          "Open"
-                        ) : asset.enterpriseOnly ? (
-                          <>
-                            <Lock className="h-4 w-4 mr-1" />
-                            Request Access
-                          </>
-                        ) : (
-                          "Install"
-                        )}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleAssetClick(asset)
-                        }}
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            /* List View */
-            <Card className="border border-[#E5E7EB] bg-white">
-              <CardContent className="p-0">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-[#E5E7EB] bg-[#F5F7FA]">
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Asset</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Type</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Rating</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Installs</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Price</th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginatedAssets.map((asset) => (
-                      <tr
-                        key={asset.id}
-                        className="border-b border-[#E5E7EB] last:border-b-0 hover:bg-[#F5F7FA] cursor-pointer transition-colors"
-                        onClick={() => handleAssetClick(asset)}
-                      >
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F5F7FA] text-sm font-semibold">
-                              {asset.name.substring(0, 2)}
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium text-foreground">{asset.name}</span>
-                                {asset.verified && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
-                                {asset.enterpriseOnly && <Lock className="h-4 w-4 text-amber-500" />}
-                              </div>
-                              <span className="text-xs text-muted-foreground">{asset.creator}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <Badge variant="outline" className="text-xs">{asset.type}</Badge>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                            <span className="text-sm">{asset.rating}</span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{asset.installs}</td>
-                        <td className="px-4 py-3 text-sm font-medium">{asset.price}</td>
-                        <td className="px-4 py-3 text-right">
-                          <Button
-                            size="sm"
-                            className={
-                              installedAssets.includes(asset.id)
-                                ? "bg-emerald-500 hover:bg-emerald-600"
-                                : "bg-[#ee3224] hover:bg-[#cc2a1e]"
-                            }
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              if (!installedAssets.includes(asset.id) && !asset.enterpriseOnly) {
-                                handleInstall(asset.id, e)
-                              }
-                            }}
-                            disabled={installingAsset === asset.id}
-                          >
-                            {installingAsset === asset.id
-                              ? "..."
-                              : installedAssets.includes(asset.id)
-                              ? "Open"
-                              : "Install"}
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Pagination */}
-          {filteredAssets.length > 0 && (
-            <div className="flex items-center justify-between mt-6">
-              <p className="text-sm text-muted-foreground">
-                Showing {(currentPage - 1) * assetsPerPage + 1}-{Math.min(currentPage * assetsPerPage, sortedAssets.length)} of {sortedAssets.length} assets
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  Previous
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).slice(0, 5).map((page) => (
-                  <Button
-                    key={page}
-                    variant={currentPage === page ? "default" : "outline"}
-                    size="sm"
-                    className={currentPage === page ? "bg-[#ee3224] hover:bg-[#cc2a1e]" : ""}
-                    onClick={() => setCurrentPage(page)}
+            <div className="border-b border-[#E5E7EB]">
+              <div className="flex">
+                {["trending", "my", "following"].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setCommunityTab(tab)}
+                    className={`flex-1 py-2 text-sm font-medium border-b-2 ${
+                      communityTab === tab ? "border-[#ee3224] text-[#ee3224]" : "border-transparent text-muted-foreground"
+                    }`}
                   >
-                    {page}
-                  </Button>
+                    {tab === "my" ? "My Discussions" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
                 ))}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
               </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* Asset Detail Modal */}
-      <Dialog open={showAssetModal} onOpenChange={setShowAssetModal}>
-        <DialogContent className="max-w-[900px] max-h-[85vh] overflow-hidden p-0">
-          {selectedAsset && (
-            <>
-              {/* Modal Header */}
-              <DialogHeader className="p-6 pb-0">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#F5F7FA] text-xl font-semibold">
-                      {selectedAsset.name.substring(0, 2)}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <DialogTitle className="text-xl">{selectedAsset.name}</DialogTitle>
-                        {selectedAsset.verified && <CheckCircle2 className="h-5 w-5 text-emerald-500" />}
-                        <Badge variant="outline" className="text-xs">v{selectedAsset.version}</Badge>
-                      </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        {selectedAsset.enterpriseOnly ? (
-                          <Badge className="bg-amber-100 text-amber-700 border-amber-200">
-                            <Lock className="h-3 w-3 mr-1" />
-                            Enterprise Only
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
-                            Available
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon">
-                      <Share2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Flag className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </DialogHeader>
-
-              {/* Modal Tabs */}
-              <Tabs value={assetModalTab} onValueChange={setAssetModalTab} className="flex-1">
-                <div className="border-b border-[#E5E7EB] px-6">
-                  <TabsList className="h-12 bg-transparent p-0 gap-6">
-                    <TabsTrigger value="overview" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none bg-transparent px-0 pb-3">
-                      Overview
-                    </TabsTrigger>
-                    <TabsTrigger value="documentation" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none bg-transparent px-0 pb-3">
-                      Documentation
-                    </TabsTrigger>
-                    <TabsTrigger value="reviews" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none bg-transparent px-0 pb-3">
-                      Reviews
-                    </TabsTrigger>
-                    <TabsTrigger value="discussions" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none bg-transparent px-0 pb-3">
-                      Discussions
-                    </TabsTrigger>
-                    <TabsTrigger value="versions" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none bg-transparent px-0 pb-3">
-                      Versions
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
-
-                <ScrollArea className="h-[calc(85vh-180px)]">
-                  {/* Overview Tab */}
-                  <TabsContent value="overview" className="p-6 m-0">
-                    <div className="grid grid-cols-3 gap-6">
-                      <div className="col-span-2 space-y-6">
-                        {/* Hero */}
-                        <div className="aspect-video rounded-lg bg-[#F5F7FA] flex items-center justify-center">
-                          <span className="text-4xl font-bold text-muted-foreground/30">{selectedAsset.name}</span>
-                        </div>
-
-                        {/* Description */}
-                        <div>
-                          <h3 className="font-semibold text-foreground mb-2">Description</h3>
-                          <p className="text-muted-foreground leading-relaxed">{selectedAsset.description}</p>
-                        </div>
-
-                        {/* Key Features */}
-                        <div>
-                          <h3 className="font-semibold text-foreground mb-2">Key Features</h3>
-                          <ul className="space-y-2">
-                            <li className="flex items-center gap-2 text-muted-foreground">
-                              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                              Real-time processing with low latency
-                            </li>
-                            <li className="flex items-center gap-2 text-muted-foreground">
-                              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                              Privacy-first with on-device AI
-                            </li>
-                            <li className="flex items-center gap-2 text-muted-foreground">
-                              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                              Seamless integration with popular tools
-                            </li>
-                            <li className="flex items-center gap-2 text-muted-foreground">
-                              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                              Enterprise-grade security and compliance
-                            </li>
-                          </ul>
-                        </div>
-
-                        {/* Requirements */}
-                        <div>
-                          <h3 className="font-semibold text-foreground mb-2">Requirements</h3>
-                          <div className="flex flex-wrap gap-2">
-                            {selectedAsset.compatibility.map((c) => (
-                              <Badge key={c} variant="outline">{c}</Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Sidebar */}
-                      <div className="space-y-4">
-                        <Button
-                          className={`w-full ${
-                            installedAssets.includes(selectedAsset.id)
-                              ? "bg-emerald-500 hover:bg-emerald-600"
-                              : "bg-[#ee3224] hover:bg-[#cc2a1e]"
-                          }`}
-                          onClick={() => {
-                            if (!installedAssets.includes(selectedAsset.id)) {
-                              handleInstall(selectedAsset.id)
-                            }
-                          }}
-                          disabled={installingAsset === selectedAsset.id}
-                        >
-                          {installingAsset === selectedAsset.id
-                            ? "Installing..."
-                            : installedAssets.includes(selectedAsset.id)
-                            ? "Open in My Apps"
-                            : "Install"}
-                        </Button>
-
-                        <Card className="border-[#E5E7EB]">
-                          <CardContent className="p-4 space-y-3">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Price</span>
-                              <span className="font-medium">{selectedAsset.price}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">License</span>
-                              <span className="font-medium">{selectedAsset.license}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Version</span>
-                              <span className="font-medium">{selectedAsset.version}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Updated</span>
-                              <span className="font-medium">{selectedAsset.lastUpdated}</span>
-                            </div>
-                          </CardContent>
-                        </Card>
-
-                        {/* Creator Info */}
-                        <Card className="border-[#E5E7EB]">
-                          <CardContent className="p-4">
-                            <div className="flex items-center gap-3 mb-3">
-                              <Avatar className="h-10 w-10">
-                                <AvatarFallback className="bg-muted">{selectedAsset.creatorInitials}</AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="font-medium text-foreground">{selectedAsset.creator}</p>
-                                <Badge variant="outline" className={`text-[10px] ${getTierColor(selectedAsset.tier)}`}>
-                                  {selectedAsset.tier} Creator
-                                </Badge>
-                              </div>
-                            </div>
-                            <Button variant="outline" size="sm" className="w-full">
-                              Follow
-                            </Button>
-                          </CardContent>
-                        </Card>
-
-                        {/* Metrics */}
-                        <Card className="border-[#E5E7EB]">
-                          <CardContent className="p-4 space-y-3">
-                            <div className="flex items-center gap-2">
-                              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                              <span className="font-medium">{selectedAsset.rating}</span>
-                              <span className="text-muted-foreground">({selectedAsset.reviews} reviews)</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Download className="h-4 w-4 text-muted-foreground" />
-                              <span>{selectedAsset.installs} installs</span>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Documentation Tab */}
-                  <TabsContent value="documentation" className="p-6 m-0">
-                    <div className="grid grid-cols-4 gap-6">
-                      <div className="space-y-1">
-                        <p className="text-xs font-medium text-muted-foreground uppercase mb-2">Contents</p>
-                        <Button variant="ghost" size="sm" className="w-full justify-start text-[#ee3224]">Quick Start</Button>
-                        <Button variant="ghost" size="sm" className="w-full justify-start">Installation</Button>
-                        <Button variant="ghost" size="sm" className="w-full justify-start">Configuration</Button>
-                        <Button variant="ghost" size="sm" className="w-full justify-start">API Reference</Button>
-                        <Button variant="ghost" size="sm" className="w-full justify-start">Examples</Button>
-                      </div>
-                      <div className="col-span-3 space-y-4">
-                        <h2 className="text-xl font-semibold">Quick Start</h2>
-                        <p className="text-muted-foreground">Get started with {selectedAsset.name} in minutes.</p>
-                        
-                        <div className="relative">
-                          <pre className="bg-[#1e1e1e] text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-                            <code>{`// Install the agent
-npm install @ai-agent-os/${selectedAsset.name.toLowerCase().replace(/\s/g, "-")}
-
-// Initialize in your workflow
-import { ${selectedAsset.name.replace(/\s/g, "")} } from "@ai-agent-os/${selectedAsset.name.toLowerCase().replace(/\s/g, "-")}";
-
-const agent = new ${selectedAsset.name.replace(/\s/g, "")}({
-  apiKey: process.env.AGENT_API_KEY,
-  mode: "production"
-});
-
-await agent.start();`}</code>
-                          </pre>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute top-2 right-2 text-gray-400 hover:text-white"
-                            onClick={() => handleCopyCode("npm install ...")}
-                          >
-                            {copiedCode ? <CheckCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                          </Button>
-                        </div>
-
-                        <div className="flex items-center gap-2 p-3 rounded-lg bg-[#F5F7FA] border border-[#E5E7EB]">
-                          <span className="text-sm text-muted-foreground">Was this helpful?</span>
-                          <Button variant="ghost" size="sm"><ThumbsUp className="h-4 w-4" /></Button>
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Reviews Tab */}
-                  <TabsContent value="reviews" className="p-6 m-0">
-                    <div className="flex items-start gap-8 mb-6">
-                      <div className="text-center">
-                        <p className="text-5xl font-bold text-foreground">{selectedAsset.rating}</p>
-                        <div className="flex items-center gap-1 my-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className={`h-5 w-5 ${star <= Math.round(selectedAsset.rating) ? "fill-amber-400 text-amber-400" : "text-gray-200"}`}
-                            />
-                          ))}
-                        </div>
-                        <p className="text-sm text-muted-foreground">{selectedAsset.reviews} reviews</p>
-                      </div>
-                      <div className="flex-1 space-y-2">
-                        {[5, 4, 3, 2, 1].map((rating) => (
-                          <div key={rating} className="flex items-center gap-2">
-                            <span className="text-sm w-3">{rating}</span>
-                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                            <div className="flex-1 h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-amber-400"
-                                style={{ width: `${rating === 5 ? 65 : rating === 4 ? 25 : rating === 3 ? 7 : rating === 2 ? 2 : 1}%` }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Button className="mb-6 bg-[#ee3224] hover:bg-[#cc2a1e]">Write a Review</Button>
-
-                    <div className="space-y-4">
-                      {[
-                        { name: "Alice Smith", initials: "AS", rating: 5, date: "2 days ago", text: "Incredible tool! Has completely transformed how I take meeting notes." },
-                        { name: "Bob Johnson", initials: "BJ", rating: 4, date: "1 week ago", text: "Very useful, but would love to see more language support." },
-                        { name: "Carol Davis", initials: "CD", rating: 5, date: "2 weeks ago", text: "Best transcription tool I've used. The summaries are spot-on." },
-                      ].map((review, idx) => (
-                        <Card key={idx} className="border-[#E5E7EB]">
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex items-center gap-3">
-                                <Avatar className="h-9 w-9">
-                                  <AvatarFallback className="bg-muted text-xs">{review.initials}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <p className="font-medium text-foreground">{review.name}</p>
-                                  <div className="flex items-center gap-2">
-                                    <div className="flex">
-                                      {[1, 2, 3, 4, 5].map((star) => (
-                                        <Star
-                                          key={star}
-                                          className={`h-3 w-3 ${star <= review.rating ? "fill-amber-400 text-amber-400" : "text-gray-200"}`}
-                                        />
-                                      ))}
-                                    </div>
-                                    <span className="text-xs text-muted-foreground">{review.date}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <p className="text-sm text-muted-foreground">{review.text}</p>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </TabsContent>
-
-                  {/* Discussions Tab */}
-                  <TabsContent value="discussions" className="p-6 m-0">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold">Discussions about {selectedAsset.name}</h3>
-                      <Button className="bg-[#ee3224] hover:bg-[#cc2a1e]">Start New Discussion</Button>
-                    </div>
-
-                    <div className="flex gap-2 mb-4">
-                      {["all", "Q&A", "Ideas", "Bugs", "Showcases"].map((type) => (
-                        <Button
-                          key={type}
-                          variant={discussionTypeFilter === type ? "default" : "outline"}
-                          size="sm"
-                          className={discussionTypeFilter === type ? "bg-[#ee3224] hover:bg-[#cc2a1e]" : ""}
-                          onClick={() => setDiscussionTypeFilter(type)}
-                        >
-                          {type === "all" ? "All" : type}
-                        </Button>
-                      ))}
-                    </div>
-
-                    <div className="space-y-3">
-                      {currentAssetDiscussions
-                        .filter(d => discussionTypeFilter === "all" || d.type === discussionTypeFilter)
-                        .map((discussion) => (
-                          <Card key={discussion.id} className="border-[#E5E7EB] cursor-pointer hover:border-[#ee3224]/30 transition-colors">
-                            <CardContent className="p-4">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <Badge variant="outline" className={`text-[10px] ${getDiscussionTypeColor(discussion.type)}`}>
-                                      {discussion.type}
-                                    </Badge>
-                                    {discussion.acceptedAnswer && (
-                                      <Badge className="bg-emerald-100 text-emerald-700 text-[10px]">
-                                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                                        Answered
-                                      </Badge>
-                                    )}
-                                    {discussion.isCreator && (
-                                      <Badge variant="outline" className="text-[10px] bg-[#ee3224]/10 text-[#ee3224] border-[#ee3224]/30">
-                                        Creator
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  <h4 className="font-medium text-foreground mb-1">{discussion.title}</h4>
-                                  <p className="text-sm text-muted-foreground line-clamp-1">{discussion.excerpt}</p>
-                                </div>
-                                <div className="flex items-center gap-4 text-xs text-muted-foreground ml-4">
-                                  <div className="flex items-center gap-1">
-                                    <ThumbsUp className="h-3.5 w-3.5" />
-                                    {discussion.upvotes}
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <MessageSquare className="h-3.5 w-3.5" />
-                                    {discussion.replies}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2 mt-3">
-                                <Avatar className="h-5 w-5">
-                                  <AvatarFallback className="text-[10px] bg-muted">{discussion.authorInitials}</AvatarFallback>
-                                </Avatar>
-                                <span className="text-xs text-muted-foreground">{discussion.author}</span>
-                                <span className="text-xs text-muted-foreground">·</span>
-                                <span className="text-xs text-muted-foreground">{discussion.timestamp}</span>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                    </div>
-                  </TabsContent>
-
-                  {/* Versions Tab */}
-                  <TabsContent value="versions" className="p-6 m-0">
-                    <h3 className="font-semibold mb-4">Version History</h3>
-                    <div className="space-y-3">
-                      {versionHistory.map((version) => (
-                        <Card key={version.version} className={`border-[#E5E7EB] ${version.current ? "ring-2 ring-[#ee3224]/20" : ""}`}>
-                          <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                  <span className="font-medium text-foreground">v{version.version}</span>
-                                  {version.current && (
-                                    <Badge className="bg-emerald-100 text-emerald-700 text-[10px]">Current</Badge>
-                                  )}
-                                </div>
-                                <p className="text-sm text-muted-foreground">{version.summary}</p>
-                                <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                                  <div className="flex items-center gap-1">
-                                    <Clock className="h-3.5 w-3.5" />
-                                    {version.date}
-                                  </div>
-                                  <span>{version.size}</span>
-                                </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm">Release Notes</Button>
-                                {!version.current && (
-                                  <Button variant="outline" size="sm">Install</Button>
-                                )}
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </TabsContent>
-                </ScrollArea>
-              </Tabs>
-
-              {/* Modal Footer */}
-              <div className="border-t border-[#E5E7EB] p-4 flex items-center justify-between bg-white">
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">Add to Collection</Button>
-                  <Button variant="outline" size="sm">Notify on Update</Button>
-                </div>
-                <Button
-                  className={
-                    installedAssets.includes(selectedAsset.id)
-                      ? "bg-emerald-500 hover:bg-emerald-600"
-                      : "bg-[#ee3224] hover:bg-[#cc2a1e]"
-                  }
-                  onClick={() => {
-                    if (!installedAssets.includes(selectedAsset.id)) {
-                      handleInstall(selectedAsset.id)
-                    }
-                  }}
-                  disabled={installingAsset === selectedAsset.id}
-                >
-                  {installingAsset === selectedAsset.id
-                    ? "Installing..."
-                    : installedAssets.includes(selectedAsset.id)
-                    ? "Open in My Apps"
-                    : "Install Now"}
-                </Button>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Community Slide-Over Panel */}
-      <Sheet open={showCommunityPanel} onOpenChange={setShowCommunityPanel}>
-        <SheetContent className="w-[400px] p-0">
-          <SheetHeader className="p-4 border-b border-[#E5E7EB]">
-            <div className="flex items-center justify-between">
-              <SheetTitle>Community Discussions</SheetTitle>
-            </div>
-            <div className="relative mt-2">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search discussions..." className="pl-10 border-[#E5E7EB]" />
-            </div>
-          </SheetHeader>
-
-          <Tabs value={communityTab} onValueChange={setCommunityTab} className="flex-1">
-            <div className="border-b border-[#E5E7EB] px-4">
-              <TabsList className="h-10 bg-transparent p-0 gap-4">
-                <TabsTrigger value="trending" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none bg-transparent px-0 pb-2 text-sm">
-                  Trending
-                </TabsTrigger>
-                <TabsTrigger value="my" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none bg-transparent px-0 pb-2 text-sm">
-                  My Discussions
-                </TabsTrigger>
-                <TabsTrigger value="following" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none bg-transparent px-0 pb-2 text-sm">
-                  Following
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            <ScrollArea className="h-[calc(100vh-200px)]">
-              <TabsContent value="trending" className="p-4 m-0 space-y-3">
-                {globalDiscussions.map((discussion) => (
-                  <Card key={discussion.id} className="border-[#E5E7EB] cursor-pointer hover:border-[#ee3224]/30 transition-colors">
+            <ScrollArea className="flex-1 h-[calc(100vh-220px)]">
+              <div className="p-4 space-y-3">
+                {globalDiscussions.map((disc) => (
+                  <Card key={disc.id} className="border-[#E5E7EB] cursor-pointer hover:border-[#ee3224]/30 transition-colors">
                     <CardContent className="p-3">
-                      <div className="flex items-start gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback className="text-xs bg-muted">{discussion.authorInitials}</AvatarFallback>
+                      <h4 className="font-medium text-sm line-clamp-2">{disc.title}</h4>
+                      <Badge variant="secondary" className="text-[10px] mt-1 bg-[#F5F7FA]">{disc.assetBadge}</Badge>
+                      <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                        <Avatar className="h-5 w-5">
+                          <AvatarFallback className="text-[10px]">{disc.authorInitials}</AvatarFallback>
                         </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-sm text-foreground line-clamp-2 mb-1">{discussion.title}</h4>
-                          <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{discussion.assetBadge}</Badge>
-                            <span className="text-xs text-muted-foreground">{discussion.timestamp}</span>
-                          </div>
-                          <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <ThumbsUp className="h-3 w-3" />
-                              {discussion.upvotes}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <MessageSquare className="h-3 w-3" />
-                              {discussion.replies}
-                            </div>
-                          </div>
-                        </div>
+                        <span>{disc.author}</span>
+                        <span>{disc.timestamp}</span>
+                      </div>
+                      <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1"><ThumbsUp className="h-3 w-3" /> {disc.upvotes}</span>
+                        <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" /> {disc.replies}</span>
                       </div>
                     </CardContent>
                   </Card>
                 ))}
-              </TabsContent>
-
-              <TabsContent value="my" className="p-4 m-0">
-                <div className="text-center py-8 text-muted-foreground">
-                  <MessageSquare className="h-10 w-10 mx-auto mb-3 text-muted-foreground/50" />
-                  <p className="text-sm">No discussions yet</p>
-                  <p className="text-xs mt-1">Start a discussion to see it here</p>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="following" className="p-4 m-0">
-                <div className="text-center py-8 text-muted-foreground">
-                  <Users className="h-10 w-10 mx-auto mb-3 text-muted-foreground/50" />
-                  <p className="text-sm">Not following any discussions</p>
-                  <p className="text-xs mt-1">Follow discussions to track updates</p>
-                </div>
-              </TabsContent>
+              </div>
             </ScrollArea>
-          </Tabs>
 
-          {/* Panel Footer */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[#E5E7EB] bg-white">
-            <Button className="w-full bg-[#ee3224] hover:bg-[#cc2a1e]">
-              <Plus className="h-4 w-4 mr-2" />
-              Start New Discussion
-            </Button>
-            <div className="flex items-center justify-center gap-4 mt-3 text-xs text-muted-foreground">
-              <a href="#" className="hover:text-foreground">Documentation</a>
-              <a href="#" className="hover:text-foreground">Tutorials</a>
-              <a href="#" className="hover:text-foreground">Support</a>
+            <div className="p-4 border-t border-[#E5E7EB]">
+              <Button className="w-full bg-[#ee3224] hover:bg-[#cc2a1e]">Start New Discussion</Button>
             </div>
-          </div>
-        </SheetContent>
-      </Sheet>
+          </SheetContent>
+        </Sheet>
+      </div>
     </AppLayout>
   )
 }
