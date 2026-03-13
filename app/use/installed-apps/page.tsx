@@ -607,15 +607,16 @@ export default function MyAppsPage() {
       <div className="flex flex-col h-full bg-[#F5F7FA]">
         {/* Header */}
         <div className="bg-white border-b border-[#E5E7EB] px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Left: Title */}
-            <div className="flex items-center gap-2">
-              <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Installed Apps</h1>
-            </div>
-            
-            {/* Center: Search */}
-            <div className="relative w-[400px]">
+          {/* Title Row */}
+          <div className="flex items-center gap-2 mb-4">
+            <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
+            <h1 className="text-xl font-semibold text-foreground">Installed Apps</h1>
+          </div>
+          
+          {/* Controls Row: Search + Filter Chips + View Toggle */}
+          <div className="flex items-center gap-4">
+            {/* Search */}
+            <div className="relative w-[300px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 ref={searchInputRef}
@@ -655,7 +656,45 @@ export default function MyAppsPage() {
               )}
             </div>
             
-            {/* Right: View Toggle */}
+            {/* Filter Chips */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setActiveFilters([])}
+                className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                  activeFilters.length === 0
+                    ? "bg-[#ee3224] text-white"
+                    : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+                }`}
+              >
+                All
+              </button>
+              {(["Built-In", "My Agent", "Team"] as AppSource[]).map(source => (
+                <button
+                  key={source}
+                  onClick={() => toggleFilter(source)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                    activeFilters.includes(source)
+                      ? "bg-[#ee3224] text-white"
+                      : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+                  }`}
+                >
+                  {source === "My Agent" ? "My Agents" : source === "Team" ? "Team Agents" : source}
+                </button>
+              ))}
+              {activeFilters.length > 0 && (
+                <button 
+                  onClick={() => setActiveFilters([])}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            
+            {/* Spacer */}
+            <div className="flex-1" />
+            
+            {/* View Toggle */}
             <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
               <button
                 onClick={() => setViewMode("grid")}
@@ -678,41 +717,6 @@ export default function MyAppsPage() {
                 <List className="h-4 w-4" />
               </button>
             </div>
-          </div>
-          
-          {/* Filter Chips */}
-          <div className="flex items-center gap-2 mt-4">
-            <button
-              onClick={() => setActiveFilters([])}
-              className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
-                activeFilters.length === 0
-                  ? "bg-[#ee3224] text-white"
-                  : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
-              }`}
-            >
-              All
-            </button>
-            {(["Built-In", "My Agent", "Team"] as AppSource[]).map(source => (
-              <button
-                key={source}
-                onClick={() => toggleFilter(source)}
-                className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
-                  activeFilters.includes(source)
-                    ? "bg-[#ee3224] text-white"
-                    : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
-                }`}
-              >
-                {source === "My Agent" ? "My Agents" : source === "Team" ? "Team Agents" : source}
-              </button>
-            ))}
-            {activeFilters.length > 0 && (
-              <button 
-                onClick={() => setActiveFilters([])}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
           </div>
         </div>
         
