@@ -14,10 +14,10 @@ import {
   Store,
   FileCode,
   Puzzle,
-  Trophy,
-  Briefcase,
   BookOpen,
   LayoutGrid,
+  Activity,
+  Award,
 } from "lucide-react"
 
 const navigation = [
@@ -50,6 +50,13 @@ const navigation = [
       { name: "Agent Marketplace", href: "/layer6/marketplace", icon: Store },
       { name: "Template Library", href: "/layer6/templates", icon: FileCode },
       { name: "Plugin Store", href: "/layer6/plugins", icon: Puzzle },
+    ],
+  },
+  {
+    title: "Layer 7 - Creator Studio",
+    items: [
+      { name: "Pulse", href: "/layer7/pulse", icon: Activity },
+      { name: "Creator Status", href: "/layer7/creator-status", icon: Award },
     ],
   },
 ]
