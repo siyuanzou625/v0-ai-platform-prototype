@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
 
 export default function DiscoverPage() {
-  redirect("/layer6/marketplace")
+  redirect("/explore/agents")
 }

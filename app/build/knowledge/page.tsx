@@ -220,7 +220,7 @@ export default function KnowledgePage() {
   )
 
   const handleOpenKnowledge = (kbId: string) => {
-    router.push(`/layer4/knowledge/${kbId}`)
+    router.push(`/build/knowledge/${kbId}`)
   }
 
   const handleCreateKnowledge = () => {

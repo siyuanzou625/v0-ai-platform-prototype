@@ -367,14 +367,14 @@ export default function ProjectsPage() {
   const blockedCount = projects.filter(p => p.status === "blocked").length
 
   const handleOpenProject = (projectId: string) => {
-    router.push(`/layer4/workspace?id=${projectId}`)
+    router.push(`/build/workspace?id=${projectId}`)
   }
 
   const handleCreateProject = () => {
     setShowNewProject(false)
     setNewProjectName("")
     setNewProjectDescription("")
-    router.push(`/layer4/workspace?id=new&mode=${newProjectMode}`)
+    router.push(`/build/workspace?id=new&mode=${newProjectMode}`)
   }
 
   const handleSort = (field: SortField) => {

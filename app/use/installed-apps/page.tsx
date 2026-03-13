@@ -527,7 +527,7 @@ export default function MyAppsPage() {
                   variant="ghost" 
                   size="icon" 
                   className="h-7 w-7"
-                  onClick={(e) => { e.stopPropagation(); router.push("/layer4/projects") }}
+                  onClick={(e) => { e.stopPropagation(); router.push("/build/projects") }}
                 >
                   <Pencil className="h-4 w-4 text-muted-foreground" />
                 </Button>

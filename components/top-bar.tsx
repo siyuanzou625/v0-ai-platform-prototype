@@ -65,9 +65,9 @@ const recentSearches = [
 ]
 
 const quickActions = [
-  { label: "Create New Agent", shortcut: "Cmd+N", href: "/layer4/projects" },
-  { label: "Open Build Workspace", shortcut: "Cmd+B", href: "/layer4/workspace" },
-  { label: "View My Apps", shortcut: "Cmd+M", href: "/layer5" },
+  { label: "Create New Agent", shortcut: "Cmd+N", href: "/build/projects" },
+  { label: "Open Build Workspace", shortcut: "Cmd+B", href: "/build/workspace" },
+  { label: "View My Apps", shortcut: "Cmd+M", href: "/use/installed-apps" },
 ]
 
 const suggestedAssets = [
