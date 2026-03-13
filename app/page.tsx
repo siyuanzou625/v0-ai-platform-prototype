@@ -1,268 +1,752 @@
+"use client"
+
+import { useState } from "react"
 import { AppLayout } from "@/components/app-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
 import { 
-  Sparkles, 
-  Workflow, 
-  Store, 
-  AppWindow,
-  Bot,
-  FileCode,
+  House,
+  Hammer,
+  Rocket,
+  Compass,
+  Lightbulb,
+  X,
+  Play,
+  ChevronLeft,
+  ChevronRight,
+  LayoutGrid,
+  Folder,
+  Database,
+  Link,
+  RefreshCcw,
   BarChart3,
+  Activity,
+  Award,
+  Sparkles,
+  Star,
+  Download,
+  Bell,
+  Megaphone,
+  Package,
   Users,
-  ArrowRight,
-  Clock,
-  TrendingUp
+  DollarSign,
+  Bot,
+  Mic,
+  FileText,
+  MessageSquare,
+  BookOpen,
+  Mail,
+  Puzzle,
+  ArrowUp,
+  ExternalLink
 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
-const mainActions = [
+// Mock data
+const continueData = [
   {
-    title: "Create Agent",
-    description: "Build AI agents with natural language",
+    id: "continue-001",
+    type: "Project",
+    name: "Enterprise Sales Agent",
     icon: Bot,
-    href: "/build/projects",
-    color: "bg-primary",
+    lastActivity: "2 hours ago",
+    progress: 75,
+    path: "/build/projects",
+    action: "Resume"
   },
   {
-    title: "Build Workflow",
-    description: "Visual workflow automation",
-    icon: Workflow,
-    href: "/build/projects",
-    color: "bg-chart-2",
+    id: "continue-002",
+    type: "App",
+    name: "Briefly AI",
+    icon: Mic,
+    lastActivity: "5 hours ago",
+    progress: null,
+    path: "/use/installed-apps",
+    action: "Launch"
   },
   {
-    title: "Explore Marketplace",
-    description: "Discover community agents",
-    icon: Store,
-    href: "/explore/agents",
-    color: "bg-chart-3",
+    id: "continue-003",
+    type: "Dashboard",
+    name: "Pulse Check",
+    icon: Activity,
+    lastActivity: "1 day ago",
+    progress: null,
+    path: "/manage/pulse-check",
+    action: "View"
   },
   {
-    title: "Launch AI App",
-    description: "Deploy production applications",
-    icon: AppWindow,
-    href: "/use/installed-apps",
-    color: "bg-chart-4",
+    id: "continue-004",
+    type: "Template",
+    name: "Meeting Notes Template",
+    icon: FileText,
+    lastActivity: "2 days ago",
+    progress: null,
+    path: "/explore/templates",
+    action: "Use"
   },
+  {
+    id: "continue-005",
+    type: "Plugin",
+    name: "Slack Connector",
+    icon: MessageSquare,
+    lastActivity: "3 days ago",
+    progress: null,
+    path: "/explore/plugins",
+    action: "Edit"
+  }
 ]
 
-const recentAgents = [
-  { name: "Email Summarizer", type: "Personal", lastUsed: "2 hours ago", runs: 342 },
-  { name: "Data Analyst Pro", type: "Enterprise", lastUsed: "5 hours ago", runs: 1205 },
-  { name: "Content Writer", type: "Personal", lastUsed: "1 day ago", runs: 89 },
-  { name: "Meeting Scheduler", type: "Personal", lastUsed: "2 days ago", runs: 567 },
-  { name: "Code Reviewer", type: "Enterprise", lastUsed: "3 days ago", runs: 234 },
+const recommendations = [
+  {
+    id: "rec-001",
+    type: "Agent",
+    name: "Research Assistant",
+    description: "Deep dive into any topic with AI-assisted literature review",
+    rating: 4.6,
+    installs: "5.6K",
+    icon: BookOpen,
+    action: "Install"
+  },
+  {
+    id: "rec-002",
+    type: "Template",
+    name: "Meeting Notes Automation",
+    description: "Auto-summarize and distribute meeting notes",
+    rating: 4.8,
+    installs: "1.2K",
+    icon: FileText,
+    action: "Use"
+  },
+  {
+    id: "rec-003",
+    type: "Plugin",
+    name: "Slack Connector",
+    description: "Send notifications to Slack channels",
+    rating: 4.5,
+    installs: "45.2K",
+    icon: MessageSquare,
+    action: "Install"
+  },
+  {
+    id: "rec-004",
+    type: "Agent",
+    name: "InboxIQ AI",
+    description: "Privately triage, summarize, and draft email responses",
+    rating: 4.9,
+    installs: "18.2K",
+    icon: Mail,
+    action: "Install"
+  },
+  {
+    id: "rec-005",
+    type: "Template",
+    name: "Lead Qualification Pipeline",
+    description: "Score and route sales leads automatically",
+    rating: 4.4,
+    installs: "892",
+    icon: Users,
+    action: "Use"
+  },
+  {
+    id: "rec-006",
+    type: "Plugin",
+    name: "Google Workspace Integration",
+    description: "Connect Gmail, Calendar, Drive",
+    rating: 4.7,
+    installs: "38.7K",
+    icon: Puzzle,
+    action: "Install"
+  }
 ]
 
-const featuredTemplates = [
-  { name: "Customer Support Bot", category: "Enterprise", downloads: "12.5K", rating: 4.8 },
-  { name: "Document Processor", category: "Productivity", downloads: "8.2K", rating: 4.7 },
-  { name: "Sales Assistant", category: "Business", downloads: "6.1K", rating: 4.9 },
-  { name: "Research Agent", category: "Knowledge", downloads: "5.8K", rating: 4.6 },
+const recentActivity = [
+  { id: 1, avatar: "user", text: "You deployed Enterprise Sales Agent to Production", time: "2 hours ago" },
+  { id: 2, avatar: "user", text: "Alex updated Customer Support Bot", time: "5 hours ago" },
+  { id: 3, avatar: "celebration", text: "Briefly AI reached 10K installs!", time: "1 day ago" },
+  { id: 4, avatar: "comment", text: "New discussion on MindLink AI", time: "2 days ago" },
+  { id: 5, avatar: "user", text: "You created Meeting Notes Template", time: "3 days ago" },
+  { id: 6, avatar: "system", text: "System: Platform update deployed", time: "4 days ago" },
+  { id: 7, avatar: "user", text: "Sarah joined your team workspace", time: "1 week ago" }
 ]
 
-const activityFeed = [
-  { action: "Agent deployed", target: "Email Summarizer v2.1", time: "10 min ago", type: "deploy" },
-  { action: "Workflow completed", target: "Daily Report Generation", time: "25 min ago", type: "success" },
-  { action: "New template published", target: "Social Media Manager", time: "1 hour ago", type: "publish" },
-  { action: "Plugin installed", target: "OpenAI GPT-4 Connector", time: "2 hours ago", type: "install" },
-  { action: "Agent updated", target: "Data Analyst Pro", time: "3 hours ago", type: "update" },
-  { action: "Workflow created", target: "Customer Onboarding", time: "5 hours ago", type: "create" },
+const platformUpdates = [
+  { id: 1, icon: Rocket, title: "Cross-Device handoff now supports iOS → PC", description: "Seamlessly continue tasks from iPhone to desktop", badge: "New" },
+  { id: 2, icon: Activity, title: "Workflow builder performance +30%", description: "Faster node rendering and connection updates", badge: "Improved" },
+  { id: 3, icon: FileText, title: "12 new enterprise templates", description: "Pre-built workflows for sales, support, HR, and finance", badge: "New" },
+  { id: 4, icon: Package, title: "Enhanced credential encryption", description: "AES-256 encryption for all stored connections", badge: "Improved" }
+]
+
+const tips = [
+  "Try Briefly AI to summarize your next meeting",
+  "Connect Slack to get real-time notifications from your agents",
+  "Use templates to jumpstart your next workflow",
+  "Check Pulse to monitor your agent performance"
 ]
 
 export default function HomePage() {
+  const router = useRouter()
+  const [showTip, setShowTip] = useState(true)
+  const [currentTip] = useState(0)
+  const [continueScrollIndex, setContinueScrollIndex] = useState(0)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const handleRefreshRecommendations = () => {
+    setIsRefreshing(true)
+    setTimeout(() => setIsRefreshing(false), 1000)
+  }
+
+  const scrollContinue = (direction: "left" | "right") => {
+    if (direction === "left" && continueScrollIndex > 0) {
+      setContinueScrollIndex(continueScrollIndex - 1)
+    } else if (direction === "right" && continueScrollIndex < continueData.length - 3) {
+      setContinueScrollIndex(continueScrollIndex + 1)
+    }
+  }
+
   return (
     <AppLayout>
-      <div className="space-y-6">
-        {/* Header */}
+      <div className="space-y-8">
+        {/* Component 2: Page Header */}
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Welcome back</h1>
-          <p className="text-muted-foreground">
-            Build, deploy, and manage AI agents across your enterprise
+          <div className="flex items-center gap-2 mb-2">
+            <House className="h-6 w-6 text-[#ee3224]" />
+            <h1 className="text-2xl font-semibold text-[#1F2937]">Home</h1>
+          </div>
+          <p className="text-sm text-[#6B7280]">
+            Welcome back, Zoey. What would you like to do today?
           </p>
         </div>
 
-        {/* Main Action Cards */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {mainActions.map((action) => (
-            <Card
-              key={action.title}
-              className="group cursor-pointer border border-border transition-all hover:border-primary hover:shadow-md"
-            >
-              <CardHeader className="pb-3">
-                <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded ${action.color}`}>
-                  <action.icon className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <CardTitle className="text-base font-medium">{action.title}</CardTitle>
-                <CardDescription className="text-sm">{action.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Button variant="ghost" size="sm" className="gap-1 p-0 text-primary hover:bg-transparent">
-                  Get Started <ArrowRight className="h-3 w-3" />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Recently Used Agents */}
-          <Card className="lg:col-span-2">
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-              <div>
-                <CardTitle className="text-base font-medium">Recently Used Agents</CardTitle>
-                <CardDescription>Your most active AI agents</CardDescription>
+        {/* Primary Action Cards (3-Card Row) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Card 1: Build an Agent */}
+          <Card 
+            className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+            onClick={() => router.push("/build/projects")}
+          >
+            <CardContent className="p-6">
+              <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
+                <Hammer className="h-8 w-8 text-[#ee3224]" />
               </div>
-              <Button variant="ghost" size="sm" className="text-primary">
-                View All
+              <h3 className="text-base font-semibold text-[#1F2937] mb-1">Build an Agent</h3>
+              <p className="text-[13px] text-[#6B7280] mb-4">Create AI agents and workflows from scratch</p>
+              <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
+                Get Started
               </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {recentAgents.map((agent) => (
-                  <div
-                    key={agent.name}
-                    className="flex items-center justify-between rounded border border-border bg-card p-3 transition-colors hover:border-primary"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded bg-secondary">
-                        <Bot className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{agent.name}</p>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="text-xs">
-                            {agent.type}
-                          </Badge>
-                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3" /> {agent.lastUsed}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-foreground">{agent.runs}</p>
-                      <p className="text-xs text-muted-foreground">runs</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </CardContent>
           </Card>
 
-          {/* Activity Feed */}
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-base font-medium">Activity Feed</CardTitle>
-              <CardDescription>Recent platform activity</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {activityFeed.map((activity, index) => (
-                  <div key={index} className="flex gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
-                      <Sparkles className="h-3 w-3 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-foreground">
-                        <span className="font-medium">{activity.action}</span>
-                      </p>
-                      <p className="text-xs text-muted-foreground">{activity.target}</p>
-                      <p className="text-xs text-muted-foreground">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
+          {/* Card 2: Launch an App */}
+          <Card 
+            className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+            onClick={() => router.push("/use/installed-apps")}
+          >
+            <CardContent className="p-6">
+              <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
+                <Rocket className="h-8 w-8 text-[#ee3224]" />
               </div>
+              <h3 className="text-base font-semibold text-[#1F2937] mb-1">Launch an App</h3>
+              <p className="text-[13px] text-[#6B7280] mb-4">Open your installed AI applications</p>
+              <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
+                Open Apps
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Card 3: Explore Marketplace */}
+          <Card 
+            className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+            onClick={() => router.push("/explore/agents")}
+          >
+            <CardContent className="p-6">
+              <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
+                <Compass className="h-8 w-8 text-[#ee3224]" />
+              </div>
+              <h3 className="text-base font-semibold text-[#1F2937] mb-1">Explore Marketplace</h3>
+              <p className="text-[13px] text-[#6B7280] mb-4">Discover agents, templates, and plugins</p>
+              <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
+                Browse
+              </Button>
             </CardContent>
           </Card>
         </div>
 
-        {/* Featured Templates */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-4">
-            <div>
-              <CardTitle className="text-base font-medium">Featured Templates</CardTitle>
-              <CardDescription>Popular agent templates from the community</CardDescription>
+        {/* Contextual Tip Banner */}
+        {showTip && (
+          <div className="flex items-center justify-between bg-[#F5F7FA] border-l-[3px] border-l-[#ee3224] rounded px-4 py-3">
+            <div className="flex items-center gap-3">
+              <Lightbulb className="h-4 w-4 text-[#ee3224]" />
+              <p className="text-sm text-[#333]">
+                <span className="font-medium">Quick Tip:</span> {tips[currentTip]}
+              </p>
             </div>
-            <Button variant="ghost" size="sm" className="text-primary">
-              Browse All
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {featuredTemplates.map((template) => (
-                <div
-                  key={template.name}
-                  className="rounded border border-border bg-card p-4 transition-colors hover:border-primary"
+            <button onClick={() => setShowTip(false)} className="text-[#6B7280] hover:text-[#333]">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Component 3: Continue Where You Left Off */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Play className="h-5 w-5 text-[#ee3224]" />
+                <h2 className="text-lg font-semibold text-[#1F2937]">Continue</h2>
+              </div>
+              <p className="text-sm text-[#6B7280]">Pick up where you left off</p>
+            </div>
+            <button className="text-sm text-[#ee3224] hover:underline">View All</button>
+          </div>
+
+          <div className="relative">
+            {/* Scroll Buttons */}
+            {continueScrollIndex > 0 && (
+              <button 
+                onClick={() => scrollContinue("left")}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 h-8 w-8 flex items-center justify-center bg-white border border-[#E5E7EB] rounded-full shadow-sm hover:shadow-md"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+            )}
+            {continueScrollIndex < continueData.length - 3 && (
+              <button 
+                onClick={() => scrollContinue("right")}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 h-8 w-8 flex items-center justify-center bg-white border border-[#E5E7EB] rounded-full shadow-sm hover:shadow-md"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            )}
+
+            {/* Cards */}
+            <div className="flex gap-4 overflow-hidden">
+              {continueData.slice(continueScrollIndex, continueScrollIndex + 3).map((item) => (
+                <Card 
+                  key={item.id}
+                  className="flex-1 min-w-0 border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+                  onClick={() => router.push(item.path)}
                 >
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded bg-secondary">
-                    <FileCode className="h-5 w-5 text-primary" />
-                  </div>
-                  <h4 className="mb-1 text-sm font-medium text-foreground">{template.name}</h4>
-                  <Badge variant="secondary" className="mb-3 text-xs">
-                    {template.category}
-                  </Badge>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <TrendingUp className="h-3 w-3" /> {template.downloads}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Users className="h-3 w-3" /> {template.rating}
-                    </span>
-                  </div>
-                </div>
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="flex items-center justify-center h-12 w-12 rounded-full bg-white border border-[#E5E7EB]">
+                        <item.icon className="h-6 w-6 text-[#ee3224]" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-[15px] font-semibold text-[#1F2937] truncate">{item.name}</h4>
+                        <Badge variant="secondary" className="text-xs bg-[#F5F7FA] text-[#333] mt-1">
+                          {item.type}
+                        </Badge>
+                        <p className="text-xs text-[#6B7280] mt-2">Last edited: {item.lastActivity}</p>
+                        {item.progress && (
+                          <div className="mt-2">
+                            <Progress value={item.progress} className="h-1.5" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full mt-4 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+                    >
+                      {item.action}
+                    </Button>
+                  </CardContent>
+                </Card>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        {/* Platform Stats */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Card className="border border-border">
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded bg-primary/10">
-                <Bot className="h-6 w-6 text-primary" />
+        {/* Component 4: Quick Access by Section */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
+            <h2 className="text-lg font-semibold text-[#1F2937]">Quick Access</h2>
+          </div>
+          <p className="text-sm text-[#6B7280] mb-4">Navigate to any section instantly</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Build Card */}
+            <Card className="border border-[#E5E7EB] bg-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <Hammer className="h-6 w-6 text-[#ee3224]" />
+                  <h3 className="text-base font-semibold text-[#1F2937]">Build</h3>
+                </div>
+                <p className="text-[13px] text-[#6B7280] mb-4">Create agents and workflows</p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/build/projects")}>
+                    <div className="flex items-center gap-2">
+                      <Folder className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Projects</span>
+                      <span className="text-xs text-[#6B7280]">Create agents</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/build/knowledge")}>
+                    <div className="flex items-center gap-2">
+                      <Database className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Knowledge</span>
+                      <span className="text-xs text-[#6B7280]">Manage context</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/build/connections")}>
+                    <div className="flex items-center gap-2">
+                      <Link className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Connections</span>
+                      <span className="text-xs text-[#6B7280]">Connect tools</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Use Card */}
+            <Card className="border border-[#E5E7EB] bg-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <Rocket className="h-6 w-6 text-[#ee3224]" />
+                  <h3 className="text-base font-semibold text-[#1F2937]">Use</h3>
+                </div>
+                <p className="text-[13px] text-[#6B7280] mb-4">Launch and manage apps</p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/use/installed-apps")}>
+                    <div className="flex items-center gap-2">
+                      <LayoutGrid className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Installed Apps</span>
+                      <span className="text-xs text-[#6B7280]">Launch apps</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/use/cross-devices")}>
+                    <div className="flex items-center gap-2">
+                      <RefreshCcw className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Cross Devices</span>
+                      <span className="text-xs text-[#6B7280]">Sync devices</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Explore Card */}
+            <Card className="border border-[#E5E7EB] bg-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <Compass className="h-6 w-6 text-[#ee3224]" />
+                  <h3 className="text-base font-semibold text-[#1F2937]">Explore</h3>
+                </div>
+                <p className="text-[13px] text-[#6B7280] mb-4">Discover community assets</p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/explore/agents")}>
+                    <div className="flex items-center gap-2">
+                      <Bot className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Agents</span>
+                      <span className="text-xs text-[#6B7280]">Find agents</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/explore/templates")}>
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Templates</span>
+                      <span className="text-xs text-[#6B7280]">Speed up build</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/explore/plugins")}>
+                    <div className="flex items-center gap-2">
+                      <Puzzle className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Plugins</span>
+                      <span className="text-xs text-[#6B7280]">Extend agents</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Manage Card */}
+            <Card className="border border-[#E5E7EB] bg-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <BarChart3 className="h-6 w-6 text-[#ee3224]" />
+                  <h3 className="text-base font-semibold text-[#1F2937]">Manage</h3>
+                </div>
+                <p className="text-[13px] text-[#6B7280] mb-4">Monitor and track progress</p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/manage/pulse-check")}>
+                    <div className="flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Pulse Check</span>
+                      <span className="text-xs text-[#6B7280]">Monitor health</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA] cursor-pointer" onClick={() => router.push("/manage/creator-status")}>
+                    <div className="flex items-center gap-2">
+                      <Award className="h-4 w-4 text-[#6B7280]" />
+                      <span className="text-sm font-medium text-[#333]">Creator Status</span>
+                      <span className="text-xs text-[#6B7280]">Track progress</span>
+                    </div>
+                    <button className="text-xs text-[#ee3224] hover:underline">Go</button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Component 5: Recommended for You */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-[#ee3224]" />
+                <h2 className="text-lg font-semibold text-[#1F2937]">Recommended</h2>
               </div>
-              <div>
-                <p className="text-2xl font-semibold text-foreground">247</p>
-                <p className="text-sm text-muted-foreground">Active Agents</p>
+              <p className="text-sm text-[#6B7280]">Personalized suggestions based on your activity</p>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={handleRefreshRecommendations}
+              className={isRefreshing ? "animate-spin" : ""}
+            >
+              <RefreshCcw className="h-4 w-4 text-[#6B7280]" />
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {recommendations.map((rec) => (
+              <Card 
+                key={rec.id}
+                className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              >
+                <CardContent className="p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#F5F7FA]">
+                      <rec.icon className="h-6 w-6 text-[#ee3224]" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-sm font-semibold text-[#1F2937]">{rec.name}</h4>
+                        <Badge variant="secondary" className="text-xs bg-[#F5F7FA] text-[#333]">
+                          {rec.type}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[13px] text-[#6B7280] mb-3 line-clamp-2">{rec.description}</p>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-1 text-[#F59E0B]">
+                      <Star className="h-4 w-4 fill-current" />
+                      <span className="text-sm font-medium">{rec.rating}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-[#6B7280]">
+                      <Download className="h-4 w-4" />
+                      <span className="text-sm">{rec.installs}</span>
+                    </div>
+                  </div>
+                  <Button 
+                    className={rec.action === "Install" 
+                      ? "w-full bg-[#ee3224] hover:bg-[#cc2a1e] text-white" 
+                      : "w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+                    }
+                    variant={rec.action === "Install" ? "default" : "outline"}
+                  >
+                    {rec.action}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Component 6: Activity & Updates */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* Recent Activity (60%) */}
+          <Card className="lg:col-span-3 border border-[#E5E7EB] bg-white">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Bell className="h-5 w-5 text-[#ee3224]" />
+                  <h3 className="text-base font-semibold text-[#1F2937]">Recent Activity</h3>
+                </div>
+                <button className="text-sm text-[#ee3224] hover:underline">View All</button>
+              </div>
+              <div className="space-y-3 max-h-[280px] overflow-y-auto">
+                {recentActivity.map((activity) => (
+                  <div 
+                    key={activity.id}
+                    className="flex items-start gap-3 p-2 rounded hover:bg-[#F5F7FA] cursor-pointer"
+                  >
+                    <div className="flex items-center justify-center h-6 w-6 rounded-full bg-[#F5F7FA]">
+                      {activity.avatar === "celebration" ? (
+                        <span className="text-xs">🎉</span>
+                      ) : activity.avatar === "comment" ? (
+                        <span className="text-xs">💬</span>
+                      ) : activity.avatar === "system" ? (
+                        <span className="text-xs">🔧</span>
+                      ) : (
+                        <span className="text-xs">👤</span>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-[#333]">{activity.text}</p>
+                      <p className="text-xs text-[#6B7280]">{activity.time}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-          <Card className="border border-border">
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded bg-chart-2/10">
-                <Workflow className="h-6 w-6 text-chart-2" />
+
+          {/* Platform Updates (40%) */}
+          <Card className="lg:col-span-2 border border-[#E5E7EB] bg-white">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Megaphone className="h-5 w-5 text-[#ee3224]" />
+                  <h3 className="text-base font-semibold text-[#1F2937]">Platform Updates</h3>
+                </div>
+                <button className="text-sm text-[#ee3224] hover:underline flex items-center gap-1">
+                  Release Notes <ExternalLink className="h-3 w-3" />
+                </button>
               </div>
-              <div>
-                <p className="text-2xl font-semibold text-foreground">1,842</p>
-                <p className="text-sm text-muted-foreground">Workflows Run</p>
+              <div className="space-y-3 max-h-[280px] overflow-y-auto">
+                {platformUpdates.map((update) => (
+                  <div 
+                    key={update.id}
+                    className="p-3 rounded hover:bg-[#F5F7FA] cursor-pointer"
+                  >
+                    <div className="flex items-start gap-3">
+                      <update.icon className="h-4 w-4 text-[#ee3224] mt-0.5" />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-[#333]">{update.title}</p>
+                          <Badge className={update.badge === "New" ? "bg-[#ee3224] text-white text-xs" : "bg-[#6B7280] text-white text-xs"}>
+                            {update.badge}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-[#6B7280] mt-1 line-clamp-2">{update.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-          <Card className="border border-border">
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded bg-chart-3/10">
-                <Users className="h-6 w-6 text-chart-3" />
+        </div>
+
+        {/* Component 7: Quick Stats (Creator Dashboard) */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-[#ee3224]" />
+                <h2 className="text-lg font-semibold text-[#1F2937]">Your Impact</h2>
               </div>
-              <div>
-                <p className="text-2xl font-semibold text-foreground">56</p>
-                <p className="text-sm text-muted-foreground">Team Members</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border border-border">
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded bg-chart-4/10">
-                <BarChart3 className="h-6 w-6 text-chart-4" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold text-foreground">98.5%</p>
-                <p className="text-sm text-muted-foreground">Uptime</p>
-              </div>
-            </CardContent>
-          </Card>
+              <p className="text-sm text-[#6B7280]">Your contribution to the platform</p>
+            </div>
+            <button 
+              className="text-sm text-[#ee3224] hover:underline"
+              onClick={() => router.push("/manage/pulse-check")}
+            >
+              View Full Dashboard
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Assets Built */}
+            <Card 
+              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              onClick={() => router.push("/manage/creator-status")}
+            >
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#FEF2F2]">
+                    <Package className="h-6 w-6 text-[#ee3224]" />
+                  </div>
+                </div>
+                <p className="text-[28px] font-bold text-[#1F2937]">12</p>
+                <p className="text-[13px] text-[#6B7280]">Assets published</p>
+                <div className="flex items-center gap-1 mt-2 text-green-600">
+                  <ArrowUp className="h-3 w-3" />
+                  <span className="text-xs">+2 this month</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Users Reached */}
+            <Card 
+              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              onClick={() => router.push("/manage/creator-status")}
+            >
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#FEF2F2]">
+                    <Users className="h-6 w-6 text-[#ee3224]" />
+                  </div>
+                </div>
+                <p className="text-[28px] font-bold text-[#1F2937]">45.2K</p>
+                <p className="text-[13px] text-[#6B7280]">Across all assets</p>
+                <div className="flex items-center gap-1 mt-2 text-green-600">
+                  <ArrowUp className="h-3 w-3" />
+                  <span className="text-xs">+12% vs last month</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Avg Rating */}
+            <Card 
+              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              onClick={() => router.push("/manage/creator-status")}
+            >
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#FEF2F2]">
+                    <Star className="h-6 w-6 text-[#ee3224]" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <p className="text-[28px] font-bold text-[#1F2937]">4.6</p>
+                  <Star className="h-5 w-5 text-[#F59E0B] fill-current" />
+                </div>
+                <p className="text-[13px] text-[#6B7280]">Across all assets</p>
+                <div className="flex items-center gap-1 mt-2 text-green-600">
+                  <ArrowUp className="h-3 w-3" />
+                  <span className="text-xs">+0.2 vs last month</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Earnings */}
+            <Card 
+              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              onClick={() => router.push("/manage/creator-status")}
+            >
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#FEF2F2]">
+                    <DollarSign className="h-6 w-6 text-[#ee3224]" />
+                  </div>
+                </div>
+                <p className="text-[28px] font-bold text-[#1F2937]">$1,234</p>
+                <p className="text-[13px] text-[#6B7280]">This month</p>
+                <div className="flex items-center gap-1 mt-2 text-green-600">
+                  <ArrowUp className="h-3 w-3" />
+                  <span className="text-xs">+8% vs last month</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </AppLayout>
