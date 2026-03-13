@@ -18,6 +18,7 @@ import {
   LayoutGrid,
   Activity,
   Award,
+  Link2,
 } from "lucide-react"
 
 const navigation = [
@@ -35,6 +36,7 @@ const navigation = [
     items: [
       { name: "My Projects", href: "/layer4/projects", icon: Workflow },
       { name: "My Knowledge", href: "/layer4/knowledge", icon: BookOpen },
+      { name: "My Connections", href: "/layer4/connections", icon: Link2 },
     ],
   },
   {
