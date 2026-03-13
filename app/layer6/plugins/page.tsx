@@ -158,7 +158,7 @@ const [activeCategory, setActiveCategory] = useState("All")
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Plugin Marketplace</h1>
+            <h1 className="text-2xl font-semibold text-foreground">Plugin Store</h1>
             <p className="text-muted-foreground">
               Extend your AI agents with powerful integrations
             </p>
