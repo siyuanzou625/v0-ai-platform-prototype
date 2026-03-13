@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   Search,
   Puzzle,
@@ -25,6 +25,7 @@ import {
   MessageSquare,
   FileText,
   Image,
+  Filter,
 } from "lucide-react"
 
 const plugins = [
@@ -142,14 +143,12 @@ const categories = ["All", "AI Models", "Databases", "Cloud", "Communication", "
 
 export default function PluginsPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [activeCategory, setActiveCategory] = useState("All")
-  const [showInstalled, setShowInstalled] = useState(false)
-
+const [activeCategory, setActiveCategory] = useState("All")
+  
   const filteredPlugins = plugins.filter((plugin) => {
     const matchesSearch = plugin.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = activeCategory === "All" || plugin.category === activeCategory
-    const matchesInstalled = !showInstalled || plugin.installed
-    return matchesSearch && matchesCategory && matchesInstalled
+    return matchesSearch && matchesCategory
   })
 
   return (
@@ -180,28 +179,32 @@ export default function PluginsPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <div className="flex items-center gap-4">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={activeCategory === category ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setActiveCategory(category)}
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={showInstalled}
-                onCheckedChange={setShowInstalled}
-                id="installed"
-              />
-              <label htmlFor="installed" className="text-sm text-muted-foreground">
-                Installed only
-              </label>
-            </div>
+            <Select value={activeCategory} onValueChange={setActiveCategory}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select defaultValue="popular">
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="popular">Most Popular</SelectItem>
+                <SelectItem value="recent">Most Recent</SelectItem>
+                <SelectItem value="downloads">Most Downloads</SelectItem>
+                <SelectItem value="rating">Highest Rated</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button variant="outline" size="icon">
+              <Filter className="h-4 w-4" />
+            </Button>
           </CardContent>
         </Card>
 

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   Search,
   FileCode,
@@ -19,6 +19,7 @@ import {
   Zap,
   ArrowRight,
   Sparkles,
+  Filter,
 } from "lucide-react"
 
 const templates = [
@@ -152,15 +153,32 @@ export default function TemplatesPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-              <TabsList>
+            <Select value={activeCategory} onValueChange={setActiveCategory}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
                 {categories.map((category) => (
-                  <TabsTrigger key={category} value={category}>
+                  <SelectItem key={category} value={category}>
                     {category}
-                  </TabsTrigger>
+                  </SelectItem>
                 ))}
-              </TabsList>
-            </Tabs>
+              </SelectContent>
+            </Select>
+            <Select defaultValue="popular">
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="popular">Most Popular</SelectItem>
+                <SelectItem value="recent">Most Recent</SelectItem>
+                <SelectItem value="forks">Most Forks</SelectItem>
+                <SelectItem value="uses">Most Uses</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button variant="outline" size="icon">
+              <Filter className="h-4 w-4" />
+            </Button>
           </CardContent>
         </Card>
 
