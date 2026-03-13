@@ -567,7 +567,6 @@ export default function KnowledgePage() {
                   </div>
                 </DialogContent>
               </Dialog>
-            </div>
           </div>
         </div>
 
