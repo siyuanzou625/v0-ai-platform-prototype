@@ -280,67 +280,51 @@ export default function PulsePage() {
                     <div className="h-2.5 w-2.5 rounded-full bg-[#ee3224]" />
                     <span className="text-muted-foreground">WAU</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#C0C6CA]" />
-                    <span className="text-muted-foreground">MAU</span>
+                </div>
+                <div className="relative h-48 flex">
+                  {/* Y-axis labels */}
+                  <div className="flex flex-col justify-between text-xs text-muted-foreground pr-2 py-1">
+                    <span>13K</span>
+                    <span>12K</span>
+                    <span>11K</span>
+                    <span>10K</span>
+                    <span>9K</span>
+                  </div>
+                  <div className="flex-1 relative">
+                    <svg className="h-full w-full" viewBox="0 0 400 150" preserveAspectRatio="none">
+                      {/* Grid lines */}
+                      <line x1="0" y1="0" x2="400" y2="0" stroke="#E5E7EB" strokeDasharray="4" />
+                      <line x1="0" y1="37.5" x2="400" y2="37.5" stroke="#E5E7EB" strokeDasharray="4" />
+                      <line x1="0" y1="75" x2="400" y2="75" stroke="#E5E7EB" strokeDasharray="4" />
+                      <line x1="0" y1="112.5" x2="400" y2="112.5" stroke="#E5E7EB" strokeDasharray="4" />
+                      <line x1="0" y1="150" x2="400" y2="150" stroke="#E5E7EB" />
+                      
+                      {/* WAU line (solid) - dynamically generated */}
+                      <path
+                        d={activeUsersData.map((d, i) => {
+                          const x = (i / (activeUsersData.length - 1)) * 400
+                          const y = 150 - ((d.wau - 9000) / 4000) * 150
+                          return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+                        }).join(' ')}
+                        fill="none"
+                        stroke="#ee3224"
+                        strokeWidth="2"
+                      />
+                      
+                      {/* Data points WAU */}
+                      {activeUsersData.map((d, i) => (
+                        <circle
+                          key={`wau-${i}`}
+                          cx={(i / (activeUsersData.length - 1)) * 400}
+                          cy={150 - ((d.wau - 9000) / 4000) * 150}
+                          r="4"
+                          fill="#ee3224"
+                        />
+                      ))}
+                    </svg>
                   </div>
                 </div>
-<div className="relative h-48">
-                  <svg className="h-full w-full" viewBox="0 0 400 150" preserveAspectRatio="none">
-                    {/* Grid lines */}
-                    <line x1="0" y1="37.5" x2="400" y2="37.5" stroke="#E5E7EB" strokeDasharray="4" />
-                    <line x1="0" y1="75" x2="400" y2="75" stroke="#E5E7EB" strokeDasharray="4" />
-                    <line x1="0" y1="112.5" x2="400" y2="112.5" stroke="#E5E7EB" strokeDasharray="4" />
-                    
-                    {/* MAU line (dashed) - dynamically generated */}
-                    <path
-                      d={activeUsersData.map((d, i) => {
-                        const x = (i / 6) * 400
-                        const y = 150 - ((d.mau - 24000) / 6000) * 120
-                        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
-                      }).join(' ')}
-                      fill="none"
-                      stroke="#C0C6CA"
-                      strokeWidth="2"
-                      strokeDasharray="6"
-                    />
-                    
-                    {/* WAU line (solid) - dynamically generated */}
-                    <path
-                      d={activeUsersData.map((d, i) => {
-                        const x = (i / 6) * 400
-                        const y = 150 - ((d.wau - 9000) / 4000) * 100
-                        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
-                      }).join(' ')}
-                      fill="none"
-                      stroke="#ee3224"
-                      strokeWidth="2"
-                    />
-                    
-                    {/* Data points WAU */}
-                    {activeUsersData.map((d, i) => (
-                      <circle
-                        key={`wau-${i}`}
-                        cx={(i / 6) * 400}
-                        cy={150 - ((d.wau - 9000) / 4000) * 100}
-                        r="4"
-                        fill="#ee3224"
-                      />
-                    ))}
-                    
-                    {/* Data points MAU */}
-                    {activeUsersData.map((d, i) => (
-                      <circle
-                        key={`mau-${i}`}
-                        cx={(i / 6) * 400}
-                        cy={150 - ((d.mau - 24000) / 6000) * 120}
-                        r="4"
-                        fill="#C0C6CA"
-                      />
-                    ))}
-                  </svg>
-                </div>
-                <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                <div className="flex justify-between text-xs text-muted-foreground mt-2 ml-8">
                   <span>Day 1</span>
                   <span>Day 10</span>
                   <span>Day 20</span>
@@ -349,76 +333,62 @@ export default function PulsePage() {
               </CardContent>
             </Card>
 
-            {/* Error Rate & Latency */}
+            {/* P95 Latency */}
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold">Error Rate & P95 Latency (Last 30 Days)</CardTitle>
+                <CardTitle className="text-lg font-semibold">P95 Latency (Last 30 Days)</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-4 mb-4 text-xs">
                   <div className="flex items-center gap-1.5">
                     <div className="h-2.5 w-2.5 rounded-full bg-[#ee3224]" />
-                    <span className="text-muted-foreground">Error Rate</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#C0C6CA]" />
-                    <span className="text-muted-foreground">P95 Latency</span>
+                    <span className="text-muted-foreground">P95 Latency (ms)</span>
                   </div>
                 </div>
-                <div className="relative h-48">
-                  <svg className="h-full w-full" viewBox="0 0 400 150" preserveAspectRatio="none">
-                    {/* Grid lines */}
-                    <line x1="0" y1="37.5" x2="400" y2="37.5" stroke="#E5E7EB" strokeDasharray="4" />
-                    <line x1="0" y1="75" x2="400" y2="75" stroke="#E5E7EB" strokeDasharray="4" />
-                    <line x1="0" y1="112.5" x2="400" y2="112.5" stroke="#E5E7EB" strokeDasharray="4" />
-                    
-                    {/* Threshold line for error rate 1% */}
-                    <line x1="0" y1="50" x2="400" y2="50" stroke="#ee3224" strokeDasharray="4" opacity="0.5" />
-                    
-                    {/* Latency line - dynamically generated */}
-                    <path
-                      d={errorLatencyData.map((d, i) => {
-                        const x = (i / 6) * 400
-                        const y = 150 - ((d.latency - 1000) / 700) * 80
-                        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
-                      }).join(' ')}
-                      fill="none"
-                      stroke="#C0C6CA"
-                      strokeWidth="2"
-                    />
-                    
-                    {/* Error Rate line - dynamically generated */}
-                    <path
-                      d={errorLatencyData.map((d, i) => {
-                        const x = (i / 6) * 400
-                        const y = 150 - (d.errorRate / 0.5) * 50
-                        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
-                      }).join(' ')}
-                      fill="none"
-                      stroke="#ee3224"
-                      strokeWidth="2"
-                    />
-                    
-                    {/* Data points */}
-                    {errorLatencyData.map((d, i) => (
-                      <g key={i}>
+                <div className="relative h-48 flex">
+                  {/* Y-axis labels */}
+                  <div className="flex flex-col justify-between text-xs text-muted-foreground pr-2 py-1">
+                    <span>1700</span>
+                    <span>1500</span>
+                    <span>1300</span>
+                    <span>1100</span>
+                    <span>900</span>
+                  </div>
+                  <div className="flex-1 relative">
+                    <svg className="h-full w-full" viewBox="0 0 400 150" preserveAspectRatio="none">
+                      {/* Grid lines */}
+                      <line x1="0" y1="0" x2="400" y2="0" stroke="#E5E7EB" strokeDasharray="4" />
+                      <line x1="0" y1="37.5" x2="400" y2="37.5" stroke="#E5E7EB" strokeDasharray="4" />
+                      <line x1="0" y1="75" x2="400" y2="75" stroke="#E5E7EB" strokeDasharray="4" />
+                      <line x1="0" y1="112.5" x2="400" y2="112.5" stroke="#E5E7EB" strokeDasharray="4" />
+                      <line x1="0" y1="150" x2="400" y2="150" stroke="#E5E7EB" />
+                      
+                      {/* P95 Latency line - dynamically generated */}
+                      <path
+                        d={errorLatencyData.map((d, i) => {
+                          const x = (i / (errorLatencyData.length - 1)) * 400
+                          const y = 150 - ((d.latency - 900) / 800) * 150
+                          return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+                        }).join(' ')}
+                        fill="none"
+                        stroke="#ee3224"
+                        strokeWidth="2"
+                      />
+                      
+                      {/* Data points */}
+                      {errorLatencyData.map((d, i) => (
                         <circle
-                          cx={(i / 6) * 400}
-                          cy={150 - (d.errorRate / 0.5) * 50}
+                          key={i}
+                          cx={(i / (errorLatencyData.length - 1)) * 400}
+                          cy={150 - ((d.latency - 900) / 800) * 150}
                           r="4"
                           fill="#ee3224"
                         />
-                        <circle
-                          cx={(i / 6) * 400}
-                          cy={150 - ((d.latency - 1000) / 700) * 80}
-                          r="4"
-                          fill="#C0C6CA"
-                        />
-                      </g>
-                    ))}
-                  </svg>
+                      ))}
+                    </svg>
+                  </div>
                 </div>
-                <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                <div className="flex justify-between text-xs text-muted-foreground mt-2 ml-8">
                   <span>Day 1</span>
                   <span>Day 10</span>
                   <span>Day 20</span>
