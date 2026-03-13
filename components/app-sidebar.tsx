@@ -4,55 +4,56 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
-  Home,
-  Workflow,
-  Sparkles,
-  Smartphone,
-  Store,
-  FileCode,
-  Puzzle,
-  BookOpen,
+  Hammer,
+  Rocket,
+  Compass,
+  BarChart3,
+  Folder,
+  Database,
+  Link2,
   LayoutGrid,
+  RefreshCw,
+  Bot,
+  FileText,
+  Puzzle,
   Activity,
   Award,
-  Link2,
+  Sparkles,
 } from "lucide-react"
 
 const navigation = [
   {
-    title: "Main",
+    title: "Build",
+    icon: Hammer,
     items: [
-      { name: "Home", href: "/", icon: Home },
+      { name: "Projects", href: "/build/projects", icon: Folder },
+      { name: "Knowledge", href: "/build/knowledge", icon: Database },
+      { name: "Connections", href: "/build/connections", icon: Link2 },
     ],
   },
   {
-    title: "Layer 4 - Vibe Coding",
+    title: "Use",
+    icon: Rocket,
     items: [
-      { name: "My Projects", href: "/layer4/projects", icon: Workflow },
-      { name: "My Knowledge", href: "/layer4/knowledge", icon: BookOpen },
-      { name: "My Connections", href: "/layer4/connections", icon: Link2 },
+      { name: "Installed Apps", href: "/use/installed-apps", icon: LayoutGrid },
+      { name: "Cross Devices", href: "/use/cross-devices", icon: RefreshCw },
     ],
   },
   {
-    title: "Layer 5 - AI Apps",
+    title: "Explore",
+    icon: Compass,
     items: [
-      { name: "My Apps", href: "/layer5", icon: LayoutGrid },
-      { name: "Cross-Device", href: "/layer5/cross-device", icon: Smartphone },
+      { name: "Agents", href: "/explore/agents", icon: Bot },
+      { name: "Templates", href: "/explore/templates", icon: FileText },
+      { name: "Plugins", href: "/explore/plugins", icon: Puzzle },
     ],
   },
   {
-    title: "Layer 6 - Discover",
+    title: "Manage",
+    icon: BarChart3,
     items: [
-      { name: "Agent Marketplace", href: "/layer6/marketplace", icon: Store },
-      { name: "Template Library", href: "/layer6/templates", icon: FileCode },
-      { name: "Plugin Store", href: "/layer6/plugins", icon: Puzzle },
-    ],
-  },
-  {
-    title: "Layer 7 - Creator Studio",
-    items: [
-      { name: "Pulse", href: "/layer7/pulse", icon: Activity },
-      { name: "Creator Status", href: "/layer7/creator-status", icon: Award },
+      { name: "Pulse Check", href: "/manage/pulse-check", icon: Activity },
+      { name: "Creator Status", href: "/manage/creator-status", icon: Award },
     ],
   },
 ]
@@ -61,22 +62,23 @@ export function AppSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-border bg-sidebar">
-      <div className="flex h-16 items-center gap-2 border-b border-border px-6">
+    <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-[#E5E7EB] bg-white">
+      <div className="flex h-16 items-center gap-2 border-b border-[#E5E7EB] px-6">
         <div className="flex h-8 w-8 items-center justify-center rounded bg-[#ee3224]">
           <Sparkles className="h-4 w-4 text-white" />
         </div>
-        <span className="text-lg font-semibold text-sidebar-foreground">AI Agent OS</span>
+        <span className="text-lg font-semibold text-[#1F2937]">AI Agent OS</span>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         {navigation.map((section) => (
           <div key={section.title} className="mb-6">
-            <h3 className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <h3 className="mb-2 flex items-center gap-2 px-3 text-xs font-medium uppercase tracking-wider text-[#6B7280]">
+              <section.icon className="h-4 w-4" />
               {section.title}
             </h3>
             <ul className="space-y-1">
               {section.items.map((item) => {
-                const isActive = pathname === item.href
+                const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
                 return (
                   <li key={item.name}>
                     <Link
@@ -84,8 +86,8 @@ export function AppSidebar() {
                       className={cn(
                         "flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
                         isActive
-                          ? "bg-[#ee3224] text-white"
-                          : "text-sidebar-foreground hover:bg-sidebar-accent"
+                          ? "border-l-[3px] border-[#ee3224] bg-[#ee3224] text-white"
+                          : "text-[#333] hover:bg-[#F5F7FA]"
                       )}
                     >
                       <item.icon className="h-4 w-4" />
