@@ -426,10 +426,15 @@ export default function ProjectsPage() {
         {/* Header */}
         <div className="border-b border-border bg-card">
           <div className="flex items-center justify-between px-6 py-4">
-            {/* Left: Title */}
-            <div className="flex items-center gap-2">
-              <FolderOpen className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Projects</h1>
+            {/* Left: Title & Intro */}
+            <div>
+              <div className="flex items-center gap-2">
+                <FolderOpen className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Projects</h1>
+              </div>
+              <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+                Create and manage your AI agents and workflows in one place.
+              </p>
             </div>
 
             {/* Center: View Toggle */}

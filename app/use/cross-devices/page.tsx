@@ -91,8 +91,8 @@ export default function CrossDevicePage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Cross Devices</h1>
-            <p className="text-muted-foreground">
-              Seamlessly use AI agents across all your connected devices
+            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+              Seamlessly continue your tasks across phone, tablet, and computer.
             </p>
           </div>
           <div className="flex items-center gap-2">

@@ -146,8 +146,8 @@ export default function PulsePage() {
                 <Activity className="h-6 w-6 text-[#ee3224]" />
                 <h1 className="text-2xl font-semibold text-foreground">Pulse Check</h1>
               </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Performance and stability metrics for deployed assets
+              <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+                Monitor the performance and health of your deployed agents.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">

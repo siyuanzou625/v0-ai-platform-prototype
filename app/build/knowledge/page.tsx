@@ -266,7 +266,12 @@ export default function KnowledgePage() {
         {/* Header */}
         <div className="border-b border-border bg-card">
           <div className="flex items-center justify-between px-6 py-4">
-            <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
+            <div>
+              <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
+              <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+                Upload and organize documents to give your agents context and expertise.
+              </p>
+            </div>
             <div className="flex items-center gap-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

@@ -608,9 +608,14 @@ export default function MyAppsPage() {
         {/* Header */}
         <div className="bg-white border-b border-[#E5E7EB] px-6 py-4">
           {/* Title Row */}
-          <div className="flex items-center gap-2 mb-4">
-            <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
-            <h1 className="text-xl font-semibold text-foreground">Installed Apps</h1>
+          <div className="mb-4">
+            <div className="flex items-center gap-2">
+              <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
+              <h1 className="text-xl font-semibold text-foreground">Installed Apps</h1>
+            </div>
+            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+              Launch and use your installed AI applications with one click.
+            </p>
           </div>
           
           {/* Controls Row: Search + Filter Chips + View Toggle */}

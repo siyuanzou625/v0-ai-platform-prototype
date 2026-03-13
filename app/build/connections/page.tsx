@@ -288,8 +288,8 @@ export default function ConnectionsPage() {
             <div className="flex items-center gap-2">
               <h1 className="text-2xl font-semibold text-foreground">Connections</h1>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              Manage credentials and integrations for your workflows
+            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+              Securely connect your favorite tools and services to power your workflows.
             </p>
           </div>
           <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={() => { setCreateModalOpen(true); setCreateStep(1); setSelectedProvider(null); }}>

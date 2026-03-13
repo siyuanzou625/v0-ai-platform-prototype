@@ -132,8 +132,8 @@ export default function TemplatesPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Templates</h1>
-            <p className="text-muted-foreground">
-              Pre-built agent templates to accelerate your development
+            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+              Browse ready-made workflows to accelerate your agent development.
             </p>
           </div>
           <Button className="gap-2">
