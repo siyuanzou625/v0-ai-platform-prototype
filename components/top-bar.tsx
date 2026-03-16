@@ -441,7 +441,10 @@ export function TopBar() {
                   <Book className="h-5 w-5 text-[#333]" />
                   <span className="text-sm">Documentation</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex cursor-pointer items-center gap-3 rounded p-2 text-[#ee3224] hover:bg-[#F5F7FA]">
+                <DropdownMenuItem 
+                  className="flex cursor-pointer items-center gap-3 rounded p-2 text-[#ee3224] hover:bg-[#F5F7FA]"
+                  onClick={() => router.push("/login")}
+                >
                   <LogOut className="h-5 w-5" />
                   <span className="text-sm font-medium">Logout</span>
                 </DropdownMenuItem>
