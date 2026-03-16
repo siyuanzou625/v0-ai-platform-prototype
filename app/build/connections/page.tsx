@@ -872,7 +872,7 @@ export default function ConnectionsPage() {
 
         {/* Connection Detail Modal */}
         <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
-          <DialogContent className="max-w-[1200px] w-[95vw] max-h-[90vh] h-[85vh] overflow-hidden flex flex-col p-0">
+          <DialogContent className="max-w-[1400px] w-[98vw] max-h-[90vh] h-[85vh] overflow-hidden flex flex-col p-0">
             <DialogTitle className="sr-only">Connection Details</DialogTitle>
             {selectedConnection && (
               <>
@@ -1024,14 +1024,14 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="usage" className="p-6 m-0 space-y-6">
+                    <TabsContent value="usage" className="p-6 m-0 space-y-6 overflow-x-auto">
                       {/* Workflows Using This Connection */}
-                      <Card>
+                      <Card className="min-w-[600px]">
                         <CardHeader>
                           <CardTitle className="text-sm">Workflows Using This Connection</CardTitle>
                         </CardHeader>
                         <CardContent className="overflow-x-auto">
-                          <Table className="min-w-[500px]">
+                          <Table className="min-w-[550px]">
                             <TableHeader>
                               <TableRow>
                                 <TableHead className="whitespace-nowrap">Workflow Name</TableHead>
@@ -1065,20 +1065,20 @@ export default function ConnectionsPage() {
                       </Card>
 
                       {/* Rate Limit Status */}
-                      <Card>
+                      <Card className="min-w-[600px]">
                         <CardHeader>
                           <CardTitle className="text-sm">Rate Limit Status</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Current Usage</span>
-                            <span className="font-medium">847 / 1,000 requests/hour</span>
+                          <div className="flex justify-between text-sm gap-4">
+                            <span className="text-muted-foreground whitespace-nowrap">Current Usage</span>
+                            <span className="font-medium whitespace-nowrap">847 / 1,000 requests/hour</span>
                           </div>
                           <div className="h-2 bg-muted rounded-full overflow-hidden">
                             <div className="h-full bg-orange-500 rounded-full" style={{ width: "84.7%" }} />
                           </div>
                           <div className="flex items-center gap-2 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                            <AlertTriangle className="h-4 w-4 text-orange-600" />
+                            <AlertTriangle className="h-4 w-4 text-orange-600 flex-shrink-0" />
                             <span className="text-sm text-orange-800">Approaching rate limit (84.7% used)</span>
                           </div>
                         </CardContent>
