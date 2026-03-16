@@ -170,26 +170,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-[#F5F7FA] to-white relative overflow-hidden flex items-center justify-center">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Top-left accent */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#ee3224] rounded-full opacity-[0.05] blur-3xl" />
-        {/* Bottom-right accent */}
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#ee3224] rounded-full opacity-[0.05] blur-3xl" />
-        {/* Subtle grid pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #333 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }}
-        />
-      </div>
+    <div className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url('/images/login-bg.jpg')`,
+        }}
+      />
+      {/* Dark overlay for better readability */}
+      <div className="absolute inset-0 bg-black/40" />
 
       {/* Login Card */}
       <div 
-        className={`relative z-10 w-full max-w-[440px] mx-6 bg-white border border-[#E5E7EB] rounded-lg shadow-lg transition-all duration-300 ${
+        className={`relative z-10 w-full max-w-[440px] mx-6 bg-white/95 backdrop-blur-sm border border-white/20 rounded-lg shadow-2xl transition-all duration-300 ${
           mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
         }`}
       >
@@ -364,7 +358,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-[#E5E7EB]" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-white px-3 text-[#6B7280]">Or continue with</span>
+              <span className="bg-white/95 px-3 text-[#6B7280]">Or continue with</span>
             </div>
           </div>
 
@@ -424,14 +418,14 @@ export default function LoginPage() {
       </div>
 
       {/* Footer Links */}
-      <div className="absolute bottom-10 left-0 right-0 flex items-center justify-center gap-4 text-xs text-[#9CA3AF]">
-        <a href="#" className="hover:text-[#ee3224] hover:underline transition-colors">Help Center</a>
+      <div className="absolute bottom-10 left-0 right-0 flex items-center justify-center gap-4 text-xs text-white/60">
+        <a href="#" className="hover:text-white hover:underline transition-colors">Help Center</a>
         <span>|</span>
-        <a href="#" className="hover:text-[#ee3224] hover:underline transition-colors">Contact Support</a>
+        <a href="#" className="hover:text-white hover:underline transition-colors">Contact Support</a>
         <span>|</span>
-        <a href="#" className="hover:text-[#ee3224] hover:underline transition-colors">Privacy Policy</a>
+        <a href="#" className="hover:text-white hover:underline transition-colors">Privacy Policy</a>
         <span>|</span>
-        <a href="#" className="hover:text-[#ee3224] hover:underline transition-colors">Terms of Service</a>
+        <a href="#" className="hover:text-white hover:underline transition-colors">Terms of Service</a>
       </div>
 
       {/* Password Recovery Modal */}
