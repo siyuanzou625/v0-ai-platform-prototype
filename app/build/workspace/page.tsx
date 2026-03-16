@@ -56,6 +56,7 @@ import {
   Clock,
   Filter,
   MoreHorizontal,
+  RefreshCw,
 } from "lucide-react"
 
 type Mode = "workflow" | "code"
@@ -404,6 +405,11 @@ export default function ProjectWorkspacePage() {
   const [chatMessages, setChatMessages] = useState(initialWorkflowChat)
   const [isLoading, setIsLoading] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
+  const [showRunSimulation, setShowRunSimulation] = useState(false)
+  const [runStatus, setRunStatus] = useState<"idle" | "running" | "completed" | "error">("idle")
+  const [runProgress, setRunProgress] = useState(0)
+  const [runLogs, setRunLogs] = useState<Array<{ time: string; type: "info" | "success" | "warning" | "error"; message: string }>>([])
+  const runLogsEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // For code projects, always use code chat. For workflow projects, depends on current mode
@@ -417,6 +423,110 @@ export default function ProjectWorkspacePage() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [chatMessages])
+
+  useEffect(() => {
+    runLogsEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [runLogs])
+
+  // Project-specific run simulation logs
+  const projectRunLogs: Record<string, Array<{ time: string; type: "info" | "success" | "warning" | "error"; message: string }>> = {
+    "proj-001": [ // Enterprise Sales Agent
+      { time: "00:00", type: "info", message: "Initializing Enterprise Sales Agent..." },
+      { time: "00:01", type: "info", message: "Loading lead qualification model..." },
+      { time: "00:02", type: "success", message: "Connected to CRM API (Salesforce)" },
+      { time: "00:03", type: "info", message: "Processing incoming lead: john.doe@techcorp.com" },
+      { time: "00:04", type: "info", message: "Running qualification scoring algorithm..." },
+      { time: "00:05", type: "success", message: "Lead score calculated: 87/100 (High Priority)" },
+      { time: "00:06", type: "info", message: "Generating personalized outreach email..." },
+      { time: "00:07", type: "success", message: "Email template generated using GPT-4" },
+      { time: "00:08", type: "info", message: "Scheduling follow-up sequence..." },
+      { time: "00:09", type: "success", message: "CRM record updated successfully" },
+      { time: "00:10", type: "success", message: "Workflow completed - Lead processed in 10s" },
+    ],
+    "proj-002": [ // Data Pipeline v2
+      { time: "00:00", type: "info", message: "Starting Data Pipeline v2 execution..." },
+      { time: "00:01", type: "info", message: "Connecting to PostgreSQL source..." },
+      { time: "00:02", type: "success", message: "Database connection established" },
+      { time: "00:03", type: "info", message: "Executing extraction query..." },
+      { time: "00:04", type: "info", message: "Retrieved 15,234 records from events table" },
+      { time: "00:05", type: "info", message: "Applying transformations..." },
+      { time: "00:06", type: "warning", message: "3 records skipped (missing customer_id)" },
+      { time: "00:07", type: "info", message: "Enriching data with customer segments..." },
+      { time: "00:08", type: "success", message: "Transformation complete: 15,231 records processed" },
+      { time: "00:09", type: "info", message: "Uploading to S3 (parquet format)..." },
+      { time: "00:10", type: "success", message: "Pipeline completed - s3://analytics/processed/customers/2024-03-15/" },
+    ],
+    "proj-003": [ // Customer Support Bot
+      { time: "00:00", type: "info", message: "Initializing Customer Support Bot..." },
+      { time: "00:01", type: "success", message: "NLP model loaded (sentiment + intent)" },
+      { time: "00:02", type: "info", message: "Processing test ticket: #TKT-4521" },
+      { time: "00:03", type: "info", message: "Analyzing customer message intent..." },
+      { time: "00:04", type: "success", message: "Intent detected: billing_inquiry (confidence: 94%)" },
+      { time: "00:05", type: "info", message: "Searching knowledge base for relevant answers..." },
+      { time: "00:06", type: "success", message: "Found 3 relevant FAQ articles" },
+      { time: "00:07", type: "info", message: "Generating contextual response..." },
+      { time: "00:08", type: "success", message: "Auto-resolution confidence: 89% - Sending response" },
+      { time: "00:09", type: "success", message: "Ticket #TKT-4521 resolved automatically" },
+    ],
+    "proj-004": [ // Analytics Dashboard API
+      { time: "00:00", type: "info", message: "Starting API server on port 3000..." },
+      { time: "00:01", type: "success", message: "JWT middleware configured" },
+      { time: "00:02", type: "success", message: "CORS enabled for *.company.com" },
+      { time: "00:03", type: "info", message: "Running test: GET /api/metrics..." },
+      { time: "00:04", type: "success", message: "Response: 200 OK (latency: 45ms)" },
+      { time: "00:05", type: "info", message: "Running test: POST /api/track..." },
+      { time: "00:06", type: "success", message: "Event tracked successfully" },
+      { time: "00:07", type: "info", message: "Running load test: 100 concurrent requests..." },
+      { time: "00:08", type: "success", message: "Load test passed - avg latency: 52ms, p99: 120ms" },
+      { time: "00:09", type: "success", message: "All API endpoints validated successfully" },
+    ],
+    "proj-005": [ // Invoice Processor
+      { time: "00:00", type: "info", message: "Initializing Invoice Processor..." },
+      { time: "00:01", type: "info", message: "Loading document extraction model..." },
+      { time: "00:02", type: "success", message: "OCR engine ready (Tesseract + GPT-4V)" },
+      { time: "00:03", type: "info", message: "Processing test invoice: INV-2024-0892.pdf" },
+      { time: "00:04", type: "info", message: "Extracting fields: vendor, amount, due date..." },
+      { time: "00:05", type: "success", message: "Extracted: Acme Corp, $12,450.00, Due: 2024-04-15" },
+      { time: "00:06", type: "info", message: "Looking up vendor in database..." },
+      { time: "00:07", type: "success", message: "Vendor verified: Acme Corp (ID: VND-0234)" },
+      { time: "00:08", type: "warning", message: "Amount exceeds $10K - Routing for approval" },
+      { time: "00:09", type: "info", message: "Sending approval request to finance@company.com" },
+      { time: "00:10", type: "success", message: "Invoice queued for approval - Workflow complete" },
+    ],
+    "proj-006": [ // Notification Service
+      { time: "00:00", type: "info", message: "Starting Notification Service..." },
+      { time: "00:01", type: "success", message: "Email provider (SES) connected" },
+      { time: "00:02", type: "success", message: "SMS provider (Twilio) connected" },
+      { time: "00:03", type: "success", message: "Push provider (SNS) connected" },
+      { time: "00:04", type: "info", message: "Processing test notification batch..." },
+      { time: "00:05", type: "info", message: "Sending email to user@example.com..." },
+      { time: "00:06", type: "success", message: "Email delivered (MessageId: abc123)" },
+      { time: "00:07", type: "info", message: "Sending SMS to +1-555-0123..." },
+      { time: "00:08", type: "success", message: "SMS delivered (SID: SM789xyz)" },
+      { time: "00:09", type: "success", message: "All notification channels tested successfully" },
+    ],
+  }
+
+  const handleRunSimulation = () => {
+    setShowRunSimulation(true)
+    setRunStatus("running")
+    setRunProgress(0)
+    setRunLogs([])
+    
+    const logs = projectRunLogs[projectId] || projectRunLogs["proj-001"]
+    let currentIndex = 0
+    
+    const interval = setInterval(() => {
+      if (currentIndex < logs.length) {
+        setRunLogs(prev => [...prev, logs[currentIndex]])
+        setRunProgress(Math.round(((currentIndex + 1) / logs.length) * 100))
+        currentIndex++
+      } else {
+        clearInterval(interval)
+        setRunStatus("completed")
+      }
+    }, 800)
+  }
 
   const handleSendMessage = () => {
     if (!chatInput.trim()) return
@@ -568,7 +678,7 @@ export default function ProjectWorkspacePage() {
               </DialogContent>
             </Dialog>
 
-            <Button size="sm" className="gap-1.5 bg-[#ee3224] hover:bg-[#cc2a1e]">
+            <Button size="sm" className="gap-1.5 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={handleRunSimulation}>
               <Play className="h-4 w-4" />
               Run
             </Button>
@@ -788,9 +898,102 @@ export default function ProjectWorkspacePage() {
                   </div>
                 ))}
               </div>
+</div>
+      </DialogContent>
+      </Dialog>
+
+      {/* Run Simulation Dialog */}
+      <Dialog open={showRunSimulation} onOpenChange={setShowRunSimulation}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Play className="h-5 w-5 text-[#ee3224]" />
+              Run Simulation - {projectName}
+            </DialogTitle>
+            <DialogDescription>
+              {runStatus === "running" ? "Executing workflow..." : runStatus === "completed" ? "Run completed successfully" : "Test run simulation"}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {/* Progress Bar */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Progress</span>
+                <span className="font-medium">{runProgress}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-[#F5F7FA]">
+                <div 
+                  className="h-2 rounded-full bg-[#ee3224] transition-all duration-300"
+                  style={{ width: `${runProgress}%` }}
+                />
+              </div>
             </div>
-          </DialogContent>
-        </Dialog>
+            
+            {/* Run Logs */}
+            <div className="rounded-lg border border-[#E5E7EB] bg-[#1F2937] p-4 h-[300px] overflow-y-auto font-mono text-sm">
+              {runLogs.map((log, index) => (
+                <div key={index} className="flex gap-3 py-1">
+                  <span className="text-[#6B7280] shrink-0">[{log.time}]</span>
+                  <span className={
+                    log.type === "success" ? "text-emerald-400" :
+                    log.type === "warning" ? "text-amber-400" :
+                    log.type === "error" ? "text-red-400" :
+                    "text-gray-300"
+                  }>
+                    {log.type === "success" && "[SUCCESS] "}
+                    {log.type === "warning" && "[WARNING] "}
+                    {log.type === "error" && "[ERROR] "}
+                    {log.type === "info" && "[INFO] "}
+                    {log.message}
+                  </span>
+                </div>
+              ))}
+              {runStatus === "running" && (
+                <div className="flex items-center gap-2 py-1 text-gray-400">
+                  <div className="h-2 w-2 rounded-full bg-[#ee3224] animate-pulse" />
+                  <span>Processing...</span>
+                </div>
+              )}
+              <div ref={runLogsEndRef} />
+            </div>
+            
+            {/* Stats */}
+            {runStatus === "completed" && (
+              <div className="grid grid-cols-3 gap-4">
+                <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] p-3 text-center">
+                  <p className="text-2xl font-semibold text-[#1F2937]">{runLogs.length}</p>
+                  <p className="text-xs text-muted-foreground">Steps Executed</p>
+                </div>
+                <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] p-3 text-center">
+                  <p className="text-2xl font-semibold text-emerald-600">{runLogs.filter(l => l.type === "success").length}</p>
+                  <p className="text-xs text-muted-foreground">Successful</p>
+                </div>
+                <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] p-3 text-center">
+                  <p className="text-2xl font-semibold text-amber-600">{runLogs.filter(l => l.type === "warning").length}</p>
+                  <p className="text-xs text-muted-foreground">Warnings</p>
+                </div>
+              </div>
+            )}
+            
+            {/* Actions */}
+            <div className="flex justify-end gap-2">
+              {runStatus === "completed" && (
+                <Button variant="outline" onClick={handleRunSimulation} className="gap-2">
+                  <RefreshCw className="h-4 w-4" />
+                  Run Again
+                </Button>
+              )}
+              <Button 
+                onClick={() => setShowRunSimulation(false)} 
+                className={runStatus === "completed" ? "bg-[#ee3224] hover:bg-[#cc2a1e]" : ""}
+                variant={runStatus === "completed" ? "default" : "outline"}
+              >
+                {runStatus === "completed" ? "Done" : "Cancel"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       </div>
     </AppLayout>
   )
