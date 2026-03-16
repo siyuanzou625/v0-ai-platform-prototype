@@ -739,9 +739,15 @@ export default function ProjectsPage() {
                           <CardContent className="p-4">
                             <div className="flex items-start justify-between">
                               <div className="flex items-center gap-2">
-                                <Avatar className="h-7 w-7">
-                                  <AvatarFallback className="text-xs bg-muted">{project.owner.initials}</AvatarFallback>
-                                </Avatar>
+                                <div className={`flex h-8 w-8 items-center justify-center rounded ${
+                                  project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
+                                }`}>
+                                  {project.mode === "workflow" ? (
+                                    <Workflow className="h-4 w-4 text-[#ee3224]" />
+                                  ) : (
+                                    <Code2 className="h-4 w-4 text-blue-500" />
+                                  )}
+                                </div>
                                 <div>
                                   <h3 className="text-sm font-semibold text-foreground group-hover:text-[#ee3224] transition-colors line-clamp-1">
                                     {project.name}
