@@ -68,7 +68,7 @@ export function AppSidebar() {
         <div className="flex h-8 w-8 items-center justify-center rounded bg-[#ee3224]">
           <Sparkles className="h-4 w-4 text-white" />
         </div>
-        <span className="text-lg font-semibold text-[#1F2937]">{"AgentStudio"}</span>
+        <span className="text-lg font-semibold text-[#1F2937]" suppressHydrationWarning>AgentStudio</span>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         {/* Home Link */}
