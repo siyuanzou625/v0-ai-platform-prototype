@@ -872,7 +872,7 @@ export default function ConnectionsPage() {
 
         {/* Connection Detail Modal */}
         <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
-          <DialogContent className="max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col p-0">
+          <DialogContent className="max-w-[1000px] w-[95vw] max-h-[90vh] h-[85vh] overflow-hidden flex flex-col p-0">
             {selectedConnection && (
               <>
                 {/* Header */}
@@ -898,7 +898,7 @@ export default function ConnectionsPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <Button variant="outline" size="sm">
                         <Edit className="h-4 w-4 mr-1" />
                         Edit
@@ -1116,7 +1116,8 @@ export default function ConnectionsPage() {
                       </div>
 
                       {/* Logs Table */}
-                      <Card>
+                      <Card className="overflow-hidden">
+                        <div className="overflow-x-auto">
                         <Table>
                           <TableHeader>
                             <TableRow>
@@ -1145,6 +1146,7 @@ export default function ConnectionsPage() {
                             ))}
                           </TableBody>
                         </Table>
+                        </div>
                       </Card>
                       <p className="text-xs text-muted-foreground">Logs retained for 90 days per compliance policy</p>
                     </TabsContent>
