@@ -873,6 +873,7 @@ export default function ConnectionsPage() {
         {/* Connection Detail Modal */}
         <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
           <DialogContent className="max-w-[1200px] w-[95vw] max-h-[90vh] h-[85vh] overflow-hidden flex flex-col p-0">
+            <DialogTitle className="sr-only">Connection Details</DialogTitle>
             {selectedConnection && (
               <>
                 {/* Header */}
