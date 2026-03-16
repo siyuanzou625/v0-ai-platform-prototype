@@ -118,21 +118,10 @@ export default function LoginPage() {
     setIsLoading(true)
     setFormError("")
     
-    // Mock API call delay
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // Mock API call delay (demo mode - accepts any credentials)
+    await new Promise(resolve => setTimeout(resolve, 1000))
     
-    // Check credentials
-    const isValidUsername = email.toLowerCase() === VALID_CREDENTIALS.username || 
-                           email.toLowerCase() === VALID_CREDENTIALS.email
-    const isValidPassword = password === VALID_CREDENTIALS.password
-    
-    if (!isValidUsername || !isValidPassword) {
-      setIsLoading(false)
-      setFormError("Invalid email or password. Please try again.")
-      return
-    }
-    
-    // Success - save token
+    // Success - save token (demo mode: any username/password allowed)
     const storage = rememberMe ? localStorage : sessionStorage
     storage.setItem("authToken", `mock-token-${Date.now()}`)
     storage.setItem("user", JSON.stringify(USER_PROFILE))
