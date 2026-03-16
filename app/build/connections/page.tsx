@@ -926,8 +926,8 @@ export default function ConnectionsPage() {
                     <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Settings</TabsTrigger>
                   </TabsList>
 
-                  <ScrollArea className="flex-1 h-full">
-                    <TabsContent value="overview" className="p-6 m-0 space-y-6">
+                  <div className="flex-1 overflow-x-auto overflow-y-auto">
+                    <TabsContent value="overview" className="p-6 m-0 space-y-6 min-w-[700px]">
                       {/* Quick Stats */}
                       <div className="grid grid-cols-4 gap-4">
                         <Card>
@@ -1025,7 +1025,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="usage" className="p-6 m-0 space-y-6 overflow-x-auto">
+                    <TabsContent value="usage" className="p-6 m-0 space-y-6 min-w-[700px]">
                       {/* Workflows Using This Connection */}
                       <Card className="min-w-[600px]">
                         <CardHeader>
@@ -1086,7 +1086,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="logs" className="p-6 m-0 space-y-4">
+                    <TabsContent value="logs" className="p-6 m-0 space-y-4 min-w-[900px]">
                       {/* Filter Bar */}
                       <div className="flex items-center gap-4">
                         <Select defaultValue="24h">
@@ -1153,7 +1153,7 @@ export default function ConnectionsPage() {
                       <p className="text-xs text-muted-foreground">Logs retained for 90 days per compliance policy</p>
                     </TabsContent>
 
-                    <TabsContent value="settings" className="p-6 m-0 space-y-6 pb-10">
+                    <TabsContent value="settings" className="p-6 m-0 space-y-6 pb-10 min-w-[700px]">
                       {/* Credentials */}
                       <Card>
                         <CardHeader>
@@ -1245,7 +1245,7 @@ export default function ConnectionsPage() {
                         </CardContent>
                       </Card>
                     </TabsContent>
-                  </ScrollArea>
+                  </div>
                 </Tabs>
               </>
             )}
