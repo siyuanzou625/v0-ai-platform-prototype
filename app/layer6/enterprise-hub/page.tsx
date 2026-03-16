@@ -206,7 +206,7 @@ export default function EnterpriseHubPage() {
               <div>
                 <h3 className="text-xl font-semibold text-foreground">Ready to Transform Your Enterprise?</h3>
                 <p className="text-muted-foreground">
-                  Schedule a demo to see how AI Agent OS can accelerate your business
+                  Schedule a demo to see how AgentStudio can accelerate your business
                 </p>
               </div>
             </div>

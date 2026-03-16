@@ -184,7 +184,7 @@ export default function LoginPage() {
                 <Bot className="h-7 w-7 text-white" />
               </div>
             </div>
-            <h2 className="text-lg font-semibold text-[#1F2937]">AI Agent OS</h2>
+            <h2 className="text-lg font-semibold text-[#1F2937]">AgentStudio</h2>
             <p className="text-sm text-[#6B7280]">AI PC Agent Platform</p>
           </div>
           

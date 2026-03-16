@@ -7,7 +7,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'AI Agent OS - Enterprise AI Platform',
+  title: 'AgentStudio - Enterprise AI Platform',
   description: 'AI PC Agent Platform for No-Code, Low-Code, and High-Code Development',
   generator: 'v0.app',
   icons: {
