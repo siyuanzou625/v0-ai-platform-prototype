@@ -48,8 +48,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-// Mock data for knowledge base details
-const knowledgeBaseData = {
+// Mock data for knowledge base details - context-specific for each KB
+const knowledgeBaseData: Record<string, {
+  id: string; name: string; description: string; embeddingModel: string; dimensions: number;
+  chunkSize: number; chunkOverlap: number; parsingMethod: string; status: string;
+  createdAt: string; updatedAt: string; collaborators: Array<{name: string; initials: string; role: string}>;
+  totalChunks: number; usedByAgents: number;
+}> = {
   "kb-001": {
     id: "kb-001",
     name: "Product Documentation",
@@ -70,30 +75,236 @@ const knowledgeBaseData = {
     totalChunks: 1234,
     usedByAgents: 5,
   },
+  "kb-002": {
+    id: "kb-002",
+    name: "Sales Data Q4 2024",
+    description: "Quarterly sales reports, customer analytics, and performance metrics.",
+    embeddingModel: "text-embedding-3-small",
+    dimensions: 1536,
+    chunkSize: 256,
+    chunkOverlap: 25,
+    parsingMethod: "Tabular",
+    status: "ready",
+    createdAt: "Dec 1, 2024",
+    updatedAt: "Jan 10, 2025",
+    collaborators: [
+      { name: "Alex Rivera", initials: "AR", role: "Admin" },
+      { name: "Jordan Lee", initials: "JL", role: "Editor" },
+    ],
+    totalChunks: 567,
+    usedByAgents: 3,
+  },
+  "kb-003": {
+    id: "kb-003",
+    name: "Training Videos",
+    description: "Employee onboarding and product training video transcripts.",
+    embeddingModel: "text-embedding-3-large",
+    dimensions: 3072,
+    chunkSize: 1024,
+    chunkOverlap: 100,
+    parsingMethod: "Transcript",
+    status: "ready",
+    createdAt: "Nov 15, 2024",
+    updatedAt: "Jan 8, 2025",
+    collaborators: [
+      { name: "Taylor Swift", initials: "TS", role: "Admin" },
+      { name: "Morgan Chen", initials: "MC", role: "Viewer" },
+    ],
+    totalChunks: 892,
+    usedByAgents: 2,
+  },
+  "kb-004": {
+    id: "kb-004",
+    name: "Customer Support Transcripts",
+    description: "Historical customer support conversations and resolved ticket summaries.",
+    embeddingModel: "text-embedding-3-large",
+    dimensions: 3072,
+    chunkSize: 512,
+    chunkOverlap: 50,
+    parsingMethod: "Conversation",
+    status: "ready",
+    createdAt: "Oct 1, 2024",
+    updatedAt: "Jan 14, 2025",
+    collaborators: [
+      { name: "Casey Wong", initials: "CW", role: "Admin" },
+      { name: "Riley Kim", initials: "RK", role: "Editor" },
+      { name: "Quinn Adams", initials: "QA", role: "Viewer" },
+    ],
+    totalChunks: 4567,
+    usedByAgents: 8,
+  },
+  "kb-005": {
+    id: "kb-005",
+    name: "Legal Contracts",
+    description: "Standard contract templates and legal documentation for enterprise clients.",
+    embeddingModel: "text-embedding-3-large",
+    dimensions: 3072,
+    chunkSize: 768,
+    chunkOverlap: 75,
+    parsingMethod: "Legal Document",
+    status: "ready",
+    createdAt: "Sep 20, 2024",
+    updatedAt: "Jan 12, 2025",
+    collaborators: [
+      { name: "Pat Harrison", initials: "PH", role: "Admin" },
+      { name: "Jamie Torres", initials: "JT", role: "Viewer" },
+    ],
+    totalChunks: 2341,
+    usedByAgents: 4,
+  },
+  "kb-006": {
+    id: "kb-006",
+    name: "Marketing Assets",
+    description: "Brand guidelines, marketing collateral, and campaign materials.",
+    embeddingModel: "text-embedding-3-small",
+    dimensions: 1536,
+    chunkSize: 384,
+    chunkOverlap: 40,
+    parsingMethod: "Mixed Media",
+    status: "ready",
+    createdAt: "Aug 15, 2024",
+    updatedAt: "Jan 11, 2025",
+    collaborators: [
+      { name: "Drew Martinez", initials: "DM", role: "Admin" },
+      { name: "Avery Park", initials: "AP", role: "Editor" },
+      { name: "Blake Foster", initials: "BF", role: "Editor" },
+    ],
+    totalChunks: 789,
+    usedByAgents: 6,
+  },
 }
 
-const documentsData = [
-  { id: "doc-001", name: "API_Guide.pdf", status: "processed", chunks: 45, size: "2.4 MB", uploadDate: "Jan 10, 2025", type: "document" },
-  { id: "doc-002", name: "Installation_Manual.docx", status: "processed", chunks: 23, size: "1.1 MB", uploadDate: "Jan 12, 2025", type: "document" },
-  { id: "doc-003", name: "FAQ.txt", status: "processing", chunks: 0, size: "45 KB", uploadDate: "Jan 15, 2025", type: "document" },
-  { id: "doc-004", name: "Release_Notes.md", status: "processed", chunks: 18, size: "78 KB", uploadDate: "Jan 14, 2025", type: "document" },
-  { id: "doc-005", name: "Pricing_Sheet.xlsx", status: "processed", chunks: 12, size: "156 KB", uploadDate: "Jan 13, 2025", type: "spreadsheet" },
-  { id: "doc-006", name: "User_Guide_v2.pdf", status: "failed", chunks: 0, size: "3.2 MB", uploadDate: "Jan 15, 2025", type: "document" },
-]
+// Context-specific documents for each knowledge base
+const documentsDataByKb: Record<string, Array<{id: string; name: string; status: string; chunks: number; size: string; uploadDate: string; type: string}>> = {
+  "kb-001": [
+    { id: "doc-001", name: "API_Guide.pdf", status: "processed", chunks: 45, size: "2.4 MB", uploadDate: "Jan 10, 2025", type: "document" },
+    { id: "doc-002", name: "Installation_Manual.docx", status: "processed", chunks: 23, size: "1.1 MB", uploadDate: "Jan 12, 2025", type: "document" },
+    { id: "doc-003", name: "FAQ.txt", status: "processing", chunks: 0, size: "45 KB", uploadDate: "Jan 15, 2025", type: "document" },
+    { id: "doc-004", name: "Release_Notes.md", status: "processed", chunks: 18, size: "78 KB", uploadDate: "Jan 14, 2025", type: "document" },
+    { id: "doc-005", name: "Pricing_Sheet.xlsx", status: "processed", chunks: 12, size: "156 KB", uploadDate: "Jan 13, 2025", type: "spreadsheet" },
+    { id: "doc-006", name: "User_Guide_v2.pdf", status: "failed", chunks: 0, size: "3.2 MB", uploadDate: "Jan 15, 2025", type: "document" },
+  ],
+  "kb-002": [
+    { id: "doc-001", name: "Q4_Revenue_Report.xlsx", status: "processed", chunks: 89, size: "4.2 MB", uploadDate: "Dec 15, 2024", type: "spreadsheet" },
+    { id: "doc-002", name: "Customer_Segmentation.xlsx", status: "processed", chunks: 67, size: "3.1 MB", uploadDate: "Dec 18, 2024", type: "spreadsheet" },
+    { id: "doc-003", name: "Sales_Pipeline.xlsx", status: "processed", chunks: 45, size: "2.8 MB", uploadDate: "Dec 20, 2024", type: "spreadsheet" },
+    { id: "doc-004", name: "Regional_Performance.xlsx", status: "processed", chunks: 78, size: "3.5 MB", uploadDate: "Jan 2, 2025", type: "spreadsheet" },
+    { id: "doc-005", name: "Churn_Analysis.xlsx", status: "processing", chunks: 0, size: "1.9 MB", uploadDate: "Jan 10, 2025", type: "spreadsheet" },
+    { id: "doc-006", name: "Forecast_2025.xlsx", status: "processed", chunks: 34, size: "1.2 MB", uploadDate: "Jan 8, 2025", type: "spreadsheet" },
+  ],
+  "kb-003": [
+    { id: "doc-001", name: "Onboarding_Day1_Transcript.txt", status: "processed", chunks: 156, size: "890 KB", uploadDate: "Nov 20, 2024", type: "document" },
+    { id: "doc-002", name: "Platform_Overview_Transcript.txt", status: "processed", chunks: 203, size: "1.2 MB", uploadDate: "Nov 22, 2024", type: "document" },
+    { id: "doc-003", name: "Advanced_Features_Transcript.txt", status: "processed", chunks: 189, size: "1.1 MB", uploadDate: "Nov 25, 2024", type: "document" },
+    { id: "doc-004", name: "Security_Training_Transcript.txt", status: "processed", chunks: 134, size: "780 KB", uploadDate: "Dec 1, 2024", type: "document" },
+    { id: "doc-005", name: "Best_Practices_Transcript.txt", status: "processing", chunks: 0, size: "650 KB", uploadDate: "Jan 8, 2025", type: "document" },
+    { id: "doc-006", name: "Compliance_Training_Transcript.txt", status: "processed", chunks: 167, size: "920 KB", uploadDate: "Dec 15, 2024", type: "document" },
+  ],
+  "kb-004": [
+    { id: "doc-001", name: "Billing_Issues_Resolved.json", status: "processed", chunks: 1234, size: "8.5 MB", uploadDate: "Oct 15, 2024", type: "document" },
+    { id: "doc-002", name: "Technical_Support_Tickets.json", status: "processed", chunks: 2156, size: "12.3 MB", uploadDate: "Nov 1, 2024", type: "document" },
+    { id: "doc-003", name: "Account_Management_Chats.json", status: "processed", chunks: 987, size: "6.7 MB", uploadDate: "Nov 15, 2024", type: "document" },
+    { id: "doc-004", name: "Feature_Requests_Summary.json", status: "processed", chunks: 456, size: "3.2 MB", uploadDate: "Dec 1, 2024", type: "document" },
+    { id: "doc-005", name: "Escalation_Cases.json", status: "failed", chunks: 0, size: "4.1 MB", uploadDate: "Jan 14, 2025", type: "document" },
+    { id: "doc-006", name: "Live_Chat_Transcripts.json", status: "processing", chunks: 0, size: "9.8 MB", uploadDate: "Jan 14, 2025", type: "document" },
+  ],
+  "kb-005": [
+    { id: "doc-001", name: "Master_Service_Agreement.pdf", status: "processed", chunks: 289, size: "1.8 MB", uploadDate: "Sep 25, 2024", type: "document" },
+    { id: "doc-002", name: "NDA_Template.pdf", status: "processed", chunks: 67, size: "456 KB", uploadDate: "Sep 28, 2024", type: "document" },
+    { id: "doc-003", name: "SLA_Enterprise.pdf", status: "processed", chunks: 145, size: "892 KB", uploadDate: "Oct 5, 2024", type: "document" },
+    { id: "doc-004", name: "Data_Processing_Agreement.pdf", status: "processed", chunks: 234, size: "1.4 MB", uploadDate: "Oct 12, 2024", type: "document" },
+    { id: "doc-005", name: "Licensing_Terms.pdf", status: "processed", chunks: 178, size: "1.1 MB", uploadDate: "Nov 8, 2024", type: "document" },
+    { id: "doc-006", name: "Privacy_Policy_v3.pdf", status: "processing", chunks: 0, size: "567 KB", uploadDate: "Jan 12, 2025", type: "document" },
+  ],
+  "kb-006": [
+    { id: "doc-001", name: "Brand_Guidelines_2025.pdf", status: "processed", chunks: 89, size: "15.6 MB", uploadDate: "Aug 20, 2024", type: "document" },
+    { id: "doc-002", name: "Social_Media_Templates.pdf", status: "processed", chunks: 45, size: "8.9 MB", uploadDate: "Sep 5, 2024", type: "document" },
+    { id: "doc-003", name: "Email_Campaign_Copy.docx", status: "processed", chunks: 67, size: "2.3 MB", uploadDate: "Oct 1, 2024", type: "document" },
+    { id: "doc-004", name: "Press_Kit_Materials.pdf", status: "processed", chunks: 123, size: "22.4 MB", uploadDate: "Oct 15, 2024", type: "document" },
+    { id: "doc-005", name: "Product_Screenshots.zip", status: "processed", chunks: 34, size: "45.2 MB", uploadDate: "Nov 20, 2024", type: "document" },
+    { id: "doc-006", name: "Video_Scripts.docx", status: "failed", chunks: 0, size: "1.8 MB", uploadDate: "Jan 11, 2025", type: "document" },
+  ],
+}
 
-const chunksData = [
-  { id: "chunk-001", documentId: "doc-001", documentName: "API_Guide.pdf", content: "The REST API provides programmatic access to all platform features. Authentication is handled via OAuth 2.0 with support for both client credentials and authorization code flows...", tokens: 45 },
-  { id: "chunk-002", documentId: "doc-001", documentName: "API_Guide.pdf", content: "Rate limiting is applied to all API endpoints. Standard tier users are limited to 100 requests per minute. Enterprise users can request higher limits by contacting support...", tokens: 38 },
-  { id: "chunk-003", documentId: "doc-002", documentName: "Installation_Manual.docx", content: "System Requirements: Minimum 8GB RAM, 4 CPU cores, 50GB disk space. Recommended: 16GB RAM, 8 CPU cores, 100GB SSD. Compatible with Ubuntu 20.04+, CentOS 8+, or Windows Server 2019+...", tokens: 42 },
-  { id: "chunk-004", documentId: "doc-002", documentName: "Installation_Manual.docx", content: "Installation Steps: 1. Download the installer from the official website. 2. Extract the archive to /opt/platform. 3. Run ./install.sh to begin the setup wizard...", tokens: 35 },
-  { id: "chunk-005", documentId: "doc-004", documentName: "Release_Notes.md", content: "Version 2.5.0 introduces significant performance improvements including 40% faster query processing, reduced memory footprint, and support for multi-region deployments...", tokens: 41 },
-]
+// Context-specific chunks for each knowledge base
+const chunksDataByKb: Record<string, Array<{id: string; documentId: string; documentName: string; content: string; tokens: number}>> = {
+  "kb-001": [
+    { id: "chunk-001", documentId: "doc-001", documentName: "API_Guide.pdf", content: "The REST API provides programmatic access to all platform features. Authentication is handled via OAuth 2.0 with support for both client credentials and authorization code flows...", tokens: 45 },
+    { id: "chunk-002", documentId: "doc-001", documentName: "API_Guide.pdf", content: "Rate limiting is applied to all API endpoints. Standard tier users are limited to 100 requests per minute. Enterprise users can request higher limits by contacting support...", tokens: 38 },
+    { id: "chunk-003", documentId: "doc-002", documentName: "Installation_Manual.docx", content: "System Requirements: Minimum 8GB RAM, 4 CPU cores, 50GB disk space. Recommended: 16GB RAM, 8 CPU cores, 100GB SSD. Compatible with Ubuntu 20.04+, CentOS 8+, or Windows Server 2019+...", tokens: 42 },
+    { id: "chunk-004", documentId: "doc-002", documentName: "Installation_Manual.docx", content: "Installation Steps: 1. Download the installer from the official website. 2. Extract the archive to /opt/platform. 3. Run ./install.sh to begin the setup wizard...", tokens: 35 },
+    { id: "chunk-005", documentId: "doc-004", documentName: "Release_Notes.md", content: "Version 2.5.0 introduces significant performance improvements including 40% faster query processing, reduced memory footprint, and support for multi-region deployments...", tokens: 41 },
+  ],
+  "kb-002": [
+    { id: "chunk-001", documentId: "doc-001", documentName: "Q4_Revenue_Report.xlsx", content: "Q4 2024 Total Revenue: $12.4M (+23% YoY). Enterprise segment: $8.2M. SMB segment: $4.2M. Highest performing region: North America with $6.8M in revenue...", tokens: 52 },
+    { id: "chunk-002", documentId: "doc-001", documentName: "Q4_Revenue_Report.xlsx", content: "Monthly breakdown - October: $3.8M, November: $4.1M, December: $4.5M. December showed strongest growth driven by enterprise renewals and new logo acquisitions...", tokens: 44 },
+    { id: "chunk-003", documentId: "doc-002", documentName: "Customer_Segmentation.xlsx", content: "Enterprise customers (>$100K ARR): 45 accounts, 62% retention. Mid-market ($25K-$100K): 234 accounts, 78% retention. SMB (<$25K): 1,245 accounts, 85% retention...", tokens: 48 },
+    { id: "chunk-004", documentId: "doc-003", documentName: "Sales_Pipeline.xlsx", content: "Current pipeline value: $28.5M. Stage breakdown - Discovery: $8.2M, Evaluation: $12.1M, Negotiation: $5.8M, Closing: $2.4M. Average deal cycle: 45 days...", tokens: 51 },
+    { id: "chunk-005", documentId: "doc-004", documentName: "Regional_Performance.xlsx", content: "APAC region showed 45% growth in Q4. Key wins include: TechCorp Japan ($450K), Singapore Airlines ($320K), Samsung Electronics ($280K). EMEA stable at 12% growth...", tokens: 47 },
+  ],
+  "kb-003": [
+    { id: "chunk-001", documentId: "doc-001", documentName: "Onboarding_Day1_Transcript.txt", content: "Welcome to your first day! Today we'll cover company history, core values, and platform overview. Our mission is to democratize AI for every business...", tokens: 56 },
+    { id: "chunk-002", documentId: "doc-001", documentName: "Onboarding_Day1_Transcript.txt", content: "Let's walk through the main dashboard. On the left, you'll see the navigation menu with Build, Use, Explore, and Manage sections. The Build section is where you create agents...", tokens: 62 },
+    { id: "chunk-003", documentId: "doc-002", documentName: "Platform_Overview_Transcript.txt", content: "The platform supports both no-code and code-first approaches. No-code users can build agents using our visual workflow editor. Developers can use our SDK and APIs...", tokens: 58 },
+    { id: "chunk-004", documentId: "doc-003", documentName: "Advanced_Features_Transcript.txt", content: "Knowledge bases allow you to upload documents that your agents can reference. The system automatically chunks and embeds your content for semantic search...", tokens: 54 },
+    { id: "chunk-005", documentId: "doc-004", documentName: "Security_Training_Transcript.txt", content: "Security is paramount. All data is encrypted at rest and in transit. We maintain SOC 2 Type II and GDPR compliance. Never share API keys or access tokens...", tokens: 49 },
+  ],
+  "kb-004": [
+    { id: "chunk-001", documentId: "doc-001", documentName: "Billing_Issues_Resolved.json", content: "Ticket #45231: Customer reported duplicate charge. Resolution: Identified payment gateway timeout causing retry. Refunded $299, added 1 month free credit. Customer satisfied...", tokens: 67 },
+    { id: "chunk-002", documentId: "doc-001", documentName: "Billing_Issues_Resolved.json", content: "Ticket #45456: Enterprise customer invoice mismatch. Resolution: Annual contract had incorrect seat count. Adjusted invoice from $45K to $38K. Finance team notified...", tokens: 58 },
+    { id: "chunk-003", documentId: "doc-002", documentName: "Technical_Support_Tickets.json", content: "Ticket #T-8923: API returning 500 errors intermittently. Root cause: Connection pool exhaustion during peak hours. Fix: Increased pool size from 50 to 200. Deployed hotfix...", tokens: 72 },
+    { id: "chunk-004", documentId: "doc-003", documentName: "Account_Management_Chats.json", content: "Chat with TechStart Inc: Requested upgrade from Pro to Enterprise. Concerns about data migration. Assured zero-downtime migration, offered dedicated onboarding call...", tokens: 61 },
+    { id: "chunk-005", documentId: "doc-004", documentName: "Feature_Requests_Summary.json", content: "Most requested features Q4: 1. Slack integration (234 votes), 2. Custom webhooks (189 votes), 3. Role-based access control (156 votes), 4. Audit logs (134 votes)...", tokens: 55 },
+  ],
+  "kb-005": [
+    { id: "chunk-001", documentId: "doc-001", documentName: "Master_Service_Agreement.pdf", content: "Section 1.1 - Definitions: 'Services' means the cloud-based AI agent platform provided by Company. 'Customer Data' means all data uploaded or generated by Customer...", tokens: 78 },
+    { id: "chunk-002", documentId: "doc-001", documentName: "Master_Service_Agreement.pdf", content: "Section 4.2 - Liability Cap: Company's total liability shall not exceed the fees paid by Customer in the 12 months preceding the claim. This limitation does not apply to...", tokens: 82 },
+    { id: "chunk-003", documentId: "doc-003", documentName: "SLA_Enterprise.pdf", content: "Uptime Commitment: 99.95% monthly uptime for Enterprise tier. Credits: <99.95%: 10% credit, <99.9%: 25% credit, <99.5%: 50% credit. Excludes scheduled maintenance...", tokens: 68 },
+    { id: "chunk-004", documentId: "doc-004", documentName: "Data_Processing_Agreement.pdf", content: "Sub-processors: AWS (infrastructure), OpenAI (AI models), Stripe (payments). Customer will be notified 30 days before adding new sub-processors. Objection rights apply...", tokens: 74 },
+    { id: "chunk-005", documentId: "doc-005", documentName: "Licensing_Terms.pdf", content: "Grant of License: Non-exclusive, non-transferable right to access and use the Services. Customer may not: reverse engineer, sublicense, or use for competing products...", tokens: 71 },
+  ],
+  "kb-006": [
+    { id: "chunk-001", documentId: "doc-001", documentName: "Brand_Guidelines_2025.pdf", content: "Primary brand color: Bain Red (#ee3224). Secondary colors: Charcoal (#1F2937), Light Gray (#F5F7FA). Logo minimum clear space: 24px on all sides...", tokens: 45 },
+    { id: "chunk-002", documentId: "doc-001", documentName: "Brand_Guidelines_2025.pdf", content: "Typography: Inter for headings (600 weight), Inter for body (400 weight). Minimum body text size: 14px. Line height: 1.5 for body, 1.2 for headings...", tokens: 52 },
+    { id: "chunk-003", documentId: "doc-002", documentName: "Social_Media_Templates.pdf", content: "LinkedIn post dimensions: 1200x627px. Twitter/X header: 1500x500px. Instagram square: 1080x1080px. Always include logo watermark in bottom right corner...", tokens: 48 },
+    { id: "chunk-004", documentId: "doc-03", documentName: "Email_Campaign_Copy.docx", content: "Welcome email subject line A/B test results: 'Get started with AgentStudio' (32% open rate) vs 'Your AI journey begins' (28% open rate). Use action-oriented language...", tokens: 56 },
+    { id: "chunk-005", documentId: "doc-04", documentName: "Press_Kit_Materials.pdf", content: "Boilerplate: AgentStudio is the leading enterprise AI agent platform, empowering businesses to build, deploy, and manage intelligent automation at scale...", tokens: 43 },
+  ],
+}
 
-const hitTestResults = [
-  { rank: 1, documentId: "doc-001", documentName: "API_Guide.pdf", chunkId: "chunk-001", score: 0.94, content: "The REST API provides programmatic access to all platform features. Authentication is handled via OAuth 2.0..." },
-  { rank: 2, documentId: "doc-002", documentName: "Installation_Manual.docx", chunkId: "chunk-003", score: 0.87, content: "System Requirements: Minimum 8GB RAM, 4 CPU cores, 50GB disk space. Recommended: 16GB RAM..." },
-  { rank: 3, documentId: "doc-004", documentName: "Release_Notes.md", chunkId: "chunk-005", score: 0.82, content: "Version 2.5.0 introduces significant performance improvements including 40% faster query processing..." },
-]
+// Context-specific hit test results for each knowledge base
+const hitTestResultsByKb: Record<string, Array<{rank: number; documentId: string; documentName: string; chunkId: string; score: number; content: string}>> = {
+  "kb-001": [
+    { rank: 1, documentId: "doc-001", documentName: "API_Guide.pdf", chunkId: "chunk-001", score: 0.94, content: "The REST API provides programmatic access to all platform features. Authentication is handled via OAuth 2.0..." },
+    { rank: 2, documentId: "doc-002", documentName: "Installation_Manual.docx", chunkId: "chunk-003", score: 0.87, content: "System Requirements: Minimum 8GB RAM, 4 CPU cores, 50GB disk space. Recommended: 16GB RAM..." },
+    { rank: 3, documentId: "doc-004", documentName: "Release_Notes.md", chunkId: "chunk-005", score: 0.82, content: "Version 2.5.0 introduces significant performance improvements including 40% faster query processing..." },
+  ],
+  "kb-002": [
+    { rank: 1, documentId: "doc-001", documentName: "Q4_Revenue_Report.xlsx", chunkId: "chunk-001", score: 0.96, content: "Q4 2024 Total Revenue: $12.4M (+23% YoY). Enterprise segment: $8.2M. SMB segment: $4.2M..." },
+    { rank: 2, documentId: "doc-003", documentName: "Sales_Pipeline.xlsx", chunkId: "chunk-004", score: 0.89, content: "Current pipeline value: $28.5M. Stage breakdown - Discovery: $8.2M, Evaluation: $12.1M..." },
+    { rank: 3, documentId: "doc-002", documentName: "Customer_Segmentation.xlsx", chunkId: "chunk-003", score: 0.84, content: "Enterprise customers (>$100K ARR): 45 accounts, 62% retention. Mid-market: 234 accounts..." },
+  ],
+  "kb-003": [
+    { rank: 1, documentId: "doc-002", documentName: "Platform_Overview_Transcript.txt", chunkId: "chunk-003", score: 0.92, content: "The platform supports both no-code and code-first approaches. No-code users can build agents..." },
+    { rank: 2, documentId: "doc-003", documentName: "Advanced_Features_Transcript.txt", chunkId: "chunk-004", score: 0.88, content: "Knowledge bases allow you to upload documents that your agents can reference..." },
+    { rank: 3, documentId: "doc-001", documentName: "Onboarding_Day1_Transcript.txt", chunkId: "chunk-002", score: 0.81, content: "Let's walk through the main dashboard. On the left, you'll see the navigation menu..." },
+  ],
+  "kb-004": [
+    { rank: 1, documentId: "doc-002", documentName: "Technical_Support_Tickets.json", chunkId: "chunk-003", score: 0.95, content: "Ticket #T-8923: API returning 500 errors intermittently. Root cause: Connection pool exhaustion..." },
+    { rank: 2, documentId: "doc-001", documentName: "Billing_Issues_Resolved.json", chunkId: "chunk-001", score: 0.88, content: "Ticket #45231: Customer reported duplicate charge. Resolution: Identified payment gateway timeout..." },
+    { rank: 3, documentId: "doc-04", documentName: "Feature_Requests_Summary.json", chunkId: "chunk-005", score: 0.79, content: "Most requested features Q4: 1. Slack integration (234 votes), 2. Custom webhooks (189 votes)..." },
+  ],
+  "kb-005": [
+    { rank: 1, documentId: "doc-001", documentName: "Master_Service_Agreement.pdf", chunkId: "chunk-002", score: 0.93, content: "Section 4.2 - Liability Cap: Company's total liability shall not exceed the fees paid by Customer..." },
+    { rank: 2, documentId: "doc-003", documentName: "SLA_Enterprise.pdf", chunkId: "chunk-003", score: 0.90, content: "Uptime Commitment: 99.95% monthly uptime for Enterprise tier. Credits: <99.95%: 10% credit..." },
+    { rank: 3, documentId: "doc-004", documentName: "Data_Processing_Agreement.pdf", chunkId: "chunk-004", score: 0.85, content: "Sub-processors: AWS (infrastructure), OpenAI (AI models), Stripe (payments). Customer will be notified..." },
+  ],
+  "kb-006": [
+    { rank: 1, documentId: "doc-001", documentName: "Brand_Guidelines_2025.pdf", chunkId: "chunk-001", score: 0.97, content: "Primary brand color: Bain Red (#ee3224). Secondary colors: Charcoal (#1F2937), Light Gray (#F5F7FA)..." },
+    { rank: 2, documentId: "doc-001", documentName: "Brand_Guidelines_2025.pdf", chunkId: "chunk-002", score: 0.91, content: "Typography: Inter for headings (600 weight), Inter for body (400 weight). Minimum body text size: 14px..." },
+    { rank: 3, documentId: "doc-02", documentName: "Social_Media_Templates.pdf", chunkId: "chunk-003", score: 0.86, content: "LinkedIn post dimensions: 1200x627px. Twitter/X header: 1500x500px. Instagram square: 1080x1080px..." },
+  ],
+}
 
 export default function KnowledgeDetailPage() {
   const router = useRouter()
@@ -102,7 +313,8 @@ export default function KnowledgeDetailPage() {
 
   const [activeTab, setActiveTab] = useState("overview")
   const [isEditingName, setIsEditingName] = useState(false)
-  const [kbName, setKbName] = useState(knowledgeBaseData["kb-001"].name)
+  const kbData = knowledgeBaseData[kbId] || knowledgeBaseData["kb-001"]
+  const [kbName, setKbName] = useState(kbData.name)
   const [selectedDocuments, setSelectedDocuments] = useState<string[]>([])
   const [documentSearch, setDocumentSearch] = useState("")
   const [documentStatusFilter, setDocumentStatusFilter] = useState("all")
@@ -113,7 +325,11 @@ export default function KnowledgeDetailPage() {
   const [showHitResults, setShowHitResults] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
-  const kb = knowledgeBaseData["kb-001"]
+  // Get KB-specific data based on the current KB ID
+  const kb = knowledgeBaseData[kbId] || knowledgeBaseData["kb-001"]
+  const documentsData = documentsDataByKb[kbId] || documentsDataByKb["kb-001"]
+  const chunksData = chunksDataByKb[kbId] || chunksDataByKb["kb-001"]
+  const hitTestResults = hitTestResultsByKb[kbId] || hitTestResultsByKb["kb-001"]
 
   const filteredDocuments = documentsData.filter((doc) => {
     const matchesSearch = doc.name.toLowerCase().includes(documentSearch.toLowerCase())
