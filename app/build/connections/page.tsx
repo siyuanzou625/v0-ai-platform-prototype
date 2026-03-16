@@ -872,7 +872,7 @@ export default function ConnectionsPage() {
 
         {/* Connection Detail Modal */}
         <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
-          <DialogContent className="max-w-[1100px] w-[95vw] max-h-[90vh] h-[85vh] overflow-y-auto flex flex-col p-0">
+          <DialogContent className="max-w-[1200px] w-[95vw] max-h-[90vh] h-[85vh] overflow-hidden flex flex-col p-0">
             {selectedConnection && (
               <>
                 {/* Header */}
@@ -924,8 +924,8 @@ export default function ConnectionsPage() {
                     <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Settings</TabsTrigger>
                   </TabsList>
 
-                  <ScrollArea className="flex-1">
-                    <TabsContent value="overview" className="p-6 m-0 space-y-6 overflow-auto">
+                  <ScrollArea className="flex-1 h-full">
+                    <TabsContent value="overview" className="p-6 m-0 space-y-6">
                       {/* Quick Stats */}
                       <div className="grid grid-cols-4 gap-4">
                         <Card>
@@ -1023,40 +1023,40 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="usage" className="p-6 m-0 space-y-6 overflow-auto">
+                    <TabsContent value="usage" className="p-6 m-0 space-y-6">
                       {/* Workflows Using This Connection */}
                       <Card>
                         <CardHeader>
                           <CardTitle className="text-sm">Workflows Using This Connection</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                          <Table>
+                        <CardContent className="overflow-x-auto">
+                          <Table className="min-w-[500px]">
                             <TableHeader>
                               <TableRow>
-                                <TableHead>Workflow Name</TableHead>
-                                <TableHead>Project</TableHead>
-                                <TableHead>Owner</TableHead>
-                                <TableHead>Last Used</TableHead>
+                                <TableHead className="whitespace-nowrap">Workflow Name</TableHead>
+                                <TableHead className="whitespace-nowrap">Project</TableHead>
+                                <TableHead className="whitespace-nowrap">Owner</TableHead>
+                                <TableHead className="whitespace-nowrap">Last Used</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
                               <TableRow>
-                                <TableCell className="font-medium">Daily Standup Bot</TableCell>
-                                <TableCell>Team Automation</TableCell>
-                                <TableCell>John Doe</TableCell>
-                                <TableCell>2 hours ago</TableCell>
+                                <TableCell className="font-medium whitespace-nowrap">Daily Standup Bot</TableCell>
+                                <TableCell className="whitespace-nowrap">Team Automation</TableCell>
+                                <TableCell className="whitespace-nowrap">John Doe</TableCell>
+                                <TableCell className="whitespace-nowrap">2 hours ago</TableCell>
                               </TableRow>
                               <TableRow>
-                                <TableCell className="font-medium">Email Notifier</TableCell>
-                                <TableCell>Notifications</TableCell>
-                                <TableCell>Jane Smith</TableCell>
-                                <TableCell>1 day ago</TableCell>
+                                <TableCell className="font-medium whitespace-nowrap">Email Notifier</TableCell>
+                                <TableCell className="whitespace-nowrap">Notifications</TableCell>
+                                <TableCell className="whitespace-nowrap">Jane Smith</TableCell>
+                                <TableCell className="whitespace-nowrap">1 day ago</TableCell>
                               </TableRow>
                               <TableRow>
-                                <TableCell className="font-medium">Data Sync Agent</TableCell>
-                                <TableCell>Data Pipeline</TableCell>
-                                <TableCell>Admin</TableCell>
-                                <TableCell>3 hours ago</TableCell>
+                                <TableCell className="font-medium whitespace-nowrap">Data Sync Agent</TableCell>
+                                <TableCell className="whitespace-nowrap">Data Pipeline</TableCell>
+                                <TableCell className="whitespace-nowrap">Admin</TableCell>
+                                <TableCell className="whitespace-nowrap">3 hours ago</TableCell>
                               </TableRow>
                             </TableBody>
                           </Table>
@@ -1084,7 +1084,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="logs" className="p-6 m-0 space-y-4 overflow-auto">
+                    <TabsContent value="logs" className="p-6 m-0 space-y-4">
                       {/* Filter Bar */}
                       <div className="flex items-center gap-4">
                         <Select defaultValue="24h">
@@ -1151,7 +1151,7 @@ export default function ConnectionsPage() {
                       <p className="text-xs text-muted-foreground">Logs retained for 90 days per compliance policy</p>
                     </TabsContent>
 
-                    <TabsContent value="settings" className="p-6 m-0 space-y-6 overflow-auto">
+                    <TabsContent value="settings" className="p-6 m-0 space-y-6 pb-10">
                       {/* Credentials */}
                       <Card>
                         <CardHeader>
