@@ -61,15 +61,15 @@ import {
 type Mode = "workflow" | "code"
 type ProjectType = "workflow" | "code"
 
-// Mock projects data to determine project type
-const projectsData: Record<string, { name: string; type: ProjectType }> = {
-  "1": { name: "Enterprise Sales Agent", type: "workflow" },
-  "2": { name: "Data Pipeline v2", type: "code" },
-  "3": { name: "Customer Support Bot", type: "workflow" },
-  "4": { name: "Analytics Dashboard API", type: "code" },
-  "5": { name: "Invoice Processor", type: "workflow" },
-  "6": { name: "Notification Service", type: "code" },
-  "new": { name: "New Project", type: "workflow" },
+// Mock projects data to determine project type - matches IDs from projects page
+const projectsData: Record<string, { name: string; type: ProjectType; description: string }> = {
+  "proj-001": { name: "Enterprise Sales Agent", type: "workflow", description: "Automating lead qualification and outreach for enterprise sales teams" },
+  "proj-002": { name: "Data Pipeline v2", type: "code", description: "ETL workflow for processing customer analytics data" },
+  "proj-003": { name: "Customer Support Bot", type: "workflow", description: "AI-powered customer service automation with ticket routing" },
+  "proj-004": { name: "Analytics Dashboard API", type: "code", description: "Backend API for real-time analytics dashboard" },
+  "proj-005": { name: "Invoice Processor", type: "workflow", description: "Automated invoice processing and approval workflow" },
+  "proj-006": { name: "Notification Service", type: "code", description: "Multi-channel notification microservice" },
+  "new": { name: "New Project", type: "workflow", description: "A new project" },
 }
 
 // Mock team members
@@ -102,8 +102,35 @@ const toolPaletteCategories = [
   },
 ]
 
-// Workflow nodes with connections
-const workflowNodes = [
+// Project-specific workflow nodes
+const projectWorkflowNodes: Record<string, typeof defaultWorkflowNodes> = {
+  "proj-001": [ // Enterprise Sales Agent
+    { id: 1, type: "start", name: "Lead Received", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["trigger"] },
+    { id: 2, type: "llm", name: "Qualify Lead", x: 300, y: 120, color: "bg-purple-500", inputs: ["lead_data"], outputs: ["score", "analysis"] },
+    { id: 3, type: "http", name: "CRM Lookup", x: 300, y: 280, color: "bg-orange-500", inputs: ["email"], outputs: ["history", "status"] },
+    { id: 4, type: "condition", name: "Score Check", x: 560, y: 180, color: "bg-emerald-500", inputs: ["score"], outputs: ["qualified", "nurture"] },
+    { id: 5, type: "email", name: "Send Outreach", x: 800, y: 120, color: "bg-red-500", inputs: ["template", "lead"], outputs: ["sent"] },
+    { id: 6, type: "database", name: "Update CRM", x: 800, y: 260, color: "bg-cyan-500", inputs: ["lead", "status"], outputs: ["id"] },
+  ],
+  "proj-003": [ // Customer Support Bot
+    { id: 1, type: "start", name: "Ticket Created", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["trigger"] },
+    { id: 2, type: "llm", name: "Analyze Intent", x: 300, y: 120, color: "bg-purple-500", inputs: ["message"], outputs: ["intent", "sentiment"] },
+    { id: 3, type: "knowledge", name: "Search FAQ", x: 300, y: 280, color: "bg-amber-500", inputs: ["query"], outputs: ["answers"] },
+    { id: 4, type: "condition", name: "Can Auto-Resolve?", x: 560, y: 180, color: "bg-emerald-500", inputs: ["confidence"], outputs: ["yes", "no"] },
+    { id: 5, type: "llm", name: "Generate Response", x: 800, y: 120, color: "bg-purple-500", inputs: ["context", "intent"], outputs: ["reply"] },
+    { id: 6, type: "http", name: "Escalate to Agent", x: 800, y: 260, color: "bg-orange-500", inputs: ["ticket"], outputs: ["assigned"] },
+  ],
+  "proj-005": [ // Invoice Processor
+    { id: 1, type: "start", name: "Invoice Uploaded", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["trigger"] },
+    { id: 2, type: "llm", name: "Extract Data", x: 300, y: 120, color: "bg-purple-500", inputs: ["document"], outputs: ["fields", "confidence"] },
+    { id: 3, type: "database", name: "Vendor Lookup", x: 300, y: 280, color: "bg-cyan-500", inputs: ["vendor_id"], outputs: ["vendor_info"] },
+    { id: 4, type: "condition", name: "Amount > $10K?", x: 560, y: 180, color: "bg-emerald-500", inputs: ["amount"], outputs: ["approval", "auto"] },
+    { id: 5, type: "email", name: "Request Approval", x: 800, y: 120, color: "bg-red-500", inputs: ["invoice", "approver"], outputs: ["sent"] },
+    { id: 6, type: "http", name: "Process Payment", x: 800, y: 260, color: "bg-orange-500", inputs: ["invoice"], outputs: ["confirmation"] },
+  ],
+}
+
+const defaultWorkflowNodes = [
   { id: 1, type: "start", name: "Start", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["trigger"] },
   { id: 2, type: "llm", name: "LLM Processor", x: 300, y: 120, color: "bg-purple-500", inputs: ["content"], outputs: ["response", "tokens"] },
   { id: 3, type: "http", name: "API Request", x: 300, y: 280, color: "bg-orange-500", inputs: ["url", "params"], outputs: ["data", "status"] },
@@ -154,7 +181,154 @@ const fileTree = [
   { name: "README.md", type: "file" },
 ]
 
-const codeContent = `import { OpenAI } from 'openai';
+// Project-specific code content
+const projectCodeContent: Record<string, string> = {
+  "proj-002": `import { Pipeline, Transform } from '@data/pipeline';
+import { PostgresSource, S3Destination } from '@data/connectors';
+
+const CustomerAnalyticsPipeline = new Pipeline({
+  name: 'customer-analytics-v2',
+  schedule: '0 */6 * * *', // Every 6 hours
+});
+
+// Extract from PostgreSQL
+const source = new PostgresSource({
+  connectionString: process.env.DATABASE_URL,
+  query: \`
+    SELECT 
+      customer_id,
+      event_type,
+      properties,
+      timestamp
+    FROM events
+    WHERE timestamp > NOW() - INTERVAL '6 hours'
+  \`,
+});
+
+// Transform data
+const transform = new Transform({
+  async process(record) {
+    return {
+      ...record,
+      enriched_at: new Date().toISOString(),
+      segment: await classifyCustomer(record.customer_id),
+    };
+  },
+});
+
+// Load to S3
+const destination = new S3Destination({
+  bucket: process.env.ANALYTICS_BUCKET,
+  prefix: 'processed/customers/',
+  format: 'parquet',
+});
+
+CustomerAnalyticsPipeline
+  .extract(source)
+  .transform(transform)
+  .load(destination);
+
+export default CustomerAnalyticsPipeline;
+`,
+  "proj-004": `import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { jwt } from 'hono/jwt';
+import { z } from 'zod';
+
+const app = new Hono();
+
+// Middleware
+app.use('/*', cors());
+app.use('/api/*', jwt({ secret: process.env.JWT_SECRET! }));
+
+// Analytics schemas
+const MetricQuerySchema = z.object({
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime(),
+  metrics: z.array(z.enum(['pageviews', 'sessions', 'conversions'])),
+  groupBy: z.enum(['day', 'week', 'month']).optional(),
+});
+
+// GET /api/metrics - Real-time analytics data
+app.get('/api/metrics', async (c) => {
+  const query = MetricQuerySchema.parse(c.req.query());
+  
+  const data = await db.analytics.findMany({
+    where: {
+      timestamp: {
+        gte: new Date(query.startDate),
+        lte: new Date(query.endDate),
+      },
+    },
+    select: query.metrics.reduce((acc, m) => ({ ...acc, [m]: true }), {}),
+  });
+
+  return c.json({ success: true, data });
+});
+
+// POST /api/track - Track events
+app.post('/api/track', async (c) => {
+  const event = await c.req.json();
+  await db.events.create({ data: event });
+  return c.json({ success: true });
+});
+
+export default app;
+`,
+  "proj-006": `import { SNS, SES, Twilio } from '@notifications/providers';
+import { Queue } from '@notifications/queue';
+
+interface NotificationPayload {
+  userId: string;
+  type: 'email' | 'sms' | 'push';
+  template: string;
+  data: Record<string, unknown>;
+  priority: 'high' | 'normal' | 'low';
+}
+
+class NotificationService {
+  private providers = {
+    email: new SES({ region: 'us-east-1' }),
+    sms: new Twilio({ accountSid: process.env.TWILIO_SID }),
+    push: new SNS({ region: 'us-east-1' }),
+  };
+
+  private queue = new Queue('notifications', {
+    concurrency: 10,
+    retries: 3,
+  });
+
+  async send(payload: NotificationPayload) {
+    const { type, priority } = payload;
+    
+    if (priority === 'high') {
+      return this.sendImmediate(payload);
+    }
+    
+    return this.queue.add(payload);
+  }
+
+  private async sendImmediate(payload: NotificationPayload) {
+    const provider = this.providers[payload.type];
+    const content = await this.renderTemplate(payload);
+    
+    return provider.send({
+      to: await this.getUserContact(payload.userId, payload.type),
+      ...content,
+    });
+  }
+
+  private async renderTemplate(payload: NotificationPayload) {
+    // Template rendering logic
+    return { subject: '', body: '' };
+  }
+}
+
+export const notificationService = new NotificationService();
+`,
+}
+
+const defaultCodeContent = `import { OpenAI } from 'openai';
 import { z } from 'zod';
 
 const EmailSchema = z.object({
@@ -216,7 +390,7 @@ export default function ProjectWorkspacePage() {
   const urlMode = searchParams.get("mode") as ProjectType | null
   
   // Determine project type from data or URL param (for new projects)
-  const projectData = projectsData[projectId] || projectsData["1"]
+  const projectData = projectsData[projectId] || projectsData["proj-001"]
   const projectType: ProjectType = urlMode || projectData.type
   
   // For code projects, always show code mode. For workflow projects, default to workflow mode
@@ -413,15 +587,16 @@ export default function ProjectWorkspacePage() {
           {/* Left Panel - Canvas (70%) */}
           <div className="flex w-[70%] flex-col border-r border-[#E5E7EB]">
             {projectType === "code" ? (
-              <CodeEditor />
+              <CodeEditor projectId={projectId} />
             ) : mode === "workflow" ? (
               <WorkflowCanvas
                 selectedNode={selectedNode}
                 setSelectedNode={setSelectedNode}
                 onOpenMarketplace={() => setShowMarketplace(true)}
+                projectId={projectId}
               />
             ) : (
-              <CodeEditor />
+              <CodeEditor projectId={projectId} />
             )}
           </div>
 
@@ -626,15 +801,20 @@ function WorkflowCanvas({
   selectedNode,
   setSelectedNode,
   onOpenMarketplace,
-}: {
+  projectId,
+  }: {
   selectedNode: number | null
   setSelectedNode: (id: number | null) => void
   onOpenMarketplace: () => void
-}) {
+  projectId: string
+  }) {
   const [toolPaletteCollapsed, setToolPaletteCollapsed] = useState<boolean>(false)
-
+  
+  // Get project-specific workflow nodes
+  const workflowNodes = projectWorkflowNodes[projectId] || defaultWorkflowNodes
+  
   // Calculate bezier curve path between two nodes
-  const getConnectionPath = (fromNode: typeof workflowNodes[0], toNode: typeof workflowNodes[0]) => {
+  const getConnectionPath = (fromNode: typeof defaultWorkflowNodes[0], toNode: typeof defaultWorkflowNodes[0]) => {
     const nodeWidth = 180
     const nodeHeight = 100 // Approximate height including header + body
     
@@ -885,10 +1065,13 @@ function WorkflowCanvas({
 }
 
 // Code Editor Component
-function CodeEditor() {
+function CodeEditor({ projectId }: { projectId: string }) {
   const [expandedFolders, setExpandedFolders] = useState<string[]>(["src"])
   const [activeFile, setActiveFile] = useState("agent.ts")
   const [terminalExpanded, setTerminalExpanded] = useState(true)
+  
+  // Get project-specific code content
+  const codeContent = projectCodeContent[projectId] || defaultCodeContent
 
   const consoleOutput = [
     { type: "info", message: "[INFO] Agent initialized successfully", time: "10:23:45" },
