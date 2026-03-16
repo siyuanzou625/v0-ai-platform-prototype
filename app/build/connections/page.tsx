@@ -872,29 +872,29 @@ export default function ConnectionsPage() {
 
         {/* Connection Detail Modal */}
         <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
-          <DialogContent className="max-w-[1000px] w-[95vw] max-h-[90vh] h-[85vh] overflow-hidden flex flex-col p-0">
+          <DialogContent className="max-w-[1100px] w-[95vw] max-h-[90vh] h-[85vh] overflow-y-auto flex flex-col p-0">
             {selectedConnection && (
               <>
                 {/* Header */}
-                <div className="p-6 border-b">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <Button variant="ghost" size="icon" onClick={() => setDetailModalOpen(false)}>
+                <div className="p-6 border-b flex-shrink-0">
+                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                    <div className="flex items-center gap-4 min-w-0">
+                      <Button variant="ghost" size="icon" onClick={() => setDetailModalOpen(false)} className="flex-shrink-0">
                         <ArrowLeft className="h-4 w-4" />
                       </Button>
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-lg font-semibold">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-lg font-semibold flex-shrink-0">
                         {selectedConnection.provider.charAt(0).toUpperCase()}
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <h2 className="text-xl font-semibold flex items-center gap-2">
-                          {selectedConnection.displayName}
-                          <Edit className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+                          <span className="truncate">{selectedConnection.displayName}</span>
+                          <Edit className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground flex-shrink-0" />
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge variant={getStatusBadgeVariant(selectedConnection.status)} className="capitalize">
                             {selectedConnection.status}
                           </Badge>
-                          <span className="text-xs text-muted-foreground">Last checked: 5 min ago</span>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap">Last checked: 5 min ago</span>
                         </div>
                       </div>
                     </div>
@@ -925,7 +925,7 @@ export default function ConnectionsPage() {
                   </TabsList>
 
                   <ScrollArea className="flex-1">
-                    <TabsContent value="overview" className="p-6 m-0 space-y-6">
+                    <TabsContent value="overview" className="p-6 m-0 space-y-6 overflow-auto">
                       {/* Quick Stats */}
                       <div className="grid grid-cols-4 gap-4">
                         <Card>
@@ -1023,7 +1023,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="usage" className="p-6 m-0 space-y-6">
+                    <TabsContent value="usage" className="p-6 m-0 space-y-6 overflow-auto">
                       {/* Workflows Using This Connection */}
                       <Card>
                         <CardHeader>
@@ -1084,7 +1084,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="logs" className="p-6 m-0 space-y-4">
+                    <TabsContent value="logs" className="p-6 m-0 space-y-4 overflow-auto">
                       {/* Filter Bar */}
                       <div className="flex items-center gap-4">
                         <Select defaultValue="24h">
@@ -1118,30 +1118,30 @@ export default function ConnectionsPage() {
                       {/* Logs Table */}
                       <Card className="overflow-hidden">
                         <div className="overflow-x-auto">
-                        <Table>
+                        <Table className="min-w-[800px]">
                           <TableHeader>
                             <TableRow>
-                              <TableHead>Timestamp</TableHead>
-                              <TableHead>Event Type</TableHead>
-                              <TableHead>Status</TableHead>
-                              <TableHead>Details</TableHead>
-                              <TableHead>Workflow</TableHead>
+                              <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                              <TableHead className="whitespace-nowrap">Event Type</TableHead>
+                              <TableHead className="whitespace-nowrap">Status</TableHead>
+                              <TableHead className="whitespace-nowrap min-w-[200px]">Details</TableHead>
+                              <TableHead className="whitespace-nowrap">Workflow</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {usageLogs.map((log, i) => (
                               <TableRow key={i}>
-                                <TableCell className="text-muted-foreground">
+                                <TableCell className="text-muted-foreground whitespace-nowrap">
                                   {new Date(log.timestamp).toLocaleString()}
                                 </TableCell>
-                                <TableCell>{log.eventType}</TableCell>
+                                <TableCell className="whitespace-nowrap">{log.eventType}</TableCell>
                                 <TableCell>
                                   <Badge variant={log.status === "success" ? "default" : "destructive"}>
                                     {log.status}
                                   </Badge>
                                 </TableCell>
                                 <TableCell className="font-mono text-xs">{log.details}</TableCell>
-                                <TableCell>{log.workflow}</TableCell>
+                                <TableCell className="whitespace-nowrap">{log.workflow}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
@@ -1151,7 +1151,7 @@ export default function ConnectionsPage() {
                       <p className="text-xs text-muted-foreground">Logs retained for 90 days per compliance policy</p>
                     </TabsContent>
 
-                    <TabsContent value="settings" className="p-6 m-0 space-y-6">
+                    <TabsContent value="settings" className="p-6 m-0 space-y-6 overflow-auto">
                       {/* Credentials */}
                       <Card>
                         <CardHeader>
