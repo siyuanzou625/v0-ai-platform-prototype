@@ -1573,12 +1573,12 @@ export default function ProjectWorkspacePage() {
           </div>
           
           {/* Modal Footer */}
-          <div className="flex items-center justify-between px-6 py-4 border-t border-[#E5E7EB] bg-white">
-            <p className="text-xs text-[#F59E0B]">This will overwrite current version. Can be undone.</p>
-            <div className="flex gap-2">
+          <div className="flex flex-col gap-3 px-6 py-4 border-t border-[#E5E7EB] bg-white">
+            <p className="text-xs text-[#F59E0B]">This will overwrite current version. This action can be undone.</p>
+            <div className="flex gap-2 justify-end">
               <Button variant="outline" size="sm" className="gap-1 text-xs">
                 <Download className="h-3 w-3" />
-                Export
+                Export Diff
               </Button>
               <Button variant="outline" size="sm" className="text-xs" onClick={() => setShowVisualDiff(false)}>Cancel</Button>
               <Button size="sm" className="bg-[#ee3224] hover:bg-[#cc2a1e] text-xs">Restore {compareVersion}</Button>
