@@ -918,16 +918,16 @@ export default function ConnectionsPage() {
                 </div>
 
                 {/* Tabs */}
-                <Tabs value={detailTab} onValueChange={setDetailTab} className="flex-1 flex flex-col overflow-hidden">
-                  <TabsList className="px-6 border-b rounded-none justify-start h-auto py-0 bg-transparent">
+                <Tabs value={detailTab} onValueChange={setDetailTab} className="flex-1 flex flex-col min-h-0">
+                  <TabsList className="px-6 border-b rounded-none justify-start h-auto py-0 bg-transparent flex-shrink-0">
                     <TabsTrigger value="overview" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Overview</TabsTrigger>
                     <TabsTrigger value="usage" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Usage</TabsTrigger>
                     <TabsTrigger value="logs" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Logs</TabsTrigger>
                     <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Settings</TabsTrigger>
                   </TabsList>
 
-                  <div className="flex-1 overflow-x-auto overflow-y-auto">
-                    <TabsContent value="overview" className="p-6 m-0 space-y-6 min-w-[700px]">
+                  <div className="flex-1 overflow-auto min-h-0">
+                    <TabsContent value="overview" className="p-6 m-0 space-y-6">
                       {/* Quick Stats */}
                       <div className="grid grid-cols-4 gap-4">
                         <Card>
@@ -1025,48 +1025,50 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="usage" className="p-6 m-0 space-y-6 min-w-[700px]">
+                    <TabsContent value="usage" className="p-6 m-0 space-y-6">
                       {/* Workflows Using This Connection */}
-                      <Card className="min-w-[600px]">
+                      <Card>
                         <CardHeader>
                           <CardTitle className="text-sm">Workflows Using This Connection</CardTitle>
                         </CardHeader>
-                        <CardContent className="overflow-x-auto">
-                          <Table className="min-w-[550px]">
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead className="whitespace-nowrap">Workflow Name</TableHead>
-                                <TableHead className="whitespace-nowrap">Project</TableHead>
-                                <TableHead className="whitespace-nowrap">Owner</TableHead>
-                                <TableHead className="whitespace-nowrap">Last Used</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell className="font-medium whitespace-nowrap">Daily Standup Bot</TableCell>
-                                <TableCell className="whitespace-nowrap">Team Automation</TableCell>
-                                <TableCell className="whitespace-nowrap">John Doe</TableCell>
-                                <TableCell className="whitespace-nowrap">2 hours ago</TableCell>
-                              </TableRow>
-                              <TableRow>
-                                <TableCell className="font-medium whitespace-nowrap">Email Notifier</TableCell>
-                                <TableCell className="whitespace-nowrap">Notifications</TableCell>
-                                <TableCell className="whitespace-nowrap">Jane Smith</TableCell>
-                                <TableCell className="whitespace-nowrap">1 day ago</TableCell>
-                              </TableRow>
-                              <TableRow>
-                                <TableCell className="font-medium whitespace-nowrap">Data Sync Agent</TableCell>
-                                <TableCell className="whitespace-nowrap">Data Pipeline</TableCell>
-                                <TableCell className="whitespace-nowrap">Admin</TableCell>
-                                <TableCell className="whitespace-nowrap">3 hours ago</TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
+                        <CardContent>
+                          <div className="overflow-x-auto">
+                            <Table className="w-full">
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead className="whitespace-nowrap min-w-[150px]">Workflow Name</TableHead>
+                                  <TableHead className="whitespace-nowrap min-w-[140px]">Project</TableHead>
+                                  <TableHead className="whitespace-nowrap min-w-[100px]">Owner</TableHead>
+                                  <TableHead className="whitespace-nowrap min-w-[100px]">Last Used</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                <TableRow>
+                                  <TableCell className="font-medium whitespace-nowrap">Daily Standup Bot</TableCell>
+                                  <TableCell className="whitespace-nowrap">Team Automation</TableCell>
+                                  <TableCell className="whitespace-nowrap">John Doe</TableCell>
+                                  <TableCell className="whitespace-nowrap">2 hours ago</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                  <TableCell className="font-medium whitespace-nowrap">Email Notifier</TableCell>
+                                  <TableCell className="whitespace-nowrap">Notifications</TableCell>
+                                  <TableCell className="whitespace-nowrap">Jane Smith</TableCell>
+                                  <TableCell className="whitespace-nowrap">1 day ago</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                  <TableCell className="font-medium whitespace-nowrap">Data Sync Agent</TableCell>
+                                  <TableCell className="whitespace-nowrap">Data Pipeline</TableCell>
+                                  <TableCell className="whitespace-nowrap">Admin</TableCell>
+                                  <TableCell className="whitespace-nowrap">3 hours ago</TableCell>
+                                </TableRow>
+                              </TableBody>
+                            </Table>
+                          </div>
                         </CardContent>
                       </Card>
 
                       {/* Rate Limit Status */}
-                      <Card className="min-w-[600px]">
+                      <Card>
                         <CardHeader>
                           <CardTitle className="text-sm">Rate Limit Status</CardTitle>
                         </CardHeader>
@@ -1086,7 +1088,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="logs" className="p-6 m-0 space-y-4 min-w-[900px]">
+                    <TabsContent value="logs" className="p-6 m-0 space-y-4">
                       {/* Filter Bar */}
                       <div className="flex items-center gap-4">
                         <Select defaultValue="24h">
@@ -1118,42 +1120,42 @@ export default function ConnectionsPage() {
                       </div>
 
                       {/* Logs Table */}
-                      <Card className="overflow-hidden">
+                      <Card>
                         <div className="overflow-x-auto">
-                        <Table className="min-w-[800px]">
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead className="whitespace-nowrap">Timestamp</TableHead>
-                              <TableHead className="whitespace-nowrap">Event Type</TableHead>
-                              <TableHead className="whitespace-nowrap">Status</TableHead>
-                              <TableHead className="whitespace-nowrap min-w-[200px]">Details</TableHead>
-                              <TableHead className="whitespace-nowrap">Workflow</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {usageLogs.map((log, i) => (
-                              <TableRow key={i}>
-                                <TableCell className="text-muted-foreground whitespace-nowrap">
-                                  {new Date(log.timestamp).toLocaleString()}
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap">{log.eventType}</TableCell>
-                                <TableCell>
-                                  <Badge variant={log.status === "success" ? "default" : "destructive"}>
-                                    {log.status}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell className="font-mono text-xs">{log.details}</TableCell>
-                                <TableCell className="whitespace-nowrap">{log.workflow}</TableCell>
+                          <Table className="w-full">
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead className="whitespace-nowrap min-w-[180px]">Timestamp</TableHead>
+                                <TableHead className="whitespace-nowrap min-w-[120px]">Event Type</TableHead>
+                                <TableHead className="whitespace-nowrap min-w-[80px]">Status</TableHead>
+                                <TableHead className="whitespace-nowrap min-w-[250px]">Details</TableHead>
+                                <TableHead className="whitespace-nowrap min-w-[150px]">Workflow</TableHead>
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
+                            </TableHeader>
+                            <TableBody>
+                              {usageLogs.map((log, i) => (
+                                <TableRow key={i}>
+                                  <TableCell className="text-muted-foreground whitespace-nowrap">
+                                    {new Date(log.timestamp).toLocaleString()}
+                                  </TableCell>
+                                  <TableCell className="whitespace-nowrap">{log.eventType}</TableCell>
+                                  <TableCell>
+                                    <Badge variant={log.status === "success" ? "default" : "destructive"}>
+                                      {log.status}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="font-mono text-xs whitespace-nowrap">{log.details}</TableCell>
+                                  <TableCell className="whitespace-nowrap">{log.workflow}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
                         </div>
                       </Card>
                       <p className="text-xs text-muted-foreground">Logs retained for 90 days per compliance policy</p>
                     </TabsContent>
 
-                    <TabsContent value="settings" className="p-6 m-0 space-y-6 pb-10 min-w-[700px]">
+                    <TabsContent value="settings" className="p-6 m-0 space-y-6 pb-10">
                       {/* Credentials */}
                       <Card>
                         <CardHeader>
