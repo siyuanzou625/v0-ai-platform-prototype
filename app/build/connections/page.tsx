@@ -918,7 +918,7 @@ export default function ConnectionsPage() {
                 </div>
 
                 {/* Tabs */}
-                <Tabs value={detailTab} onValueChange={setDetailTab} className="flex-1 flex flex-col min-h-0">
+                <Tabs value={detailTab} onValueChange={setDetailTab} className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
                   <TabsList className="px-6 border-b rounded-none justify-start h-auto py-0 bg-transparent flex-shrink-0">
                     <TabsTrigger value="overview" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Overview</TabsTrigger>
                     <TabsTrigger value="usage" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Usage</TabsTrigger>
@@ -926,8 +926,8 @@ export default function ConnectionsPage() {
                     <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Settings</TabsTrigger>
                   </TabsList>
 
-                  <div className="flex-1 overflow-auto min-h-0">
-                    <TabsContent value="overview" className="p-6 m-0 space-y-6">
+                  <div className="flex-1 overflow-auto min-h-0 min-w-0">
+                    <TabsContent value="overview" className="p-6 m-0 space-y-6 min-w-0">
                       {/* Quick Stats */}
                       <div className="grid grid-cols-4 gap-4">
                         <Card>
@@ -1025,7 +1025,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="usage" className="p-6 m-0 space-y-6">
+                    <TabsContent value="usage" className="p-6 m-0 space-y-6 min-w-0">
                       {/* Workflows Using This Connection */}
                       <Card className="overflow-hidden">
                         <CardHeader className="pb-3">
@@ -1088,7 +1088,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="logs" className="p-6 m-0 space-y-4">
+                    <TabsContent value="logs" className="p-6 m-0 space-y-4 min-w-0">
                       {/* Filter Bar */}
                       <div className="flex items-center gap-4 flex-wrap">
                         <Select defaultValue="24h">
@@ -1155,7 +1155,7 @@ export default function ConnectionsPage() {
                       <p className="text-xs text-muted-foreground">Logs retained for 90 days per compliance policy</p>
                     </TabsContent>
 
-                    <TabsContent value="settings" className="p-6 m-0 space-y-6 pb-10">
+                    <TabsContent value="settings" className="p-6 m-0 space-y-6 pb-10 min-w-0">
                       {/* Credentials */}
                       <Card>
                         <CardHeader>
