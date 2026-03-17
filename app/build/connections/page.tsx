@@ -975,84 +975,84 @@ export default function ConnectionsPage() {
   <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Settings</TabsTrigger>
   </TabsList>
 
-                  <div className="flex-1 overflow-auto min-h-0 min-w-0">
-                    <TabsContent value="overview" className="p-6 m-0 space-y-6 min-w-0">
+                  <div className="flex-1 overflow-auto min-h-0">
+                    <TabsContent value="overview" className="p-6 m-0 space-y-6">
                       {/* Quick Stats */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <Card>
-                          <CardContent className="p-5">
-                            <p className="text-sm text-muted-foreground whitespace-nowrap">Total Uses</p>
-                            <p className="text-2xl font-semibold mt-1">1,247</p>
+                      <div className="flex flex-wrap gap-3">
+                        <Card className="flex-1 min-w-[140px]">
+                          <CardContent className="p-4">
+                            <p className="text-xs text-muted-foreground">Total Uses</p>
+                            <p className="text-xl font-semibold mt-0.5">1,247</p>
                           </CardContent>
                         </Card>
-                        <Card>
-                          <CardContent className="p-5">
-                            <p className="text-sm text-muted-foreground whitespace-nowrap">Uses (7d)</p>
-                            <p className="text-2xl font-semibold mt-1">328</p>
+                        <Card className="flex-1 min-w-[140px]">
+                          <CardContent className="p-4">
+                            <p className="text-xs text-muted-foreground">Uses (7d)</p>
+                            <p className="text-xl font-semibold mt-0.5">328</p>
                           </CardContent>
                         </Card>
-                        <Card>
-                          <CardContent className="p-5">
-                            <p className="text-sm text-muted-foreground whitespace-nowrap">Last Success</p>
-                            <p className="text-2xl font-semibold mt-1 whitespace-nowrap">2h ago</p>
+                        <Card className="flex-1 min-w-[140px]">
+                          <CardContent className="p-4">
+                            <p className="text-xs text-muted-foreground">Last Success</p>
+                            <p className="text-xl font-semibold mt-0.5">2h ago</p>
                           </CardContent>
                         </Card>
-                        <Card>
-                          <CardContent className="p-5">
-                            <p className="text-sm text-muted-foreground whitespace-nowrap">Errors (7d)</p>
-                            <p className="text-2xl font-semibold text-green-600 mt-1">3</p>
+                        <Card className="flex-1 min-w-[140px]">
+                          <CardContent className="p-4">
+                            <p className="text-xs text-muted-foreground">Errors (7d)</p>
+                            <p className="text-xl font-semibold text-green-600 mt-0.5">3</p>
                           </CardContent>
                         </Card>
                       </div>
 
                       {/* Connection Meta */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <Card>
-                          <CardHeader className="pb-3">
+                          <CardHeader className="pb-2 pt-4 px-4">
                             <CardTitle className="text-sm font-semibold">Connection Details</CardTitle>
                           </CardHeader>
-                          <CardContent className="space-y-3">
-                            <div className="flex justify-between items-center gap-4">
-                              <span className="text-muted-foreground whitespace-nowrap">Provider</span>
+                          <CardContent className="space-y-2 px-4 pb-4 text-sm">
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Provider</span>
                               <span className="font-medium capitalize">{selectedConnection.provider.replace("-", " ")}</span>
                             </div>
-                            <div className="flex justify-between items-center gap-4">
-                              <span className="text-muted-foreground whitespace-nowrap">Auth Method</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Auth Method</span>
                               <span className="font-medium">{getTypeBadge(selectedConnection.type)}</span>
                             </div>
-                            <div className="flex justify-between items-center gap-4">
-                              <span className="text-muted-foreground whitespace-nowrap">Environment</span>
-                              <Badge className={getEnvironmentColor(selectedConnection.environment)}>
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Environment</span>
+                              <Badge className={`text-xs ${getEnvironmentColor(selectedConnection.environment)}`}>
                                 {selectedConnection.environment}
                               </Badge>
                             </div>
-                            <div className="flex justify-between items-center gap-4">
-                              <span className="text-muted-foreground whitespace-nowrap">Created</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Created</span>
                               <span className="font-medium">{selectedConnection.created}</span>
                             </div>
-                            <div className="flex justify-between items-center gap-4">
-                              <span className="text-muted-foreground whitespace-nowrap">Created By</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Created By</span>
                               <span className="font-medium">{selectedConnection.createdBy}</span>
                             </div>
                           </CardContent>
                         </Card>
 
                         <Card>
-                          <CardHeader className="pb-3">
+                          <CardHeader className="pb-2 pt-4 px-4">
                             <CardTitle className="text-sm font-semibold">Health Status</CardTitle>
                           </CardHeader>
-                          <CardContent className="space-y-3">
-                            <div className="flex justify-between items-center gap-4">
-                              <span className="text-muted-foreground whitespace-nowrap">Uptime (7d)</span>
+                          <CardContent className="space-y-2 px-4 pb-4 text-sm">
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Uptime (7d)</span>
                               <span className="font-medium text-green-600">{selectedConnection.health.uptime}%</span>
                             </div>
-                            <div className="flex justify-between items-center gap-4">
-                              <span className="text-muted-foreground whitespace-nowrap">Error Rate (7d)</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Error Rate (7d)</span>
                               <span className="font-medium">{(selectedConnection.health.errorRate * 100).toFixed(1)}%</span>
                             </div>
-                            <div className="flex justify-between items-center gap-4">
-                              <span className="text-muted-foreground whitespace-nowrap">Last Health Check</span>
-                              <span className="font-medium whitespace-nowrap">5 min ago</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Last Health Check</span>
+                              <span className="font-medium">5 min ago</span>
                             </div>
                           </CardContent>
                         </Card>
