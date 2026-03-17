@@ -1008,51 +1008,51 @@ export default function ConnectionsPage() {
                       {/* Connection Meta */}
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <Card>
-                          <CardHeader className="pb-2 pt-4 px-4">
+                          <CardHeader className="pb-2 pt-3 px-4">
                             <CardTitle className="text-sm font-semibold">Connection Details</CardTitle>
                           </CardHeader>
-                          <CardContent className="space-y-2 px-4 pb-4 text-sm">
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Provider</span>
-                              <span className="font-medium capitalize">{selectedConnection.provider.replace("-", " ")}</span>
+                          <CardContent className="space-y-2 px-4 pb-4 text-xs">
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="text-muted-foreground shrink-0">Provider</span>
+                              <span className="font-medium capitalize truncate">{selectedConnection.provider.replace("-", " ")}</span>
                             </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Auth Method</span>
-                              <span className="font-medium">{getTypeBadge(selectedConnection.type)}</span>
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="text-muted-foreground shrink-0">Auth</span>
+                              <span className="font-medium truncate">{getTypeBadge(selectedConnection.type)}</span>
                             </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Environment</span>
-                              <Badge className={`text-xs ${getEnvironmentColor(selectedConnection.environment)}`}>
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="text-muted-foreground shrink-0">Env</span>
+                              <Badge className={`text-[10px] px-1.5 py-0 ${getEnvironmentColor(selectedConnection.environment)}`}>
                                 {selectedConnection.environment}
                               </Badge>
                             </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Created</span>
-                              <span className="font-medium">{selectedConnection.created}</span>
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="text-muted-foreground shrink-0">Created</span>
+                              <span className="font-medium truncate">{selectedConnection.created}</span>
                             </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Created By</span>
-                              <span className="font-medium">{selectedConnection.createdBy}</span>
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="text-muted-foreground shrink-0">By</span>
+                              <span className="font-medium truncate">{selectedConnection.createdBy}</span>
                             </div>
                           </CardContent>
                         </Card>
 
                         <Card>
-                          <CardHeader className="pb-2 pt-4 px-4">
+                          <CardHeader className="pb-2 pt-3 px-4">
                             <CardTitle className="text-sm font-semibold">Health Status</CardTitle>
                           </CardHeader>
-                          <CardContent className="space-y-2 px-4 pb-4 text-sm">
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Uptime (7d)</span>
+                          <CardContent className="space-y-2 px-4 pb-4 text-xs">
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="text-muted-foreground shrink-0">Uptime (7d)</span>
                               <span className="font-medium text-green-600">{selectedConnection.health.uptime}%</span>
                             </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Error Rate (7d)</span>
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="text-muted-foreground shrink-0">Error Rate</span>
                               <span className="font-medium">{(selectedConnection.health.errorRate * 100).toFixed(1)}%</span>
                             </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Last Health Check</span>
-                              <span className="font-medium">5 min ago</span>
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="text-muted-foreground shrink-0">Last Check</span>
+                              <span className="font-medium">5m ago</span>
                             </div>
                           </CardContent>
                         </Card>
