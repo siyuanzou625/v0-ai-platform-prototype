@@ -793,6 +793,7 @@ export default function ProjectWorkspacePage() {
   const [buildAIInput, setBuildAIInput] = useState("")
   const [isAITyping, setIsAITyping] = useState(false)
   const [showProgressiveDisclosure, setShowProgressiveDisclosure] = useState(false)
+  const [targetMode, setTargetMode] = useState<"workflow" | "code">("workflow")
   const [agentSteps, setAgentSteps] = useState(initialSteps)
   const [hasPendingChanges, setHasPendingChanges] = useState(pendingChanges.length > 0)
   const [isEditingName, setIsEditingName] = useState(false)
@@ -1003,31 +1004,33 @@ export default function ProjectWorkspacePage() {
                 <Sparkles className="h-4 w-4" />
                 Build with AI
               </button>
-              <button
-                onClick={() => {
-                  if (mode === "build-ai") {
-                    setShowProgressiveDisclosure(true)
-                  } else {
-                    setMode("workflow")
-                  }
-                }}
-                className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
-                  mode === "workflow"
-                    ? "bg-[#ee3224] text-white shadow-sm"
-                    : "text-[#333] hover:bg-white/50"
-                }`}
-              >
-                <Workflow className="h-4 w-4" />
-                Workflow
-              </button>
-              <button
-                onClick={() => {
-                  if (mode === "build-ai") {
-                    setShowProgressiveDisclosure(true)
-                  } else {
-                    setMode("code")
-                  }
-                }}
+<button
+  onClick={() => {
+  if (mode === "build-ai") {
+  setTargetMode("workflow")
+  setShowProgressiveDisclosure(true)
+  } else {
+  setMode("workflow")
+  }
+  }}
+  className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
+  mode === "workflow"
+  ? "bg-[#ee3224] text-white shadow-sm"
+  : "text-[#333] hover:bg-white/50"
+  }`}
+  >
+  <Workflow className="h-4 w-4" />
+  Workflow
+  </button>
+  <button
+  onClick={() => {
+  if (mode === "build-ai") {
+  setTargetMode("code")
+  setShowProgressiveDisclosure(true)
+  } else {
+  setMode("code")
+  }
+  }}
                 className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
                   mode === "code"
                     ? "bg-[#ee3224] text-white shadow-sm"
@@ -2226,12 +2229,18 @@ export default function ProjectWorkspacePage() {
           <div className="text-center pt-8 pb-4 px-8">
             <div className="flex justify-center mb-4">
               <div className="h-12 w-12 rounded-full bg-[#ee3224]/10 flex items-center justify-center">
-                <Rocket className="h-6 w-6 text-[#ee3224]" />
+                {targetMode === "workflow" ? (
+                  <Workflow className="h-6 w-6 text-[#ee3224]" />
+                ) : (
+                  <Code2 className="h-6 w-6 text-[#ee3224]" />
+                )}
               </div>
             </div>
             <DialogHeader>
               <DialogTitle className="text-xl font-semibold text-[#1F2937]">
-                You're Ready for Visual Editing!
+                {targetMode === "workflow" 
+                  ? "You're Ready for Visual Editing!" 
+                  : "You're Ready for Code View!"}
               </DialogTitle>
               <DialogDescription className="text-sm text-[#333] mt-3">
                 Great news! Your agent is built. You can now:
@@ -2241,20 +2250,37 @@ export default function ProjectWorkspacePage() {
           
           {/* Modal Body */}
           <div className="px-8 pb-4">
-            <ul className="space-y-2 text-sm text-[#333]">
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#22C55E]" />
-                See the visual workflow behind your agent
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#22C55E]" />
-                Customize individual steps with more control
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#22C55E]" />
-                Add conditional logic and branching
-              </li>
-            </ul>
+            {targetMode === "workflow" ? (
+              <ul className="space-y-2 text-sm text-[#333]">
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-[#22C55E]" />
+                  See the visual workflow behind your agent
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-[#22C55E]" />
+                  Customize individual steps with more control
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-[#22C55E]" />
+                  Add conditional logic and branching
+                </li>
+              </ul>
+            ) : (
+              <ul className="space-y-2 text-sm text-[#333]">
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-[#22C55E]" />
+                  View and edit the generated code directly
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-[#22C55E]" />
+                  Full IDE experience with syntax highlighting
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-[#22C55E]" />
+                  Add custom logic and integrations
+                </li>
+              </ul>
+            )}
             <p className="text-sm text-[#6B7280] italic mt-4">
               Your conversation history is preserved. Switch back anytime.
             </p>
@@ -2266,10 +2292,12 @@ export default function ProjectWorkspacePage() {
               className="w-full bg-[#ee3224] hover:bg-[#cc2a1e]"
               onClick={() => {
                 setShowProgressiveDisclosure(false)
-                setMode("workflow")
+                setMode(targetMode)
               }}
             >
-              Got It, Show Me the Workflow
+              {targetMode === "workflow" 
+                ? "Got It, Show Me the Workflow" 
+                : "Got It, Show Me the Code"}
             </Button>
             <Button 
               variant="outline" 
