@@ -1454,18 +1454,19 @@ export default function ProjectWorkspacePage() {
 
       {/* Visual Diff Modal */}
       <Dialog open={showVisualDiff} onOpenChange={setShowVisualDiff}>
-        <DialogContent className="max-w-[1200px] w-[95vw] max-h-[85vh] h-[85vh] flex flex-col">
-          <DialogHeader>
+        <DialogContent className="max-w-[1000px] w-[95vw] max-h-[90vh] flex flex-col p-0 overflow-hidden">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b border-[#E5E7EB]">
             <DialogTitle className="flex items-center gap-2">
               <GitBranch className="h-5 w-5 text-[#ee3224]" />
-              Compare Versions: v23 (Current) vs {compareVersion}
+              Compare Versions
             </DialogTitle>
-            <DialogDescription>
-              <div className="flex items-center gap-4 mt-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">Compare</span>
+            <DialogDescription asChild>
+              <div className="space-y-3 mt-3">
+                {/* Version Selectors */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm text-[#6B7280]">Compare</span>
                   <Select defaultValue="v23">
-                    <SelectTrigger className="w-32 h-8">
+                    <SelectTrigger className="w-36 h-8">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1474,9 +1475,9 @@ export default function ProjectWorkspacePage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <span className="text-sm">vs</span>
+                  <span className="text-sm text-[#6B7280]">vs</span>
                   <Select value={compareVersion} onValueChange={setCompareVersion}>
-                    <SelectTrigger className="w-32 h-8">
+                    <SelectTrigger className="w-36 h-8">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1487,65 +1488,65 @@ export default function ProjectWorkspacePage() {
                   </Select>
                 </div>
                 
-                {/* Diff Statistics */}
-                <div className="flex items-center gap-2 ml-auto">
-                  <Badge className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]">+1 Added</Badge>
-                  <Badge className="bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]">2 Modified</Badge>
-                  <Badge className="bg-[#DC2626]/10 text-[#DC2626] border-[#DC2626]">0 Removed</Badge>
+                {/* Diff Statistics - On separate row */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Badge className="bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]">+1 Added</Badge>
+                  <Badge className="bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]">2 Modified</Badge>
+                  <Badge className="bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]">0 Removed</Badge>
                   <Badge variant="outline">5 Unchanged</Badge>
                 </div>
               </div>
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-auto px-6 py-4 min-h-0">
             {/* Side-by-Side Canvas */}
-            <div className="grid grid-cols-2 gap-4 h-full">
+            <div className="grid grid-cols-2 gap-4 h-[320px]">
               {/* Current Version Canvas */}
-              <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col">
-                <div className="bg-white border-b border-[#E5E7EB] px-4 py-2">
+              <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col min-w-0">
+                <div className="bg-white border-b border-[#E5E7EB] px-3 py-2 flex-shrink-0">
                   <span className="text-sm font-medium text-[#1F2937]">v23 (Current)</span>
                 </div>
-                <div className="flex-1 relative p-4" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
-                  {/* Mock workflow nodes - Current version with added node */}
-                  <div className="absolute left-8 top-16 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-emerald-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">Start</div>
-                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Lead Received</div>
+                <div className="flex-1 relative overflow-hidden" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
+                  {/* Mock workflow nodes - Current version with added node - using percentages */}
+                  <div className="absolute left-[5%] top-[20%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-emerald-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Start</div>
+                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Received</div>
                   </div>
-                  <div className="absolute left-48 top-8 w-32 h-20 rounded-lg border-2 border-[#22C55E] bg-[#F0FDF4] shadow-sm flex flex-col">
-                    <div className="bg-purple-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">LLM</div>
-                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Lead Scoring</div>
-                    <Badge className="absolute -top-2 -right-2 text-[9px] bg-[#22C55E]">NEW</Badge>
+                  <div className="absolute left-[35%] top-[10%] w-[100px] h-[60px] rounded-lg border-2 border-[#22C55E] bg-[#F0FDF4] shadow-sm flex flex-col">
+                    <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
+                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Scoring</div>
+                    <Badge className="absolute -top-1.5 -right-1.5 text-[8px] px-1 py-0 h-4 bg-[#22C55E]">NEW</Badge>
                   </div>
-                  <div className="absolute left-48 top-36 w-32 h-20 rounded-lg border-2 border-[#F59E0B] bg-[#FFFBEB] shadow-sm flex flex-col">
-                    <div className="bg-purple-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">LLM</div>
-                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Qualify Lead</div>
+                  <div className="absolute left-[35%] top-[50%] w-[100px] h-[60px] rounded-lg border-2 border-[#F59E0B] bg-[#FFFBEB] shadow-sm flex flex-col">
+                    <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
+                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Qualify Lead</div>
                   </div>
-                  <div className="absolute right-8 top-16 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">Email</div>
-                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Send Outreach</div>
+                  <div className="absolute right-[5%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-red-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Email</div>
+                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Send Outreach</div>
                   </div>
                 </div>
               </div>
               
               {/* Previous Version Canvas */}
-              <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col">
-                <div className="bg-white border-b border-[#E5E7EB] px-4 py-2">
+              <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col min-w-0">
+                <div className="bg-white border-b border-[#E5E7EB] px-3 py-2 flex-shrink-0">
                   <span className="text-sm font-medium text-[#1F2937]">{compareVersion}</span>
                 </div>
-                <div className="flex-1 relative p-4" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
+                <div className="flex-1 relative overflow-hidden" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
                   {/* Mock workflow nodes - Previous version without added node */}
-                  <div className="absolute left-8 top-16 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-emerald-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">Start</div>
-                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Lead Received</div>
+                  <div className="absolute left-[5%] top-[20%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-emerald-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Start</div>
+                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Received</div>
                   </div>
-                  <div className="absolute left-48 top-24 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-purple-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">LLM</div>
-                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Qualify Lead</div>
+                  <div className="absolute left-[35%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
+                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Qualify Lead</div>
                   </div>
-                  <div className="absolute right-8 top-16 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">Email</div>
-                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Send Outreach</div>
+                  <div className="absolute right-[5%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-red-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Email</div>
+                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Send Outreach</div>
                   </div>
                 </div>
               </div>
@@ -1553,34 +1554,34 @@ export default function ProjectWorkspacePage() {
           </div>
           
           {/* Change Summary */}
-          <div className="rounded-lg bg-[#F5F7FA] border border-[#E5E7EB] p-4 mt-4">
+          <div className="rounded-lg bg-[#F5F7FA] border border-[#E5E7EB] p-3 mx-6">
             <h4 className="text-sm font-semibold text-[#1F2937] mb-2">Change Summary</h4>
-            <div className="space-y-1 text-sm">
+            <div className="space-y-1 text-xs">
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#22C55E]" />
-                <span className="text-[#333]"><span className="font-medium">Added:</span> "Lead Scoring" node (between Lead Received - Qualify Lead)</span>
+                <div className="h-2 w-2 rounded-full bg-[#22C55E] flex-shrink-0" />
+                <span className="text-[#333]"><span className="font-medium">Added:</span> "Lead Scoring" node</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#F59E0B]" />
-                <span className="text-[#333]"><span className="font-medium">Modified:</span> "Qualify Lead" node (updated prompt template)</span>
+                <div className="h-2 w-2 rounded-full bg-[#F59E0B] flex-shrink-0" />
+                <span className="text-[#333]"><span className="font-medium">Modified:</span> "Qualify Lead" node (updated prompt)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#F59E0B]" />
-                <span className="text-[#333]"><span className="font-medium">Modified:</span> "Slack Notify" node (updated channel config)</span>
+                <div className="h-2 w-2 rounded-full bg-[#F59E0B] flex-shrink-0" />
+                <span className="text-[#333]"><span className="font-medium">Modified:</span> "Slack Notify" node (updated config)</span>
               </div>
             </div>
           </div>
           
           {/* Modal Footer */}
-          <div className="flex items-center justify-between pt-4 border-t">
-            <p className="text-xs text-[#F59E0B]">This will overwrite current version. This action can be undone.</p>
+          <div className="flex items-center justify-between px-6 py-4 border-t border-[#E5E7EB] bg-white">
+            <p className="text-xs text-[#F59E0B]">This will overwrite current version. Can be undone.</p>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="gap-1">
+              <Button variant="outline" size="sm" className="gap-1 text-xs">
                 <Download className="h-3 w-3" />
-                Export Diff
+                Export
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setShowVisualDiff(false)}>Cancel</Button>
-              <Button size="sm" className="bg-[#ee3224] hover:bg-[#cc2a1e]">Restore {compareVersion}</Button>
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => setShowVisualDiff(false)}>Cancel</Button>
+              <Button size="sm" className="bg-[#ee3224] hover:bg-[#cc2a1e] text-xs">Restore {compareVersion}</Button>
             </div>
           </div>
         </DialogContent>
