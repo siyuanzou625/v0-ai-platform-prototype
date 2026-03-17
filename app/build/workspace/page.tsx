@@ -512,37 +512,123 @@ const initialCodeChat = [
   { role: "assistant", content: "Here's the refactored code with proper async/await pattern:\n\n```typescript\nasync summarize(emails: Email[]): Promise<string> {\n  const prompt = await this.buildPrompt(emails);\n  const response = await this.client.chat.completions.create({\n    model: this.model,\n    messages: [/* ... */]\n  });\n  return response.choices[0].message.content ?? '';\n}\n```\n\nWould you like me to apply this change?" },
 ]
 
-// Build with AI conversation mock
-const initialBuildAIChat = [
-  { 
-    role: "assistant", 
-    content: "I've created your Meeting Notes Agent with 4 steps:\n\n1. Receive meeting recording (from Zoom, Teams, or upload)\n2. Transcribe audio to text (using Whisper AI)\n3. Summarize key points (extract decisions and action items)\n4. Send to Slack (post to #meetings channel)\n\nWould you like to:\n• Add email delivery as an alternative?\n• Change the summary format (bullet points vs. paragraph)?\n• Add a human approval step before sending?",
-    suggestedActions: ["Add email delivery", "Change summary format", "Add approval step"]
-  },
-  { role: "user", content: "Yes, add email delivery as an alternative to Slack" },
-  { 
-    role: "assistant", 
-    content: "Great! I'll add email delivery as an alternative to Slack:\n\nNew Step 5: Send to Email\n• Recipients: Meeting organizer + attendees\n• Format: HTML with summary + full transcript attachment\n• Trigger: After Slack notification sent\n\nThis will use your connected Gmail credential. Want me to configure it now?",
-    pendingChanges: true 
-  },
-]
+// Project-specific Build with AI conversation data
+const projectBuildAIChat: Record<string, Array<{ role: string; content: string }>> = {
+  "proj-001": [ // Enterprise Sales Agent
+    { 
+      role: "assistant", 
+      content: "I've created your Enterprise Sales Agent with 5 steps:\n\n1. Receive new lead (from Salesforce webhook)\n2. Enrich lead data (using Clearbit API)\n3. Score lead qualification (AI-powered scoring model)\n4. Generate personalized outreach (GPT-4 email template)\n5. Update CRM and schedule follow-up\n\nWould you like to:\n- Add LinkedIn research step?\n- Customize the scoring criteria?\n- Add Slack notification for high-priority leads?"
+    },
+    { role: "user", content: "Add Slack notification for high-priority leads" },
+    { 
+      role: "assistant", 
+      content: "I've added Slack notification for high-priority leads:\n\nNew Step 6: Notify Sales Team\n- Channel: #sales-hot-leads\n- Trigger: When lead score > 80\n- Include: Lead summary, company info, recommended talking points\n\nThis will alert your sales team immediately when a qualified lead comes in. Want me to adjust the score threshold?"
+    },
+  ],
+  "proj-003": [ // Customer Support Bot
+    { 
+      role: "assistant", 
+      content: "I've built your Customer Support Bot with 4 steps:\n\n1. Receive support ticket (email, chat, or form)\n2. Analyze sentiment and intent (NLP classification)\n3. Route to appropriate team (based on category)\n4. Generate initial response (AI-drafted reply)\n\nWould you like to:\n- Add escalation rules for urgent issues?\n- Connect to your knowledge base?\n- Add CSAT survey after resolution?"
+    },
+    { role: "user", content: "Connect to our knowledge base for better responses" },
+    { 
+      role: "assistant", 
+      content: "I've connected your knowledge base to improve response quality:\n\nUpdated Step 4: Enhanced AI Response\n- Search knowledge base for relevant articles\n- Include up to 3 related help articles in reply\n- Cite sources for transparency\n\nNew Step 5: Knowledge Gap Detection\n- Flag questions without good KB matches\n- Auto-create draft articles for review\n\nThis should improve first-contact resolution. Want to set up the knowledge base sync?"
+    },
+  ],
+  "proj-005": [ // Invoice Processor
+    { 
+      role: "assistant", 
+      content: "I've created your Invoice Processor with 4 steps:\n\n1. Receive invoice (email attachment or upload)\n2. Extract data with OCR (vendor, amount, line items)\n3. Validate against PO system\n4. Route for approval (based on amount thresholds)\n\nWould you like to:\n- Add duplicate detection?\n- Set up automatic payment scheduling?\n- Add Slack notifications for approvals needed?"
+    },
+    { role: "user", content: "Add duplicate detection to prevent double payments" },
+    { 
+      role: "assistant", 
+      content: "I've added duplicate detection to your workflow:\n\nNew Step 3: Duplicate Check\n- Compare invoice number, vendor, amount, date\n- Flag potential duplicates within 90 days\n- Auto-reject exact matches\n- Queue near-matches for manual review\n\nThis will help prevent double payments. Should I also add a quarterly audit report for flagged invoices?"
+    },
+  ],
+  "new": [ // New project
+    { 
+      role: "assistant", 
+      content: "Welcome! I'm ready to help you build your AI agent. Tell me what you'd like to automate, and I'll create the workflow for you.\n\nFor example:\n- \"I want to summarize my meeting recordings and send notes to Slack\"\n- \"Help me process customer emails and route them to the right team\"\n- \"Build an agent that monitors social media mentions\"\n\nWhat would you like to build?"
+    },
+  ],
+}
 
-// Build with AI Agent Steps mock
-const buildAIAgentSteps = [
-  { id: "step-1", name: "Receive meeting recording", icon: Download, type: "trigger", isNew: false },
-  { id: "step-2", name: "Transcribe audio to text", icon: Mic, type: "action", isNew: false },
-  { id: "step-3", name: "Summarize key points", icon: FileText, type: "action", isNew: false },
-  { id: "step-4", name: "Send to Slack", icon: MessageSquare, type: "output", isNew: false },
-  { id: "step-5", name: "Send to Email", icon: Mail, type: "output", isNew: true },
-]
+// Project-specific agent steps for Build with AI preview
+const projectAgentSteps: Record<string, Array<{ id: string; name: string; icon: any; type: string; isNew: boolean }>> = {
+  "proj-001": [ // Enterprise Sales Agent
+    { id: "step-1", name: "Receive new lead", icon: Download, type: "trigger", isNew: false },
+    { id: "step-2", name: "Enrich lead data", icon: Database, type: "action", isNew: false },
+    { id: "step-3", name: "Score lead qualification", icon: FileText, type: "action", isNew: false },
+    { id: "step-4", name: "Generate personalized outreach", icon: Mail, type: "action", isNew: false },
+    { id: "step-5", name: "Update CRM", icon: RefreshCw, type: "output", isNew: false },
+    { id: "step-6", name: "Notify Sales Team (Slack)", icon: MessageSquare, type: "output", isNew: true },
+  ],
+  "proj-003": [ // Customer Support Bot
+    { id: "step-1", name: "Receive support ticket", icon: Download, type: "trigger", isNew: false },
+    { id: "step-2", name: "Analyze sentiment & intent", icon: Bot, type: "action", isNew: false },
+    { id: "step-3", name: "Route to team", icon: GitBranch, type: "action", isNew: false },
+    { id: "step-4", name: "Generate AI response", icon: MessageSquare, type: "action", isNew: false },
+    { id: "step-5", name: "Knowledge gap detection", icon: BookOpen, type: "output", isNew: true },
+  ],
+  "proj-005": [ // Invoice Processor
+    { id: "step-1", name: "Receive invoice", icon: Download, type: "trigger", isNew: false },
+    { id: "step-2", name: "Extract data (OCR)", icon: FileText, type: "action", isNew: false },
+    { id: "step-3", name: "Duplicate check", icon: Shield, type: "action", isNew: true },
+    { id: "step-4", name: "Validate against PO", icon: Check, type: "action", isNew: false },
+    { id: "step-5", name: "Route for approval", icon: User, type: "output", isNew: false },
+  ],
+  "new": [],
+}
 
-// Quick suggestions for Build with AI
-const buildAIQuickSuggestions = [
-  "Add another output channel",
-  "Change the summary format",
-  "Add an approval step",
-  "Test this agent",
-]
+// Project-specific pending changes for Build with AI
+const projectPendingChanges: Record<string, Array<string>> = {
+  "proj-001": [
+    "Add Slack notification node",
+    "Configure #sales-hot-leads channel",
+    "Set score threshold to 80",
+  ],
+  "proj-003": [
+    "Connect knowledge base integration",
+    "Add KB search to response generation",
+    "Enable gap detection logging",
+  ],
+  "proj-005": [
+    "Add duplicate detection step",
+    "Configure 90-day lookback window",
+    "Set up manual review queue",
+  ],
+  "new": [],
+}
+
+// Project-specific quick suggestions
+const projectQuickSuggestions: Record<string, Array<string>> = {
+  "proj-001": [
+    "Adjust score threshold",
+    "Add LinkedIn research",
+    "Customize email template",
+    "Test with sample lead",
+  ],
+  "proj-003": [
+    "Add escalation rules",
+    "Set up CSAT survey",
+    "Configure auto-responses",
+    "Test with sample ticket",
+  ],
+  "proj-005": [
+    "Add payment scheduling",
+    "Configure approval thresholds",
+    "Set up audit reports",
+    "Test with sample invoice",
+  ],
+  "new": [
+    "Start from a template",
+    "Import existing workflow",
+    "Browse marketplace",
+    "View examples",
+  ],
+}
 
 export default function ProjectWorkspacePage() {
   const router = useRouter()
@@ -560,12 +646,19 @@ export default function ProjectWorkspacePage() {
     urlMode === "build-ai" ? "build-ai" : "workflow"
   )
   const [projectName, setProjectName] = useState(projectData.name)
-  const [buildAIChat, setBuildAIChat] = useState(initialBuildAIChat)
+  
+  // Build with AI state - use project-specific data
+  const initialChat = projectBuildAIChat[projectId] || projectBuildAIChat["new"]
+  const initialSteps = projectAgentSteps[projectId] || projectAgentSteps["new"]
+  const pendingChanges = projectPendingChanges[projectId] || []
+  const quickSuggestions = projectQuickSuggestions[projectId] || projectQuickSuggestions["new"]
+  
+  const [buildAIChat, setBuildAIChat] = useState(initialChat)
   const [buildAIInput, setBuildAIInput] = useState("")
   const [isAITyping, setIsAITyping] = useState(false)
   const [showProgressiveDisclosure, setShowProgressiveDisclosure] = useState(false)
-  const [agentSteps, setAgentSteps] = useState(buildAIAgentSteps)
-  const [hasPendingChanges, setHasPendingChanges] = useState(true)
+  const [agentSteps, setAgentSteps] = useState(initialSteps)
+  const [hasPendingChanges, setHasPendingChanges] = useState(pendingChanges.length > 0)
   const [isEditingName, setIsEditingName] = useState(false)
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
   const [showMarketplace, setShowMarketplace] = useState(false)
@@ -1017,7 +1110,7 @@ export default function ProjectWorkspacePage() {
                 {/* Quick Suggestions */}
                 <div className="px-4 py-2 border-t border-[#E5E7EB] bg-[#F9FAFB]">
                   <div className="flex flex-wrap gap-2">
-                    {buildAIQuickSuggestions.map((suggestion) => (
+                    {quickSuggestions.map((suggestion) => (
                       <button
                         key={suggestion}
                         onClick={() => setBuildAIInput(suggestion)}
@@ -1098,7 +1191,7 @@ export default function ProjectWorkspacePage() {
                         <FileText className="h-6 w-6 text-[#ee3224]" />
                       </div>
                       <div>
-                        <h3 className="text-base font-semibold text-[#1F2937]">Meeting Notes Agent</h3>
+                        <h3 className="text-base font-semibold text-[#1F2937]">{projectName}</h3>
                         <Badge className="bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B] text-xs">
                           Draft - Not Deployed
                         </Badge>
@@ -1147,20 +1240,14 @@ export default function ProjectWorkspacePage() {
                         <FileText className="h-4 w-4" />
                         What I'll Do:
                       </h4>
-                      <ul className="space-y-2 text-sm text-[#333] mb-4">
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-[#22C55E]" />
-                          Add Email node after Slack
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-[#22C55E]" />
-                          Configure SMTP settings
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-[#22C55E]" />
-                          Test with sample meeting
-                        </li>
-                      </ul>
+<ul className="space-y-2 text-sm text-[#333] mb-4">
+  {pendingChanges.map((change, idx) => (
+    <li key={idx} className="flex items-center gap-2">
+      <Check className="h-4 w-4 text-[#22C55E]" />
+      {change}
+    </li>
+  ))}
+  </ul>
                       <div className="flex gap-2">
                         <Button 
                           className="flex-1 bg-[#ee3224] hover:bg-[#cc2a1e]"
