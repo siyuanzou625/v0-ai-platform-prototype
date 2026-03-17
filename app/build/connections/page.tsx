@@ -872,7 +872,7 @@ export default function ConnectionsPage() {
 
         {/* Connection Detail Modal */}
         <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
-          <DialogContent className="max-w-[1400px] w-[98vw] max-h-[90vh] h-[85vh] overflow-hidden flex flex-col p-0">
+          <DialogContent className="max-w-[1400px] w-[98vw] max-h-[90vh] h-[85vh] flex flex-col p-0 overflow-hidden">
             <DialogTitle className="sr-only">Connection Details</DialogTitle>
             <DialogDescription className="sr-only">View and manage connection settings, usage, and logs</DialogDescription>
             {selectedConnection && (
@@ -926,8 +926,8 @@ export default function ConnectionsPage() {
                     <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Settings</TabsTrigger>
                   </TabsList>
 
-                  <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0">
-                    <TabsContent value="overview" className="p-6 m-0 space-y-6 overflow-visible">
+                  <div className="flex-1 overflow-auto min-h-0">
+                    <TabsContent value="overview" className="p-6 m-0 space-y-6">
                       {/* Quick Stats */}
                       <div className="grid grid-cols-4 gap-4">
                         <Card>
@@ -1025,7 +1025,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="usage" className="p-6 m-0 space-y-6 overflow-visible">
+                    <TabsContent value="usage" className="p-6 m-0 space-y-6">
                       {/* Workflows Using This Connection */}
                       <Card className="overflow-hidden">
                         <CardHeader className="pb-3">
@@ -1088,7 +1088,7 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="logs" className="p-6 m-0 space-y-4 overflow-visible">
+                    <TabsContent value="logs" className="p-6 m-0 space-y-4">
                       {/* Filter Bar */}
                       <div className="flex items-center gap-4 flex-wrap">
                         <Select defaultValue="24h">
