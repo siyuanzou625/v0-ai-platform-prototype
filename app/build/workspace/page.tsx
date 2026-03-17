@@ -278,6 +278,51 @@ const workflowConnections = [
   { from: 4, to: 6, fromPort: "false", toPort: "output" },
 ]
 
+// Template-specific workflow nodes for new projects
+const templateWorkflowNodes: Record<string, typeof defaultWorkflowNodes> = {
+  "meeting-notes": [
+    { id: 1, type: "start", name: "Meeting Recording", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["audio"] },
+    { id: 2, type: "llm", name: "Whisper Transcribe", x: 300, y: 180, color: "bg-purple-500", inputs: ["audio"], outputs: ["transcript"] },
+    { id: 3, type: "llm", name: "AI Summarizer", x: 520, y: 180, color: "bg-purple-500", inputs: ["transcript"], outputs: ["summary", "actions"] },
+    { id: 4, type: "http", name: "Send to Slack", x: 740, y: 180, color: "bg-orange-500", inputs: ["message"], outputs: ["status"] },
+  ],
+  "email-triage": [
+    { id: 1, type: "start", name: "Email Received", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["email"] },
+    { id: 2, type: "llm", name: "Analyze Content", x: 300, y: 120, color: "bg-purple-500", inputs: ["email"], outputs: ["category", "urgency"] },
+    { id: 3, type: "condition", name: "Check Priority", x: 520, y: 180, color: "bg-emerald-500", inputs: ["urgency"], outputs: ["high", "low"] },
+    { id: 4, type: "llm", name: "Draft Response", x: 740, y: 120, color: "bg-purple-500", inputs: ["email"], outputs: ["draft"] },
+    { id: 5, type: "database", name: "Archive Email", x: 740, y: 260, color: "bg-cyan-500", inputs: ["email"], outputs: ["id"] },
+  ],
+  "data-analyst": [
+    { id: 1, type: "start", name: "Data Source", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["data"] },
+    { id: 2, type: "code", name: "Clean Data", x: 300, y: 180, color: "bg-blue-500", inputs: ["data"], outputs: ["cleaned"] },
+    { id: 3, type: "llm", name: "Analyze Patterns", x: 520, y: 180, color: "bg-purple-500", inputs: ["cleaned"], outputs: ["insights"] },
+    { id: 4, type: "code", name: "Generate Charts", x: 740, y: 180, color: "bg-blue-500", inputs: ["insights"], outputs: ["charts"] },
+  ],
+  "calendar": [
+    { id: 1, type: "start", name: "Calendar Sync", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["events"] },
+    { id: 2, type: "llm", name: "Analyze Schedule", x: 300, y: 180, color: "bg-purple-500", inputs: ["events"], outputs: ["analysis"] },
+    { id: 3, type: "condition", name: "Has Conflicts?", x: 520, y: 180, color: "bg-emerald-500", inputs: ["analysis"], outputs: ["yes", "no"] },
+    { id: 4, type: "llm", name: "Suggest Changes", x: 740, y: 120, color: "bg-purple-500", inputs: ["events"], outputs: ["suggestions"] },
+    { id: 5, type: "end", name: "Optimized", x: 740, y: 260, color: "bg-gray-500", inputs: ["output"], outputs: [] },
+  ],
+  "research": [
+    { id: 1, type: "start", name: "Research Topic", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["topic"] },
+    { id: 2, type: "http", name: "Web Search", x: 300, y: 120, color: "bg-orange-500", inputs: ["query"], outputs: ["results"] },
+    { id: 3, type: "http", name: "Academic Search", x: 300, y: 260, color: "bg-orange-500", inputs: ["query"], outputs: ["papers"] },
+    { id: 4, type: "llm", name: "Synthesize", x: 520, y: 180, color: "bg-purple-500", inputs: ["sources"], outputs: ["summary"] },
+    { id: 5, type: "code", name: "Generate Report", x: 740, y: 180, color: "bg-blue-500", inputs: ["summary"], outputs: ["report"] },
+  ],
+  "social-media": [
+    { id: 1, type: "start", name: "Content Brief", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["brief"] },
+    { id: 2, type: "llm", name: "Generate Content", x: 300, y: 180, color: "bg-purple-500", inputs: ["brief"], outputs: ["posts"] },
+    { id: 3, type: "condition", name: "Approval?", x: 520, y: 180, color: "bg-emerald-500", inputs: ["posts"], outputs: ["approved", "rejected"] },
+    { id: 4, type: "http", name: "Post to Twitter", x: 740, y: 100, color: "bg-orange-500", inputs: ["content"], outputs: ["status"] },
+    { id: 5, type: "http", name: "Post to LinkedIn", x: 740, y: 200, color: "bg-orange-500", inputs: ["content"], outputs: ["status"] },
+    { id: 6, type: "http", name: "Post to Instagram", x: 740, y: 300, color: "bg-orange-500", inputs: ["content"], outputs: ["status"] },
+  ],
+}
+
 // Marketplace components
 const marketplaceComponents = [
   { id: 1, name: "Email Parser", icon: "📧", rating: 4.8, downloads: "12.3K", category: "Data" },
@@ -455,6 +500,417 @@ class NotificationService {
 
 export const notificationService = new NotificationService();
 `,
+}
+
+// Template-specific code content for new projects
+const templateCodeContent: Record<string, string> = {
+  "meeting-notes": `import { OpenAI } from 'openai';
+import { WebClient } from '@slack/web-api';
+
+interface MeetingRecording {
+  audioUrl: string;
+  duration: number;
+  participants: string[];
+  title: string;
+}
+
+export class MeetingNotesAgent {
+  private openai: OpenAI;
+  private slack: WebClient;
+  private model = "whisper-1";
+
+  constructor(openaiKey: string, slackToken: string) {
+    this.openai = new OpenAI({ apiKey: openaiKey });
+    this.slack = new WebClient(slackToken);
+  }
+
+  async processRecording(recording: MeetingRecording) {
+    // Step 1: Transcribe audio
+    const transcript = await this.transcribe(recording.audioUrl);
+    
+    // Step 2: Summarize with AI
+    const summary = await this.summarize(transcript, recording.title);
+    
+    // Step 3: Send to Slack
+    await this.sendToSlack(summary, recording);
+    
+    return { transcript, summary };
+  }
+
+  private async transcribe(audioUrl: string): Promise<string> {
+    // Whisper transcription logic
+    return "Transcribed meeting content...";
+  }
+
+  private async summarize(transcript: string, title: string) {
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: [
+        { role: "system", content: "Summarize meeting notes with key decisions and action items." },
+        { role: "user", content: transcript }
+      ]
+    });
+    return response.choices[0].message.content;
+  }
+
+  private async sendToSlack(summary: string, recording: MeetingRecording) {
+    await this.slack.chat.postMessage({
+      channel: '#meetings',
+      text: \`*Meeting Notes: \${recording.title}*\\n\\n\${summary}\`
+    });
+  }
+}
+
+// Initialize agent
+const agent = new MeetingNotesAgent(
+  process.env.OPENAI_API_KEY!,
+  process.env.SLACK_TOKEN!
+);`,
+  "email-triage": `import { OpenAI } from 'openai';
+import { google } from 'googleapis';
+
+interface Email {
+  id: string;
+  from: string;
+  subject: string;
+  body: string;
+  timestamp: Date;
+}
+
+type Priority = 'urgent' | 'important' | 'normal' | 'low';
+
+export class EmailTriageAgent {
+  private openai: OpenAI;
+  private gmail: any;
+
+  constructor(openaiKey: string) {
+    this.openai = new OpenAI({ apiKey: openaiKey });
+  }
+
+  async triageEmail(email: Email): Promise<{
+    priority: Priority;
+    category: string;
+    suggestedResponse: string;
+  }> {
+    // Analyze email with AI
+    const analysis = await this.analyzeEmail(email);
+    
+    // Draft response if needed
+    const response = analysis.priority === 'urgent' 
+      ? await this.draftResponse(email)
+      : null;
+
+    return {
+      priority: analysis.priority,
+      category: analysis.category,
+      suggestedResponse: response || ''
+    };
+  }
+
+  private async analyzeEmail(email: Email) {
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: [
+        { role: "system", content: "Analyze email priority and category." },
+        { role: "user", content: \`From: \${email.from}\\nSubject: \${email.subject}\\n\\n\${email.body}\` }
+      ]
+    });
+    return JSON.parse(response.choices[0].message.content || '{}');
+  }
+
+  private async draftResponse(email: Email): Promise<string> {
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: [
+        { role: "system", content: "Draft a professional email response." },
+        { role: "user", content: email.body }
+      ]
+    });
+    return response.choices[0].message.content || '';
+  }
+}
+
+// Initialize agent
+const agent = new EmailTriageAgent(process.env.OPENAI_API_KEY!);`,
+  "data-analyst": `import { OpenAI } from 'openai';
+import * as fs from 'fs';
+import { parse } from 'csv-parse/sync';
+
+interface DataRow {
+  [key: string]: string | number;
+}
+
+interface AnalysisResult {
+  insights: string[];
+  trends: string[];
+  recommendations: string[];
+}
+
+export class DataAnalystAgent {
+  private openai: OpenAI;
+
+  constructor(openaiKey: string) {
+    this.openai = new OpenAI({ apiKey: openaiKey });
+  }
+
+  async analyzeData(filePath: string): Promise<AnalysisResult> {
+    // Step 1: Load and clean data
+    const rawData = fs.readFileSync(filePath, 'utf-8');
+    const data = this.cleanData(parse(rawData, { columns: true }));
+    
+    // Step 2: Generate statistics
+    const stats = this.calculateStats(data);
+    
+    // Step 3: AI analysis
+    const insights = await this.generateInsights(data, stats);
+    
+    return insights;
+  }
+
+  private cleanData(data: DataRow[]): DataRow[] {
+    return data.filter(row => 
+      Object.values(row).every(val => val !== null && val !== '')
+    );
+  }
+
+  private calculateStats(data: DataRow[]) {
+    // Basic statistical calculations
+    return {
+      rowCount: data.length,
+      columns: Object.keys(data[0] || {}),
+    };
+  }
+
+  private async generateInsights(data: DataRow[], stats: any): Promise<AnalysisResult> {
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: [
+        { role: "system", content: "Analyze data and provide insights, trends, and recommendations." },
+        { role: "user", content: JSON.stringify({ sample: data.slice(0, 10), stats }) }
+      ]
+    });
+    return JSON.parse(response.choices[0].message.content || '{}');
+  }
+}
+
+// Initialize agent
+const agent = new DataAnalystAgent(process.env.OPENAI_API_KEY!);`,
+  "calendar": `import { OpenAI } from 'openai';
+import { google } from 'googleapis';
+
+interface CalendarEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  attendees: string[];
+}
+
+interface OptimizationSuggestion {
+  type: 'reschedule' | 'cancel' | 'merge' | 'add_buffer';
+  eventId: string;
+  reason: string;
+  suggestedTime?: Date;
+}
+
+export class CalendarOptimizerAgent {
+  private openai: OpenAI;
+  private calendar: any;
+
+  constructor(openaiKey: string) {
+    this.openai = new OpenAI({ apiKey: openaiKey });
+  }
+
+  async optimizeSchedule(events: CalendarEvent[]): Promise<OptimizationSuggestion[]> {
+    // Analyze meeting patterns
+    const analysis = await this.analyzePatterns(events);
+    
+    // Find conflicts and inefficiencies
+    const conflicts = this.findConflicts(events);
+    
+    // Generate suggestions
+    const suggestions = await this.generateSuggestions(events, analysis, conflicts);
+    
+    return suggestions;
+  }
+
+  private async analyzePatterns(events: CalendarEvent[]) {
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: [
+        { role: "system", content: "Analyze calendar patterns for productivity optimization." },
+        { role: "user", content: JSON.stringify(events.slice(0, 20)) }
+      ]
+    });
+    return JSON.parse(response.choices[0].message.content || '{}');
+  }
+
+  private findConflicts(events: CalendarEvent[]) {
+    const conflicts: Array<[CalendarEvent, CalendarEvent]> = [];
+    for (let i = 0; i < events.length; i++) {
+      for (let j = i + 1; j < events.length; j++) {
+        if (this.eventsOverlap(events[i], events[j])) {
+          conflicts.push([events[i], events[j]]);
+        }
+      }
+    }
+    return conflicts;
+  }
+
+  private eventsOverlap(a: CalendarEvent, b: CalendarEvent): boolean {
+    return a.start < b.end && b.start < a.end;
+  }
+
+  private async generateSuggestions(events: CalendarEvent[], analysis: any, conflicts: any[]) {
+    // Generate AI-powered optimization suggestions
+    return [];
+  }
+}
+
+// Initialize agent
+const agent = new CalendarOptimizerAgent(process.env.OPENAI_API_KEY!);`,
+  "research": `import { OpenAI } from 'openai';
+import axios from 'axios';
+
+interface SearchResult {
+  title: string;
+  url: string;
+  snippet: string;
+  source: 'web' | 'academic' | 'news';
+}
+
+interface ResearchReport {
+  topic: string;
+  summary: string;
+  keyFindings: string[];
+  sources: SearchResult[];
+  generatedAt: Date;
+}
+
+export class ResearchAssistantAgent {
+  private openai: OpenAI;
+
+  constructor(openaiKey: string) {
+    this.openai = new OpenAI({ apiKey: openaiKey });
+  }
+
+  async research(topic: string): Promise<ResearchReport> {
+    // Step 1: Search multiple sources
+    const webResults = await this.searchWeb(topic);
+    const academicResults = await this.searchAcademic(topic);
+    
+    // Step 2: Synthesize findings
+    const allResults = [...webResults, ...academicResults];
+    const synthesis = await this.synthesize(topic, allResults);
+    
+    // Step 3: Generate report
+    return {
+      topic,
+      summary: synthesis.summary,
+      keyFindings: synthesis.findings,
+      sources: allResults,
+      generatedAt: new Date()
+    };
+  }
+
+  private async searchWeb(query: string): Promise<SearchResult[]> {
+    // Web search implementation
+    return [];
+  }
+
+  private async searchAcademic(query: string): Promise<SearchResult[]> {
+    // Academic paper search implementation
+    return [];
+  }
+
+  private async synthesize(topic: string, sources: SearchResult[]) {
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: [
+        { role: "system", content: "Synthesize research findings into a comprehensive summary." },
+        { role: "user", content: JSON.stringify({ topic, sources: sources.slice(0, 10) }) }
+      ]
+    });
+    return JSON.parse(response.choices[0].message.content || '{}');
+  }
+}
+
+// Initialize agent
+const agent = new ResearchAssistantAgent(process.env.OPENAI_API_KEY!);`,
+  "social-media": `import { OpenAI } from 'openai';
+import { TwitterApi } from 'twitter-api-v2';
+
+interface ContentBrief {
+  topic: string;
+  tone: 'professional' | 'casual' | 'humorous';
+  platforms: ('twitter' | 'linkedin' | 'instagram')[];
+  hashtags?: string[];
+}
+
+interface GeneratedPost {
+  platform: string;
+  content: string;
+  hashtags: string[];
+  scheduledFor?: Date;
+}
+
+export class SocialMediaAgent {
+  private openai: OpenAI;
+  private twitter: TwitterApi;
+
+  constructor(openaiKey: string, twitterCredentials: any) {
+    this.openai = new OpenAI({ apiKey: openaiKey });
+    this.twitter = new TwitterApi(twitterCredentials);
+  }
+
+  async generateContent(brief: ContentBrief): Promise<GeneratedPost[]> {
+    const posts: GeneratedPost[] = [];
+    
+    for (const platform of brief.platforms) {
+      const content = await this.generateForPlatform(brief, platform);
+      posts.push(content);
+    }
+    
+    return posts;
+  }
+
+  private async generateForPlatform(brief: ContentBrief, platform: string): Promise<GeneratedPost> {
+    const constraints = this.getPlatformConstraints(platform);
+    
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: [
+        { role: "system", content: \`Generate \${platform} content. \${constraints}\` },
+        { role: "user", content: JSON.stringify(brief) }
+      ]
+    });
+    
+    return {
+      platform,
+      content: response.choices[0].message.content || '',
+      hashtags: brief.hashtags || []
+    };
+  }
+
+  private getPlatformConstraints(platform: string): string {
+    const constraints: Record<string, string> = {
+      twitter: 'Max 280 characters. Be concise and engaging.',
+      linkedin: 'Professional tone. Can be longer form.',
+      instagram: 'Visual-first. Include emoji suggestions.'
+    };
+    return constraints[platform] || '';
+  }
+
+  async postToTwitter(post: GeneratedPost) {
+    await this.twitter.v2.tweet(post.content);
+  }
+}
+
+// Initialize agent
+const agent = new SocialMediaAgent(
+  process.env.OPENAI_API_KEY!,
+  { appKey: process.env.TWITTER_KEY! }
+);`,
 }
 
 const defaultCodeContent = `import { OpenAI } from 'openai';
@@ -1408,16 +1864,17 @@ export default function ProjectWorkspacePage() {
               {/* Left Panel - Canvas */}
               <div className={`flex ${showVersionHistory ? 'w-[55%]' : 'w-[70%]'} flex-col border-r border-[#E5E7EB] transition-all duration-200`}>
                 {projectType === "code" ? (
-                  <CodeEditor projectId={projectId} />
+                  <CodeEditor projectId={projectId} templateId={templateId} />
                 ) : mode === "workflow" ? (
-                  <WorkflowCanvas
-                    selectedNode={selectedNode}
-                    setSelectedNode={setSelectedNode}
-                    onOpenMarketplace={() => setShowMarketplace(true)}
-                    projectId={projectId}
-                  />
+<WorkflowCanvas
+  selectedNode={selectedNode}
+  setSelectedNode={setSelectedNode}
+  onOpenMarketplace={() => setShowMarketplace(true)}
+  projectId={projectId}
+  templateId={templateId}
+  />
                 ) : (
-                  <CodeEditor projectId={projectId} />
+                  <CodeEditor projectId={projectId} templateId={templateId} />
                 )}
               </div>
 
@@ -2321,16 +2778,21 @@ function WorkflowCanvas({
   setSelectedNode,
   onOpenMarketplace,
   projectId,
+  templateId,
   }: {
   selectedNode: number | null
   setSelectedNode: (id: number | null) => void
   onOpenMarketplace: () => void
   projectId: string
+  templateId?: string | null
   }) {
   const [toolPaletteCollapsed, setToolPaletteCollapsed] = useState<boolean>(false)
   
-  // Get project-specific workflow nodes
-  const workflowNodes = projectWorkflowNodes[projectId] || defaultWorkflowNodes
+  // Get project-specific or template-specific workflow nodes
+  const workflowNodes = 
+    (projectId === "new" && templateId && templateWorkflowNodes[templateId]) 
+      ? templateWorkflowNodes[templateId]
+      : (projectWorkflowNodes[projectId] || defaultWorkflowNodes)
   
   // Calculate bezier curve path between two nodes
   const getConnectionPath = (fromNode: typeof defaultWorkflowNodes[0], toNode: typeof defaultWorkflowNodes[0]) => {
@@ -2584,13 +3046,16 @@ function WorkflowCanvas({
 }
 
 // Code Editor Component
-function CodeEditor({ projectId }: { projectId: string }) {
+function CodeEditor({ projectId, templateId }: { projectId: string; templateId?: string | null }) {
   const [expandedFolders, setExpandedFolders] = useState<string[]>(["src"])
   const [activeFile, setActiveFile] = useState("agent.ts")
   const [terminalExpanded, setTerminalExpanded] = useState(true)
   
-  // Get project-specific code content
-  const codeContent = projectCodeContent[projectId] || defaultCodeContent
+  // Get project-specific or template-specific code content
+  const codeContent = 
+    (projectId === "new" && templateId && templateCodeContent[templateId])
+      ? templateCodeContent[templateId]
+      : (projectCodeContent[projectId] || defaultCodeContent)
 
   const consoleOutput = [
     { type: "info", message: "[INFO] Agent initialized successfully", time: "10:23:45" },
