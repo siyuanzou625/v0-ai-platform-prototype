@@ -67,12 +67,15 @@ import {
   ExternalLink,
   RotateCcw,
   CheckCircle,
+  Mic,
+  FileText,
+  ArrowUp,
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Switch } from "@/components/ui/switch"
 import { Checkbox } from "@/components/ui/checkbox"
 
-type Mode = "workflow" | "code"
+type Mode = "build-ai" | "workflow" | "code"
 type ProjectType = "workflow" | "code"
 
 // Mock projects data to determine project type - matches IDs from projects page
@@ -509,6 +512,38 @@ const initialCodeChat = [
   { role: "assistant", content: "Here's the refactored code with proper async/await pattern:\n\n```typescript\nasync summarize(emails: Email[]): Promise<string> {\n  const prompt = await this.buildPrompt(emails);\n  const response = await this.client.chat.completions.create({\n    model: this.model,\n    messages: [/* ... */]\n  });\n  return response.choices[0].message.content ?? '';\n}\n```\n\nWould you like me to apply this change?" },
 ]
 
+// Build with AI conversation mock
+const initialBuildAIChat = [
+  { 
+    role: "assistant", 
+    content: "I've created your Meeting Notes Agent with 4 steps:\n\n1. Receive meeting recording (from Zoom, Teams, or upload)\n2. Transcribe audio to text (using Whisper AI)\n3. Summarize key points (extract decisions and action items)\n4. Send to Slack (post to #meetings channel)\n\nWould you like to:\n• Add email delivery as an alternative?\n• Change the summary format (bullet points vs. paragraph)?\n• Add a human approval step before sending?",
+    suggestedActions: ["Add email delivery", "Change summary format", "Add approval step"]
+  },
+  { role: "user", content: "Yes, add email delivery as an alternative to Slack" },
+  { 
+    role: "assistant", 
+    content: "Great! I'll add email delivery as an alternative to Slack:\n\nNew Step 5: Send to Email\n• Recipients: Meeting organizer + attendees\n• Format: HTML with summary + full transcript attachment\n• Trigger: After Slack notification sent\n\nThis will use your connected Gmail credential. Want me to configure it now?",
+    pendingChanges: true 
+  },
+]
+
+// Build with AI Agent Steps mock
+const buildAIAgentSteps = [
+  { id: "step-1", name: "Receive meeting recording", icon: Download, type: "trigger", isNew: false },
+  { id: "step-2", name: "Transcribe audio to text", icon: Mic, type: "action", isNew: false },
+  { id: "step-3", name: "Summarize key points", icon: FileText, type: "action", isNew: false },
+  { id: "step-4", name: "Send to Slack", icon: MessageSquare, type: "output", isNew: false },
+  { id: "step-5", name: "Send to Email", icon: Mail, type: "output", isNew: true },
+]
+
+// Quick suggestions for Build with AI
+const buildAIQuickSuggestions = [
+  "Add another output channel",
+  "Change the summary format",
+  "Add an approval step",
+  "Test this agent",
+]
+
 export default function ProjectWorkspacePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -519,9 +554,18 @@ export default function ProjectWorkspacePage() {
   const projectData = projectsData[projectId] || projectsData["proj-001"]
   const projectType: ProjectType = urlMode || projectData.type
   
-  // For code projects, always show code mode. For workflow projects, default to workflow mode
-  const [mode, setMode] = useState<Mode>(projectType === "code" ? "code" : "workflow")
+  // For code projects, always show code mode. For workflow projects, check if URL has build-ai mode
+  const [mode, setMode] = useState<Mode>(
+    projectType === "code" ? "code" : 
+    urlMode === "build-ai" ? "build-ai" : "workflow"
+  )
   const [projectName, setProjectName] = useState(projectData.name)
+  const [buildAIChat, setBuildAIChat] = useState(initialBuildAIChat)
+  const [buildAIInput, setBuildAIInput] = useState("")
+  const [isAITyping, setIsAITyping] = useState(false)
+  const [showProgressiveDisclosure, setShowProgressiveDisclosure] = useState(false)
+  const [agentSteps, setAgentSteps] = useState(buildAIAgentSteps)
+  const [hasPendingChanges, setHasPendingChanges] = useState(true)
   const [isEditingName, setIsEditingName] = useState(false)
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
   const [showMarketplace, setShowMarketplace] = useState(false)
@@ -720,7 +764,24 @@ export default function ProjectWorkspacePage() {
           {projectType === "workflow" ? (
             <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
               <button
-                onClick={() => setMode("workflow")}
+                onClick={() => setMode("build-ai")}
+                className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  mode === "build-ai"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <Sparkles className="h-4 w-4" />
+                Build with AI
+              </button>
+              <button
+                onClick={() => {
+                  if (mode === "build-ai") {
+                    setShowProgressiveDisclosure(true)
+                  } else {
+                    setMode("workflow")
+                  }
+                }}
                 className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
                   mode === "workflow"
                     ? "bg-[#ee3224] text-white shadow-sm"
@@ -731,7 +792,13 @@ export default function ProjectWorkspacePage() {
                 Workflow
               </button>
               <button
-                onClick={() => setMode("code")}
+                onClick={() => {
+                  if (mode === "build-ai") {
+                    setShowProgressiveDisclosure(true)
+                  } else {
+                    setMode("code")
+                  }
+                }}
                 className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-all rounded-md ${
                   mode === "code"
                     ? "bg-[#ee3224] text-white shadow-sm"
@@ -890,36 +957,260 @@ export default function ProjectWorkspacePage() {
 
         {/* Main Canvas - Split Layout */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Left Panel - Canvas */}
-          <div className={`flex ${showVersionHistory ? 'w-[55%]' : 'w-[70%]'} flex-col border-r border-[#E5E7EB] transition-all duration-200`}>
-            {projectType === "code" ? (
-              <CodeEditor projectId={projectId} />
-            ) : mode === "workflow" ? (
-              <WorkflowCanvas
-                selectedNode={selectedNode}
-                setSelectedNode={setSelectedNode}
-                onOpenMarketplace={() => setShowMarketplace(true)}
-                projectId={projectId}
-              />
-            ) : (
-              <CodeEditor projectId={projectId} />
-            )}
-          </div>
+          {/* Build with AI Mode - Two Panel Layout */}
+          {mode === "build-ai" && projectType === "workflow" ? (
+            <>
+              {/* Left Panel: Conversation Interface (50% width) */}
+              <div className={`flex ${showVersionHistory ? 'w-[35%]' : 'w-[50%]'} flex-col border-r border-[#E5E7EB] bg-white transition-all duration-200`}>
+                {/* Chat Header */}
+                <div className="flex items-center gap-2 border-b border-[#E5E7EB] px-4 py-3">
+                  <MessageSquare className="h-5 w-5 text-[#1F2937]" />
+                  <span className="text-sm font-semibold text-[#1F2937]">Tell Me What to Build or Change</span>
+                </div>
+                
+                {/* Chat Messages */}
+                <ScrollArea className="flex-1 p-4">
+                  <div className="space-y-4">
+                    {buildAIChat.map((msg, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
+                      >
+                        <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                          msg.role === "user" ? "bg-muted" : "bg-[#ee3224]"
+                        }`}>
+                          {msg.role === "user" ? (
+                            <span className="text-xs font-medium text-muted-foreground">ZD</span>
+                          ) : (
+                            <Sparkles className="h-4 w-4 text-white" />
+                          )}
+                        </div>
+                        <div
+                          className={`max-w-[85%] rounded-lg p-3 text-sm leading-relaxed ${
+                            msg.role === "user"
+                              ? "bg-[#ee3224] text-white"
+                              : "bg-[#F5F7FA] border border-[#E5E7EB] text-[#333]"
+                          }`}
+                        >
+                          <div className="whitespace-pre-line">{msg.content}</div>
+                        </div>
+                      </div>
+                    ))}
+                    {isAITyping && (
+                      <div className="flex gap-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ee3224]">
+                          <Sparkles className="h-4 w-4 text-white" />
+                        </div>
+                        <div className="bg-[#F5F7FA] border border-[#E5E7EB] rounded-lg p-3">
+                          <div className="flex gap-1">
+                            <div className="h-2 w-2 rounded-full bg-[#6B7280] animate-bounce" style={{ animationDelay: "0ms" }} />
+                            <div className="h-2 w-2 rounded-full bg-[#6B7280] animate-bounce" style={{ animationDelay: "150ms" }} />
+                            <div className="h-2 w-2 rounded-full bg-[#6B7280] animate-bounce" style={{ animationDelay: "300ms" }} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </div>
+                </ScrollArea>
+                
+                {/* Quick Suggestions */}
+                <div className="px-4 py-2 border-t border-[#E5E7EB] bg-[#F9FAFB]">
+                  <div className="flex flex-wrap gap-2">
+                    {buildAIQuickSuggestions.map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        onClick={() => setBuildAIInput(suggestion)}
+                        className="text-xs px-3 py-1.5 rounded-full bg-white border border-[#E5E7EB] text-[#6B7280] hover:border-[#ee3224] hover:text-[#ee3224] transition-colors"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Input Area */}
+                <div className="p-4 border-t border-[#E5E7EB] bg-white">
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Describe what you want to change..."
+                      value={buildAIInput}
+                      onChange={(e) => setBuildAIInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && buildAIInput.trim()) {
+                          setBuildAIChat((prev) => [...prev, { role: "user", content: buildAIInput }])
+                          setBuildAIInput("")
+                          setIsAITyping(true)
+                          setTimeout(() => {
+                            setIsAITyping(false)
+                            setBuildAIChat((prev) => [...prev, { 
+                              role: "assistant", 
+                              content: "I've updated the agent based on your request. The changes are ready for your review in the Agent Preview panel. Would you like me to explain what I changed or make any adjustments?" 
+                            }])
+                          }, 2000)
+                        }
+                      }}
+                      className="flex-1 border-[#E5E7EB]"
+                    />
+                    <Button 
+                      size="icon" 
+                      className="bg-[#ee3224] hover:bg-[#cc2a1e]"
+                      onClick={() => {
+                        if (buildAIInput.trim()) {
+                          setBuildAIChat((prev) => [...prev, { role: "user", content: buildAIInput }])
+                          setBuildAIInput("")
+                          setIsAITyping(true)
+                          setTimeout(() => {
+                            setIsAITyping(false)
+                            setBuildAIChat((prev) => [...prev, { 
+                              role: "assistant", 
+                              content: "I've updated the agent based on your request. The changes are ready for your review in the Agent Preview panel." 
+                            }])
+                          }, 2000)
+                        }
+                      }}
+                    >
+                      <ArrowUp className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right Panel: Agent Preview (50% width) */}
+              <div className={`flex ${showVersionHistory ? 'w-[35%]' : 'w-[50%]'} flex-col bg-[#F5F7FA] transition-all duration-200`}>
+                {/* Preview Header */}
+                <div className="flex items-center justify-between border-b border-[#E5E7EB] bg-white px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-[#1F2937]">Agent Preview</span>
+                    <Badge className="bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E] text-xs">
+                      <div className="h-1.5 w-1.5 rounded-full bg-[#22C55E] mr-1 animate-pulse" />
+                      Live
+                    </Badge>
+                  </div>
+                </div>
+                
+                {/* Agent Preview Card */}
+                <div className="flex-1 overflow-auto p-4">
+                  <div className="bg-white rounded-lg border border-[#E5E7EB] p-4 mb-4">
+                    {/* Agent Header */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="h-12 w-12 rounded-full bg-[#ee3224]/10 flex items-center justify-center">
+                        <FileText className="h-6 w-6 text-[#ee3224]" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-semibold text-[#1F2937]">Meeting Notes Agent</h3>
+                        <Badge className="bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B] text-xs">
+                          Draft - Not Deployed
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    {/* Steps List */}
+                    <div className="space-y-2">
+                      {agentSteps.map((step, idx) => {
+                        const IconComponent = step.icon
+                        return (
+                          <div 
+                            key={step.id}
+                            className={`flex items-center gap-3 p-3 rounded-lg border ${
+                              step.isNew 
+                                ? "bg-[#22C55E]/5 border-[#22C55E]" 
+                                : "bg-white border-[#E5E7EB]"
+                            }`}
+                          >
+                            <span className="text-sm font-medium text-[#6B7280] w-5">{idx + 1}.</span>
+                            <IconComponent className={`h-4 w-4 ${step.isNew ? "text-[#22C55E]" : "text-[#6B7280]"}`} />
+                            <span className="text-sm text-[#333] flex-1">{step.name}</span>
+                            {step.isNew && (
+                              <Sparkles className="h-4 w-4 text-[#22C55E]" />
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                    
+                    {/* Test Button */}
+                    <Button 
+                      variant="outline" 
+                      className="w-full mt-4 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/5"
+                      onClick={() => setShowRunSimulation(true)}
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      Test Agent
+                    </Button>
+                  </div>
+                  
+                  {/* Change Summary */}
+                  {hasPendingChanges && (
+                    <div className="bg-[#F5F7FA] rounded-lg border border-[#E5E7EB] p-4">
+                      <h4 className="text-sm font-semibold text-[#1F2937] mb-3 flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        What I'll Do:
+                      </h4>
+                      <ul className="space-y-2 text-sm text-[#333] mb-4">
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-[#22C55E]" />
+                          Add Email node after Slack
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-[#22C55E]" />
+                          Configure SMTP settings
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-[#22C55E]" />
+                          Test with sample meeting
+                        </li>
+                      </ul>
+                      <div className="flex gap-2">
+                        <Button 
+                          className="flex-1 bg-[#ee3224] hover:bg-[#cc2a1e]"
+                          onClick={() => setHasPendingChanges(false)}
+                        >
+                          Approve Changes
+                        </Button>
+                        <Button variant="outline" className="flex-1">
+                          Edit
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Left Panel - Canvas */}
+              <div className={`flex ${showVersionHistory ? 'w-[55%]' : 'w-[70%]'} flex-col border-r border-[#E5E7EB] transition-all duration-200`}>
+                {projectType === "code" ? (
+                  <CodeEditor projectId={projectId} />
+                ) : mode === "workflow" ? (
+                  <WorkflowCanvas
+                    selectedNode={selectedNode}
+                    setSelectedNode={setSelectedNode}
+                    onOpenMarketplace={() => setShowMarketplace(true)}
+                    projectId={projectId}
+                  />
+                ) : (
+                  <CodeEditor projectId={projectId} />
+                )}
+              </div>
 
-          {/* Right Panel - AI Chat (30%) */}
-          <div className="flex w-[30%] flex-col bg-[#F5F7FA]">
-            {/* Chat Header */}
-            <div className="flex items-center gap-2 border-b border-[#E5E7EB] bg-white px-4 py-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ee3224]">
-                <Bot className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-foreground">AI Assistant</p>
-                <p className="text-xs text-muted-foreground">
-                  {projectType === "code" ? "Code Assistant" : (mode === "workflow" ? "Workflow Builder" : "Code Helper")}
-                </p>
-              </div>
-            </div>
+              {/* Right Panel - AI Chat (30%) */}
+              <div className="flex w-[30%] flex-col bg-[#F5F7FA]">
+                {/* Chat Header */}
+                <div className="flex items-center gap-2 border-b border-[#E5E7EB] bg-white px-4 py-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ee3224]">
+                    <Bot className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">AI Assistant</p>
+                    <p className="text-xs text-muted-foreground">
+                      {projectType === "code" ? "Code Assistant" : (mode === "workflow" ? "Workflow Builder" : "Code Helper")}
+                    </p>
+                  </div>
+                </div>
+            </>
+          )}
 
             {/* Chat Messages */}
             <ScrollArea className="flex-1 p-4">
@@ -1041,6 +1332,8 @@ export default function ProjectWorkspacePage() {
               </div>
             </div>
           </div>
+            </>
+          )}
 
           {/* Version History Panel (Right Sidebar) */}
           {showVersionHistory && (
@@ -1701,6 +1994,69 @@ export default function ProjectWorkspacePage() {
               <Button variant="outline" size="sm" className="text-xs" onClick={() => setShowVisualDiff(false)}>Cancel</Button>
               <Button size="sm" className="bg-[#ee3224] hover:bg-[#cc2a1e] text-xs">Restore {compareVersion}</Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Progressive Disclosure Modal */}
+      <Dialog open={showProgressiveDisclosure} onOpenChange={setShowProgressiveDisclosure}>
+        <DialogContent className="max-w-[500px] p-0 overflow-hidden">
+          {/* Modal Header */}
+          <div className="text-center pt-8 pb-4 px-8">
+            <div className="flex justify-center mb-4">
+              <div className="h-12 w-12 rounded-full bg-[#ee3224]/10 flex items-center justify-center">
+                <Rocket className="h-6 w-6 text-[#ee3224]" />
+              </div>
+            </div>
+            <DialogHeader>
+              <DialogTitle className="text-xl font-semibold text-[#1F2937]">
+                You're Ready for Visual Editing!
+              </DialogTitle>
+              <DialogDescription className="text-sm text-[#333] mt-3">
+                Great news! Your agent is built. You can now:
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          
+          {/* Modal Body */}
+          <div className="px-8 pb-4">
+            <ul className="space-y-2 text-sm text-[#333]">
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-[#22C55E]" />
+                See the visual workflow behind your agent
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-[#22C55E]" />
+                Customize individual steps with more control
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-[#22C55E]" />
+                Add conditional logic and branching
+              </li>
+            </ul>
+            <p className="text-sm text-[#6B7280] italic mt-4">
+              Your conversation history is preserved. Switch back anytime.
+            </p>
+          </div>
+          
+          {/* Modal Footer */}
+          <div className="px-8 py-4 bg-[#F9FAFB] border-t border-[#E5E7EB] flex flex-col gap-2">
+            <Button 
+              className="w-full bg-[#ee3224] hover:bg-[#cc2a1e]"
+              onClick={() => {
+                setShowProgressiveDisclosure(false)
+                setMode("workflow")
+              }}
+            >
+              Got It, Show Me the Workflow
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={() => setShowProgressiveDisclosure(false)}
+            >
+              Stay in Build with AI
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
