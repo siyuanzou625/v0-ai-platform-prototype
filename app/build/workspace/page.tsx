@@ -1209,8 +1209,6 @@ export default function ProjectWorkspacePage() {
                     </p>
                   </div>
                 </div>
-            </>
-          )}
 
             {/* Chat Messages */}
             <ScrollArea className="flex-1 p-4">
@@ -1332,7 +1330,7 @@ export default function ProjectWorkspacePage() {
               </div>
             </div>
           </div>
-            </>
+          </>
           )}
 
           {/* Version History Panel (Right Sidebar) */}
