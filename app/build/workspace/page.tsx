@@ -1490,85 +1490,203 @@ export default function ProjectWorkspacePage() {
                 
                 {/* Diff Statistics - On separate row */}
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Badge className="bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]">+1 Added</Badge>
-                  <Badge className="bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]">2 Modified</Badge>
-                  <Badge className="bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]">0 Removed</Badge>
-                  <Badge variant="outline">5 Unchanged</Badge>
+                  {projectType === "code" ? (
+                    <>
+                      <Badge className="bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]">+12 lines</Badge>
+                      <Badge className="bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]">-3 lines</Badge>
+                      <Badge variant="outline">1 file changed</Badge>
+                    </>
+                  ) : (
+                    <>
+                      <Badge className="bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]">+1 Added</Badge>
+                      <Badge className="bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]">2 Modified</Badge>
+                      <Badge className="bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]">0 Removed</Badge>
+                      <Badge variant="outline">5 Unchanged</Badge>
+                    </>
+                  )}
                 </div>
               </div>
             </DialogDescription>
           </DialogHeader>
           
           <div className="flex-1 overflow-auto px-6 py-4 min-h-0">
-            {/* Side-by-Side Canvas */}
-            <div className="grid grid-cols-2 gap-4 h-[320px]">
-              {/* Current Version Canvas */}
-              <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col min-w-0">
-                <div className="bg-white border-b border-[#E5E7EB] px-3 py-2 flex-shrink-0">
-                  <span className="text-sm font-medium text-[#1F2937]">v23 (Current)</span>
+            {projectType === "code" ? (
+              /* Code Diff View for code-based projects */
+              <div className="rounded-lg border border-[#E5E7EB] bg-[#1E1E1E] overflow-hidden h-[320px] flex flex-col">
+                {/* File Header */}
+                <div className="bg-[#2D2D2D] border-b border-[#404040] px-4 py-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FileCode className="h-4 w-4 text-[#9CA3AF]" />
+                    <span className="text-sm font-mono text-[#E5E7EB]">src/services/dataProcessor.ts</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs">
+                    <span className="text-[#22C55E]">+12 lines</span>
+                    <span className="text-[#DC2626]">-3 lines</span>
+                  </div>
                 </div>
-                <div className="flex-1 relative overflow-hidden" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
-                  {/* Mock workflow nodes - Current version with added node - using percentages */}
-                  <div className="absolute left-[5%] top-[20%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-emerald-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Start</div>
-                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Received</div>
+                {/* Code Diff Content */}
+                <div className="flex-1 overflow-auto font-mono text-xs">
+                  {/* Unchanged lines */}
+                  <div className="flex">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#6B7280] bg-[#1E1E1E] select-none border-r border-[#404040]">14</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#D4D4D4]">{"  const processData = async (input: DataInput) => {"}</div>
                   </div>
-                  <div className="absolute left-[35%] top-[10%] w-[100px] h-[60px] rounded-lg border-2 border-[#22C55E] bg-[#F0FDF4] shadow-sm flex flex-col">
-                    <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
-                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Scoring</div>
-                    <Badge className="absolute -top-1.5 -right-1.5 text-[8px] px-1 py-0 h-4 bg-[#22C55E]">NEW</Badge>
+                  <div className="flex">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#6B7280] bg-[#1E1E1E] select-none border-r border-[#404040]">15</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#D4D4D4]">{"    const validated = validateInput(input);"}</div>
                   </div>
-                  <div className="absolute left-[35%] top-[50%] w-[100px] h-[60px] rounded-lg border-2 border-[#F59E0B] bg-[#FFFBEB] shadow-sm flex flex-col">
-                    <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
-                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Qualify Lead</div>
+                  {/* Removed lines */}
+                  <div className="flex bg-[#3D1F1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#F87171] bg-[#4C1D1D] select-none border-r border-[#7F1D1D]">16</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#F87171]">{"−   const result = transform(validated);"}</div>
                   </div>
-                  <div className="absolute right-[5%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-red-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Email</div>
-                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Send Outreach</div>
+                  <div className="flex bg-[#3D1F1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#F87171] bg-[#4C1D1D] select-none border-r border-[#7F1D1D]">17</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#F87171]">{"−   return result;"}</div>
+                  </div>
+                  {/* Added lines */}
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">16</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"   // Apply new transformation pipeline"}</span></div>
+                  </div>
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">17</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"   const enriched = await enrichData(validated);"}</span></div>
+                  </div>
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">18</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"   const transformed = applyTransforms(enriched);"}</span></div>
+                  </div>
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">19</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"   const validated = runValidation(transformed);"}</span></div>
+                  </div>
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">20</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"   return validated;"}</span></div>
+                  </div>
+                  {/* Unchanged lines */}
+                  <div className="flex">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#6B7280] bg-[#1E1E1E] select-none border-r border-[#404040]">21</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#D4D4D4]">{"  };"}</div>
+                  </div>
+                  <div className="flex">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#6B7280] bg-[#1E1E1E] select-none border-r border-[#404040]">22</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#D4D4D4]">{""}</div>
+                  </div>
+                  {/* More added lines */}
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">23</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"  // New helper function for data enrichment"}</span></div>
+                  </div>
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">24</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"  const enrichData = async (data: ValidatedData) => {"}</span></div>
+                  </div>
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">25</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"    const metadata = await fetchMetadata(data.id);"}</span></div>
+                  </div>
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">26</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"    return { ...data, metadata };"}</span></div>
+                  </div>
+                  <div className="flex bg-[#1F3D1F]">
+                    <div className="w-12 text-right pr-3 py-0.5 text-[#4ADE80] bg-[#1D4C1D] select-none border-r border-[#166534]">27</div>
+                    <div className="flex-1 py-0.5 px-3 text-[#4ADE80]">{"+ "}<span className="bg-[#166534] px-0.5">{"  };"}</span></div>
                   </div>
                 </div>
               </div>
-              
-              {/* Previous Version Canvas */}
-              <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col min-w-0">
-                <div className="bg-white border-b border-[#E5E7EB] px-3 py-2 flex-shrink-0">
-                  <span className="text-sm font-medium text-[#1F2937]">{compareVersion}</span>
+            ) : (
+              /* Workflow Diff View for workflow-based projects */
+              <div className="grid grid-cols-2 gap-4 h-[320px]">
+                {/* Current Version Canvas */}
+                <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col min-w-0">
+                  <div className="bg-white border-b border-[#E5E7EB] px-3 py-2 flex-shrink-0">
+                    <span className="text-sm font-medium text-[#1F2937]">v23 (Current)</span>
+                  </div>
+                  <div className="flex-1 relative overflow-hidden" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
+                    {/* Mock workflow nodes - Current version with added node - using percentages */}
+                    <div className="absolute left-[5%] top-[20%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                      <div className="bg-emerald-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Start</div>
+                      <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Received</div>
+                    </div>
+                    <div className="absolute left-[35%] top-[10%] w-[100px] h-[60px] rounded-lg border-2 border-[#22C55E] bg-[#F0FDF4] shadow-sm flex flex-col">
+                      <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
+                      <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Scoring</div>
+                      <Badge className="absolute -top-1.5 -right-1.5 text-[8px] px-1 py-0 h-4 bg-[#22C55E]">NEW</Badge>
+                    </div>
+                    <div className="absolute left-[35%] top-[50%] w-[100px] h-[60px] rounded-lg border-2 border-[#F59E0B] bg-[#FFFBEB] shadow-sm flex flex-col">
+                      <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
+                      <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Qualify Lead</div>
+                    </div>
+                    <div className="absolute right-[5%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                      <div className="bg-red-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Email</div>
+                      <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Send Outreach</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1 relative overflow-hidden" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
-                  {/* Mock workflow nodes - Previous version without added node */}
-                  <div className="absolute left-[5%] top-[20%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-emerald-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Start</div>
-                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Received</div>
+                
+                {/* Previous Version Canvas */}
+                <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col min-w-0">
+                  <div className="bg-white border-b border-[#E5E7EB] px-3 py-2 flex-shrink-0">
+                    <span className="text-sm font-medium text-[#1F2937]">{compareVersion}</span>
                   </div>
-                  <div className="absolute left-[35%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
-                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Qualify Lead</div>
-                  </div>
-                  <div className="absolute right-[5%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
-                    <div className="bg-red-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Email</div>
-                    <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Send Outreach</div>
+                  <div className="flex-1 relative overflow-hidden" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
+                    {/* Mock workflow nodes - Previous version without added node */}
+                    <div className="absolute left-[5%] top-[20%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                      <div className="bg-emerald-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Start</div>
+                      <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Lead Received</div>
+                    </div>
+                    <div className="absolute left-[35%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                      <div className="bg-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">LLM</div>
+                      <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Qualify Lead</div>
+                    </div>
+                    <div className="absolute right-[5%] top-[30%] w-[100px] h-[60px] rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                      <div className="bg-red-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-t-md">Email</div>
+                      <div className="flex-1 flex items-center justify-center text-[10px] text-[#333] px-1 text-center">Send Outreach</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
           
           {/* Change Summary */}
           <div className="rounded-lg bg-[#F5F7FA] border border-[#E5E7EB] p-3 mx-6">
             <h4 className="text-sm font-semibold text-[#1F2937] mb-2">Change Summary</h4>
             <div className="space-y-1 text-xs">
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#22C55E] flex-shrink-0" />
-                <span className="text-[#333]"><span className="font-medium">Added:</span> "Lead Scoring" node</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#F59E0B] flex-shrink-0" />
-                <span className="text-[#333]"><span className="font-medium">Modified:</span> "Qualify Lead" node (updated prompt)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#F59E0B] flex-shrink-0" />
-                <span className="text-[#333]"><span className="font-medium">Modified:</span> "Slack Notify" node (updated config)</span>
-              </div>
+              {projectType === "code" ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-[#22C55E] flex-shrink-0" />
+                    <span className="text-[#333]"><span className="font-medium">Added:</span> enrichData() helper function</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-[#F59E0B] flex-shrink-0" />
+                    <span className="text-[#333]"><span className="font-medium">Modified:</span> processData() - added enrichment pipeline</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-[#DC2626] flex-shrink-0" />
+                    <span className="text-[#333]"><span className="font-medium">Removed:</span> direct transform() call</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-[#22C55E] flex-shrink-0" />
+                    <span className="text-[#333]"><span className="font-medium">Added:</span> "Lead Scoring" node</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-[#F59E0B] flex-shrink-0" />
+                    <span className="text-[#333]"><span className="font-medium">Modified:</span> "Qualify Lead" node (updated prompt)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-[#F59E0B] flex-shrink-0" />
+                    <span className="text-[#333]"><span className="font-medium">Modified:</span> "Slack Notify" node (updated config)</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           
