@@ -45,6 +45,13 @@ import {
   ArrowDown,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
+  FileText,
+  Mail,
+  BarChart3,
+  Calendar,
+  SearchIcon,
+  Megaphone,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -298,7 +305,18 @@ export default function ProjectsPage() {
   const [showNewProject, setShowNewProject] = useState(false)
   const [newProjectName, setNewProjectName] = useState("")
   const [newProjectDescription, setNewProjectDescription] = useState("")
-  const [newProjectMode, setNewProjectMode] = useState<"workflow" | "code">("workflow")
+  const [newProjectMode, setNewProjectMode] = useState<"build-ai" | "workflow" | "code">("build-ai")
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
+  
+  // Templates for Build with AI
+  const templates = [
+    { id: "meeting-notes", name: "Meeting Notes Agent", description: "Auto-summarize meetings", icon: FileText, preset: "I want an agent that summarizes my meeting recordings and sends the notes to my team on Slack" },
+    { id: "email-triage", name: "Email Triage Agent", description: "Prioritize and draft emails", icon: Mail, preset: "I want an agent that reads my emails, prioritizes them, and drafts responses" },
+    { id: "data-analyst", name: "Data Analyst Agent", description: "Analyze and visualize data", icon: BarChart3, preset: "I want an agent that analyzes my data and creates visualizations" },
+    { id: "calendar", name: "Calendar Optimizer", description: "Schedule and manage meetings", icon: Calendar, preset: "I want an agent that optimizes my calendar and schedules meetings efficiently" },
+    { id: "research", name: "Research Assistant", description: "Deep dive into any topic", icon: SearchIcon, preset: "I want an agent that researches topics and provides comprehensive summaries" },
+    { id: "social-media", name: "Social Media Manager", description: "Post across platforms", icon: Megaphone, preset: "I want an agent that manages my social media posts across multiple platforms" },
+  ]
 
   // Load view preference from localStorage
   useEffect(() => {
@@ -372,9 +390,19 @@ export default function ProjectsPage() {
 
   const handleCreateProject = () => {
     setShowNewProject(false)
+    const description = newProjectDescription || (selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.preset : "")
     setNewProjectName("")
     setNewProjectDescription("")
-    router.push(`/build/workspace?id=new&mode=${newProjectMode}`)
+    setSelectedTemplate(null)
+    router.push(`/build/workspace?id=new&mode=${newProjectMode}${description ? `&prompt=${encodeURIComponent(description)}` : ""}`)
+  }
+  
+  const handleTemplateSelect = (templateId: string) => {
+    const template = templates.find(t => t.id === templateId)
+    if (template) {
+      setSelectedTemplate(templateId)
+      setNewProjectDescription(template.preset)
+    }
   }
 
   const handleSort = (field: SortField) => {
@@ -475,91 +503,110 @@ export default function ProjectsPage() {
                 Clear filters
               </Button>
             )}
-            <Dialog open={showNewProject} onOpenChange={setShowNewProject}>
+            <Dialog open={showNewProject} onOpenChange={(open) => {
+              setShowNewProject(open)
+              if (!open) {
+                setNewProjectName("")
+                setNewProjectDescription("")
+                setSelectedTemplate(null)
+                setNewProjectMode("build-ai")
+              }
+            }}>
               <DialogTrigger asChild>
                 <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
                   <Plus className="h-4 w-4" />
-                  New Project
+                  New Agent
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Create New Project</DialogTitle>
-                  <DialogDescription>
-                    Set up a new AI agent project with your preferred development mode.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="projectName">Project Name</Label>
-                    <Input
-                      id="projectName"
-                      placeholder="Enter project name"
-                      value={newProjectName}
-                      onChange={(e) => setNewProjectName(e.target.value)}
-                    />
+              <DialogContent className="max-w-[700px] p-0 overflow-hidden">
+                {/* Modal Header */}
+                <div className="text-center pt-8 pb-4 px-8">
+                  <div className="flex justify-center mb-4">
+                    <div className="h-12 w-12 rounded-full bg-[#ee3224]/10 flex items-center justify-center">
+                      <Sparkles className="h-6 w-6 text-[#ee3224]" />
+                    </div>
                   </div>
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-semibold text-[#1F2937]">
+                      Build Your AI Agent with Natural Language
+                    </DialogTitle>
+                    <DialogDescription className="text-sm text-[#6B7280] mt-2">
+                      Tell me what you want. I'll build it - no coding required.
+                    </DialogDescription>
+                  </DialogHeader>
+                </div>
+                
+                {/* Modal Body */}
+                <div className="px-8 pb-6 space-y-6">
+                  {/* Conversation Input */}
                   <div className="space-y-2">
-                    <Label htmlFor="projectDescription">Description</Label>
+                    <Label className="text-sm font-medium text-[#333] flex items-center gap-1.5">
+                      Describe Your Agent:
+                    </Label>
                     <Textarea
-                      id="projectDescription"
-                      placeholder="Describe your project..."
-                      className="resize-none"
-                      rows={3}
+                      placeholder="I want an agent that summarizes my meeting recordings and sends the notes to my team on Slack..."
+                      className="min-h-[120px] resize-none border-[#E5E7EB] focus:border-[#ee3224] focus:ring-[#ee3224]/20"
                       value={newProjectDescription}
-                      onChange={(e) => setNewProjectDescription(e.target.value)}
+                      onChange={(e) => {
+                        setNewProjectDescription(e.target.value)
+                        setSelectedTemplate(null)
+                      }}
                     />
                   </div>
+                  
+                  {/* Template Suggestions */}
                   <div className="space-y-3">
-                    <Label>Development Mode</Label>
-                    <RadioGroup
-                      value={newProjectMode}
-                      onValueChange={(v) => setNewProjectMode(v as "workflow" | "code")}
-                      className="grid grid-cols-2 gap-3"
-                    >
-                      <Label
-                        htmlFor="mode-workflow"
-                        className={`flex cursor-pointer flex-col items-center gap-2 rounded border-2 p-4 transition-colors ${
-                          newProjectMode === "workflow"
-                            ? "border-[#ee3224] bg-[#ee3224]/5"
-                            : "border-border hover:border-[#ee3224]/50"
-                        }`}
-                      >
-                        <RadioGroupItem value="workflow" id="mode-workflow" className="sr-only" />
-                        <Workflow className={`h-6 w-6 ${newProjectMode === "workflow" ? "text-[#ee3224]" : "text-muted-foreground"}`} />
-                        <span className={`text-sm font-medium ${newProjectMode === "workflow" ? "text-[#ee3224]" : "text-foreground"}`}>
-                          Workflow
-                        </span>
-                        <span className="text-xs text-muted-foreground text-center">
-                          Visual drag-and-drop builder
-                        </span>
-                      </Label>
-                      <Label
-                        htmlFor="mode-code"
-                        className={`flex cursor-pointer flex-col items-center gap-2 rounded border-2 p-4 transition-colors ${
-                          newProjectMode === "code"
-                            ? "border-[#ee3224] bg-[#ee3224]/5"
-                            : "border-border hover:border-[#ee3224]/50"
-                        }`}
-                      >
-                        <RadioGroupItem value="code" id="mode-code" className="sr-only" />
-                        <Code2 className={`h-6 w-6 ${newProjectMode === "code" ? "text-[#ee3224]" : "text-muted-foreground"}`} />
-                        <span className={`text-sm font-medium ${newProjectMode === "code" ? "text-[#ee3224]" : "text-foreground"}`}>
-                          Code
-                        </span>
-                        <span className="text-xs text-muted-foreground text-center">
-                          Full IDE experience
-                        </span>
-                      </Label>
-                    </RadioGroup>
+                    <Label className="text-sm font-medium text-[#333] flex items-center gap-1.5">
+                      Or Choose a Template:
+                    </Label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {templates.map((template) => {
+                        const IconComponent = template.icon
+                        return (
+                          <button
+                            key={template.id}
+                            onClick={() => handleTemplateSelect(template.id)}
+                            className={`flex flex-col items-start p-3 rounded-lg border text-left transition-all ${
+                              selectedTemplate === template.id
+                                ? "border-[#ee3224] bg-[#ee3224]/5"
+                                : "border-[#E5E7EB] hover:border-[#ee3224] bg-white"
+                            }`}
+                          >
+                            <IconComponent className={`h-5 w-5 mb-2 ${selectedTemplate === template.id ? "text-[#ee3224]" : "text-[#6B7280]"}`} />
+                            <span className="text-sm font-medium text-[#1F2937]">{template.name}</span>
+                            <span className="text-xs text-[#6B7280] mt-0.5">{template.description}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
+                </div>
+                
+                {/* Modal Footer */}
+                <div className="px-8 py-4 bg-[#F9FAFB] border-t border-[#E5E7EB]">
                   <Button
-                    className="w-full bg-[#ee3224] hover:bg-[#cc2a1e]"
+                    className="w-full h-12 bg-[#ee3224] hover:bg-[#cc2a1e] text-white font-medium"
                     onClick={handleCreateProject}
-                    disabled={!newProjectName.trim()}
+                    disabled={!newProjectDescription.trim()}
                   >
-                    Create Project
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Build My Agent
                   </Button>
+                  <div className="flex items-center justify-between mt-3">
+                    <button
+                      onClick={() => {
+                        setNewProjectMode("workflow")
+                        setShowNewProject(false)
+                        router.push("/build/workspace?id=new&mode=workflow")
+                      }}
+                      className="text-sm text-[#6B7280] hover:text-[#ee3224] transition-colors"
+                    >
+                      Skip to Visual Editor
+                    </button>
+                    <span className="text-xs text-[#9CA3AF]">
+                      You can always switch to visual editor or code later.
+                    </span>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -1195,7 +1242,7 @@ export default function ProjectsPage() {
                   onClick={() => setShowNewProject(true)}
                 >
                   <Plus className="h-4 w-4" />
-                  New Project
+                  New Agent
                 </Button>
               </div>
             )}
