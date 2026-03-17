@@ -512,6 +512,108 @@ const initialCodeChat = [
   { role: "assistant", content: "Here's the refactored code with proper async/await pattern:\n\n```typescript\nasync summarize(emails: Email[]): Promise<string> {\n  const prompt = await this.buildPrompt(emails);\n  const response = await this.client.chat.completions.create({\n    model: this.model,\n    messages: [/* ... */]\n  });\n  return response.choices[0].message.content ?? '';\n}\n```\n\nWould you like me to apply this change?" },
 ]
 
+// Template-specific Build with AI conversation data (for new projects from templates)
+const templateBuildAIChat: Record<string, Array<{ role: string; content: string }>> = {
+  "meeting-notes": [
+    { 
+      role: "assistant", 
+      content: "I've created your Meeting Notes Agent with 4 steps:\n\n1. Receive meeting recording (from Zoom, Teams, or upload)\n2. Transcribe audio to text (using Whisper AI)\n3. Summarize key points (extract decisions and action items)\n4. Send to Slack (post to #meetings channel)\n\nWould you like to:\n- Add email delivery as an alternative?\n- Change the summary format (bullet points vs. paragraph)?\n- Add a human approval step before sending?"
+    },
+  ],
+  "email-triage": [
+    { 
+      role: "assistant", 
+      content: "I've created your Email Triage Agent with 5 steps:\n\n1. Connect to inbox (Gmail, Outlook, or IMAP)\n2. Analyze email content (extract sender, subject, urgency)\n3. Categorize by priority (urgent, important, low priority)\n4. Draft response suggestions (AI-generated replies)\n5. Move to appropriate folder or label\n\nWould you like to:\n- Add auto-reply for specific categories?\n- Set up VIP sender rules?\n- Connect to your calendar for meeting requests?"
+    },
+  ],
+  "data-analyst": [
+    { 
+      role: "assistant", 
+      content: "I've created your Data Analyst Agent with 4 steps:\n\n1. Connect to data source (CSV, database, or API)\n2. Clean and transform data (handle missing values, normalize)\n3. Analyze patterns (statistical analysis, trends)\n4. Generate visualizations (charts, dashboards)\n\nWould you like to:\n- Add scheduled reports?\n- Set up anomaly detection alerts?\n- Export to specific formats (PDF, Excel, Sheets)?"
+    },
+  ],
+  "calendar": [
+    { 
+      role: "assistant", 
+      content: "I've created your Calendar Optimizer Agent with 4 steps:\n\n1. Sync with calendar (Google Calendar, Outlook)\n2. Analyze meeting patterns (frequency, duration, attendees)\n3. Suggest optimizations (batch meetings, protect focus time)\n4. Auto-schedule based on preferences\n\nWould you like to:\n- Add buffer time between meetings?\n- Set up recurring availability blocks?\n- Integrate with scheduling tools (Calendly, etc.)?"
+    },
+  ],
+  "research": [
+    { 
+      role: "assistant", 
+      content: "I've created your Research Assistant Agent with 4 steps:\n\n1. Receive research topic (text input or voice)\n2. Search multiple sources (web, academic papers, news)\n3. Synthesize findings (summarize, compare perspectives)\n4. Generate report (structured document with citations)\n\nWould you like to:\n- Add fact-checking step?\n- Include competitor analysis?\n- Set up recurring research on topics?"
+    },
+  ],
+  "social-media": [
+    { 
+      role: "assistant", 
+      content: "I've created your Social Media Manager Agent with 5 steps:\n\n1. Generate content ideas (based on trends, audience)\n2. Create posts (text, images, hashtags)\n3. Schedule across platforms (Twitter, LinkedIn, Instagram)\n4. Monitor engagement (likes, comments, shares)\n5. Generate performance reports\n\nWould you like to:\n- Add auto-reply to comments?\n- Set up content approval workflow?\n- Connect to analytics dashboards?"
+    },
+  ],
+}
+
+// Template-specific agent steps
+const templateAgentSteps: Record<string, Array<{ id: string; name: string; icon: any; type: string; isNew: boolean }>> = {
+  "meeting-notes": [
+    { id: "step-1", name: "Receive meeting recording", icon: Download, type: "trigger", isNew: false },
+    { id: "step-2", name: "Transcribe audio to text", icon: Mic, type: "action", isNew: false },
+    { id: "step-3", name: "Summarize key points", icon: FileText, type: "action", isNew: false },
+    { id: "step-4", name: "Send to Slack", icon: MessageSquare, type: "output", isNew: false },
+  ],
+  "email-triage": [
+    { id: "step-1", name: "Connect to inbox", icon: Mail, type: "trigger", isNew: false },
+    { id: "step-2", name: "Analyze email content", icon: FileText, type: "action", isNew: false },
+    { id: "step-3", name: "Categorize by priority", icon: Filter, type: "action", isNew: false },
+    { id: "step-4", name: "Draft response suggestions", icon: MessageSquare, type: "action", isNew: false },
+    { id: "step-5", name: "Organize in folders", icon: Folder, type: "output", isNew: false },
+  ],
+  "data-analyst": [
+    { id: "step-1", name: "Connect to data source", icon: Database, type: "trigger", isNew: false },
+    { id: "step-2", name: "Clean and transform data", icon: RefreshCw, type: "action", isNew: false },
+    { id: "step-3", name: "Analyze patterns", icon: FileText, type: "action", isNew: false },
+    { id: "step-4", name: "Generate visualizations", icon: Variable, type: "output", isNew: false },
+  ],
+  "calendar": [
+    { id: "step-1", name: "Sync with calendar", icon: Clock, type: "trigger", isNew: false },
+    { id: "step-2", name: "Analyze meeting patterns", icon: FileText, type: "action", isNew: false },
+    { id: "step-3", name: "Suggest optimizations", icon: Sparkles, type: "action", isNew: false },
+    { id: "step-4", name: "Auto-schedule", icon: Check, type: "output", isNew: false },
+  ],
+  "research": [
+    { id: "step-1", name: "Receive research topic", icon: Download, type: "trigger", isNew: false },
+    { id: "step-2", name: "Search multiple sources", icon: Search, type: "action", isNew: false },
+    { id: "step-3", name: "Synthesize findings", icon: FileText, type: "action", isNew: false },
+    { id: "step-4", name: "Generate report", icon: BookOpen, type: "output", isNew: false },
+  ],
+  "social-media": [
+    { id: "step-1", name: "Generate content ideas", icon: Sparkles, type: "trigger", isNew: false },
+    { id: "step-2", name: "Create posts", icon: FileText, type: "action", isNew: false },
+    { id: "step-3", name: "Schedule across platforms", icon: Clock, type: "action", isNew: false },
+    { id: "step-4", name: "Monitor engagement", icon: MessageSquare, type: "action", isNew: false },
+    { id: "step-5", name: "Generate reports", icon: Variable, type: "output", isNew: false },
+  ],
+}
+
+// Template-specific quick suggestions
+const templateQuickSuggestions: Record<string, Array<string>> = {
+  "meeting-notes": ["Add email delivery", "Change summary format", "Add approval step", "Test with sample"],
+  "email-triage": ["Add auto-reply", "Set up VIP rules", "Connect calendar", "Test with sample"],
+  "data-analyst": ["Add scheduled reports", "Set up alerts", "Export to PDF", "Test with sample"],
+  "calendar": ["Add buffer time", "Set availability blocks", "Connect Calendly", "Test with sample"],
+  "research": ["Add fact-checking", "Include competitors", "Set up recurring", "Test with sample"],
+  "social-media": ["Add auto-reply", "Set up approval", "Connect analytics", "Test with sample"],
+}
+
+// Template names for display
+const templateNames: Record<string, string> = {
+  "meeting-notes": "Meeting Notes Agent",
+  "email-triage": "Email Triage Agent",
+  "data-analyst": "Data Analyst Agent",
+  "calendar": "Calendar Optimizer",
+  "research": "Research Assistant",
+  "social-media": "Social Media Manager",
+}
+
 // Project-specific Build with AI conversation data
 const projectBuildAIChat: Record<string, Array<{ role: string; content: string }>> = {
   "proj-001": [ // Enterprise Sales Agent
@@ -547,7 +649,7 @@ const projectBuildAIChat: Record<string, Array<{ role: string; content: string }
       content: "I've added duplicate detection to your workflow:\n\nNew Step 3: Duplicate Check\n- Compare invoice number, vendor, amount, date\n- Flag potential duplicates within 90 days\n- Auto-reject exact matches\n- Queue near-matches for manual review\n\nThis will help prevent double payments. Should I also add a quarterly audit report for flagged invoices?"
     },
   ],
-  "new": [ // New project
+  "new": [ // New project (no template)
     { 
       role: "assistant", 
       content: "Welcome! I'm ready to help you build your AI agent. Tell me what you'd like to automate, and I'll create the workflow for you.\n\nFor example:\n- \"I want to summarize my meeting recordings and send notes to Slack\"\n- \"Help me process customer emails and route them to the right team\"\n- \"Build an agent that monitors social media mentions\"\n\nWhat would you like to build?"
@@ -635,6 +737,7 @@ export default function ProjectWorkspacePage() {
   const searchParams = useSearchParams()
   const projectId = searchParams.get("id") || "1"
   const urlMode = searchParams.get("mode") as ProjectType | null
+  const templateId = searchParams.get("template")
   
   // Determine project type from data or URL param (for new projects)
   const projectData = projectsData[projectId] || projectsData["proj-001"]
@@ -645,13 +748,42 @@ export default function ProjectWorkspacePage() {
     projectType === "code" ? "code" : 
     urlMode === "build-ai" ? "build-ai" : "workflow"
   )
-  const [projectName, setProjectName] = useState(projectData.name)
   
-  // Build with AI state - use project-specific data
-  const initialChat = projectBuildAIChat[projectId] || projectBuildAIChat["new"]
-  const initialSteps = projectAgentSteps[projectId] || projectAgentSteps["new"]
+  // Determine the project name - use template name for new projects with templates
+  const getInitialProjectName = () => {
+    if (projectId === "new" && templateId && templateNames[templateId]) {
+      return templateNames[templateId]
+    }
+    return projectData.name
+  }
+  const [projectName, setProjectName] = useState(getInitialProjectName())
+  
+  // Build with AI state - use template-specific data for new projects, project-specific for existing
+  const getInitialChat = () => {
+    if (projectId === "new" && templateId && templateBuildAIChat[templateId]) {
+      return templateBuildAIChat[templateId]
+    }
+    return projectBuildAIChat[projectId] || projectBuildAIChat["new"]
+  }
+  
+  const getInitialSteps = () => {
+    if (projectId === "new" && templateId && templateAgentSteps[templateId]) {
+      return templateAgentSteps[templateId]
+    }
+    return projectAgentSteps[projectId] || projectAgentSteps["new"]
+  }
+  
+  const getQuickSuggestions = () => {
+    if (projectId === "new" && templateId && templateQuickSuggestions[templateId]) {
+      return templateQuickSuggestions[templateId]
+    }
+    return projectQuickSuggestions[projectId] || projectQuickSuggestions["new"]
+  }
+  
+  const initialChat = getInitialChat()
+  const initialSteps = getInitialSteps()
   const pendingChanges = projectPendingChanges[projectId] || []
-  const quickSuggestions = projectQuickSuggestions[projectId] || projectQuickSuggestions["new"]
+  const quickSuggestions = getQuickSuggestions()
   
   const [buildAIChat, setBuildAIChat] = useState(initialChat)
   const [buildAIInput, setBuildAIInput] = useState("")

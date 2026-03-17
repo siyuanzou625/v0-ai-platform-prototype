@@ -391,10 +391,11 @@ export default function ProjectsPage() {
   const handleCreateProject = () => {
     setShowNewProject(false)
     const description = newProjectDescription || (selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.preset : "")
+    const templateId = selectedTemplate
     setNewProjectName("")
     setNewProjectDescription("")
     setSelectedTemplate(null)
-    router.push(`/build/workspace?id=new&mode=${newProjectMode}${description ? `&prompt=${encodeURIComponent(description)}` : ""}`)
+    router.push(`/build/workspace?id=new&mode=${newProjectMode}${templateId ? `&template=${templateId}` : ""}${description ? `&prompt=${encodeURIComponent(description)}` : ""}`)
   }
   
   const handleTemplateSelect = (templateId: string) => {
