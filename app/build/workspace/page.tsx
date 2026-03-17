@@ -736,17 +736,21 @@ export default function ProjectWorkspacePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const projectId = searchParams.get("id") || "1"
-  const urlMode = searchParams.get("mode") as ProjectType | null
+  const urlMode = searchParams.get("mode") // Can be "build-ai", "workflow", or "code"
   const templateId = searchParams.get("template")
   
   // Determine project type from data or URL param (for new projects)
+  // New projects with templates or "build-ai" mode are always workflow type
   const projectData = projectsData[projectId] || projectsData["proj-001"]
-  const projectType: ProjectType = urlMode || projectData.type
+  const projectType: ProjectType = 
+    (projectId === "new" && (templateId || urlMode === "build-ai")) ? "workflow" :
+    (urlMode === "workflow" || urlMode === "code") ? urlMode : 
+    projectData.type
   
   // For code projects, always show code mode. For workflow projects, check if URL has build-ai mode
   const [mode, setMode] = useState<Mode>(
     projectType === "code" ? "code" : 
-    urlMode === "build-ai" ? "build-ai" : "workflow"
+    (urlMode === "build-ai" || (projectId === "new" && templateId)) ? "build-ai" : "workflow"
   )
   
   // Determine the project name - use template name for new projects with templates
