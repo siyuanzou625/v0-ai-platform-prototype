@@ -42,7 +42,12 @@ import {
   Activity,
   AlertTriangle,
   Upload,
+  Lock,
+  Filter,
+  User,
 } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -186,6 +191,20 @@ const usageLogs = [
   { timestamp: "2025-03-12T16:15:00Z", eventType: "Authentication", status: "success", details: "Token refresh completed", workflow: "System" },
   { timestamp: "2025-03-12T15:00:00Z", eventType: "API Call", status: "error", details: "Rate limit exceeded", workflow: "Data Sync Agent" },
   { timestamp: "2025-03-12T14:30:00Z", eventType: "API Call", status: "success", details: "GET /api/drive/files", workflow: "File Monitor" },
+]
+
+// Mock audit log data
+const auditLogData = [
+  { id: "audit-001", timestamp: "2025-03-12T14:30:00Z", event: "Credential Used", user: "Zoey Doyle", userInitials: "ZD", project: "Enterprise Sales Agent", ipAddress: "192.168.1.100", status: "success" },
+  { id: "audit-002", timestamp: "2025-03-12T11:00:00Z", event: "Credential Used", user: "Alex Chen", userInitials: "AC", project: "Customer Support Bot", ipAddress: "192.168.1.105", status: "success" },
+  { id: "audit-003", timestamp: "2025-03-11T16:15:00Z", event: "Config Updated", user: "Zoey Doyle", userInitials: "ZD", project: "-", ipAddress: "192.168.1.100", status: "success" },
+  { id: "audit-004", timestamp: "2025-03-10T09:00:00Z", event: "Credential Used", user: "Zoey Doyle", userInitials: "ZD", project: "Enterprise Sales Agent", ipAddress: "192.168.1.100", status: "success" },
+  { id: "audit-005", timestamp: "2025-03-09T15:00:00Z", event: "Test Connection", user: "Alex Chen", userInitials: "AC", project: "-", ipAddress: "192.168.1.105", status: "success" },
+  { id: "audit-006", timestamp: "2025-03-08T10:30:00Z", event: "Access Granted", user: "Zoey Doyle", userInitials: "ZD", project: "-", ipAddress: "192.168.1.100", status: "success" },
+  { id: "audit-007", timestamp: "2025-03-07T14:15:00Z", event: "Credential Used", user: "Sarah Kim", userInitials: "SK", project: "Data Pipeline v2", ipAddress: "192.168.1.110", status: "rate_limited" },
+  { id: "audit-008", timestamp: "2025-03-06T11:00:00Z", event: "Config Updated", user: "Zoey Doyle", userInitials: "ZD", project: "-", ipAddress: "192.168.1.100", status: "success" },
+  { id: "audit-009", timestamp: "2025-03-05T09:45:00Z", event: "Credential Used", user: "Alex Chen", userInitials: "AC", project: "Enterprise Sales Agent", ipAddress: "192.168.1.105", status: "failed" },
+  { id: "audit-010", timestamp: "2025-03-04T15:30:00Z", event: "Access Revoked", user: "Zoey Doyle", userInitials: "ZD", project: "-", ipAddress: "192.168.1.100", status: "success" },
 ]
 
 // Popular providers for create modal
@@ -386,13 +405,27 @@ export default function ConnectionsPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-2 mb-2">
                     <Badge variant="outline" className="text-xs">{getTypeBadge(conn.type)}</Badge>
                     <Badge className={`text-xs ${getEnvironmentColor(conn.environment)}`}>
                       {conn.environment.charAt(0).toUpperCase() + conn.environment.slice(1)}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                  {/* Never in Git Badge */}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F5F7FA] text-[#6B7280] mb-2">
+                          <Lock className="h-3 w-3" />
+                          <span className="text-[11px]">Never in Git</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-xs">Credentials are encrypted and never synced to version control</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {conn.lastUsed}
@@ -442,6 +475,7 @@ export default function ConnectionsPage() {
                   <TableHead>Connection</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Security</TableHead>
                   <TableHead>Environment</TableHead>
                   <TableHead>Last Used</TableHead>
                   <TableHead>Used By</TableHead>
@@ -483,6 +517,21 @@ export default function ConnectionsPage() {
                         <div className={`h-2 w-2 rounded-full ${getStatusColor(conn.status)}`} />
                         <span className="text-sm capitalize">{conn.status}</span>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F5F7FA] text-[#6B7280]">
+                              <Lock className="h-3 w-3" />
+                              <span className="text-[11px]">Never in Git</span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="text-xs">Credentials are encrypted and never synced to version control</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </TableCell>
                     <TableCell>
                       <Badge className={`text-xs ${getEnvironmentColor(conn.environment)}`}>
@@ -920,11 +969,11 @@ export default function ConnectionsPage() {
                 {/* Tabs */}
                 <Tabs value={detailTab} onValueChange={setDetailTab} className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
                   <TabsList className="px-6 border-b rounded-none justify-start h-auto py-0 bg-transparent flex-shrink-0">
-                    <TabsTrigger value="overview" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Overview</TabsTrigger>
-                    <TabsTrigger value="usage" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Usage</TabsTrigger>
-                    <TabsTrigger value="logs" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Logs</TabsTrigger>
-                    <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Settings</TabsTrigger>
-                  </TabsList>
+<TabsTrigger value="overview" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Overview</TabsTrigger>
+  <TabsTrigger value="usage" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Usage</TabsTrigger>
+  <TabsTrigger value="audit" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Audit Log</TabsTrigger>
+  <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-[#ee3224] rounded-none py-3">Settings</TabsTrigger>
+  </TabsList>
 
                   <div className="flex-1 overflow-auto min-h-0 min-w-0">
                     <TabsContent value="overview" className="p-6 m-0 space-y-6 min-w-0">
@@ -1088,71 +1137,135 @@ export default function ConnectionsPage() {
                       </Card>
                     </TabsContent>
 
-                    <TabsContent value="logs" className="p-6 m-0 space-y-4 min-w-0">
+                    <TabsContent value="audit" className="p-6 m-0 space-y-4 min-w-0">
+                      {/* Audit Log Header */}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <Lock className="h-4 w-4 text-[#1F2937]" />
+                          <h3 className="text-base font-semibold text-[#1F2937]">Audit Log</h3>
+                        </div>
+                        <p className="text-sm text-[#6B7280]">All credential access is logged for compliance (SOC2, GDPR)</p>
+                      </div>
+
                       {/* Filter Bar */}
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <Select defaultValue="24h">
-                          <SelectTrigger className="w-40">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="24h">Last 24 hours</SelectItem>
-                            <SelectItem value="7d">Last 7 days</SelectItem>
-                            <SelectItem value="30d">Last 30 days</SelectItem>
-                          </SelectContent>
-                        </Select>
+                      <div className="flex items-center gap-3 flex-wrap">
                         <Select defaultValue="all">
-                          <SelectTrigger className="w-40">
-                            <SelectValue />
+                          <SelectTrigger className="w-36">
+                            <SelectValue placeholder="Event Type" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="all">All Events</SelectItem>
-                            <SelectItem value="auth">Authentication</SelectItem>
-                            <SelectItem value="api">API Call</SelectItem>
-                            <SelectItem value="error">Error</SelectItem>
+                            <SelectItem value="credential_used">Credential Used</SelectItem>
+                            <SelectItem value="config_updated">Config Updated</SelectItem>
+                            <SelectItem value="test_connection">Test Connection</SelectItem>
+                            <SelectItem value="access_granted">Access Granted</SelectItem>
+                            <SelectItem value="access_revoked">Access Revoked</SelectItem>
                           </SelectContent>
                         </Select>
-                        <div className="flex-1" />
-                        <Button variant="outline" size="sm" className="gap-2">
+                        <Select defaultValue="7d">
+                          <SelectTrigger className="w-36">
+                            <SelectValue placeholder="Date Range" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="24h">Last 24 Hours</SelectItem>
+                            <SelectItem value="7d">Last 7 Days</SelectItem>
+                            <SelectItem value="30d">Last 30 Days</SelectItem>
+                            <SelectItem value="custom">Custom</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Select defaultValue="all">
+                          <SelectTrigger className="w-32">
+                            <SelectValue placeholder="User" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Users</SelectItem>
+                            <SelectItem value="zoey">Zoey Doyle</SelectItem>
+                            <SelectItem value="alex">Alex Chen</SelectItem>
+                            <SelectItem value="sarah">Sarah Kim</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <div className="relative flex-1 min-w-[200px]">
+                          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                          <Input placeholder="Search by project or IP..." className="pl-9" />
+                        </div>
+                        <Button variant="outline" size="sm" className="gap-2 border-[#ee3224] text-[#ee3224]">
                           <Download className="h-4 w-4" />
-                          Export Logs
+                          Export Audit Log (CSV)
                         </Button>
                       </div>
 
-                      {/* Logs Table */}
+                      {/* Audit Log Table */}
                       <Card className="overflow-hidden">
                         <div className="overflow-x-auto">
-                          <table className="w-full min-w-[850px]">
+                          <table className="w-full min-w-[950px]">
                             <thead className="border-b bg-muted/50">
                               <tr>
-                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[180px]">Timestamp</th>
-                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[130px]">Event Type</th>
-                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[90px]">Status</th>
-                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[280px]">Details</th>
-                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[170px]">Workflow</th>
+                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[160px]">Timestamp</th>
+                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[140px]">Event</th>
+                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[150px]">User</th>
+                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[180px]">Project</th>
+                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[140px]">IP Address</th>
+                                <th className="text-left text-sm font-medium text-muted-foreground px-4 py-3 w-[100px]">Status</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {usageLogs.map((log, i) => (
-                                <tr key={i} className="border-b last:border-0">
+                              {auditLogData.map((log) => (
+                                <tr key={log.id} className="border-b last:border-0 hover:bg-[#F5F7FA] cursor-pointer">
                                   <td className="px-4 py-3 text-sm text-muted-foreground">
-                                    {new Date(log.timestamp).toLocaleString()}
+                                    {new Date(log.timestamp).toLocaleDateString("en-US", { 
+                                      month: "short", 
+                                      day: "numeric",
+                                      hour: "numeric",
+                                      minute: "2-digit"
+                                    })}
                                   </td>
-                                  <td className="px-4 py-3 text-sm">{log.eventType}</td>
                                   <td className="px-4 py-3">
-                                    <Badge variant={log.status === "success" ? "default" : "destructive"}>
-                                      {log.status}
+                                    <Badge variant="outline" className="text-xs font-normal">
+                                      {log.event}
                                     </Badge>
                                   </td>
-                                  <td className="px-4 py-3 font-mono text-xs">{log.details}</td>
-                                  <td className="px-4 py-3 text-sm">{log.workflow}</td>
+                                  <td className="px-4 py-3">
+                                    <div className="flex items-center gap-2">
+                                      <Avatar className="h-6 w-6">
+                                        <AvatarFallback className="text-[10px] bg-muted">
+                                          {log.userInitials}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      <span className="text-sm">{log.user}</span>
+                                    </div>
+                                  </td>
+                                  <td className="px-4 py-3 text-sm">
+                                    {log.project !== "-" ? (
+                                      <span className="text-[#ee3224] hover:underline cursor-pointer">{log.project}</span>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </td>
+                                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{log.ipAddress}</td>
+                                  <td className="px-4 py-3">
+                                    <Badge 
+                                      variant={log.status === "success" ? "default" : log.status === "rate_limited" ? "secondary" : "destructive"}
+                                      className={log.status === "success" ? "bg-green-500" : log.status === "rate_limited" ? "bg-orange-500 text-white" : ""}
+                                    >
+                                      {log.status === "success" ? "Success" : log.status === "rate_limited" ? "Rate Limited" : "Failed"}
+                                    </Badge>
+                                  </td>
                                 </tr>
                               ))}
                             </tbody>
                           </table>
                         </div>
                       </Card>
-                      <p className="text-xs text-muted-foreground">Logs retained for 90 days per compliance policy</p>
+
+                      {/* Compliance Notice */}
+                      <div className="rounded-lg bg-[#F5F7FA] border border-[#E5E7EB] p-4">
+                        <div className="flex gap-3">
+                          <Shield className="h-4 w-4 text-[#6B7280] mt-0.5 flex-shrink-0" />
+                          <p className="text-xs text-[#6B7280]">
+                            All credential access is logged for compliance (SOC2, GDPR). Credentials are encrypted at rest (AES-256) and never synced to Git. Logs retained for 90 days.
+                          </p>
+                        </div>
+                      </div>
                     </TabsContent>
 
                     <TabsContent value="settings" className="p-6 m-0 space-y-6 pb-10 min-w-0">

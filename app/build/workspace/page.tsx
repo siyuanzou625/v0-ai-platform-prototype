@@ -57,7 +57,19 @@ import {
   Filter,
   MoreHorizontal,
   RefreshCw,
+  History,
+  X,
+  GitCommit,
+  Github,
+  Lock,
+  Shield,
+  AlertTriangle,
+  ExternalLink,
+  RotateCcw,
 } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Switch } from "@/components/ui/switch"
+import { Checkbox } from "@/components/ui/checkbox"
 
 type Mode = "workflow" | "code"
 type ProjectType = "workflow" | "code"
@@ -78,6 +90,118 @@ const teamMembers = [
   { id: 1, name: "Sarah Chen", email: "sarah@example.com", role: "Admin", initials: "SC" },
   { id: 2, name: "Mike Johnson", email: "mike@example.com", role: "Editor", initials: "MJ" },
   { id: 3, name: "Emily Davis", email: "emily@example.com", role: "Viewer", initials: "ED" },
+]
+
+// Mock Git connection data
+const gitConnection = {
+  provider: "GitHub",
+  repository: "Enterprise Corp / sales-agent-repo",
+  branch: "main",
+  status: "connected" as const, // "connected" | "unsaved" | "error" | "disconnected"
+  unsavedCount: 0,
+  lastSync: "2025-03-12T12:30:00Z",
+  commitHash: "a1b2c3d",
+  syncSettings: {
+    autoSyncOnDeploy: true,
+    commitWorkflows: true,
+    commitPrompts: true,
+    commitKnowledge: false,
+  },
+  branchProtection: {
+    protected: true,
+    requiresPR: true,
+  },
+}
+
+// Mock version history data
+const versionHistory = [
+  {
+    id: "v23",
+    timestamp: "2025-03-12T14:30:00Z",
+    author: "Zoey Doyle",
+    note: "Added lead scoring node",
+    type: "manual" as const,
+    changes: { added: 1, modified: 2, removed: 0 },
+    isCurrent: true,
+    gitSynced: false,
+  },
+  {
+    id: "v22",
+    timestamp: "2025-03-11T16:15:00Z",
+    author: "Zoey Doyle",
+    note: "Fixed Slack notification",
+    type: "manual" as const,
+    changes: { added: 0, modified: 1, removed: 0 },
+    isCurrent: false,
+    gitSynced: true,
+  },
+  {
+    id: "v21",
+    timestamp: "2025-03-10T10:00:00Z",
+    author: "Alex Chen",
+    note: "Initial workflow",
+    type: "auto" as const,
+    changes: { added: 5, modified: 0, removed: 0 },
+    isCurrent: false,
+    gitSynced: true,
+  },
+  {
+    id: "v20",
+    timestamp: "2025-03-09T15:45:00Z",
+    author: "Zoey Doyle",
+    note: "Added email trigger",
+    type: "git" as const,
+    changes: { added: 1, modified: 1, removed: 0 },
+    isCurrent: false,
+    gitSynced: true,
+  },
+  {
+    id: "v19",
+    timestamp: "2025-03-08T11:00:00Z",
+    author: "Zoey Doyle",
+    note: "Updated prompt template",
+    type: "manual" as const,
+    changes: { added: 0, modified: 2, removed: 0 },
+    isCurrent: false,
+    gitSynced: false,
+  },
+  {
+    id: "v18",
+    timestamp: "2025-03-07T09:30:00Z",
+    author: "Alex Chen",
+    note: "Connected Salesforce",
+    type: "manual" as const,
+    changes: { added: 1, modified: 0, removed: 0 },
+    isCurrent: false,
+    gitSynced: true,
+  },
+  {
+    id: "v17",
+    timestamp: "2025-03-06T14:00:00Z",
+    author: "Zoey Doyle",
+    note: "Performance optimization",
+    type: "auto" as const,
+    changes: { added: 0, modified: 3, removed: 1 },
+    isCurrent: false,
+    gitSynced: false,
+  },
+  {
+    id: "v16",
+    timestamp: "2025-03-05T10:15:00Z",
+    author: "Zoey Doyle",
+    note: "Initial commit",
+    type: "git" as const,
+    changes: { added: 6, modified: 0, removed: 0 },
+    isCurrent: false,
+    gitSynced: true,
+  },
+]
+
+// Mock git activity log
+const gitActivityLog = [
+  { timestamp: "2025-03-12T14:30:00Z", action: "Pushed v23 to main", user: "Zoey Doyle" },
+  { timestamp: "2025-03-11T16:15:00Z", action: "Pulled latest changes", user: "Zoey Doyle" },
+  { timestamp: "2025-03-10T10:00:00Z", action: "Created branch feature/lead-scoring", user: "Alex Chen" },
 ]
 
 // Tool palette categories
@@ -410,6 +534,15 @@ export default function ProjectWorkspacePage() {
   const [runProgress, setRunProgress] = useState(0)
   const [runLogs, setRunLogs] = useState<Array<{ time: string; type: "info" | "success" | "warning" | "error"; message: string }>>([])
   const runLogsEndRef = useRef<HTMLDivElement>(null)
+  
+  // Version History & Git states
+  const [showVersionHistory, setShowVersionHistory] = useState(false)
+  const [showGitSettings, setShowGitSettings] = useState(false)
+  const [showVisualDiff, setShowVisualDiff] = useState(false)
+  const [selectedVersionForDiff, setSelectedVersionForDiff] = useState<string | null>(null)
+  const [compareVersion, setCompareVersion] = useState<string>("v22")
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true)
+  const [gitSyncSettings, setGitSyncSettings] = useState(gitConnection.syncSettings)
 
   useEffect(() => {
     // For code projects, always use code chat. For workflow projects, depends on current mode
@@ -615,8 +748,70 @@ export default function ProjectWorkspacePage() {
             </Badge>
           )}
 
-          {/* Right: Team + Actions */}
+          {/* Right: Git Status + Team + Actions */}
           <div className="flex items-center gap-3">
+            {/* Git Status Indicator */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setShowGitSettings(true)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-[#E5E7EB] bg-white hover:bg-[#F5F7FA] transition-colors"
+                  >
+                    <GitBranch className={`h-4 w-4 ${
+                      gitConnection.status === "connected" ? "text-[#22C55E]" :
+                      gitConnection.status === "unsaved" ? "text-[#F59E0B]" :
+                      gitConnection.status === "error" ? "text-[#ee3224]" : "text-[#6B7280]"
+                    }`} />
+                    <span className="text-sm text-[#333]">
+                      {gitConnection.status === "disconnected" ? "Connect GitHub" : `GitHub: ${gitConnection.branch}`}
+                    </span>
+                    {gitConnection.status === "connected" && (
+                      <div className="h-2 w-2 rounded-full bg-[#22C55E]" />
+                    )}
+                    {gitConnection.status === "unsaved" && (
+                      <>
+                        <div className="h-2 w-2 rounded-full bg-[#F59E0B]" />
+                        <span className="text-xs text-[#F59E0B]">{gitConnection.unsavedCount} unsaved</span>
+                      </>
+                    )}
+                    {gitConnection.status === "error" && (
+                      <>
+                        <div className="h-2 w-2 rounded-full bg-[#ee3224]" />
+                        <span className="text-xs text-[#ee3224]">Failed</span>
+                      </>
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs">
+                  <div className="space-y-1 text-xs">
+                    <p className="font-medium">{gitConnection.repository}</p>
+                    <p className="text-muted-foreground">Last sync: {new Date(gitConnection.lastSync).toLocaleString()}</p>
+                    <p className="text-muted-foreground">Commit: {gitConnection.commitHash}</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            {/* Version History Toggle */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`gap-1.5 border-[#E5E7EB] ${showVersionHistory ? 'bg-[#F5F7FA]' : ''}`}
+                    onClick={() => setShowVersionHistory(!showVersionHistory)}
+                  >
+                    <History className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>Version History</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             {/* Avatar Stack */}
             <div className="flex items-center -space-x-2">
               {teamMembers.slice(0, 3).map((member) => (
@@ -694,8 +889,8 @@ export default function ProjectWorkspacePage() {
 
         {/* Main Canvas - Split Layout */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Left Panel - Canvas (70%) */}
-          <div className="flex w-[70%] flex-col border-r border-[#E5E7EB]">
+          {/* Left Panel - Canvas */}
+          <div className={`flex ${showVersionHistory ? 'w-[55%]' : 'w-[70%]'} flex-col border-r border-[#E5E7EB] transition-all duration-200`}>
             {projectType === "code" ? (
               <CodeEditor projectId={projectId} />
             ) : mode === "workflow" ? (
@@ -845,6 +1040,125 @@ export default function ProjectWorkspacePage() {
               </div>
             </div>
           </div>
+
+          {/* Version History Panel (Right Sidebar) */}
+          {showVersionHistory && (
+            <div className="w-[280px] flex-shrink-0 flex flex-col bg-white border-l border-[#E5E7EB] transition-all duration-200">
+              {/* Panel Header */}
+              <div className="flex items-center justify-between border-b border-[#E5E7EB] px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <History className="h-4 w-4 text-[#1F2937]" />
+                  <span className="text-sm font-semibold text-[#1F2937]">Version History</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => setShowVersionHistory(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Auto-Save Toggle */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#E5E7EB]">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-medium text-[#1F2937]">Auto-Save: {autoSaveEnabled ? "On" : "Off"}</p>
+                  <p className="text-xs text-[#6B7280]">Last saved: 2 minutes ago</p>
+                </div>
+                <Switch
+                  checked={autoSaveEnabled}
+                  onCheckedChange={setAutoSaveEnabled}
+                  className="data-[state=checked]:bg-[#ee3224]"
+                />
+              </div>
+
+              {/* Version List */}
+              <ScrollArea className="flex-1">
+                <div className="p-2 space-y-1">
+                  {versionHistory.map((version) => (
+                    <div
+                      key={version.id}
+                      className="p-3 rounded-md hover:bg-[#F5F7FA] transition-colors group"
+                    >
+                      <div className="flex items-start gap-2">
+                        {/* Version Indicator */}
+                        <div className={`mt-1 h-3 w-3 rounded-full border-2 ${
+                          version.isCurrent 
+                            ? "bg-[#ee3224] border-[#ee3224]" 
+                            : version.type === "manual" 
+                              ? "border-[#8B5CF6] bg-transparent" 
+                              : version.type === "auto" 
+                                ? "border-[#3B82F6] bg-transparent" 
+                                : "border-[#22C55E] bg-transparent"
+                        }`} />
+                        
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-semibold text-[#1F2937]">
+                              {version.id} {version.isCurrent && "(Current)"}
+                            </span>
+                            {version.gitSynced && (
+                              <Github className="h-3 w-3 text-[#333]" />
+                            )}
+                          </div>
+                          <p className="text-xs text-[#6B7280] mt-0.5">
+                            {new Date(version.timestamp).toLocaleDateString("en-US", { 
+                              month: "short", 
+                              day: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit"
+                            })}
+                          </p>
+                          <p className="text-xs text-[#333] truncate mt-0.5">{version.note}</p>
+                          <p className="text-xs text-[#6B7280]">by {version.author}</p>
+                          
+                          {/* Action Buttons - Visible on Hover */}
+                          <div className="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-6 text-xs px-2 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+                              disabled={version.isCurrent}
+                            >
+                              <RotateCcw className="h-3 w-3 mr-1" />
+                              Restore
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-6 text-xs px-2 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+                              onClick={() => {
+                                setSelectedVersionForDiff(version.id)
+                                setShowVisualDiff(true)
+                              }}
+                            >
+                              Compare
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              {/* Panel Footer */}
+              <div className="border-t border-[#E5E7EB] p-3 space-y-2">
+                <button className="text-xs text-[#ee3224] hover:underline w-full text-left">
+                  View All 50 Versions
+                </button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-xs border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+                >
+                  <Download className="h-3 w-3 mr-1.5" />
+                  Export Version History
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Marketplace Modal */}
@@ -994,6 +1308,283 @@ export default function ProjectWorkspacePage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Git Settings Modal */}
+      <Dialog open={showGitSettings} onOpenChange={setShowGitSettings}>
+        <DialogContent className="sm:max-w-[700px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GitBranch className="h-5 w-5 text-[#ee3224]" />
+              Project Settings - Git Integration
+            </DialogTitle>
+            <DialogDescription>Manage version control and sync settings</DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            {/* Connection Status Card */}
+            <div className="rounded-lg bg-[#F5F7FA] border border-[#E5E7EB] p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <CheckCircle className="h-4 w-4 text-[#22C55E]" />
+                <span className="text-sm font-semibold text-[#22C55E]">Connected to GitHub</span>
+              </div>
+              <div className="space-y-1 text-sm">
+                <p className="text-[#333]"><span className="text-[#6B7280]">Repository:</span> {gitConnection.repository}</p>
+                <p className="text-[#333]"><span className="text-[#6B7280]">Current Branch:</span> {gitConnection.branch}</p>
+                <p className="text-[#333]"><span className="text-[#6B7280]">Last Sync:</span> {new Date(gitConnection.lastSync).toLocaleString()}</p>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <Button variant="outline" size="sm" className="text-xs">Disconnect</Button>
+                <Button variant="outline" size="sm" className="text-xs gap-1">
+                  <RefreshCw className="h-3 w-3" />
+                  Sync Now
+                </Button>
+                <Button variant="outline" size="sm" className="text-xs">Change Repository</Button>
+              </div>
+            </div>
+
+            {/* Sync Settings */}
+            <div className="rounded-lg bg-white border border-[#E5E7EB] p-4 space-y-4">
+              <h3 className="text-sm font-semibold text-[#1F2937]">Sync Settings</h3>
+              
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <Checkbox 
+                    id="autoSync" 
+                    checked={gitSyncSettings.autoSyncOnDeploy}
+                    onCheckedChange={(checked) => setGitSyncSettings(prev => ({...prev, autoSyncOnDeploy: !!checked}))}
+                  />
+                  <div>
+                    <Label htmlFor="autoSync" className="text-sm font-medium text-[#1F2937]">Auto-sync on deploy</Label>
+                    <p className="text-xs text-[#6B7280]">Automatically commit on each deployment</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Checkbox 
+                    id="commitWorkflows" 
+                    checked={gitSyncSettings.commitWorkflows}
+                    onCheckedChange={(checked) => setGitSyncSettings(prev => ({...prev, commitWorkflows: !!checked}))}
+                  />
+                  <div>
+                    <Label htmlFor="commitWorkflows" className="text-sm font-medium text-[#1F2937]">Commit workflow changes to Git</Label>
+                    <p className="text-xs text-[#6B7280]">Export workflow JSON to repo</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Checkbox 
+                    id="commitPrompts" 
+                    checked={gitSyncSettings.commitPrompts}
+                    onCheckedChange={(checked) => setGitSyncSettings(prev => ({...prev, commitPrompts: !!checked}))}
+                  />
+                  <div>
+                    <Label htmlFor="commitPrompts" className="text-sm font-medium text-[#1F2937]">Commit prompt templates to Git</Label>
+                    <p className="text-xs text-[#6B7280]">Sanitized, no secrets</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Checkbox 
+                    id="commitKnowledge" 
+                    checked={gitSyncSettings.commitKnowledge}
+                    onCheckedChange={(checked) => setGitSyncSettings(prev => ({...prev, commitKnowledge: !!checked}))}
+                  />
+                  <div>
+                    <Label htmlFor="commitKnowledge" className="text-sm font-medium text-[#1F2937]">Commit knowledge base references to Git</Label>
+                    <p className="text-xs text-[#6B7280]">Not recommended</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="pt-2">
+                <Label className="text-sm font-medium text-[#1F2937]">Protected Branch</Label>
+                <Select defaultValue="main">
+                  <SelectTrigger className="w-48 mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="main">main</SelectItem>
+                    <SelectItem value="develop">develop</SelectItem>
+                    <SelectItem value="staging">staging</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-[#6B7280] mt-1">Changes require pull request review</p>
+              </div>
+            </div>
+
+            {/* Security Notice */}
+            <div className="rounded-lg bg-[#FEF2F2] border border-[#FECACA] p-4">
+              <div className="flex gap-3">
+                <Lock className="h-4 w-4 text-[#DC2626] mt-0.5" />
+                <div>
+                  <h4 className="text-sm font-semibold text-[#991B1B]">Important Security Notice</h4>
+                  <p className="text-xs text-[#991B1B] mt-1">
+                    Credentials and secrets are NEVER synced to Git. They are stored securely in Connections and scoped by environment (Dev/Staging/Prod).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Git Activity */}
+            <div>
+              <h3 className="text-sm font-semibold text-[#1F2937] mb-3">Recent Git Activity</h3>
+              <div className="space-y-2">
+                {gitActivityLog.map((activity, idx) => (
+                  <div key={idx} className="flex items-center gap-3 text-sm">
+                    <GitCommit className="h-3 w-3 text-[#6B7280]" />
+                    <span className="text-[#6B7280]">
+                      {new Date(activity.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+                    </span>
+                    <span className="text-[#333]">{activity.action}</span>
+                    <span className="text-[#6B7280]">by {activity.user}</span>
+                  </div>
+                ))}
+              </div>
+              <button className="text-xs text-[#ee3224] hover:underline mt-2">View Full Git Log</button>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-4 border-t">
+            <Button variant="outline" onClick={() => setShowGitSettings(false)}>Cancel</Button>
+            <Button className="bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={() => setShowGitSettings(false)}>Save Settings</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Visual Diff Modal */}
+      <Dialog open={showVisualDiff} onOpenChange={setShowVisualDiff}>
+        <DialogContent className="max-w-[1200px] w-[95vw] max-h-[85vh] h-[85vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GitBranch className="h-5 w-5 text-[#ee3224]" />
+              Compare Versions: v23 (Current) vs {compareVersion}
+            </DialogTitle>
+            <DialogDescription>
+              <div className="flex items-center gap-4 mt-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">Compare</span>
+                  <Select defaultValue="v23">
+                    <SelectTrigger className="w-32 h-8">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {versionHistory.map(v => (
+                        <SelectItem key={v.id} value={v.id}>{v.id} {v.isCurrent && "(Current)"}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="text-sm">vs</span>
+                  <Select value={compareVersion} onValueChange={setCompareVersion}>
+                    <SelectTrigger className="w-32 h-8">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {versionHistory.filter(v => !v.isCurrent).map(v => (
+                        <SelectItem key={v.id} value={v.id}>{v.id}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Diff Statistics */}
+                <div className="flex items-center gap-2 ml-auto">
+                  <Badge className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]">+1 Added</Badge>
+                  <Badge className="bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]">2 Modified</Badge>
+                  <Badge className="bg-[#DC2626]/10 text-[#DC2626] border-[#DC2626]">0 Removed</Badge>
+                  <Badge variant="outline">5 Unchanged</Badge>
+                </div>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex-1 overflow-hidden">
+            {/* Side-by-Side Canvas */}
+            <div className="grid grid-cols-2 gap-4 h-full">
+              {/* Current Version Canvas */}
+              <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col">
+                <div className="bg-white border-b border-[#E5E7EB] px-4 py-2">
+                  <span className="text-sm font-medium text-[#1F2937]">v23 (Current)</span>
+                </div>
+                <div className="flex-1 relative p-4" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
+                  {/* Mock workflow nodes - Current version with added node */}
+                  <div className="absolute left-8 top-16 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-emerald-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">Start</div>
+                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Lead Received</div>
+                  </div>
+                  <div className="absolute left-48 top-8 w-32 h-20 rounded-lg border-2 border-[#22C55E] bg-[#F0FDF4] shadow-sm flex flex-col">
+                    <div className="bg-purple-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">LLM</div>
+                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Lead Scoring</div>
+                    <Badge className="absolute -top-2 -right-2 text-[9px] bg-[#22C55E]">NEW</Badge>
+                  </div>
+                  <div className="absolute left-48 top-36 w-32 h-20 rounded-lg border-2 border-[#F59E0B] bg-[#FFFBEB] shadow-sm flex flex-col">
+                    <div className="bg-purple-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">LLM</div>
+                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Qualify Lead</div>
+                  </div>
+                  <div className="absolute right-8 top-16 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">Email</div>
+                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Send Outreach</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Previous Version Canvas */}
+              <div className="rounded-lg border border-[#E5E7EB] bg-[#F5F7FA] overflow-hidden flex flex-col">
+                <div className="bg-white border-b border-[#E5E7EB] px-4 py-2">
+                  <span className="text-sm font-medium text-[#1F2937]">{compareVersion}</span>
+                </div>
+                <div className="flex-1 relative p-4" style={{ backgroundImage: "radial-gradient(#C0C6CA 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
+                  {/* Mock workflow nodes - Previous version without added node */}
+                  <div className="absolute left-8 top-16 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-emerald-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">Start</div>
+                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Lead Received</div>
+                  </div>
+                  <div className="absolute left-48 top-24 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-purple-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">LLM</div>
+                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Qualify Lead</div>
+                  </div>
+                  <div className="absolute right-8 top-16 w-32 h-20 rounded-lg border-2 border-[#E5E7EB] bg-white shadow-sm flex flex-col">
+                    <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-t-md">Email</div>
+                    <div className="flex-1 flex items-center justify-center text-xs text-[#333]">Send Outreach</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Change Summary */}
+          <div className="rounded-lg bg-[#F5F7FA] border border-[#E5E7EB] p-4 mt-4">
+            <h4 className="text-sm font-semibold text-[#1F2937] mb-2">Change Summary</h4>
+            <div className="space-y-1 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-[#22C55E]" />
+                <span className="text-[#333]"><span className="font-medium">Added:</span> "Lead Scoring" node (between Lead Received - Qualify Lead)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-[#F59E0B]" />
+                <span className="text-[#333]"><span className="font-medium">Modified:</span> "Qualify Lead" node (updated prompt template)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-[#F59E0B]" />
+                <span className="text-[#333]"><span className="font-medium">Modified:</span> "Slack Notify" node (updated channel config)</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Modal Footer */}
+          <div className="flex items-center justify-between pt-4 border-t">
+            <p className="text-xs text-[#F59E0B]">This will overwrite current version. This action can be undone.</p>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" className="gap-1">
+                <Download className="h-3 w-3" />
+                Export Diff
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setShowVisualDiff(false)}>Cancel</Button>
+              <Button size="sm" className="bg-[#ee3224] hover:bg-[#cc2a1e]">Restore {compareVersion}</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       </div>
     </AppLayout>
   )
