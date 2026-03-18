@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { AppLayout } from "@/components/app-layout"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
@@ -11,6 +11,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
+import { Checkbox } from "@/components/ui/checkbox"
+import { useToast } from "@/hooks/use-toast"
 import {
   Cpu,
   Monitor,
@@ -36,11 +38,14 @@ import {
   Lock,
   FileText,
   Check,
+  History,
+  X,
 } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
@@ -49,7 +54,7 @@ const systemMetrics = {
   cpu: { usage: 42, trend: "+5%", cores: "8 of 12 cores active" },
   gpu: { usage: 67, trend: "+12%", info: "NVIDIA RTX 4090 - 8GB VRAM used" },
   npu: { usage: 34, trend: "Stable", info: "NPU handling AI inference tasks" },
-  memory: { used: 8.2, total: 16, trend: "51% utilized", available: "7.8GB available" },
+  memory: { used: 8.2, total: 16, trend: "51% utilized", available: "7.8GB available for new agents" },
   idle: { value: 49, trend: "Sufficient headroom", info: "New agents will run without queuing" },
 }
 
@@ -91,13 +96,13 @@ const permissionData = [
 ]
 
 // Circular Progress Component
-function CircularProgress({ value, color = "#ee3224", size = 48, glow = false }: { value: number; color?: string; size?: number; glow?: boolean }) {
+function CircularProgress({ value, color = "#ee3224", size = 48 }: { value: number; color?: string; size?: number }) {
   const radius = (size - 8) / 2
   const circumference = 2 * Math.PI * radius
   const strokeDashoffset = circumference - (value / 100) * circumference
 
   return (
-    <svg width={size} height={size} className={glow ? "drop-shadow-[0_0_6px_rgba(238,50,36,0.5)]" : ""}>
+    <svg width={size} height={size}>
       <circle
         cx={size / 2}
         cy={size / 2}
@@ -117,6 +122,34 @@ function CircularProgress({ value, color = "#ee3224", size = 48, glow = false }:
         strokeDasharray={circumference}
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(-90 ${size / 2} ${size / 2})`}
+      />
+    </svg>
+  )
+}
+
+// Mini Sparkline Component
+function MiniSparkline({ data }: { data: number[] }) {
+  const max = Math.max(...data)
+  const min = Math.min(...data)
+  const range = max - min || 1
+  const width = 40
+  const height = 16
+  
+  const points = data.map((val, i) => {
+    const x = (i / (data.length - 1)) * width
+    const y = height - ((val - min) / range) * height
+    return `${x},${y}`
+  }).join(' ')
+
+  return (
+    <svg width={width} height={height} className="inline-block ml-2">
+      <polyline
+        points={points}
+        fill="none"
+        stroke="#ee3224"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   )
@@ -162,6 +195,7 @@ function getUsageColor(value: number): string {
 }
 
 export default function ExecutionControlPage() {
+  const { toast } = useToast()
   const [executionMode, setExecutionMode] = useState("balanced")
   const [autoOptimize, setAutoOptimize] = useState(true)
   const [advancedMode, setAdvancedMode] = useState(false)
@@ -171,9 +205,29 @@ export default function ExecutionControlPage() {
   const [lastUpdated, setLastUpdated] = useState(5)
   const [npuMode, setNpuMode] = useState("auto")
   const [executionStrategy, setExecutionStrategy] = useState("local")
-  const [permissionPreset, setPermissionPreset] = useState("custom")
+  const [permissionPreset, setPermissionPreset] = useState("standard")
+  const [selectedAgents, setSelectedAgents] = useState<number[]>([])
+  const [showAppliedInsights, setShowAppliedInsights] = useState(false)
   
-  // Filter agents based on status
+  // Load advanced mode preference from localStorage
+  useEffect(() => {
+    const savedAdvancedMode = localStorage.getItem("advancedMode")
+    if (savedAdvancedMode !== null) {
+      setAdvancedMode(savedAdvancedMode === "true")
+    }
+  }, [])
+  
+  // Save advanced mode preference to localStorage
+  const handleAdvancedModeToggle = (checked: boolean) => {
+    setAdvancedMode(checked)
+    localStorage.setItem("advancedMode", String(checked))
+    toast({
+      title: checked ? "Advanced Mode enabled" : "Advanced Mode disabled",
+      description: checked ? "All advanced controls are now visible" : "Showing simplified view",
+    })
+  }
+  
+  // Filter agents based on status (different options in basic vs advanced mode)
   const filteredAgents = activeAgents.filter(agent => {
     if (statusFilter !== "all" && agent.status !== statusFilter) return false
     if (searchQuery && !agent.name.toLowerCase().includes(searchQuery.toLowerCase())) return false
@@ -184,10 +238,44 @@ export default function ExecutionControlPage() {
     setLastUpdated(0)
     setTimeout(() => setLastUpdated(5), 1000)
   }
+  
+  const handlePresetClick = (preset: string) => {
+    setExecutionMode(preset)
+    toast({
+      title: "Resources rebalanced",
+      description: `Applied ${preset} preset to all agents`,
+    })
+  }
+  
+  const toggleAgentSelection = (agentId: number) => {
+    setSelectedAgents(prev => 
+      prev.includes(agentId) 
+        ? prev.filter(id => id !== agentId)
+        : [...prev, agentId]
+    )
+  }
+  
+  const toggleAllAgents = () => {
+    if (selectedAgents.length === filteredAgents.length) {
+      setSelectedAgents([])
+    } else {
+      setSelectedAgents(filteredAgents.map(a => a.id))
+    }
+  }
+
+  // Mock sparkline data for each agent
+  const sparklineData: Record<number, number[]> = {
+    1: [12, 15, 18, 14, 15],
+    2: [8, 12, 15, 11, 12],
+    3: [5, 8, 10, 7, 8],
+    4: [2, 3, 2, 1, 2],
+    5: [0, 0, 0, 0, 0],
+    6: [35, 42, 48, 44, 45],
+  }
 
   return (
     <AppLayout>
-      <TooltipProvider>
+      <TooltipProvider delayDuration={500}>
         <div className="space-y-8 p-6">
           {/* Page Header */}
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -255,20 +343,28 @@ export default function ExecutionControlPage() {
               {/* Advanced Mode Toggle */}
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-[#6B7280]">Advanced Mode</label>
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={advancedMode}
-                    onCheckedChange={setAdvancedMode}
-                    className="data-[state=checked]:bg-[#ee3224]"
-                  />
-                  <span className="text-sm text-[#333]">{advancedMode ? "ON" : "OFF"}</span>
-                </div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={advancedMode}
+                        onCheckedChange={handleAdvancedModeToggle}
+                        className="data-[state=checked]:bg-[#ee3224] w-11 h-6 transition-colors duration-200"
+                        aria-label="Advanced Mode"
+                      />
+                      <span className="text-sm text-[#333]">{advancedMode ? "ON" : "OFF"}</span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-[#1F2937] text-white rounded">
+                    Show advanced controls for fine-tuning
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </div>
           </div>
 
           {/* Section A: System Overview */}
-          <section>
+          <section aria-hidden={false}>
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-[#1F2937]">System Overview</h2>
@@ -299,12 +395,16 @@ export default function ExecutionControlPage() {
                         <span>↑</span> {systemMetrics.cpu.trend} vs last min
                       </p>
                     </div>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <CircularProgress value={systemMetrics.cpu.usage} />
-                      </TooltipTrigger>
-                      <TooltipContent>{systemMetrics.cpu.cores}</TooltipContent>
-                    </Tooltip>
+                    {advancedMode ? (
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <CircularProgress value={systemMetrics.cpu.usage} />
+                        </TooltipTrigger>
+                        <TooltipContent>{systemMetrics.cpu.cores}</TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <CircularProgress value={systemMetrics.cpu.usage} />
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -323,12 +423,16 @@ export default function ExecutionControlPage() {
                         <span>↑</span> {systemMetrics.gpu.trend} vs last min
                       </p>
                     </div>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <CircularProgress value={systemMetrics.gpu.usage} />
-                      </TooltipTrigger>
-                      <TooltipContent>{systemMetrics.gpu.info}</TooltipContent>
-                    </Tooltip>
+                    {advancedMode ? (
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <CircularProgress value={systemMetrics.gpu.usage} />
+                        </TooltipTrigger>
+                        <TooltipContent>{systemMetrics.gpu.info}</TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <CircularProgress value={systemMetrics.gpu.usage} />
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -347,12 +451,16 @@ export default function ExecutionControlPage() {
                         <span>●</span> AI Acceleration Active
                       </p>
                     </div>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <CircularProgress value={systemMetrics.npu.usage} />
-                      </TooltipTrigger>
-                      <TooltipContent>{systemMetrics.npu.info}</TooltipContent>
-                    </Tooltip>
+                    {advancedMode ? (
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <CircularProgress value={systemMetrics.npu.usage} />
+                        </TooltipTrigger>
+                        <TooltipContent>{systemMetrics.npu.info}</TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <CircularProgress value={systemMetrics.npu.usage} />
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -368,17 +476,26 @@ export default function ExecutionControlPage() {
                       </div>
                       <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.memory.used}GB / {systemMetrics.memory.total}GB</p>
                       <p className="text-xs text-[#6B7280] mt-1">{systemMetrics.memory.trend}</p>
-                      <Tooltip>
-                        <TooltipTrigger className="w-full">
-                          <div className="mt-2 h-2 w-full bg-[#E5E7EB] rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-[#ee3224] rounded-full transition-all"
-                              style={{ width: `${(systemMetrics.memory.used / systemMetrics.memory.total) * 100}%` }}
-                            />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>{systemMetrics.memory.available}</TooltipContent>
-                      </Tooltip>
+                      {advancedMode ? (
+                        <Tooltip>
+                          <TooltipTrigger className="w-full">
+                            <div className="mt-2 h-2 w-full bg-[#E5E7EB] rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-[#ee3224] rounded-full transition-all"
+                                style={{ width: `${(systemMetrics.memory.used / systemMetrics.memory.total) * 100}%` }}
+                              />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>{systemMetrics.memory.available}</TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        <div className="mt-2 h-2 w-full bg-[#E5E7EB] rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-[#ee3224] rounded-full transition-all"
+                            style={{ width: `${(systemMetrics.memory.used / systemMetrics.memory.total) * 100}%` }}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -396,12 +513,16 @@ export default function ExecutionControlPage() {
                       <p className="text-2xl font-bold text-[#22C55E]">{systemMetrics.idle.value}%</p>
                       <p className="text-xs text-[#22C55E] mt-1">{systemMetrics.idle.trend}</p>
                     </div>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <CircularProgress value={systemMetrics.idle.value} color="#22C55E" />
-                      </TooltipTrigger>
-                      <TooltipContent>{systemMetrics.idle.info}</TooltipContent>
-                    </Tooltip>
+                    {advancedMode ? (
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <CircularProgress value={systemMetrics.idle.value} color="#22C55E" />
+                        </TooltipTrigger>
+                        <TooltipContent>{systemMetrics.idle.info}</TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <CircularProgress value={systemMetrics.idle.value} color="#22C55E" />
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -415,8 +536,15 @@ export default function ExecutionControlPage() {
                   {allocationSegments.map((segment, idx) => (
                     <Tooltip key={idx}>
                       <TooltipTrigger 
-                        className="h-full transition-opacity hover:opacity-80"
+                        className={`h-full transition-opacity hover:opacity-80 ${advancedMode ? "cursor-pointer" : ""}`}
                         style={{ width: `${segment.percentage}%`, backgroundColor: segment.color }}
+                        onClick={() => {
+                          if (advancedMode) {
+                            // Scroll to agent in table
+                            const element = document.getElementById(`agent-row-${idx + 1}`)
+                            element?.scrollIntoView({ behavior: "smooth", block: "center" })
+                          }
+                        }}
                       />
                       <TooltipContent>{segment.name}: {segment.percentage}%</TooltipContent>
                     </Tooltip>
@@ -435,7 +563,7 @@ export default function ExecutionControlPage() {
           </section>
 
           {/* Section B: Active Agents */}
-          <section>
+          <section aria-hidden={false}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-[#1F2937]">Active Agents</h2>
@@ -459,12 +587,19 @@ export default function ExecutionControlPage() {
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="running">Running</SelectItem>
                     <SelectItem value="idle">Idle</SelectItem>
-                    <SelectItem value="paused">Paused</SelectItem>
+                    {advancedMode && (
+                      <>
+                        <SelectItem value="paused">Paused</SelectItem>
+                        <SelectItem value="overloaded">Overloaded</SelectItem>
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
-                <Button variant="outline" className="border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/10" disabled>
-                  Pause Selected
-                </Button>
+                {advancedMode && selectedAgents.length > 0 && (
+                  <Button variant="outline" className="border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/10">
+                    Pause Selected ({selectedAgents.length})
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -472,11 +607,23 @@ export default function ExecutionControlPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[#F5F7FA]">
+                    {advancedMode && (
+                      <TableHead className="w-10">
+                        <Checkbox 
+                          checked={selectedAgents.length === filteredAgents.length && filteredAgents.length > 0}
+                          onCheckedChange={toggleAllAgents}
+                        />
+                      </TableHead>
+                    )}
                     <TableHead className="font-semibold text-[#333]">Agent Name</TableHead>
                     <TableHead className="font-semibold text-[#333]">Status</TableHead>
-                    <TableHead className="font-semibold text-[#333]">CPU %</TableHead>
-                    <TableHead className="font-semibold text-[#333]">GPU %</TableHead>
-                    <TableHead className="font-semibold text-[#333] bg-[#FEF2F2]/50">NPU %</TableHead>
+                    {advancedMode && (
+                      <>
+                        <TableHead className="font-semibold text-[#333]">CPU %</TableHead>
+                        <TableHead className="font-semibold text-[#333]">GPU %</TableHead>
+                        <TableHead className="font-semibold text-[#333] bg-[#FEF2F2]/50">NPU %</TableHead>
+                      </>
+                    )}
                     <TableHead className="font-semibold text-[#333]">Priority</TableHead>
                     <TableHead className="font-semibold text-[#333]">Last Activity</TableHead>
                     <TableHead className="w-12"></TableHead>
@@ -484,7 +631,15 @@ export default function ExecutionControlPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredAgents.map((agent) => (
-                    <TableRow key={agent.id} className="hover:bg-[#F5F7FA] h-16">
+                    <TableRow key={agent.id} id={`agent-row-${agent.id}`} className="hover:bg-[#F5F7FA] h-16">
+                      {advancedMode && (
+                        <TableCell>
+                          <Checkbox 
+                            checked={selectedAgents.includes(agent.id)}
+                            onCheckedChange={() => toggleAgentSelection(agent.id)}
+                          />
+                        </TableCell>
+                      )}
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div className="h-8 w-8 rounded-lg bg-[#ee3224]/10 flex items-center justify-center">
@@ -494,9 +649,22 @@ export default function ExecutionControlPage() {
                         </div>
                       </TableCell>
                       <TableCell><StatusBadge status={agent.status} /></TableCell>
-                      <TableCell className={getUsageColor(agent.cpu)}>{agent.cpu}%</TableCell>
-                      <TableCell className={getUsageColor(agent.gpu)}>{agent.gpu}%</TableCell>
-                      <TableCell className={`${getUsageColor(agent.npu)} bg-[#FEF2F2]/30`}>{agent.npu}%</TableCell>
+                      {advancedMode && (
+                        <>
+                          <TableCell className={getUsageColor(agent.cpu)}>
+                            {agent.cpu}%
+                            <MiniSparkline data={sparklineData[agent.id]} />
+                          </TableCell>
+                          <TableCell className={getUsageColor(agent.gpu)}>
+                            {agent.gpu}%
+                            <MiniSparkline data={sparklineData[agent.id].map(v => v * 1.5)} />
+                          </TableCell>
+                          <TableCell className={`${getUsageColor(agent.npu)} bg-[#FEF2F2]/30`}>
+                            {agent.npu}%
+                            <MiniSparkline data={sparklineData[agent.id].map(v => v * 2)} />
+                          </TableCell>
+                        </>
+                      )}
                       <TableCell><PriorityBadge priority={agent.priority} /></TableCell>
                       <TableCell className="text-[#6B7280] text-sm">{agent.lastActivity}</TableCell>
                       <TableCell>
@@ -512,9 +680,16 @@ export default function ExecutionControlPage() {
                             ) : (
                               <DropdownMenuItem><Play className="h-4 w-4 mr-2" /> Resume Agent</DropdownMenuItem>
                             )}
-                            <DropdownMenuItem><Sliders className="h-4 w-4 mr-2" /> Limit Resources</DropdownMenuItem>
                             <DropdownMenuItem><Eye className="h-4 w-4 mr-2" /> View Details</DropdownMenuItem>
-                            <DropdownMenuItem className="text-[#ee3224]"><Square className="h-4 w-4 mr-2" /> Stop Agent</DropdownMenuItem>
+                            {advancedMode && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem><Sliders className="h-4 w-4 mr-2" /> Limit Resources</DropdownMenuItem>
+                                <DropdownMenuItem><Scale className="h-4 w-4 mr-2" /> Change Priority</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-[#ee3224]"><Square className="h-4 w-4 mr-2" /> Stop Agent</DropdownMenuItem>
+                              </>
+                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -532,30 +707,28 @@ export default function ExecutionControlPage() {
             </Card>
           </section>
 
-          {/* Section C: Resource Allocation (Advanced Mode Only shows sliders) */}
-          <section>
+          {/* Section C: Resource Allocation */}
+          <section aria-hidden={false}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-[#1F2937]">Resource Allocation</h2>
                 <p className="text-sm text-[#6B7280]">Set resource limits for each agent</p>
               </div>
-              {advancedMode && (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={autoScaling}
-                      onCheckedChange={setAutoScaling}
-                      className="data-[state=checked]:bg-[#ee3224]"
-                    />
-                    <span className="text-sm text-[#333]">Enable Auto-Scaling</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className={executionMode === "balanced" ? "border-[#ee3224] text-[#ee3224]" : ""}>Balanced</Button>
-                    <Button variant="outline" size="sm" className={executionMode === "performance" ? "border-[#ee3224] text-[#ee3224]" : ""}>Performance</Button>
-                    <Button variant="outline" size="sm" className={executionMode === "efficiency" ? "border-[#ee3224] text-[#ee3224]" : ""}>Efficiency</Button>
-                  </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={autoScaling}
+                    onCheckedChange={setAutoScaling}
+                    className="data-[state=checked]:bg-[#ee3224]"
+                  />
+                  <span className="text-sm text-[#333]">Auto-Scaling</span>
                 </div>
-              )}
+                {advancedMode && (
+                  <div className="text-xs text-[#6B7280]">
+                    12 cores available | 24GB VRAM
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="grid gap-4 lg:grid-cols-2">
@@ -597,9 +770,30 @@ export default function ExecutionControlPage() {
                       </div>
                     ) : (
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1">Balanced</Button>
-                        <Button variant="outline" size="sm" className="flex-1">Performance</Button>
-                        <Button variant="outline" size="sm" className="flex-1">Efficiency</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className={`flex-1 ${executionMode === "balanced" ? "border-[#ee3224] text-[#ee3224]" : ""}`}
+                          onClick={() => handlePresetClick("balanced")}
+                        >
+                          Balanced
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className={`flex-1 ${executionMode === "performance" ? "border-[#ee3224] text-[#ee3224]" : ""}`}
+                          onClick={() => handlePresetClick("performance")}
+                        >
+                          Performance
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className={`flex-1 ${executionMode === "efficiency" ? "border-[#ee3224] text-[#ee3224]" : ""}`}
+                          onClick={() => handlePresetClick("efficiency")}
+                        >
+                          Efficiency
+                        </Button>
                       </div>
                     )}
                   </CardContent>
@@ -609,7 +803,7 @@ export default function ExecutionControlPage() {
           </section>
 
           {/* Section D: Hardware Access & Permissions */}
-          <section>
+          <section aria-hidden={false}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-[#1F2937]">Hardware Access & Permissions</h2>
@@ -624,13 +818,15 @@ export default function ExecutionControlPage() {
                     <SelectItem value="full">Full Access</SelectItem>
                     <SelectItem value="standard">Standard</SelectItem>
                     <SelectItem value="restricted">Restricted</SelectItem>
-                    <SelectItem value="custom">Custom</SelectItem>
+                    {advancedMode && <SelectItem value="custom">Custom</SelectItem>}
                   </SelectContent>
                 </Select>
-                <Button variant="outline" className="border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/10 gap-2">
-                  <FileText className="h-4 w-4" />
-                  Export Audit Log
-                </Button>
+                {advancedMode && (
+                  <Button variant="outline" className="border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/10 gap-2">
+                    <FileText className="h-4 w-4" />
+                    Export Audit Log
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -641,13 +837,23 @@ export default function ExecutionControlPage() {
                     <TableHead className="font-semibold text-[#333]">Agent Name</TableHead>
                     <TableHead className="font-semibold text-[#333] text-center">CPU Access</TableHead>
                     <TableHead className="font-semibold text-[#333] text-center">GPU Access</TableHead>
-                    <TableHead className="font-semibold text-[#333] text-center bg-[#FEF2F2]/50">NPU Access</TableHead>
+                    {advancedMode && (
+                      <TableHead className="font-semibold text-[#333] text-center bg-[#FEF2F2]/50">NPU Access</TableHead>
+                    )}
                     {advancedMode && (
                       <>
                         <TableHead className="font-semibold text-[#333] text-center">Local Files</TableHead>
                         <TableHead className="font-semibold text-[#333] text-center">Network</TableHead>
-                        <TableHead className="font-semibold text-[#333] text-center">Camera/Mic</TableHead>
+                        <TableHead className="font-semibold text-[#333] text-center">
+                          <div className="flex items-center justify-center gap-1">
+                            Camera/Mic
+                            <button className="text-[#ee3224] text-[10px] hover:underline">View Access Log</button>
+                          </div>
+                        </TableHead>
                       </>
+                    )}
+                    {!advancedMode && (
+                      <TableHead className="font-semibold text-[#333] text-center">Network</TableHead>
                     )}
                   </TableRow>
                 </TableHeader>
@@ -661,14 +867,34 @@ export default function ExecutionControlPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Switch checked={agent.cpu} className="data-[state=checked]:bg-[#ee3224]" />
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Switch checked={agent.cpu} className="data-[state=checked]:bg-[#ee3224]" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {advancedMode 
+                              ? "CPU access enables general computation and logic processing"
+                              : "This allows the agent to use CPU"}
+                          </TooltipContent>
+                        </Tooltip>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {advancedMode 
+                              ? "GPU access enables faster AI inference for image processing tasks"
+                              : "This allows the agent to use GPU"}
+                          </TooltipContent>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell className="text-center bg-[#FEF2F2]/30">
-                        <Switch checked={agent.npu} className="data-[state=checked]:bg-[#ee3224]" />
-                      </TableCell>
+                      {advancedMode && (
+                        <TableCell className="text-center bg-[#FEF2F2]/30">
+                          <Switch checked={agent.npu} className="data-[state=checked]:bg-[#ee3224]" />
+                        </TableCell>
+                      )}
                       {advancedMode && (
                         <>
                           <TableCell className="text-center">
@@ -680,10 +906,22 @@ export default function ExecutionControlPage() {
                           <TableCell className="text-center">
                             <div className="flex items-center justify-center gap-1">
                               <Switch checked={agent.camera} className="data-[state=checked]:bg-[#ee3224]" />
-                              {!agent.camera && <Lock className="h-3 w-3 text-[#6B7280]" />}
+                              {!agent.camera && (
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <Lock className="h-3 w-3 text-[#6B7280] cursor-pointer" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>Camera/Mic access restricted by admin policy</TooltipContent>
+                                </Tooltip>
+                              )}
                             </div>
                           </TableCell>
                         </>
+                      )}
+                      {!advancedMode && (
+                        <TableCell className="text-center">
+                          <Switch checked={agent.network} className="data-[state=checked]:bg-[#ee3224]" />
+                        </TableCell>
                       )}
                     </TableRow>
                   ))}
@@ -693,19 +931,28 @@ export default function ExecutionControlPage() {
           </section>
 
           {/* Section E: AI Optimization Insights */}
-          <section>
+          <section aria-hidden={false}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-[#1F2937]">AI Optimization Insights</h2>
                 <p className="text-sm text-[#6B7280]">AI-powered suggestions to improve performance and efficiency</p>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Switch className="data-[state=checked]:bg-[#ee3224]" />
-                  <span className="text-sm text-[#333]">Show Applied Insights</span>
+              {advancedMode && (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Switch 
+                      checked={showAppliedInsights}
+                      onCheckedChange={setShowAppliedInsights}
+                      className="data-[state=checked]:bg-[#ee3224]" 
+                    />
+                    <span className="text-sm text-[#333]">Show Applied Insights</span>
+                  </div>
+                  <button className="flex items-center gap-1 text-sm text-[#ee3224] hover:underline">
+                    <History className="h-4 w-4" />
+                    View History
+                  </button>
                 </div>
-                <button className="text-sm text-[#ee3224] hover:underline">View History</button>
-              </div>
+              )}
             </div>
 
             <div className="grid gap-4 lg:grid-cols-3">
@@ -719,9 +966,20 @@ export default function ExecutionControlPage() {
                     <Badge className="bg-[#22C55E] text-white text-[10px]">High Impact</Badge>
                   </div>
                   <h4 className="font-semibold text-[#1F2937] mb-2">Optimization Suggestion</h4>
-                  <p className="text-sm text-[#333] mb-4">Move &apos;Sales Agent&apos; to NPU to reduce latency by 18%</p>
-                  <Button className="w-full bg-[#ee3224] hover:bg-[#cc2a1e] h-10">Apply Suggestion</Button>
-                  <button className="w-full mt-2 text-xs text-[#6B7280] hover:text-[#ee3224]">Learn More</button>
+                  <p className="text-sm text-[#333] mb-2">Move &apos;Sales Agent&apos; to NPU to reduce latency by 18%</p>
+                  <p className="text-xs text-[#6B7280] mb-4">
+                    {advancedMode 
+                      ? "NPU inference reduces CPU load by 40% while maintaining accuracy. Estimated latency improvement: 180ms → 147ms."
+                      : "This will make your agent faster."}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button className="flex-1 bg-[#ee3224] hover:bg-[#cc2a1e] h-10">Apply Suggestion</Button>
+                    {advancedMode && (
+                      <Button variant="outline" size="icon" className="h-10 w-10">
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
 
@@ -735,9 +993,20 @@ export default function ExecutionControlPage() {
                     <Badge className="bg-[#F59E0B] text-white text-[10px]">Medium Impact</Badge>
                   </div>
                   <h4 className="font-semibold text-[#1F2937] mb-2">Resource Conflict</h4>
-                  <p className="text-sm text-[#333] mb-4">2 agents competing for GPU resources</p>
-                  <Button variant="outline" className="w-full border-[#F59E0B] text-[#F59E0B] hover:bg-[#F59E0B]/10 h-10">Resolve Automatically</Button>
-                  <button className="w-full mt-2 text-xs text-[#6B7280] hover:text-[#ee3224]">View Details</button>
+                  <p className="text-sm text-[#333] mb-2">2 agents competing for GPU resources</p>
+                  <p className="text-xs text-[#6B7280] mb-4">
+                    {advancedMode 
+                      ? "Briefly AI and LocalLens AI are both requesting >40% GPU. Consider time-slicing or priority adjustment."
+                      : "Some agents need the same resources."}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button variant="outline" className="flex-1 border-[#F59E0B] text-[#F59E0B] hover:bg-[#F59E0B]/10 h-10">Resolve Automatically</Button>
+                    {advancedMode && (
+                      <Button variant="outline" size="icon" className="h-10 w-10">
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
 
@@ -751,112 +1020,130 @@ export default function ExecutionControlPage() {
                     <Badge className="bg-[#3B82F6] text-white text-[10px]">Low Impact</Badge>
                   </div>
                   <h4 className="font-semibold text-[#1F2937] mb-2">Efficiency Tip</h4>
-                  <p className="text-sm text-[#333] mb-4">Idle agent consuming unnecessary CPU resources</p>
-                  <Button variant="outline" className="w-full border-[#3B82F6] text-[#3B82F6] hover:bg-[#3B82F6]/10 h-10">Auto-Pause</Button>
-                  <button className="w-full mt-2 text-xs text-[#6B7280] hover:text-[#ee3224]">Dismiss</button>
+                  <p className="text-sm text-[#333] mb-2">Idle agent consuming unnecessary CPU resources</p>
+                  <p className="text-xs text-[#6B7280] mb-4">
+                    {advancedMode 
+                      ? "Research Assistant has been idle for 1 hour but maintaining 2% CPU. Auto-pause would save ~0.5W power."
+                      : "An idle agent is using resources."}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button variant="outline" className="flex-1 border-[#3B82F6] text-[#3B82F6] hover:bg-[#3B82F6]/10 h-10">Auto-Pause</Button>
+                    {advancedMode && (
+                      <Button variant="outline" size="icon" className="h-10 w-10">
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </div>
           </section>
 
           {/* Section F: Execution Strategy (Advanced Mode Only) */}
-          {advancedMode && (
-            <section>
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
-                <div>
-                  <h2 className="text-lg font-semibold text-[#1F2937]">Execution Strategy</h2>
-                  <p className="text-sm text-[#6B7280]">Configure where and how agents execute</p>
-                  <p className="text-xs text-[#6B7280] italic mt-1">Local-first execution enabled. Cloud integration coming soon.</p>
-                </div>
+          <section 
+            className={`transition-all duration-200 ${advancedMode ? "opacity-100" : "hidden"}`}
+            aria-hidden={!advancedMode}
+          >
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-[#1F2937]">Execution Strategy</h2>
+                <p className="text-sm text-[#6B7280]">Configure where and how agents execute</p>
+                <p className="text-xs text-[#6B7280] italic mt-1">Local-first execution enabled. Cloud integration coming soon.</p>
               </div>
+            </div>
 
-              <div className="grid gap-4 lg:grid-cols-3 mb-6">
-                {/* Run Locally */}
-                <Card 
-                  className={`cursor-pointer transition-all ${executionStrategy === "local" ? "border-[#ee3224] shadow-md" : "hover:shadow-md"}`}
-                  onClick={() => setExecutionStrategy("local")}
-                >
-                  <CardContent className="p-5 text-center">
-                    <div className="flex justify-center mb-3">
-                      <Computer className={`h-10 w-10 ${executionStrategy === "local" ? "text-[#ee3224]" : "text-[#6B7280]"}`} />
-                    </div>
-                    <h4 className="font-semibold text-[#1F2937] mb-1">Run Locally</h4>
-                    <p className="text-sm text-[#6B7280] mb-3">All agents execute on this AI PC</p>
-                    {executionStrategy === "local" && (
-                      <Badge className="bg-[#22C55E] text-white">Active</Badge>
-                    )}
-                    <div className="mt-3 flex justify-center">
-                      <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${executionStrategy === "local" ? "border-[#ee3224]" : "border-[#E5E7EB]"}`}>
-                        {executionStrategy === "local" && <div className="h-3 w-3 rounded-full bg-[#ee3224]" />}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Run on Cloud */}
-                <Card className="cursor-not-allowed opacity-60">
-                  <CardContent className="p-5 text-center">
-                    <div className="flex justify-center mb-3">
-                      <Cloud className="h-10 w-10 text-[#6B7280]" />
-                    </div>
-                    <h4 className="font-semibold text-[#6B7280] mb-1">Run on Cloud</h4>
-                    <p className="text-sm text-[#9CA3AF] mb-3">Agents execute on cloud infrastructure</p>
-                    <Badge className="bg-[#6B7280] text-white">Coming Soon</Badge>
-                    <div className="mt-3 flex justify-center">
-                      <div className="h-5 w-5 rounded-full border-2 border-[#E5E7EB]" />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Hybrid Mode */}
-                <Card className="cursor-not-allowed opacity-60">
-                  <CardContent className="p-5 text-center">
-                    <div className="flex justify-center mb-3">
-                      <ArrowLeftRight className="h-10 w-10 text-[#6B7280]" />
-                    </div>
-                    <h4 className="font-semibold text-[#6B7280] mb-1">Hybrid Mode</h4>
-                    <p className="text-sm text-[#9CA3AF] mb-3">Smart distribution between local and cloud</p>
-                    <Badge className="bg-[#6B7280] text-white">Coming Soon</Badge>
-                    <div className="mt-3 flex justify-center">
-                      <div className="h-5 w-5 rounded-full border-2 border-[#E5E7EB]" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* NPU Mode Toggle */}
-              <Card>
-                <CardContent className="p-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                      <h4 className="font-medium text-[#333]">NPU Acceleration</h4>
-                      <p className="text-xs text-[#6B7280]">Auto: NPU used when available. Force: Always prioritize NPU.</p>
-                    </div>
-                    <div className="flex rounded-lg overflow-hidden border border-[#E5E7EB]">
-                      <button 
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${npuMode === "off" ? "bg-[#ee3224] text-white" : "bg-white text-[#333] hover:bg-[#F5F7FA]"}`}
-                        onClick={() => setNpuMode("off")}
-                      >
-                        Off
-                      </button>
-                      <button 
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${npuMode === "auto" ? "bg-[#ee3224] text-white" : "bg-white text-[#333] hover:bg-[#F5F7FA]"}`}
-                        onClick={() => setNpuMode("auto")}
-                      >
-                        Auto
-                      </button>
-                      <button 
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${npuMode === "force" ? "bg-[#ee3224] text-white" : "bg-white text-[#333] hover:bg-[#F5F7FA]"}`}
-                        onClick={() => setNpuMode("force")}
-                      >
-                        Force Acceleration
-                      </button>
+            <div className="grid gap-4 lg:grid-cols-3 mb-6">
+              {/* Run Locally */}
+              <Card 
+                className={`cursor-pointer transition-all ${executionStrategy === "local" ? "border-[#ee3224] shadow-md" : "hover:shadow-md"}`}
+                onClick={() => setExecutionStrategy("local")}
+              >
+                <CardContent className="p-5 text-center">
+                  <div className="flex justify-center mb-3">
+                    <Computer className={`h-10 w-10 ${executionStrategy === "local" ? "text-[#ee3224]" : "text-[#6B7280]"}`} />
+                  </div>
+                  <h4 className="font-semibold text-[#1F2937] mb-1">Run Locally</h4>
+                  <p className="text-sm text-[#6B7280] mb-3">All agents execute on this AI PC</p>
+                  {executionStrategy === "local" && (
+                    <Badge className="bg-[#22C55E] text-white">Active</Badge>
+                  )}
+                  <div className="mt-3 flex justify-center">
+                    <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${executionStrategy === "local" ? "border-[#ee3224]" : "border-[#E5E7EB]"}`}>
+                      {executionStrategy === "local" && <div className="h-3 w-3 rounded-full bg-[#ee3224]" />}
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            </section>
-          )}
+
+              {/* Run on Cloud */}
+              <Card 
+                className="cursor-not-allowed opacity-60"
+                onClick={() => toast({ title: "Coming Soon", description: "Cloud execution will be available in a future update." })}
+              >
+                <CardContent className="p-5 text-center">
+                  <div className="flex justify-center mb-3">
+                    <Cloud className="h-10 w-10 text-[#6B7280]" />
+                  </div>
+                  <h4 className="font-semibold text-[#6B7280] mb-1">Run on Cloud</h4>
+                  <p className="text-sm text-[#9CA3AF] mb-3">Agents execute on cloud infrastructure</p>
+                  <Badge className="bg-[#6B7280] text-white">Coming Soon</Badge>
+                  <div className="mt-3 flex justify-center">
+                    <div className="h-5 w-5 rounded-full border-2 border-[#E5E7EB]" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Hybrid Mode */}
+              <Card 
+                className="cursor-not-allowed opacity-60"
+                onClick={() => toast({ title: "Coming Soon", description: "Hybrid mode will be available in a future update." })}
+              >
+                <CardContent className="p-5 text-center">
+                  <div className="flex justify-center mb-3">
+                    <ArrowLeftRight className="h-10 w-10 text-[#6B7280]" />
+                  </div>
+                  <h4 className="font-semibold text-[#6B7280] mb-1">Hybrid Mode</h4>
+                  <p className="text-sm text-[#9CA3AF] mb-3">Smart distribution between local and cloud</p>
+                  <Badge className="bg-[#6B7280] text-white">Coming Soon</Badge>
+                  <div className="mt-3 flex justify-center">
+                    <div className="h-5 w-5 rounded-full border-2 border-[#E5E7EB]" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* NPU Mode Toggle */}
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <h4 className="font-medium text-[#333]">NPU Acceleration</h4>
+                    <p className="text-xs text-[#6B7280]">Auto: NPU used when available. Force: Always prioritize NPU.</p>
+                  </div>
+                  <div className="flex rounded-lg overflow-hidden border border-[#E5E7EB]">
+                    <button 
+                      className={`px-4 py-2 text-sm font-medium transition-colors ${npuMode === "off" ? "bg-[#ee3224] text-white" : "bg-white text-[#333] hover:bg-[#F5F7FA]"}`}
+                      onClick={() => setNpuMode("off")}
+                    >
+                      Off
+                    </button>
+                    <button 
+                      className={`px-4 py-2 text-sm font-medium transition-colors ${npuMode === "auto" ? "bg-[#ee3224] text-white" : "bg-white text-[#333] hover:bg-[#F5F7FA]"}`}
+                      onClick={() => setNpuMode("auto")}
+                    >
+                      Auto
+                    </button>
+                    <button 
+                      className={`px-4 py-2 text-sm font-medium transition-colors ${npuMode === "force" ? "bg-[#ee3224] text-white" : "bg-white text-[#333] hover:bg-[#F5F7FA]"}`}
+                      onClick={() => setNpuMode("force")}
+                    >
+                      Force Acceleration
+                    </button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
         </div>
       </TooltipProvider>
     </AppLayout>
