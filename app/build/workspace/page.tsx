@@ -1310,7 +1310,7 @@ export default function ProjectWorkspacePage() {
   const [showMarketplace, setShowMarketplace] = useState(false)
   const [showInvite, setShowInvite] = useState(false)
   const [chatInput, setChatInput] = useState("")
-  const [chatMessages, setChatMessages] = useState(initialWorkflowChat)
+  const [chatMessages, setChatMessages] = useState(defaultWorkflowChat)
   const [isLoading, setIsLoading] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
   const [showRunSimulation, setShowRunSimulation] = useState(false)
