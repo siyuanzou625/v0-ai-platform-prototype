@@ -898,7 +898,7 @@ export default function MyAppsPage() {
         
         {/* App Launch Modal */}
         <Dialog open={!!selectedApp} onOpenChange={(open) => !open && setSelectedApp(null)}>
-          <DialogContent className="max-w-[900px] h-[80vh] flex flex-col p-0">
+          <DialogContent className="max-w-[900px] h-[80vh] flex flex-col p-0" aria-describedby={undefined}>
             {selectedApp && (
               <>
                 {/* Modal Header */}

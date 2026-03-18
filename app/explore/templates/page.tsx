@@ -834,8 +834,8 @@ export default function TemplatesPage() {
 
         {/* Template Detail Modal */}
         <Dialog open={!!selectedTemplate} onOpenChange={(open) => !open && setSelectedTemplate(null)}>
-          <DialogContent 
-            className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" 
+<DialogContent
+            className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col"
             aria-describedby={undefined}
           >
             <DialogHeader>

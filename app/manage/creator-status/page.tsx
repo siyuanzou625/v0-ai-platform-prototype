@@ -428,7 +428,7 @@ export default function CreatorStatusPage() {
 
           {/* Payout Modal */}
           <Dialog open={payoutModalOpen} onOpenChange={setPayoutModalOpen}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md" aria-describedby={undefined}>
               <DialogHeader>
                 <DialogTitle>Request Payout</DialogTitle>
               </DialogHeader>
@@ -470,7 +470,7 @@ export default function CreatorStatusPage() {
 
           {/* Payout History Modal */}
           <Dialog open={payoutHistoryOpen} onOpenChange={setPayoutHistoryOpen}>
-            <DialogContent className="sm:max-w-3xl">
+            <DialogContent className="sm:max-w-3xl" aria-describedby={undefined}>
               <DialogHeader>
                 <DialogTitle>Payout History</DialogTitle>
               </DialogHeader>
@@ -509,7 +509,7 @@ export default function CreatorStatusPage() {
 
           {/* All Badges Modal */}
           <Dialog open={allBadgesOpen} onOpenChange={setAllBadgesOpen}>
-            <DialogContent className="sm:max-w-4xl max-h-[80vh]">
+            <DialogContent className="sm:max-w-4xl max-h-[80vh]" aria-describedby={undefined}>
               <DialogHeader>
                 <DialogTitle>All Badges ({earnedCount}/{badges.length} Earned)</DialogTitle>
               </DialogHeader>

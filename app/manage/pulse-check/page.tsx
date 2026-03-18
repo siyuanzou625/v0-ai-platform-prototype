@@ -602,7 +602,7 @@ export default function PulsePage() {
 
           {/* Asset Detail Modal */}
           <Dialog open={assetDetailOpen} onOpenChange={setAssetDetailOpen}>
-            <DialogContent className="max-w-5xl max-h-[80vh] overflow-hidden flex flex-col">
+            <DialogContent className="max-w-5xl max-h-[80vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
               <DialogHeader>
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#ee3224]/10">

@@ -519,7 +519,7 @@ export default function ProjectsPage() {
                   New Agent
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-[700px] p-0 overflow-hidden">
+              <DialogContent className="max-w-[700px] p-0 overflow-hidden" aria-describedby={undefined}>
                 {/* Modal Header */}
                 <div className="text-center pt-8 pb-4 px-8">
                   <div className="flex justify-center mb-4">

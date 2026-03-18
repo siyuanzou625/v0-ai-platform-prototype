@@ -1054,7 +1054,7 @@ export default function KnowledgeDetailPage() {
 
         {/* Delete Confirmation Dialog */}
         <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Delete Knowledge Base</DialogTitle>
               <DialogDescription>

@@ -598,7 +598,7 @@ export default function ConnectionsPage() {
 
         {/* Create Connection Modal */}
         <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
-          <DialogContent className="max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogContent className="max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Create New Connection</DialogTitle>
             </DialogHeader>
@@ -921,7 +921,7 @@ export default function ConnectionsPage() {
 
         {/* Connection Detail Modal */}
         <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
-          <DialogContent className="max-w-[900px] w-[95vw] min-w-[600px] max-h-[90vh] h-[85vh] flex flex-col p-0 overflow-hidden">
+          <DialogContent className="max-w-[900px] w-[95vw] min-w-[600px] max-h-[90vh] h-[85vh] flex flex-col p-0 overflow-hidden" aria-describedby={undefined}>
             <DialogTitle className="sr-only">Connection Details</DialogTitle>
             <DialogDescription className="sr-only">View and manage connection settings, usage, and logs</DialogDescription>
             {selectedConnection && (

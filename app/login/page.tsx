@@ -419,7 +419,7 @@ export default function LoginPage() {
 
       {/* Password Recovery Modal */}
       <Dialog open={showForgotPassword} onOpenChange={closeResetModal}>
-        <DialogContent className="sm:max-w-[450px]">
+        <DialogContent className="sm:max-w-[450px]" aria-describedby={undefined}>
           {!resetSent ? (
             <>
               <DialogHeader className="text-center">

@@ -1015,7 +1015,7 @@ export default function NativeAppsDashboardPage() {
 
         {/* App Detail Modal */}
         <Dialog open={showAppDetailModal} onOpenChange={setShowAppDetailModal}>
-          <DialogContent className="max-w-[1200px] max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent className="max-w-[1200px] max-h-[90vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
 <DialogHeader>
                   <div className="flex items-center gap-3">
                   <div>
