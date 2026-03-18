@@ -1302,6 +1302,7 @@ export default function ProjectWorkspacePage() {
   const [buildAIInput, setBuildAIInput] = useState("")
   const [isAITyping, setIsAITyping] = useState(false)
   const [showProgressiveDisclosure, setShowProgressiveDisclosure] = useState(false)
+  const [hasSeenProgressiveDisclosure, setHasSeenProgressiveDisclosure] = useState(false)
   const [targetMode, setTargetMode] = useState<"workflow" | "code">("workflow")
   const [agentSteps, setAgentSteps] = useState(initialSteps)
   const [hasPendingChanges, setHasPendingChanges] = useState(pendingChanges.length > 0)
@@ -1532,8 +1533,12 @@ export default function ProjectWorkspacePage() {
 <button
   onClick={() => {
   if (mode === "build-ai") {
+  if (hasSeenProgressiveDisclosure) {
+  setMode("workflow")
+  } else {
   setTargetMode("workflow")
   setShowProgressiveDisclosure(true)
+  }
   } else {
   setMode("workflow")
   }
@@ -1550,8 +1555,12 @@ export default function ProjectWorkspacePage() {
   <button
   onClick={() => {
   if (mode === "build-ai") {
+  if (hasSeenProgressiveDisclosure) {
+  setMode("code")
+  } else {
   setTargetMode("code")
   setShowProgressiveDisclosure(true)
+  }
   } else {
   setMode("code")
   }
@@ -2818,6 +2827,7 @@ export default function ProjectWorkspacePage() {
               className="w-full bg-[#ee3224] hover:bg-[#cc2a1e]"
               onClick={() => {
                 setShowProgressiveDisclosure(false)
+                setHasSeenProgressiveDisclosure(true)
                 setMode(targetMode)
               }}
             >
