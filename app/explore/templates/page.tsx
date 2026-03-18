@@ -750,7 +750,7 @@ export default function TemplatesPage() {
                     </button>
                   </div>
 
-                  <div className="mb-3 flex flex-wrap gap-2">
+                  <div className="mb-3 flex items-center gap-2">
                     <Badge variant="secondary">{template.category}</Badge>
                     <Badge
                       variant="outline"
@@ -764,6 +764,7 @@ export default function TemplatesPage() {
                     >
                       {template.complexity}
                     </Badge>
+                    <span className="text-xs text-muted-foreground">v{template.version || "1.0.0"}</span>
                   </div>
                   {/* Metrics row with comment count */}
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">

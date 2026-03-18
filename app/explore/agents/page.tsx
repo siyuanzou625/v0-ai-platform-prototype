@@ -844,8 +844,8 @@ export default function ExploreAgentsPage() {
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-lg bg-[#FEF2F2] flex items-center justify-center">
-                            <Bot className="h-5 w-5 text-[#ee3224]" />
+                          <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Bot className="h-6 w-6 text-primary" />
                           </div>
                           <div>
                             <CardTitle className="text-base">
@@ -870,7 +870,7 @@ export default function ExploreAgentsPage() {
                             by {agent.author}
                           </button>
                           {creator?.verified && (
-                            <Badge className="bg-[#22C55E] text-white text-[9px] px-1 py-0 h-4">Verified</Badge>
+                            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">Verified</Badge>
                           )}
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -909,18 +909,16 @@ export default function ExploreAgentsPage() {
                       
                       {/* Category and Version */}
                       <div className="flex items-center gap-2 mt-2">
-                        <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-[#E5E7EB] text-[#6B7280]">
-                          {agent.category}
-                        </Badge>
-                        <span className="text-[10px] text-[#9CA3AF]">{agent.version}</span>
+                        <Badge variant="secondary">{agent.category}</Badge>
+                        <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
                       
                       {/* Stats row */}
-                      <div className="flex items-center gap-3 text-xs text-[#6B7280]">
+                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="flex items-center gap-1">
-                              <Star className="h-3 w-3 text-[#F59E0B] fill-[#F59E0B]" />
+                              <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" />
                               {agent.rating}
                             </span>
                           </TooltipTrigger>
@@ -937,7 +935,7 @@ export default function ExploreAgentsPage() {
                               }}
                               className="flex items-center gap-1 hover:text-[#ee3224] transition-colors"
                             >
-                              <MessageSquare className="h-3 w-3" />
+                              <MessageSquare className="h-3.5 w-3.5" />
                               {agent.commentCount}
                             </button>
                           </TooltipTrigger>
@@ -947,7 +945,7 @@ export default function ExploreAgentsPage() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="flex items-center gap-1">
-                              <Download className="h-3 w-3" />
+                              <Download className="h-3.5 w-3.5" />
                               {agent.downloads}
                             </span>
                           </TooltipTrigger>
@@ -991,8 +989,8 @@ export default function ExploreAgentsPage() {
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-[#F5F7FA] flex items-center justify-center">
-                          <Bot className="h-5 w-5 text-[#6B7280]" />
+                        <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Bot className="h-6 w-6 text-primary" />
                         </div>
                         <div>
                           <CardTitle className="text-base">
@@ -1017,7 +1015,7 @@ export default function ExploreAgentsPage() {
                           by {agent.author}
                         </button>
                         {creator?.verified && (
-                          <Badge className="bg-[#22C55E] text-white text-[9px] px-1 py-0 h-4">Verified</Badge>
+                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">Verified</Badge>
                         )}
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -1056,18 +1054,16 @@ export default function ExploreAgentsPage() {
                     
                     {/* Category and Version */}
                     <div className="flex items-center gap-2 mt-2">
-                      <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-[#E5E7EB] text-[#6B7280]">
-                        {agent.category}
-                      </Badge>
-                      <span className="text-[10px] text-[#9CA3AF]">{agent.version}</span>
+                      <Badge variant="secondary">{agent.category}</Badge>
+                      <span className="text-xs text-muted-foreground">{agent.version}</span>
                     </div>
                     
                     {/* Stats row */}
-                    <div className="flex items-center gap-3 text-xs text-[#6B7280]">
+                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3 w-3 text-[#F59E0B] fill-[#F59E0B]" />
+                            <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" />
                             {agent.rating}
                           </span>
                         </TooltipTrigger>
@@ -1084,7 +1080,7 @@ export default function ExploreAgentsPage() {
                             }}
                             className="flex items-center gap-1 hover:text-[#ee3224] transition-colors"
                           >
-                            <MessageSquare className="h-3 w-3" />
+                            <MessageSquare className="h-3.5 w-3.5" />
                             {agent.commentCount}
                           </button>
                         </TooltipTrigger>
@@ -1094,7 +1090,7 @@ export default function ExploreAgentsPage() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-1">
-                            <Download className="h-3 w-3" />
+                            <Download className="h-3.5 w-3.5" />
                             {agent.downloads}
                           </span>
                         </TooltipTrigger>
