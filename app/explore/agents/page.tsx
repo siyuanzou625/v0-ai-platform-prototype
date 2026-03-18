@@ -1126,11 +1126,8 @@ export default function ExploreAgentsPage() {
                     <Bot className="h-7 w-7 text-[#ee3224]" />
                   </div>
                   <div>
-                    <DialogTitle className="text-xl flex items-center gap-2">
+                    <DialogTitle className="text-xl">
                       {selectedAgent?.name}
-                      {selectedAgent?.verified && (
-                        <CheckCircle className="h-5 w-5 text-[#22C55E] fill-[#22C55E]" />
-                      )}
                     </DialogTitle>
                     <DialogDescription>{selectedAgent?.description}</DialogDescription>
                     <div className="flex items-center gap-2 mt-1 text-sm text-[#6B7280]">
