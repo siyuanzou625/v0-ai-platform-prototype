@@ -836,9 +836,22 @@ export default function ExploreAgentsPage() {
                             </CardTitle>
                           </div>
                         </div>
-                        <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
-                          {agent.price}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
+                            {agent.price}
+                          </Badge>
+                          <Button 
+                            size="sm" 
+                            className="bg-[#ee3224] hover:bg-[#cc2a1e] h-7 text-xs"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setSelectedAgent(agent)
+                              setActiveTab("overview")
+                            }}
+                          >
+                            Install <ArrowRight className="ml-1 h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                       <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
                     </CardHeader>
@@ -966,9 +979,22 @@ export default function ExploreAgentsPage() {
                           </CardTitle>
                         </div>
                       </div>
-                      <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
-                        {agent.price}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
+                          {agent.price}
+                        </Badge>
+                        <Button 
+                          size="sm" 
+                          className="bg-[#ee3224] hover:bg-[#cc2a1e] h-7 text-xs"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setSelectedAgent(agent)
+                            setActiveTab("overview")
+                          }}
+                        >
+                          Install <ArrowRight className="ml-1 h-3 w-3" />
+                        </Button>
+                      </div>
                     </div>
                     <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
                   </CardHeader>
@@ -1066,7 +1092,7 @@ export default function ExploreAgentsPage() {
           </div>
         </div>
 
-        {/* Agent Detail Modal */}
+{/* Agent Detail Modal */}
         <Dialog open={!!selectedAgent} onOpenChange={() => setSelectedAgent(null)}>
           <DialogContent 
             className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" 
