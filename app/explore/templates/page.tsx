@@ -765,16 +765,6 @@ export default function TemplatesPage() {
                       {template.complexity}
                     </Badge>
                   </div>
-                  <div className="mb-3 space-y-1 text-xs text-muted-foreground">
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1">
-                        <Zap className="h-3 w-3" /> {template.components} components
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" /> {template.estimatedTime}
-                      </span>
-                    </div>
-                  </div>
                   {/* Metrics row with comment count */}
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">
                     <Tooltip>
@@ -844,7 +834,7 @@ export default function TemplatesPage() {
 
         {/* Template Detail Modal */}
         <Dialog open={!!selectedTemplate} onOpenChange={(open) => !open && setSelectedTemplate(null)}>
-          <DialogContent 
+<DialogContent 
             className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" 
             aria-describedby={undefined}
           >
