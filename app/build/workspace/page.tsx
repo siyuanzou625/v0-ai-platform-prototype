@@ -1302,7 +1302,9 @@ export default function ProjectWorkspacePage() {
   const [buildAIInput, setBuildAIInput] = useState("")
   const [isAITyping, setIsAITyping] = useState(false)
   const [showProgressiveDisclosure, setShowProgressiveDisclosure] = useState(false)
-  const [hasSeenProgressiveDisclosure, setHasSeenProgressiveDisclosure] = useState(false)
+  // If user starts in workflow or code mode (not build-ai), they already know those modes
+  const startedInBuildAI = urlMode === "build-ai" || (projectId === "new" && templateId)
+  const [hasSeenProgressiveDisclosure, setHasSeenProgressiveDisclosure] = useState(!startedInBuildAI)
   const [targetMode, setTargetMode] = useState<"workflow" | "code">("workflow")
   const [agentSteps, setAgentSteps] = useState(initialSteps)
   const [hasPendingChanges, setHasPendingChanges] = useState(pendingChanges.length > 0)
