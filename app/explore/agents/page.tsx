@@ -961,11 +961,8 @@ export default function ExploreAgentsPage() {
                           <Bot className="h-5 w-5 text-[#6B7280]" />
                         </div>
                         <div>
-                          <CardTitle className="text-base flex items-center gap-1">
+                          <CardTitle className="text-base">
                             {agent.name}
-                            {agent.verified && (
-                              <CheckCircle className="h-4 w-4 text-[#22C55E] fill-[#22C55E]" />
-                            )}
                           </CardTitle>
                         </div>
                       </div>
