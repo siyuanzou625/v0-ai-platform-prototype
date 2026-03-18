@@ -844,7 +844,7 @@ export default function TemplatesPage() {
 
         {/* Template Detail Modal */}
         <Dialog open={!!selectedTemplate} onOpenChange={(open) => !open && setSelectedTemplate(null)}>
-          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}
+          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
             <DialogHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
@@ -1158,7 +1158,7 @@ export default function TemplatesPage() {
 
         {/* Creator Profile Modal */}
         <Dialog open={showCreatorModal} onOpenChange={setShowCreatorModal}>
-          <DialogContent className="max-w-2xl" aria-describedby={undefined}
+          <DialogContent className="max-w-2xl" aria-describedby={undefined}>
             <DialogHeader>
               <div className="flex items-start gap-4">
                 <Avatar className="h-20 w-20 border-2 border-white shadow-md">
@@ -1298,7 +1298,7 @@ export default function TemplatesPage() {
 
         {/* Followers/Following List Modal */}
         <Dialog open={showFollowersModal} onOpenChange={setShowFollowersModal}>
-          <DialogContent className="max-w-md" aria-describedby={undefined}
+          <DialogContent className="max-w-md" aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>{followersModalType === "followers" ? "Followers" : "Following"}</DialogTitle>
               <DialogDescription>

@@ -1074,7 +1074,7 @@ export default function ExploreAgentsPage() {
 
         {/* Agent Detail Modal */}
         <Dialog open={!!selectedAgent} onOpenChange={() => setSelectedAgent(null)}>
-          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}
+          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
             <DialogHeader className="pb-0">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
@@ -1504,7 +1504,7 @@ export default function ExploreAgentsPage() {
 
         {/* Creator Profile Modal */}
         <Dialog open={showCreatorModal} onOpenChange={setShowCreatorModal}>
-          <DialogContent className="max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}
+          <DialogContent className="max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
             {currentCreator && (
               <>
                 <DialogHeader className="pb-4 border-b">
@@ -1712,7 +1712,7 @@ export default function ExploreAgentsPage() {
 
         {/* Followers/Following List Modal */}
         <Dialog open={showFollowersModal} onOpenChange={setShowFollowersModal}>
-          <DialogContent className="max-w-[500px] max-h-[70vh] overflow-hidden flex flex-col" aria-describedby={undefined}
+          <DialogContent className="max-w-[500px] max-h-[70vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>{followersModalType === "followers" ? "Followers" : "Following"}</DialogTitle>
               <DialogDescription>
@@ -1775,7 +1775,7 @@ export default function ExploreAgentsPage() {
 
         {/* New Discussion Modal */}
         <Dialog open={showNewDiscussion} onOpenChange={setShowNewDiscussion}>
-          <DialogContent className="max-w-lg" aria-describedby={undefined}
+          <DialogContent className="max-w-lg" aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Start a New Discussion</DialogTitle>
               <DialogDescription>Ask a question or share your thoughts with the community</DialogDescription>
@@ -1832,7 +1832,7 @@ export default function ExploreAgentsPage() {
 
         {/* Report Modal */}
         <Dialog open={showReportModal} onOpenChange={setShowReportModal}>
-          <DialogContent className="max-w-md" aria-describedby={undefined}
+          <DialogContent className="max-w-md" aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Report Discussion</DialogTitle>
               <DialogDescription>Help us understand what's wrong with this discussion</DialogDescription>
