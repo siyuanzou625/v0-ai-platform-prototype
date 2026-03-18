@@ -836,22 +836,9 @@ export default function ExploreAgentsPage() {
                             </CardTitle>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
-                            {agent.price}
-                          </Badge>
-                          <Button 
-                            size="sm" 
-                            className="bg-[#ee3224] hover:bg-[#cc2a1e] h-7 text-xs"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setSelectedAgent(agent)
-                              setActiveTab("overview")
-                            }}
-                          >
-                            Install <ArrowRight className="ml-1 h-3 w-3" />
-                          </Button>
-                        </div>
+                        <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
+                          {agent.price}
+                        </Badge>
                       </div>
                       <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
                     </CardHeader>
@@ -942,6 +929,15 @@ export default function ExploreAgentsPage() {
                           <TooltipContent>Total downloads</TooltipContent>
                         </Tooltip>
                       </div>
+                      {/* Action buttons */}
+                      <div className="mt-4 flex gap-2">
+                        <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
+                          <Eye className="h-3 w-3" /> Preview
+                        </Button>
+                        <Button size="sm" className="flex-1 gap-1 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={(e) => e.stopPropagation()}>
+                          <ArrowRight className="h-3 w-3" /> Install
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 )
@@ -979,22 +975,9 @@ export default function ExploreAgentsPage() {
                           </CardTitle>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
-                          {agent.price}
-                        </Badge>
-                        <Button 
-                          size="sm" 
-                          className="bg-[#ee3224] hover:bg-[#cc2a1e] h-7 text-xs"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setSelectedAgent(agent)
-                            setActiveTab("overview")
-                          }}
-                        >
-                          Install <ArrowRight className="ml-1 h-3 w-3" />
-                        </Button>
-                      </div>
+                      <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
+                        {agent.price}
+                      </Badge>
                     </div>
                     <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
                   </CardHeader>
@@ -1084,6 +1067,15 @@ export default function ExploreAgentsPage() {
                         </TooltipTrigger>
                         <TooltipContent>Total downloads</TooltipContent>
                       </Tooltip>
+                    </div>
+                    {/* Action buttons */}
+                    <div className="mt-4 flex gap-2">
+                      <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
+                        <Eye className="h-3 w-3" /> Preview
+                      </Button>
+                      <Button size="sm" className="flex-1 gap-1 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={(e) => e.stopPropagation()}>
+                        <ArrowRight className="h-3 w-3" /> Install
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
