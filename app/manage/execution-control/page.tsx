@@ -333,23 +333,23 @@ export default function ExecutionControlPage() {
                 </CardContent>
               </Card>
 
-              {/* NPU Usage - Highlighted */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer border-[#ee3224]/20 bg-[#FEF2F2]/30">
+              {/* NPU Usage */}
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <Brain className="h-5 w-5 text-[#ee3224]" />
+                        <Brain className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">NPU Usage</span>
                       </div>
                       <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.npu.usage}%</p>
-                      <Badge className="mt-1 bg-[#ee3224] text-white text-[10px] px-1.5 py-0">
-                        AI Acceleration Active
-                      </Badge>
+                      <p className="text-xs text-[#ee3224] flex items-center gap-1 mt-1">
+                        <span>●</span> AI Acceleration Active
+                      </p>
                     </div>
                     <Tooltip>
                       <TooltipTrigger>
-                        <CircularProgress value={systemMetrics.npu.usage} glow />
+                        <CircularProgress value={systemMetrics.npu.usage} />
                       </TooltipTrigger>
                       <TooltipContent>{systemMetrics.npu.info}</TooltipContent>
                     </Tooltip>
