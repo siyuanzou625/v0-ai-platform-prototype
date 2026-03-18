@@ -848,7 +848,7 @@ export default function PluginsPage() {
 
         {/* Plugin Detail Modal */}
         <Dialog open={!!selectedPlugin} onOpenChange={(open) => !open && setSelectedPlugin(null)}>
-<DialogContent
+          <DialogContent
             className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col"
             aria-describedby={undefined}
           >
