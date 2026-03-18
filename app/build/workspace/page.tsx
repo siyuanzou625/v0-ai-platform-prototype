@@ -1666,7 +1666,7 @@ export default function ProjectWorkspacePage() {
                   Invite
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
+              <DialogContent className="sm:max-w-md" aria-describedby={undefined}>
                 <DialogHeader>
                   <DialogTitle>Invite Team Members</DialogTitle>
                   <DialogDescription>Add collaborators to this project</DialogDescription>
@@ -2218,7 +2218,7 @@ export default function ProjectWorkspacePage() {
 
         {/* Marketplace Modal */}
         <Dialog open={showMarketplace} onOpenChange={setShowMarketplace}>
-          <DialogContent className="sm:max-w-2xl">
+          <DialogContent className="sm:max-w-2xl" aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Browse Marketplace Components</DialogTitle>
               <DialogDescription>Find agents, tools, and templates to add to your workflow</DialogDescription>
@@ -2273,7 +2273,7 @@ export default function ProjectWorkspacePage() {
 
       {/* Run Simulation Dialog */}
       <Dialog open={showRunSimulation} onOpenChange={setShowRunSimulation}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-2xl" aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Play className="h-5 w-5 text-[#ee3224]" />
@@ -2366,7 +2366,7 @@ export default function ProjectWorkspacePage() {
 
       {/* Git Settings Modal */}
       <Dialog open={showGitSettings} onOpenChange={setShowGitSettings}>
-        <DialogContent className="sm:max-w-[700px]">
+        <DialogContent className="sm:max-w-[700px]" aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <GitBranch className="h-5 w-5 text-[#ee3224]" />
@@ -2508,7 +2508,7 @@ export default function ProjectWorkspacePage() {
 
       {/* Visual Diff Modal */}
       <Dialog open={showVisualDiff} onOpenChange={setShowVisualDiff}>
-        <DialogContent className="max-w-[1000px] w-[95vw] max-h-[90vh] flex flex-col p-0 overflow-hidden">
+        <DialogContent className="max-w-[1000px] w-[95vw] max-h-[90vh] flex flex-col p-0 overflow-hidden" aria-describedby={undefined}>
           <DialogHeader className="px-6 pt-6 pb-4 border-b border-[#E5E7EB]">
             <DialogTitle className="flex items-center gap-2">
               <GitBranch className="h-5 w-5 text-[#ee3224]" />
@@ -2761,7 +2761,7 @@ export default function ProjectWorkspacePage() {
 
       {/* Progressive Disclosure Modal */}
       <Dialog open={showProgressiveDisclosure} onOpenChange={setShowProgressiveDisclosure}>
-        <DialogContent className="max-w-[500px] p-0 overflow-hidden">
+        <DialogContent className="max-w-[500px] p-0 overflow-hidden" aria-describedby={undefined}>
           {/* Modal Header */}
           <div className="text-center pt-8 pb-4 px-8">
             <div className="flex justify-center mb-4">
