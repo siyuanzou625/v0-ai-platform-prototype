@@ -402,13 +402,7 @@ export function TopBar() {
                   <User className="h-5 w-5 text-[#333]" />
                   <span className="text-sm">Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex cursor-pointer items-center justify-between gap-3 rounded p-2 hover:bg-[#F5F7FA]">
-                  <div className="flex items-center gap-3">
-                    <Brush className="h-5 w-5 text-[#333]" />
-                    <span className="text-sm">Creator Studio</span>
-                  </div>
-                  <Badge variant="secondary" className="bg-[#ee3224] text-[10px] text-white">New</Badge>
-                </DropdownMenuItem>
+                
                 <DropdownMenuItem className="flex cursor-pointer items-center gap-3 rounded p-2 hover:bg-[#F5F7FA]">
                   <Settings className="h-5 w-5 text-[#333]" />
                   <span className="text-sm">Settings</span>
