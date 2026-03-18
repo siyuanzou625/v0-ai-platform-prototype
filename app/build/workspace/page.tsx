@@ -2009,7 +2009,7 @@ export default function ProjectWorkspacePage() {
                           </Button>
                         </div>
                       ) : (
-                        msg.content
+                        <span className="whitespace-pre-line">{msg.content}</span>
                       )}
                     </div>
                   </div>
