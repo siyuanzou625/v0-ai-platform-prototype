@@ -1074,7 +1074,10 @@ export default function ExploreAgentsPage() {
 
         {/* Agent Detail Modal */}
         <Dialog open={!!selectedAgent} onOpenChange={() => setSelectedAgent(null)}>
-          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
+          <DialogContent 
+            className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" 
+            aria-describedby={undefined}
+          >
             <DialogHeader className="pb-0">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">

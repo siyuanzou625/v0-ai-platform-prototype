@@ -844,7 +844,10 @@ export default function TemplatesPage() {
 
         {/* Template Detail Modal */}
         <Dialog open={!!selectedTemplate} onOpenChange={(open) => !open && setSelectedTemplate(null)}>
-          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
+          <DialogContent 
+            className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" 
+            aria-describedby={undefined}
+          >
             <DialogHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">

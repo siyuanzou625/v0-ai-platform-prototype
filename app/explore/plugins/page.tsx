@@ -848,7 +848,10 @@ export default function PluginsPage() {
 
         {/* Plugin Detail Modal */}
         <Dialog open={!!selectedPlugin} onOpenChange={(open) => !open && setSelectedPlugin(null)}>
-          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
+          <DialogContent 
+            className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" 
+            aria-describedby={undefined}
+          >
             <DialogHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
