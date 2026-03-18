@@ -179,6 +179,7 @@ const agents = [
     author: "AI Labs",
     authorId: "ailabs",
     category: "Productivity",
+    version: "v2.3.1",
     downloads: "45.2K",
     rating: 4.9,
     price: "Free",
@@ -193,6 +194,7 @@ const agents = [
     author: "SalesBot Inc",
     authorId: "salesbot",
     category: "Productivity",
+    version: "v1.8.0",
     downloads: "32.1K",
     rating: 4.8,
     price: "$29/mo",
@@ -207,6 +209,7 @@ const agents = [
     author: "DocAI",
     authorId: "docai",
     category: "Knowledge",
+    version: "v3.0.2",
     downloads: "28.7K",
     rating: 4.7,
     price: "Free",
@@ -221,6 +224,7 @@ const agents = [
     author: "DevTools Co",
     authorId: "devtools",
     category: "Productivity",
+    version: "v2.1.0",
     downloads: "56.3K",
     rating: 4.9,
     price: "$19/mo",
@@ -235,6 +239,7 @@ const agents = [
     author: "HR Tech",
     authorId: "hrtech",
     category: "Travel",
+    version: "v1.2.4",
     downloads: "18.9K",
     rating: 4.6,
     price: "Free",
@@ -249,6 +254,7 @@ const agents = [
     author: "DataMind",
     authorId: "datamind",
     category: "Productivity",
+    version: "v1.5.3",
     downloads: "41.5K",
     rating: 4.8,
     price: "$49/mo",
@@ -263,6 +269,7 @@ const agents = [
     author: "Creative AI",
     authorId: "creativeai",
     category: "Content",
+    version: "v4.0.0",
     downloads: "67.2K",
     rating: 4.7,
     price: "Free",
@@ -277,6 +284,7 @@ const agents = [
     author: "LegalTech AI",
     authorId: "legaltech",
     category: "Legal",
+    version: "v1.0.5",
     downloads: "12.4K",
     rating: 4.9,
     price: "$99/mo",
@@ -899,6 +907,14 @@ export default function ExploreAgentsPage() {
                         </button>
                       </div>
                       
+                      {/* Category and Version */}
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-[#E5E7EB] text-[#6B7280]">
+                          {agent.category}
+                        </Badge>
+                        <span className="text-[10px] text-[#9CA3AF]">{agent.version}</span>
+                      </div>
+                      
                       {/* Stats row */}
                       <div className="flex items-center gap-3 text-xs text-[#6B7280]">
                         <Tooltip>
@@ -1036,6 +1052,14 @@ export default function ExploreAgentsPage() {
                         <Users className="h-3 w-3" />
                         {formatFollowers(followerCount)} followers
                       </button>
+                    </div>
+                    
+                    {/* Category and Version */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-[#E5E7EB] text-[#6B7280]">
+                        {agent.category}
+                      </Badge>
+                      <span className="text-[10px] text-[#9CA3AF]">{agent.version}</span>
                     </div>
                     
                     {/* Stats row */}
