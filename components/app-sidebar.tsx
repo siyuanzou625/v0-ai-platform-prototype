@@ -20,6 +20,7 @@ import {
   Activity,
   Award,
   Sparkles,
+  Cpu,
 } from "lucide-react"
 
 const navigation = [
@@ -55,6 +56,7 @@ const navigation = [
     items: [
       { name: "Pulse Check", href: "/manage/pulse-check", icon: Activity },
       { name: "Creator Status", href: "/manage/creator-status", icon: Award },
+      { name: "Execution Control", href: "/manage/execution-control", icon: Cpu },
     ],
   },
 ]
