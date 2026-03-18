@@ -40,8 +40,14 @@ import {
   Mail,
   Puzzle,
   ArrowUp,
-  ExternalLink
+  ExternalLink,
+  UserPlus,
+  UserCheck,
+  BadgeCheck
 } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { useRouter } from "next/navigation"
 
 // Mock data
@@ -185,12 +191,34 @@ const tips = [
   "Check Pulse to monitor your agent performance"
 ]
 
+// Mock data for user's followers and following
+const myFollowers = [
+  { id: "f1", name: "DataFlow Inc", initials: "DF", verified: true },
+  { id: "f2", name: "AI Labs", initials: "AI", verified: true },
+  { id: "f3", name: "Sarah Chen", initials: "SC", verified: false },
+  { id: "f4", name: "Workflow Labs", initials: "WL", verified: true },
+  { id: "f5", name: "Alex Johnson", initials: "AJ", verified: false },
+  { id: "f6", name: "TechStart", initials: "TS", verified: false },
+  { id: "f7", name: "Mike Rodriguez", initials: "MR", verified: false },
+  { id: "f8", name: "DataMind", initials: "DM", verified: true }
+]
+
+const myFollowing = [
+  { id: "g1", name: "AI Labs", initials: "AI", verified: true },
+  { id: "g2", name: "DataFlow Inc", initials: "DF", verified: true },
+  { id: "g3", name: "Workflow Labs", initials: "WL", verified: true },
+  { id: "g4", name: "Plugin Masters", initials: "PM", verified: true },
+  { id: "g5", name: "Emily Watson", initials: "EW", verified: false }
+]
+
 export default function HomePage() {
   const router = useRouter()
   const [showTip, setShowTip] = useState(true)
   const [currentTip] = useState(0)
   const [continueScrollIndex, setContinueScrollIndex] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [networkModalOpen, setNetworkModalOpen] = useState(false)
+  const [networkModalTab, setNetworkModalTab] = useState<"followers" | "following">("followers")
 
   const handleRefreshRecommendations = () => {
     setIsRefreshing(true)
@@ -663,7 +691,29 @@ export default function HomePage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* My Network */}
+            <Card 
+              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              onClick={() => { setNetworkModalTab("followers"); setNetworkModalOpen(true); }}
+            >
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#FEF2F2]">
+                    <Users className="h-6 w-6 text-[#ee3224]" />
+                  </div>
+                </div>
+                <p className="text-[28px] font-bold text-[#1F2937]">{myFollowers.length}</p>
+                <p className="text-[13px] text-[#6B7280]">Followers</p>
+                <button 
+                  className="text-xs text-[#ee3224] hover:underline mt-2"
+                  onClick={(e) => { e.stopPropagation(); setNetworkModalTab("following"); setNetworkModalOpen(true); }}
+                >
+                  {myFollowing.length} Following
+                </button>
+              </CardContent>
+            </Card>
+
             {/* Assets Built */}
             <Card 
               className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
@@ -748,6 +798,78 @@ export default function HomePage() {
             </Card>
           </div>
         </div>
+
+        {/* My Network Modal */}
+        <Dialog open={networkModalOpen} onOpenChange={setNetworkModalOpen}>
+          <DialogContent className="max-w-md" aria-describedby={undefined}>
+            <DialogHeader>
+              <DialogTitle>My Network</DialogTitle>
+            </DialogHeader>
+            <div className="flex gap-2 border-b mb-4">
+              <button
+                className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
+                  networkModalTab === "followers" 
+                    ? "border-[#ee3224] text-[#ee3224]" 
+                    : "border-transparent text-[#6B7280] hover:text-[#333]"
+                }`}
+                onClick={() => setNetworkModalTab("followers")}
+              >
+                Followers ({myFollowers.length})
+              </button>
+              <button
+                className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
+                  networkModalTab === "following" 
+                    ? "border-[#ee3224] text-[#ee3224]" 
+                    : "border-transparent text-[#6B7280] hover:text-[#333]"
+                }`}
+                onClick={() => setNetworkModalTab("following")}
+              >
+                Following ({myFollowing.length})
+              </button>
+            </div>
+            <ScrollArea className="max-h-[400px]">
+              <div className="space-y-3">
+                {(networkModalTab === "followers" ? myFollowers : myFollowing).map((user) => (
+                  <div key={user.id} className="flex items-center justify-between p-2 rounded hover:bg-[#F5F7FA]">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback className="bg-[#FEF2F2] text-[#ee3224] text-sm font-medium">
+                          {user.initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-medium text-[#333]">{user.name}</span>
+                          {user.verified && (
+                            <BadgeCheck className="h-4 w-4 text-[#22C55E] fill-[#22C55E]" />
+                          )}
+                        </div>
+                        <span className="text-xs text-[#6B7280]">Creator</span>
+                      </div>
+                    </div>
+                    {networkModalTab === "followers" ? (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="text-xs border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
+                      >
+                        <UserPlus className="h-3 w-3 mr-1" /> Follow Back
+                      </Button>
+                    ) : (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="text-xs border-[#22C55E] text-[#22C55E] hover:bg-[#22C55E] hover:text-white"
+                      >
+                        <UserCheck className="h-3 w-3 mr-1" /> Following
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   )
