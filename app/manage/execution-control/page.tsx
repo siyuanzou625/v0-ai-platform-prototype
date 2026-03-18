@@ -198,7 +198,7 @@ export default function ExecutionControlPage() {
   const { toast } = useToast()
   const [executionMode, setExecutionMode] = useState("balanced")
   const [autoOptimize, setAutoOptimize] = useState(true)
-  const [advancedMode, setAdvancedMode] = useState(false)
+  const [advancedMode, setAdvancedMode] = useState(true)
   const [autoScaling, setAutoScaling] = useState(true)
   const [statusFilter, setStatusFilter] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
@@ -343,22 +343,15 @@ export default function ExecutionControlPage() {
               {/* Advanced Mode Toggle */}
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-[#6B7280]">Advanced Mode</label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={advancedMode}
-                        onCheckedChange={handleAdvancedModeToggle}
-                        className="data-[state=checked]:bg-[#ee3224] w-11 h-6 transition-colors duration-200"
-                        aria-label="Advanced Mode"
-                      />
-                      <span className="text-sm text-[#333]">{advancedMode ? "ON" : "OFF"}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent className="bg-[#1F2937] text-white rounded">
-                    Show advanced controls for fine-tuning
-                  </TooltipContent>
-                </Tooltip>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={advancedMode}
+                    onCheckedChange={handleAdvancedModeToggle}
+                    className="data-[state=checked]:bg-[#ee3224]"
+                    aria-label="Advanced Mode"
+                  />
+                  <span className="text-sm text-[#333]">{advancedMode ? "ON" : "OFF"}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -867,32 +860,10 @@ export default function ExecutionControlPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span className="inline-flex">
-                              <Switch checked={agent.cpu} className="data-[state=checked]:bg-[#ee3224]" />
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {advancedMode 
-                              ? "CPU access enables general computation and logic processing"
-                              : "This allows the agent to use CPU"}
-                          </TooltipContent>
-                        </Tooltip>
+                        <Switch checked={agent.cpu} className="data-[state=checked]:bg-[#ee3224]" />
                       </TableCell>
                       <TableCell className="text-center">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span className="inline-flex">
-                              <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {advancedMode 
-                              ? "GPU access enables faster AI inference for image processing tasks"
-                              : "This allows the agent to use GPU"}
-                          </TooltipContent>
-                        </Tooltip>
+                        <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
                       </TableCell>
                       {advancedMode && (
                         <TableCell className="text-center bg-[#FEF2F2]/30">
