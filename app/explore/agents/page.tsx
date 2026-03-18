@@ -817,7 +817,7 @@ export default function AgentsPage() {
 
       {/* Asset Detail Modal */}
       <Dialog open={!!selectedAgent} onOpenChange={(open) => !open && setSelectedAgent(null)}>
-        <DialogContent className="max-w-4xl max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-5xl max-h-[85vh] overflow-hidden flex flex-col">
           <DialogHeader className="pb-0">
             <div className="flex items-start gap-4">
               <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
