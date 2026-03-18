@@ -2789,10 +2789,14 @@ function WorkflowCanvas({
   const [toolPaletteCollapsed, setToolPaletteCollapsed] = useState<boolean>(false)
   
   // Get project-specific or template-specific workflow nodes
+  // For new projects without a template, show empty canvas
+  const isEmptyNewProject = projectId === "new" && !templateId
   const workflowNodes = 
-    (projectId === "new" && templateId && templateWorkflowNodes[templateId]) 
-      ? templateWorkflowNodes[templateId]
-      : (projectWorkflowNodes[projectId] || defaultWorkflowNodes)
+    isEmptyNewProject
+      ? [] // Empty canvas for new projects without template
+      : (projectId === "new" && templateId && templateWorkflowNodes[templateId]) 
+        ? templateWorkflowNodes[templateId]
+        : (projectWorkflowNodes[projectId] || defaultWorkflowNodes)
   
   // Calculate bezier curve path between two nodes
   const getConnectionPath = (fromNode: typeof defaultWorkflowNodes[0], toNode: typeof defaultWorkflowNodes[0]) => {
@@ -2954,6 +2958,37 @@ function WorkflowCanvas({
             })}
           </svg>
 
+          {/* Empty State for new projects */}
+          {workflowNodes.length === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center max-w-md p-8">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F7FA] border-2 border-dashed border-[#E5E7EB]">
+                  <Workflow className="h-8 w-8 text-[#9CA3AF]" />
+                </div>
+                <h3 className="text-lg font-semibold text-[#1F2937] mb-2">Start Building Your Workflow</h3>
+                <p className="text-sm text-[#6B7280] mb-4">
+                  Drag nodes from the palette on the left to build your agent workflow, or use the "Build with AI" tab to generate one automatically.
+                </p>
+                <div className="flex items-center justify-center gap-2 text-xs text-[#9CA3AF]">
+                  <span className="flex items-center gap-1">
+                    <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                    Triggers
+                  </span>
+                  <span className="text-[#E5E7EB]">|</span>
+                  <span className="flex items-center gap-1">
+                    <div className="h-2 w-2 rounded-full bg-purple-500" />
+                    Actions
+                  </span>
+                  <span className="text-[#E5E7EB]">|</span>
+                  <span className="flex items-center gap-1">
+                    <div className="h-2 w-2 rounded-full bg-orange-500" />
+                    Outputs
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Workflow Nodes */}
           {workflowNodes.map((node) => {
             const NodeIcon = getNodeIcon(node.type)
@@ -3052,10 +3087,28 @@ function CodeEditor({ projectId, templateId }: { projectId: string; templateId?:
   const [terminalExpanded, setTerminalExpanded] = useState(true)
   
   // Get project-specific or template-specific code content
+  // For new projects without a template, show empty/starter code
+  const isEmptyNewProject = projectId === "new" && !templateId
+  const emptyStarterCode = `// Your agent code will appear here
+// Start by describing your agent in the "Build with AI" tab
+// or add nodes in the "Workflow" tab
+
+export class MyAgent {
+  constructor() {
+    // Initialize your agent
+  }
+
+  async run() {
+    // Your agent logic here
+  }
+}
+`
   const codeContent = 
-    (projectId === "new" && templateId && templateCodeContent[templateId])
-      ? templateCodeContent[templateId]
-      : (projectCodeContent[projectId] || defaultCodeContent)
+    isEmptyNewProject
+      ? emptyStarterCode
+      : (projectId === "new" && templateId && templateCodeContent[templateId])
+        ? templateCodeContent[templateId]
+        : (projectCodeContent[projectId] || defaultCodeContent)
 
   const consoleOutput = [
     { type: "info", message: "[INFO] Agent initialized successfully", time: "10:23:45" },
