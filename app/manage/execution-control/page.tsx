@@ -868,8 +868,10 @@ export default function ExecutionControlPage() {
                       </TableCell>
                       <TableCell className="text-center">
                         <Tooltip>
-                          <TooltipTrigger>
-                            <Switch checked={agent.cpu} className="data-[state=checked]:bg-[#ee3224]" />
+                          <TooltipTrigger asChild>
+                            <span className="inline-flex">
+                              <Switch checked={agent.cpu} className="data-[state=checked]:bg-[#ee3224]" />
+                            </span>
                           </TooltipTrigger>
                           <TooltipContent>
                             {advancedMode 
@@ -880,8 +882,10 @@ export default function ExecutionControlPage() {
                       </TableCell>
                       <TableCell className="text-center">
                         <Tooltip>
-                          <TooltipTrigger>
-                            <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
+                          <TooltipTrigger asChild>
+                            <span className="inline-flex">
+                              <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
+                            </span>
                           </TooltipTrigger>
                           <TooltipContent>
                             {advancedMode 
