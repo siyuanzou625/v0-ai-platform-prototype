@@ -844,7 +844,7 @@ export default function TemplatesPage() {
 
         {/* Template Detail Modal */}
         <Dialog open={!!selectedTemplate} onOpenChange={(open) => !open && setSelectedTemplate(null)}>
-          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}
             <DialogHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
@@ -1158,7 +1158,7 @@ export default function TemplatesPage() {
 
         {/* Creator Profile Modal */}
         <Dialog open={showCreatorModal} onOpenChange={setShowCreatorModal}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl" aria-describedby={undefined}
             <DialogHeader>
               <div className="flex items-start gap-4">
                 <Avatar className="h-20 w-20 border-2 border-white shadow-md">
@@ -1298,7 +1298,7 @@ export default function TemplatesPage() {
 
         {/* Followers/Following List Modal */}
         <Dialog open={showFollowersModal} onOpenChange={setShowFollowersModal}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md" aria-describedby={undefined}
             <DialogHeader>
               <DialogTitle>{followersModalType === "followers" ? "Followers" : "Following"}</DialogTitle>
               <DialogDescription>
@@ -1345,7 +1345,7 @@ export default function TemplatesPage() {
 
         {/* New Discussion Modal */}
         <Dialog open={showNewDiscussionModal} onOpenChange={setShowNewDiscussionModal}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Start a New Discussion</DialogTitle>
               <DialogDescription>Ask a question or share feedback about this template</DialogDescription>
@@ -1399,7 +1399,7 @@ export default function TemplatesPage() {
 
         {/* Report Modal */}
         <Dialog open={showReportModal} onOpenChange={setShowReportModal}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Report Content</DialogTitle>
               <DialogDescription>Help us understand what's wrong with this content</DialogDescription>

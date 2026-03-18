@@ -848,7 +848,7 @@ export default function PluginsPage() {
 
         {/* Plugin Detail Modal */}
         <Dialog open={!!selectedPlugin} onOpenChange={(open) => !open && setSelectedPlugin(null)}>
-          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" aria-describedby={undefined}
             <DialogHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
@@ -1181,7 +1181,7 @@ export default function PluginsPage() {
 
         {/* Creator Profile Modal */}
         <Dialog open={showCreatorModal} onOpenChange={setShowCreatorModal}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl" aria-describedby={undefined}
             <DialogHeader>
               <div className="flex items-start gap-4">
                 <Avatar className="h-20 w-20 border-2 border-white shadow-md">
@@ -1321,7 +1321,7 @@ export default function PluginsPage() {
 
         {/* Followers/Following List Modal */}
         <Dialog open={showFollowersModal} onOpenChange={setShowFollowersModal}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md" aria-describedby={undefined}
             <DialogHeader>
               <DialogTitle>{followersModalType === "followers" ? "Followers" : "Following"}</DialogTitle>
               <DialogDescription>
@@ -1368,7 +1368,7 @@ export default function PluginsPage() {
 
         {/* New Discussion Modal */}
         <Dialog open={showNewDiscussionModal} onOpenChange={setShowNewDiscussionModal}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Start a New Discussion</DialogTitle>
               <DialogDescription>Ask a question or share feedback about this plugin</DialogDescription>
@@ -1422,7 +1422,7 @@ export default function PluginsPage() {
 
         {/* Report Modal */}
         <Dialog open={showReportModal} onOpenChange={setShowReportModal}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Report Content</DialogTitle>
               <DialogDescription>Help us understand what's wrong with this content</DialogDescription>
