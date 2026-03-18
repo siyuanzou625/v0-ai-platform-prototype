@@ -766,7 +766,7 @@ export default function ExploreAgentsPage() {
             </p>
           </div>
           <Button className="gap-2">
-            <Bot className="h-4 w-4" /> Submit Agent
+            <Bot className="h-4 w-4" /> Build Agent
           </Button>
         </div>
 
@@ -1093,7 +1093,7 @@ export default function ExploreAgentsPage() {
           </div>
         </div>
 
-{/* Agent Detail Modal */}
+        {/* Agent Detail Modal */}
         <Dialog open={!!selectedAgent} onOpenChange={() => setSelectedAgent(null)}>
           <DialogContent 
             className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col" 
