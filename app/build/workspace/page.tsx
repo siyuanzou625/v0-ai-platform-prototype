@@ -955,18 +955,71 @@ export class EmailSummarizerAgent {
 const agent = new EmailSummarizerAgent(process.env.OPENAI_API_KEY!);
 `
 
-// Chat messages mock
-const initialWorkflowChat = [
+// Chat messages mock - default for existing projects
+const defaultWorkflowChat = [
   { role: "assistant", content: "Hello! I'm your AI assistant. I can help you build and modify workflows. Try asking me to add nodes, connect components, or explain how things work." },
   { role: "user", content: "Add a sentiment analysis step after the email trigger" },
   { role: "assistant", content: "I've added a Sentiment Analysis node after the Email Trigger. The workflow now analyzes the emotional tone of incoming emails before processing them further. Would you like me to configure the sentiment thresholds?" },
 ]
 
-const initialCodeChat = [
+const defaultCodeChat = [
   { role: "assistant", content: "Hello! I'm your AI coding assistant. I can help you write, refactor, and debug code. Ask me anything about your codebase." },
   { role: "user", content: "Can you refactor the summarize function to use async/await properly?" },
   { role: "assistant", content: "Here's the refactored code with proper async/await pattern:\n\n```typescript\nasync summarize(emails: Email[]): Promise<string> {\n  const prompt = await this.buildPrompt(emails);\n  const response = await this.client.chat.completions.create({\n    model: this.model,\n    messages: [/* ... */]\n  });\n  return response.choices[0].message.content ?? '';\n}\n```\n\nWould you like me to apply this change?" },
 ]
+
+// Empty state chat for new projects without templates
+const emptyWorkflowChat = [
+  { role: "assistant", content: "Hello! I'm ready to help you build your workflow. You can:\n\n- Drag nodes from the palette to the canvas\n- Ask me to add specific nodes or connections\n- Describe what you want to automate and I'll suggest a workflow\n\nWhat would you like to create?" },
+]
+
+const emptyCodeChat = [
+  { role: "assistant", content: "Hello! I'm ready to help you write code for your agent. You can:\n\n- Describe what your agent should do\n- Ask me to generate boilerplate code\n- Request help with specific functions or integrations\n\nWhat would you like to build?" },
+]
+
+// Template-specific workflow chat messages
+const templateWorkflowChat: Record<string, Array<{ role: string; content: string }>> = {
+  "meeting-notes": [
+    { role: "assistant", content: "I've set up your Meeting Notes workflow. The canvas shows:\n\n1. **Meeting Recording** trigger - receives audio from Zoom, Teams, or uploads\n2. **Whisper Transcribe** - converts speech to text\n3. **AI Summarizer** - extracts key points and action items\n4. **Send to Slack** - posts notes to your channel\n\nWould you like me to add email delivery or modify any step?" },
+  ],
+  "email-triage": [
+    { role: "assistant", content: "Your Email Triage workflow is ready. Here's what each node does:\n\n1. **Email Received** - monitors your inbox\n2. **Analyze Content** - extracts key information\n3. **Check Priority** - routes based on urgency\n4. **Draft Response** - generates AI replies for urgent emails\n5. **Archive Email** - organizes low-priority messages\n\nShould I add auto-reply functionality or VIP sender rules?" },
+  ],
+  "data-analyst": [
+    { role: "assistant", content: "Your Data Analyst workflow is configured with:\n\n1. **Data Source** - connects to your CSV, database, or API\n2. **Clean Data** - handles missing values and normalization\n3. **Analyze Patterns** - performs statistical analysis\n4. **Generate Charts** - creates visualizations\n\nWant me to add scheduled reports or anomaly detection?" },
+  ],
+  "calendar": [
+    { role: "assistant", content: "Your Calendar Optimizer is set up:\n\n1. **Calendar Sync** - connects to Google Calendar or Outlook\n2. **Analyze Schedule** - identifies meeting patterns\n3. **Has Conflicts?** - detects scheduling issues\n4. **Suggest Changes** - recommends optimizations\n\nShould I add buffer time rules or focus time blocks?" },
+  ],
+  "research": [
+    { role: "assistant", content: "Your Research Assistant workflow includes:\n\n1. **Research Topic** - receives your query\n2. **Web Search** - searches general sources\n3. **Academic Search** - finds scholarly papers\n4. **Synthesize** - combines and summarizes findings\n5. **Generate Report** - creates a structured document\n\nWant me to add fact-checking or citation formatting?" },
+  ],
+  "social-media": [
+    { role: "assistant", content: "Your Social Media Manager is ready:\n\n1. **Content Brief** - receives your topic and tone\n2. **Generate Content** - creates platform-specific posts\n3. **Approval?** - routes for review\n4. **Post to Twitter/LinkedIn/Instagram** - publishes approved content\n\nShould I add engagement monitoring or scheduling features?" },
+  ],
+}
+
+// Template-specific code chat messages
+const templateCodeChat: Record<string, Array<{ role: string; content: string }>> = {
+  "meeting-notes": [
+    { role: "assistant", content: "Your Meeting Notes Agent code is ready. The `MeetingNotesAgent` class includes:\n\n- `processRecording()` - main entry point\n- `transcribe()` - uses Whisper API\n- `summarize()` - extracts key points with GPT-4\n- `sendToSlack()` - posts to your channel\n\nWould you like me to add error handling or customize the summary format?" },
+  ],
+  "email-triage": [
+    { role: "assistant", content: "Your Email Triage Agent is implemented. The `EmailTriageAgent` class has:\n\n- `triageEmail()` - analyzes and categorizes emails\n- `analyzeEmail()` - uses AI for priority detection\n- `draftResponse()` - generates suggested replies\n\nNeed me to add folder organization or auto-reply logic?" },
+  ],
+  "data-analyst": [
+    { role: "assistant", content: "Your Data Analyst Agent code is set up. The `DataAnalystAgent` class includes:\n\n- `analyzeData()` - main analysis pipeline\n- `cleanData()` - removes nulls and normalizes\n- `calculateStats()` - basic statistics\n- `generateInsights()` - AI-powered analysis\n\nWant me to add chart generation or export functionality?" },
+  ],
+  "calendar": [
+    { role: "assistant", content: "Your Calendar Optimizer code is ready. The `CalendarOptimizerAgent` class has:\n\n- `optimizeSchedule()` - main optimization logic\n- `analyzePatterns()` - identifies meeting trends\n- `findConflicts()` - detects overlapping events\n- `eventsOverlap()` - helper for conflict detection\n\nShould I add auto-rescheduling or notification features?" },
+  ],
+  "research": [
+    { role: "assistant", content: "Your Research Assistant code is implemented. The `ResearchAssistantAgent` class includes:\n\n- `research()` - orchestrates the research flow\n- `searchWeb()` - queries general sources\n- `searchAcademic()` - finds scholarly papers\n- `synthesize()` - combines findings into a report\n\nNeed me to add citation formatting or fact verification?" },
+  ],
+  "social-media": [
+    { role: "assistant", content: "Your Social Media Agent is ready. The `SocialMediaAgent` class has:\n\n- `generateContent()` - creates posts for all platforms\n- `generateForPlatform()` - platform-specific content\n- `getPlatformConstraints()` - character limits and style\n- `postToTwitter()` - publishes to Twitter\n\nWant me to add LinkedIn/Instagram posting or scheduling?" },
+  ],
+}
 
 // Template-specific Build with AI conversation data (for new projects from templates)
 const templateBuildAIChat: Record<string, Array<{ role: string; content: string }>> = {
@@ -1276,13 +1329,29 @@ export default function ProjectWorkspacePage() {
   const [gitSyncSettings, setGitSyncSettings] = useState(gitConnection.syncSettings)
 
   useEffect(() => {
+    // Determine which chat to use based on project, template, and mode
+    const isNewWithoutTemplate = projectId === "new" && !templateId
+    const isNewWithTemplate = projectId === "new" && templateId
+    
+    const getWorkflowChat = () => {
+      if (isNewWithoutTemplate) return emptyWorkflowChat
+      if (isNewWithTemplate && templateWorkflowChat[templateId]) return templateWorkflowChat[templateId]
+      return defaultWorkflowChat
+    }
+    
+    const getCodeChat = () => {
+      if (isNewWithoutTemplate) return emptyCodeChat
+      if (isNewWithTemplate && templateCodeChat[templateId]) return templateCodeChat[templateId]
+      return defaultCodeChat
+    }
+    
     // For code projects, always use code chat. For workflow projects, depends on current mode
     if (projectType === "code") {
-      setChatMessages(initialCodeChat)
+      setChatMessages(getCodeChat())
     } else {
-      setChatMessages(mode === "workflow" ? initialWorkflowChat : initialCodeChat)
+      setChatMessages(mode === "workflow" ? getWorkflowChat() : getCodeChat())
     }
-  }, [mode, projectType])
+  }, [mode, projectType, projectId, templateId])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
