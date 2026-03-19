@@ -736,7 +736,7 @@ export default function PluginsPage() {
 
               return (
                 <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                  <CardHeader className="py-3 px-5 pb-1">
+                  <CardHeader className="py-2.5 px-5 pb-1">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-50 p-1.5">
@@ -750,13 +750,13 @@ export default function PluginsPage() {
                         <Badge className="badge-neutral">Available</Badge>
                       )}
                     </div>
-                    <CardDescription className="text-sm mt-3">{plugin.description}</CardDescription>
+                    <CardDescription className="text-sm mt-2">{plugin.description}</CardDescription>
                   </CardHeader>
-                  <CardContent className="py-3 px-5">
+                  <CardContent className="py-2.5 px-5">
                     {/* Divider */}
-                    <div className="w-full border-t border-[#E5E7EB] mb-4"></div>
+                    <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
                     {/* Creator info with Follow button */}
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <button
                           className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
@@ -805,7 +805,7 @@ export default function PluginsPage() {
                       </Tooltip>
                     </div>
 
-                    <div className="mb-3 flex items-center gap-2">
+                    <div className="mb-2 flex items-center gap-2">
                       <Badge variant="secondary">{plugin.category}</Badge>
                       <span className="text-xs text-muted-foreground">v{plugin.version}</span>
                     </div>

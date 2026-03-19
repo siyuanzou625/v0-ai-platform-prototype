@@ -847,7 +847,7 @@ export default function ExploreAgentsPage() {
                       setActiveTab("overview")
                     }}
                   >
-                    <CardHeader className="py-3 px-5 pb-1">
+                    <CardHeader className="py-2.5 px-5 pb-1">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
@@ -861,13 +861,13 @@ export default function ExploreAgentsPage() {
                           {agent.price}
                         </Badge>
                       </div>
-                      <CardDescription className="text-xs mt-3 line-clamp-2">{agent.description}</CardDescription>
+                      <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
                     </CardHeader>
-<CardContent className="py-3 px-5">
+<CardContent className="py-2.5 px-5">
                       {/* Divider */}
-                      <div className="w-full border-t border-[#E5E7EB] mb-4"></div>
+                      <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
                       {/* Creator row with follow button */}
-                      <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={(e) => openCreatorProfile(agent.authorId, e)}
@@ -915,13 +915,13 @@ export default function ExploreAgentsPage() {
                       </div>
                       
                       {/* Category and Version */}
-                      <div className="flex items-center gap-2 mb-3">
+                      <div className="flex items-center gap-2 mb-2">
                         <Badge variant="secondary">{agent.category}</Badge>
                         <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
                       
                       {/* Stats row */}
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground pt-1">
+                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="flex items-center gap-1">

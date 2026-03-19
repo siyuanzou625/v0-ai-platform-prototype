@@ -720,7 +720,7 @@ export default function TemplatesPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openTemplateModal(template)}
               >
-                <CardHeader className="py-3 px-5 pb-1">
+                <CardHeader className="py-2.5 px-5 pb-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -730,13 +730,13 @@ export default function TemplatesPage() {
                     </div>
                     <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(template.category)}`}>{template.category}</Badge>
                   </div>
-                  <CardDescription className="text-sm line-clamp-2 mt-3">{template.description}</CardDescription>
+                  <CardDescription className="text-sm line-clamp-2 mt-2">{template.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="py-3 px-5">
+                <CardContent className="py-2.5 px-5">
                   {/* Divider */}
-                  <div className="w-full border-t border-[#E5E7EB] mb-4"></div>
+                  <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
                   {/* Creator info with Follow button */}
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <button
                         className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
@@ -785,7 +785,7 @@ export default function TemplatesPage() {
                     </Tooltip>
                   </div>
 
-                  <div className="mb-3 flex items-center gap-2">
+                  <div className="mb-2 flex items-center gap-2">
                     <Badge
                       variant="outline"
                       className={
