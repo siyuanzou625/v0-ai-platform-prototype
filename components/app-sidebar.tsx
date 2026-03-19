@@ -83,14 +83,14 @@ export function AppSidebar() {
               <Link
                 href="/"
                 className={cn(
-                  "mb-4 flex items-center gap-2 rounded px-3 py-2 text-sm font-semibold uppercase tracking-wider transition-colors",
+                  "mb-4 flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
                   isHomeActive
-                    ? "bg-[#ee3224] text-white"
-                    : "text-[#ee3224] hover:bg-[#F5F7FA]"
+                    ? "bg-[#ee3224]/10 text-[#ee3224]"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 )}
               >
-                <Home className="h-5 w-5" />
-                HOME
+                <Home className={cn("h-4 w-4", isHomeActive ? "text-[#ee3224]" : "text-slate-400")} />
+                Home
               </Link>
               <div className="mb-6 flex justify-center">
                 <div className="h-px w-4/5 bg-[#E5E7EB]" />
@@ -106,8 +106,7 @@ export function AppSidebar() {
           return (
             <div key={section.title}>
               <div className="mb-8">
-                <h3 className="mb-2 flex items-center gap-2 px-3 text-sm font-semibold uppercase tracking-wider text-[#ee3224]">
-                  <section.icon className="h-5 w-5" />
+                <h3 className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-slate-400">
                   {section.title}
                 </h3>
                 <ul className="space-y-1">
@@ -120,11 +119,11 @@ export function AppSidebar() {
                           className={cn(
                             "flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
                             isActive
-                              ? "bg-[#ee3224] text-white"
-                              : "text-[#333] hover:bg-[#F5F7FA]"
+                              ? "bg-[#ee3224]/10 text-[#ee3224]"
+                              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                           )}
                         >
-                          <item.icon className="h-4 w-4" />
+                          <item.icon className={cn("h-4 w-4", isActive ? "text-[#ee3224]" : "text-slate-400")} />
                           {item.name}
                         </Link>
                       </li>
