@@ -864,6 +864,8 @@ export default function ExploreAgentsPage() {
                       <CardDescription className="text-xs mt-3 line-clamp-2">{agent.description}</CardDescription>
                     </CardHeader>
 <CardContent className="py-3 px-5 space-y-2">
+                      {/* Divider */}
+                      <div className="w-full border-t border-[#E5E7EB] -mt-1 mb-2"></div>
                       {/* Creator row with follow button */}
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
