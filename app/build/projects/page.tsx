@@ -1,5 +1,5 @@
 "use client"
-// Cache invalidation timestamp: 1742488800000
+// v3-rebuild-20260320
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
@@ -668,7 +668,6 @@ export default function ProjectsPage() {
                           <Briefcase className="h-6 w-6 text-[#ee3224]" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p>
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
@@ -682,7 +681,6 @@ export default function ProjectsPage() {
                           <PlayCircle className="h-6 w-6 text-amber-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}>
@@ -696,7 +694,6 @@ export default function ProjectsPage() {
                           <CheckCircle2 className="h-6 w-6 text-emerald-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-emerald-600 hover:underline">View ready projects</p>
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("blocked")}>
@@ -710,7 +707,6 @@ export default function ProjectsPage() {
                           <AlertCircle className="h-6 w-6 text-[#ee3224]" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-red-600 hover:underline">View blocked projects</p>
                     </CardContent>
                   </Card>
                 </div>
