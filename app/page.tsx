@@ -312,7 +312,7 @@ export default function HomePage() {
 
         {/* Contextual Tip Banner */}
         {showTip && (
-          <div className="flex items-center justify-between bg-[#F5F7FA] border-l-[3px] border-l-[#ee3224] rounded px-4 py-3">
+          <div className="flex items-center justify-between bg-white border border-[#E5E7EB] border-l-[3px] border-l-[#ee3224] rounded shadow-sm px-4 py-3">
             <div className="flex items-center gap-3">
               <Lightbulb className="h-4 w-4 text-[#ee3224]" />
               <p className="text-sm text-[#333]">
