@@ -842,7 +842,7 @@ export default function ExploreAgentsPage() {
                 return (
                   <Card
                     key={agent.id}
-                    className="hover:shadow-md hover:border-[#ee3224] transition-all cursor-pointer group"
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => {
                       setSelectedAgent(agent)
                       setActiveTab("overview")
@@ -855,7 +855,7 @@ export default function ExploreAgentsPage() {
                             <Bot className="h-6 w-6 text-primary" />
                           </div>
                           <div>
-                            <CardTitle className="text-base">
+                            <CardTitle className="card-title-text text-base transition-colors duration-150">
                               {agent.name}
                             </CardTitle>
                           </div>
@@ -987,7 +987,7 @@ export default function ExploreAgentsPage() {
               return (
                 <Card
                   key={agent.id}
-                  className="hover:shadow-md hover:border-[#ee3224] transition-all cursor-pointer"
+                  className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                   onClick={() => {
                     setSelectedAgent(agent)
                     setActiveTab("overview")
@@ -1000,7 +1000,7 @@ export default function ExploreAgentsPage() {
                           <Bot className="h-6 w-6 text-primary" />
                         </div>
                         <div>
-                          <CardTitle className="text-base">
+                          <CardTitle className="card-title-text text-base transition-colors duration-150">
                             {agent.name}
                           </CardTitle>
                         </div>
@@ -1301,7 +1301,7 @@ export default function ExploreAgentsPage() {
                         {paginatedDiscussions.map((discussion) => (
                           <Card
                             key={discussion.id}
-                            className={`hover:shadow-md transition-shadow ${
+                            className={`card-interactive group border border-[#E5E7EB] bg-white shadow-sm ${
                               expandedDiscussion === discussion.id ? "border-[#ee3224]" : ""
                             }`}
                           >
@@ -1626,7 +1626,7 @@ export default function ExploreAgentsPage() {
                         {getCreatorAssets(currentCreator.id).map((asset) => (
                           <Card
                             key={asset.id}
-                            className="hover:shadow-md hover:border-[#ee3224] transition-all cursor-pointer"
+                            className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                             onClick={() => {
                               setShowCreatorModal(false)
                               setSelectedAgent(asset)
@@ -1638,7 +1638,7 @@ export default function ExploreAgentsPage() {
                                 <div className="h-8 w-8 rounded-lg bg-[#F5F7FA] flex items-center justify-center">
                                   <Bot className="h-4 w-4 text-[#6B7280]" />
                                 </div>
-                                <span className="text-sm font-semibold text-[#1F2937] truncate">{asset.name}</span>
+                                <span className="card-title-text text-sm font-semibold text-[#1F2937] transition-colors duration-150 truncate">{asset.name}</span>
                               </div>
                               <div className="flex items-center gap-2 text-xs text-[#6B7280]">
                                 <span className="flex items-center gap-1">

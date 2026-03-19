@@ -580,7 +580,7 @@ export default function KnowledgePage() {
               return (
                 <Card
                   key={kb.id}
-                  className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224]/30 hover:shadow-md"
+                  className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                   onClick={() => handleOpenKnowledge(kb.id)}
                 >
                   <CardContent className="p-5">
@@ -590,7 +590,7 @@ export default function KnowledgePage() {
                           <KbIcon className="h-5 w-5" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-foreground group-hover:text-[#ee3224] transition-colors line-clamp-1">
+                          <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
                             {kb.name}
                           </h3>
                           {getStatusBadge(kb.status)}

@@ -123,9 +123,9 @@ export default function CrossDevicePage() {
               {devices.map((device) => (
                 <div
                   key={device.id}
-                  className={`relative rounded border p-4 transition-all ${
+                  className={`group relative rounded border p-4 transition-all duration-150 ease-out ${
                     device.status === "online"
-                      ? "border-border hover:border-primary"
+                      ? "border-[#E5E7EB] cursor-pointer hover:border-[#ee3224] hover:shadow-md hover:-translate-y-0.5"
                       : "border-dashed border-border bg-secondary/30"
                   }`}
                 >
@@ -141,7 +141,7 @@ export default function CrossDevicePage() {
                         }`}
                       />
                     </div>
-                    <h4 className="font-medium text-foreground">{device.name}</h4>
+                    <h4 className={`font-medium text-foreground transition-colors duration-150 ${device.status === "online" ? "group-hover:text-[#ee3224]" : ""}`}>{device.name}</h4>
                     <div className="mt-2 flex items-center gap-1">
                       {device.status === "online" ? (
                         <Wifi className="h-3 w-3 text-chart-3" />
@@ -226,13 +226,13 @@ export default function CrossDevicePage() {
                 {crossDeviceFeatures.map((feature) => (
                   <div
                     key={feature.name}
-                    className="flex items-center gap-4 rounded border border-border p-4 transition-colors hover:border-primary"
+                    className="group flex items-center gap-4 rounded border border-[#E5E7EB] p-4 cursor-pointer transition-all duration-150 ease-out hover:border-[#ee3224] hover:shadow-md hover:-translate-y-0.5"
                   >
                     <div className="flex h-12 w-12 items-center justify-center rounded bg-primary/10">
                       <feature.icon className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-foreground">{feature.name}</h4>
+                      <h4 className="font-medium text-foreground transition-colors duration-150 group-hover:text-[#ee3224]">{feature.name}</h4>
                       <p className="text-sm text-muted-foreground">{feature.description}</p>
                     </div>
                   </div>

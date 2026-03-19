@@ -379,7 +379,7 @@ export default function ExecutionControlPage() {
             {/* Metric Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 mb-6">
               {/* CPU Usage */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -387,7 +387,7 @@ export default function ExecutionControlPage() {
                         <Cpu className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">CPU Usage</span>
                       </div>
-                      <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.cpu.usage}%</p>
+                      <p className="card-title-text text-2xl font-bold text-[#1F2937] transition-colors duration-150">{systemMetrics.cpu.usage}%</p>
                       <p className="text-xs text-[#22C55E] flex items-center gap-1 mt-1">
                         <span>↑</span> {systemMetrics.cpu.trend} vs last min
                       </p>
@@ -407,7 +407,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* GPU Usage */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -415,7 +415,7 @@ export default function ExecutionControlPage() {
                         <Monitor className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">GPU Usage</span>
                       </div>
-                      <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.gpu.usage}%</p>
+                      <p className="card-title-text text-2xl font-bold text-[#1F2937] transition-colors duration-150">{systemMetrics.gpu.usage}%</p>
                       <p className="text-xs text-[#F59E0B] flex items-center gap-1 mt-1">
                         <span>↑</span> {systemMetrics.gpu.trend} vs last min
                       </p>
@@ -435,7 +435,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* NPU Usage */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -443,7 +443,7 @@ export default function ExecutionControlPage() {
                         <Brain className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">NPU Usage</span>
                       </div>
-                      <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.npu.usage}%</p>
+                      <p className="card-title-text text-2xl font-bold text-[#1F2937] transition-colors duration-150">{systemMetrics.npu.usage}%</p>
                       <p className="text-xs text-[#ee3224] flex items-center gap-1 mt-1">
                         <span>●</span> AI Acceleration Active
                       </p>
@@ -463,7 +463,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Memory Usage */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -471,7 +471,7 @@ export default function ExecutionControlPage() {
                         <MemoryStick className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">Memory Usage</span>
                       </div>
-                      <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.memory.used}GB / {systemMetrics.memory.total}GB</p>
+                      <p className="card-title-text text-2xl font-bold text-[#1F2937] transition-colors duration-150">{systemMetrics.memory.used}GB / {systemMetrics.memory.total}GB</p>
                       <p className="text-xs text-[#6B7280] mt-1">{systemMetrics.memory.trend}</p>
                       {advancedMode ? (
                         <Tooltip>
@@ -499,7 +499,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Idle Capacity */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -507,7 +507,7 @@ export default function ExecutionControlPage() {
                         <Battery className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">Idle Capacity</span>
                       </div>
-                      <p className="text-2xl font-bold text-[#22C55E]">{systemMetrics.idle.value}%</p>
+                      <p className="card-title-text text-2xl font-bold text-[#22C55E] transition-colors duration-150">{systemMetrics.idle.value}%</p>
                       <p className="text-xs text-[#22C55E] mt-1">{systemMetrics.idle.trend}</p>
                     </div>
                     {advancedMode ? (

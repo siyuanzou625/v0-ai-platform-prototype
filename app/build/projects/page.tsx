@@ -662,14 +662,14 @@ export default function ProjectsPage() {
                 {/* Summary Metrics */}
                 <div className="grid grid-cols-4 gap-4">
                   <Card 
-                    className="cursor-pointer border border-[#E5E7EB] hover:border-[#ee3224]/30 hover:shadow-md transition-all"
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleMetricClick("all")}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">Total Projects</p>
-                          <p className="text-3xl font-bold text-foreground">{totalProjects}</p>
+                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{totalProjects}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ee3224]/10">
                           <Briefcase className="h-6 w-6 text-[#ee3224]" />
@@ -679,14 +679,14 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card 
-                    className="cursor-pointer border border-[#E5E7EB] hover:border-blue-500/30 hover:shadow-md transition-all"
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleMetricClick("building")}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">In Progress</p>
-                          <p className="text-3xl font-bold text-foreground">{inProgressCount}</p>
+                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{inProgressCount}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
                           <PlayCircle className="h-6 w-6 text-blue-500" />
@@ -696,14 +696,14 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card 
-                    className="cursor-pointer border border-[#E5E7EB] hover:border-emerald-500/30 hover:shadow-md transition-all"
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleMetricClick("ready")}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">Ready to Deploy</p>
-                          <p className="text-3xl font-bold text-foreground">{readyCount}</p>
+                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{readyCount}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
                           <CheckCircle2 className="h-6 w-6 text-emerald-500" />
@@ -713,14 +713,14 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card 
-                    className="cursor-pointer border border-[#E5E7EB] hover:border-red-500/30 hover:shadow-md transition-all"
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleMetricClick("blocked")}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">Blocked</p>
-                          <p className="text-3xl font-bold text-foreground">{blockedCount}</p>
+                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{blockedCount}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5F7FA]">
                           <AlertCircle className="h-6 w-6 text-[#ee3224]" />
@@ -781,7 +781,7 @@ export default function ProjectsPage() {
                       {filteredProjects.slice(0, 6).map((project) => (
                         <Card 
                           key={project.id}
-                          className="group cursor-pointer border border-[#E5E7EB] hover:border-[#ee3224]/30 hover:shadow-md transition-all"
+                          className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           onClick={() => handleOpenProject(project.id)}
                         >
                           <CardContent className="p-4">
@@ -797,7 +797,7 @@ export default function ProjectsPage() {
                                   )}
                                 </div>
                                 <div>
-                                  <h3 className="text-sm font-semibold text-foreground group-hover:text-[#ee3224] transition-colors line-clamp-1">
+                                  <h3 className="card-title-text text-sm font-semibold text-foreground transition-colors duration-150 line-clamp-1">
                                     {project.name}
                                   </h3>
                                   <p className="text-xs text-muted-foreground">{project.owner.name}</p>
@@ -856,7 +856,7 @@ export default function ProjectsPage() {
                 {filteredProjects.map((project) => (
                   <Card
                     key={project.id}
-                    className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224]/30 hover:shadow-md"
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleOpenProject(project.id)}
                   >
                     <CardContent className="p-5">
@@ -872,7 +872,7 @@ export default function ProjectsPage() {
                             )}
                           </div>
                           <div>
-                            <h3 className="font-semibold text-foreground group-hover:text-[#ee3224] transition-colors line-clamp-1">
+                            <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
                               {project.name}
                             </h3>
                             <div className="flex items-center gap-2 mt-1">

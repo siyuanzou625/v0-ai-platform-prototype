@@ -282,7 +282,7 @@ export default function CreatorStatusPage() {
                   return (
                     <Tooltip key={badge.id}>
                       <TooltipTrigger asChild>
-                        <Card className={`cursor-pointer transition-all hover:shadow-md ${!badge.earned ? "opacity-50" : ""}`}>
+                        <Card className={`card-interactive group border border-[#E5E7EB] bg-white shadow-sm ${!badge.earned ? "opacity-50" : ""}`}>
                           <CardContent className="p-4">
                             <div className="flex items-start gap-3">
                               <div
@@ -297,7 +297,7 @@ export default function CreatorStatusPage() {
                                 )}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="font-semibold text-sm truncate">{badge.name}</p>
+                                <p className="card-title-text font-semibold text-sm transition-colors duration-150 truncate">{badge.name}</p>
                                 <p className="text-xs text-muted-foreground line-clamp-2">{badge.description}</p>
                                 {badge.earned ? (
                                   <p className="text-xs text-muted-foreground mt-1">Earned {badge.earnedDate}</p>
@@ -414,7 +414,7 @@ export default function CreatorStatusPage() {
                     <Tooltip key={stat.id}>
                       <TooltipTrigger asChild>
                         <Card 
-                          className={`transition-all ${isClickable ? "cursor-pointer hover:shadow-md hover:border-[#ee3224]" : ""}`}
+                          className={`border border-[#E5E7EB] bg-white shadow-sm ${isClickable ? "card-interactive group" : ""}`}
                           onClick={() => isClickable && setFollowersModalOpen(true)}
                         >
                           <CardContent className="p-5">
@@ -423,7 +423,7 @@ export default function CreatorStatusPage() {
                                 <IconComponent className="h-6 w-6 text-[#ee3224]" />
                               </div>
                               <div>
-                                <p className="text-[28px] font-bold text-[#1F2937]">{stat.value}</p>
+                                <p className={`text-[28px] font-bold text-[#1F2937] ${isClickable ? "card-title-text transition-colors duration-150" : ""}`}>{stat.value}</p>
                                 <p className="text-[13px] text-[#6B7280]">{stat.label}</p>
                                 <div className="flex items-center gap-1 text-xs text-[#22C55E] mt-1">
                                   <TrendingUp className="h-3 w-3" />

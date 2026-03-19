@@ -124,3 +124,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .card-interactive {
+    @apply transition-all duration-150 ease-out cursor-pointer;
+  }
+  .card-interactive:hover {
+    @apply border-[#ee3224] shadow-md;
+    transform: translateY(-2px);
+  }
+  .card-interactive:hover [data-slot="card-title"],
+  .card-interactive:hover .card-title-text {
+    @apply text-[#ee3224];
+  }
+}

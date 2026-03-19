@@ -251,14 +251,14 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Card 1: Build an Agent */}
           <Card 
-            className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+            className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
             onClick={() => router.push("/build/projects")}
           >
             <CardContent className="p-6">
               <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
                 <Hammer className="h-8 w-8 text-[#ee3224]" />
               </div>
-              <h3 className="text-base font-semibold text-[#1F2937] mb-1">Build an Agent</h3>
+              <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150 mb-1">Build an Agent</h3>
               <p className="text-[13px] text-[#6B7280] mb-4">Create AI agents and workflows from scratch</p>
               <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
                 Get Started
@@ -268,14 +268,14 @@ export default function HomePage() {
 
           {/* Card 2: Launch an App */}
           <Card 
-            className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+            className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
             onClick={() => router.push("/use/installed-apps")}
           >
             <CardContent className="p-6">
               <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
                 <Rocket className="h-8 w-8 text-[#ee3224]" />
               </div>
-              <h3 className="text-base font-semibold text-[#1F2937] mb-1">Launch an App</h3>
+              <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150 mb-1">Launch an App</h3>
               <p className="text-[13px] text-[#6B7280] mb-4">Open your installed AI applications</p>
               <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
                 Open Apps
@@ -285,14 +285,14 @@ export default function HomePage() {
 
           {/* Card 3: Explore Marketplace */}
           <Card 
-            className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+            className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
             onClick={() => router.push("/explore/agents")}
           >
             <CardContent className="p-6">
               <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
                 <Compass className="h-8 w-8 text-[#ee3224]" />
               </div>
-              <h3 className="text-base font-semibold text-[#1F2937] mb-1">Explore Marketplace</h3>
+              <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150 mb-1">Explore Marketplace</h3>
               <p className="text-[13px] text-[#6B7280] mb-4">Discover agents, templates, and plugins</p>
               <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
                 Browse
@@ -353,7 +353,7 @@ export default function HomePage() {
               {continueData.slice(continueScrollIndex, continueScrollIndex + 3).map((item) => (
                 <Card 
                   key={item.id}
-                  className="flex-1 min-w-0 border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+                  className="card-interactive group flex-1 min-w-0 border border-[#E5E7EB] bg-white shadow-sm"
                   onClick={() => router.push(item.path)}
                 >
                   <CardContent className="p-4">
@@ -362,7 +362,7 @@ export default function HomePage() {
                         <item.icon className="h-6 w-6 text-[#ee3224]" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-[15px] font-semibold text-[#1F2937] truncate">{item.name}</h4>
+                        <h4 className="card-title-text text-[15px] font-semibold text-[#1F2937] transition-colors duration-150 truncate">{item.name}</h4>
                         <Badge variant="secondary" className="text-xs bg-[#F5F7FA] text-[#333] mt-1">
                           {item.type}
                         </Badge>
@@ -555,7 +555,7 @@ export default function HomePage() {
             {recommendations.map((rec) => (
               <Card 
                 key={rec.id}
-                className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+                className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
               >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3 mb-3">
@@ -564,7 +564,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-semibold text-[#1F2937]">{rec.name}</h4>
+                        <h4 className="card-title-text text-sm font-semibold text-[#1F2937] transition-colors duration-150">{rec.name}</h4>
                         <Badge variant="secondary" className="text-xs bg-[#F5F7FA] text-[#333]">
                           {rec.type}
                         </Badge>
@@ -694,7 +694,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* My Network */}
             <Card 
-              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
               onClick={() => { setNetworkModalTab("followers"); setNetworkModalOpen(true); }}
             >
               <CardContent className="p-5">
@@ -703,7 +703,7 @@ export default function HomePage() {
                     <Users className="h-6 w-6 text-[#ee3224]" />
                   </div>
                 </div>
-                <p className="text-[28px] font-bold text-[#1F2937]">{myFollowers.length}</p>
+                <p className="card-title-text text-[28px] font-bold text-[#1F2937] transition-colors duration-150">{myFollowers.length}</p>
                 <p className="text-[13px] text-[#6B7280]">Followers</p>
                 <button 
                   className="text-xs text-[#ee3224] hover:underline mt-2"
@@ -716,7 +716,7 @@ export default function HomePage() {
 
             {/* Assets Built */}
             <Card 
-              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
               onClick={() => router.push("/manage/creator-status")}
             >
               <CardContent className="p-5">
@@ -725,7 +725,7 @@ export default function HomePage() {
                     <Package className="h-6 w-6 text-[#ee3224]" />
                   </div>
                 </div>
-                <p className="text-[28px] font-bold text-[#1F2937]">12</p>
+                <p className="card-title-text text-[28px] font-bold text-[#1F2937] transition-colors duration-150">12</p>
                 <p className="text-[13px] text-[#6B7280]">Assets published</p>
                 <div className="flex items-center gap-1 mt-2 text-green-600">
                   <ArrowUp className="h-3 w-3" />
@@ -736,7 +736,7 @@ export default function HomePage() {
 
             {/* Users Reached */}
             <Card 
-              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
               onClick={() => router.push("/manage/creator-status")}
             >
               <CardContent className="p-5">
@@ -745,7 +745,7 @@ export default function HomePage() {
                     <Users className="h-6 w-6 text-[#ee3224]" />
                   </div>
                 </div>
-                <p className="text-[28px] font-bold text-[#1F2937]">45.2K</p>
+                <p className="card-title-text text-[28px] font-bold text-[#1F2937] transition-colors duration-150">45.2K</p>
                 <p className="text-[13px] text-[#6B7280]">Across all assets</p>
                 <div className="flex items-center gap-1 mt-2 text-green-600">
                   <ArrowUp className="h-3 w-3" />
@@ -756,7 +756,7 @@ export default function HomePage() {
 
             {/* Avg Rating */}
             <Card 
-              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
               onClick={() => router.push("/manage/creator-status")}
             >
               <CardContent className="p-5">
@@ -766,7 +766,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
-                  <p className="text-[28px] font-bold text-[#1F2937]">4.6</p>
+                  <p className="card-title-text text-[28px] font-bold text-[#1F2937] transition-colors duration-150">4.6</p>
                   <Star className="h-5 w-5 text-[#F59E0B] fill-current" />
                 </div>
                 <p className="text-[13px] text-[#6B7280]">Across all assets</p>
@@ -779,7 +779,7 @@ export default function HomePage() {
 
             {/* Earnings */}
             <Card 
-              className="border border-[#E5E7EB] bg-white cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+              className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
               onClick={() => router.push("/manage/creator-status")}
             >
               <CardContent className="p-5">
@@ -788,7 +788,7 @@ export default function HomePage() {
                     <DollarSign className="h-6 w-6 text-[#ee3224]" />
                   </div>
                 </div>
-                <p className="text-[28px] font-bold text-[#1F2937]">$1,234</p>
+                <p className="card-title-text text-[28px] font-bold text-[#1F2937] transition-colors duration-150">$1,234</p>
                 <p className="text-[13px] text-[#6B7280]">This month</p>
                 <div className="flex items-center gap-1 mt-2 text-green-600">
                   <ArrowUp className="h-3 w-3" />

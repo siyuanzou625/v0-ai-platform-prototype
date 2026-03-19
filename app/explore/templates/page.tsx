@@ -696,14 +696,14 @@ export default function TemplatesPage() {
             return (
               <Card
                 key={template.id}
-                className="group cursor-pointer transition-all hover:border-primary hover:shadow-md"
+                className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openTemplateModal(template)}
               >
                 <CardHeader className="pb-3">
                   <div className="mb-3 flex h-12 w-12 items-center justify-center rounded bg-primary/10">
                     <FileCode className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-base font-medium">{template.name}</CardTitle>
+                  <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
                   <CardDescription className="text-sm line-clamp-2">{template.description}</CardDescription>
                 </CardHeader>
                 <CardContent>

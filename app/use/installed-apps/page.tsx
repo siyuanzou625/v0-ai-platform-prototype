@@ -497,7 +497,7 @@ export default function MyAppsPage() {
     
     return (
       <Card 
-        className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224] hover:shadow-md"
+        className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
       >
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
@@ -507,7 +507,7 @@ export default function MyAppsPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-foreground truncate">{app.name}</h3>
+                  <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{app.name}</h3>
                   <div className={`h-2 w-2 rounded-full ${getStatusColor(app.status)}`} />
                 </div>
                 <p className="text-sm text-muted-foreground truncate">{app.tagline}</p>
@@ -743,7 +743,7 @@ export default function MyAppsPage() {
                         return (
                           <Card 
                             key={recent.appId}
-                            className="flex-shrink-0 w-[280px] cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224] hover:shadow-md"
+                            className="card-interactive group flex-shrink-0 w-[280px] border border-[#E5E7EB] bg-white shadow-sm"
                           >
                             <CardContent className="p-4">
                               <div className="flex items-center gap-3">
@@ -751,7 +751,7 @@ export default function MyAppsPage() {
                                   <IconComponent className="h-6 w-6 text-[#ee3224]" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <h3 className="font-semibold text-foreground truncate">{recent.name}</h3>
+                                  <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{recent.name}</h3>
                                   <p className="text-xs text-muted-foreground">{recent.lastUsed}</p>
                                 </div>
                               </div>

@@ -329,14 +329,14 @@ export default function ProfilePage() {
               {filteredAssets.map((asset) => {
                 const IconComponent = getAssetIcon(asset.type)
                 return (
-                  <Card key={asset.id} className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card key={asset.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#ee3224]/10">
                           <IconComponent className="h-5 w-5 text-[#ee3224]" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-[14px] text-[#1F2937] truncate">{asset.name}</h3>
+                          <h3 className="card-title-text font-medium text-[14px] text-[#1F2937] transition-colors duration-150 truncate">{asset.name}</h3>
                           <p className="text-[12px] text-[#6B7280] capitalize">{asset.type} - {asset.category}</p>
                           <div className="flex items-center gap-3 mt-2 text-[12px] text-[#6B7280]">
                             <span className="flex items-center gap-1">

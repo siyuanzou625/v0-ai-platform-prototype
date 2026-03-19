@@ -390,7 +390,7 @@ export default function ConnectionsPage() {
             {filteredConnections.map((conn) => (
               <Card
                 key={conn.id}
-                className="cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+                className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openDetailView(conn)}
               >
                 <CardContent className="p-4">
@@ -404,7 +404,7 @@ export default function ConnectionsPage() {
                         )}
                       </div>
                       <div>
-                        <h3 className="font-medium text-foreground">{conn.displayName}</h3>
+                        <h3 className="card-title-text font-medium text-foreground transition-colors duration-150">{conn.displayName}</h3>
                         <div className={`h-2 w-2 rounded-full inline-block mr-1.5 ${getStatusColor(conn.status)}`} />
                         <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
                       </div>
