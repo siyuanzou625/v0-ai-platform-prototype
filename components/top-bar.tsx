@@ -28,6 +28,7 @@ import {
   ArrowUp,
   ChevronRight,
   Package,
+  Sparkles,
   Users,
   CheckCircle,
 } from "lucide-react"
@@ -156,7 +157,14 @@ export function TopBar() {
 
   return (
     <>
-      <header className="sticky top-0 z-[1000] flex h-16 items-center justify-end border-b border-[#E5E7EB] bg-white px-6">
+      <header className="sticky top-0 z-[1000] flex h-16 items-center justify-between border-b border-[#E5E7EB] bg-white px-6">
+        {/* Left Section: Logo */}
+        <div className="flex w-64 items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#ee3224]">
+            <Sparkles className="h-4 w-4 text-white" />
+          </div>
+          <span className="text-lg font-semibold text-[#1F2937]">AgentStudio</span>
+        </div>
         {/* Right Section: Search + Actions */}
         <div className="flex items-center gap-3">
           {/* Compact Search Bar */}

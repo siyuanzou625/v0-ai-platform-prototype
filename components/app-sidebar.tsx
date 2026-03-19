@@ -65,15 +65,7 @@ export function AppSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-[#E5E7EB] bg-white">
-      <div className="flex h-16 items-center gap-2 px-6" suppressHydrationWarning>
-        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#ee3224]">
-          <Sparkles className="h-4 w-4 text-white" />
-        </div>
-        <span className="text-lg font-semibold text-[#1F2937]" suppressHydrationWarning>
-          AgentStudio
-        </span>
-      </div>
+    <aside className="flex h-[calc(100vh-4rem)] w-64 flex-col border-r border-[#E5E7EB] bg-white">
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         {/* Home Link */}
         {(() => {
