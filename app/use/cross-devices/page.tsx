@@ -112,7 +112,7 @@ export default function CrossDevicePage() {
 
         {/* Content */}
         <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-          <div className="p-6 space-y-6">
+          <div className="px-8 py-6 space-y-6">
         {/* Connected Devices */}
         <Card>
           <CardHeader>

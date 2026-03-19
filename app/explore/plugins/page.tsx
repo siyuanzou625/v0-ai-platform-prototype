@@ -695,11 +695,11 @@ export default function PluginsPage() {
 
         {/* Content */}
         <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-          <div className="p-6 space-y-6">
+          <div className="px-8 py-6 space-y-6">
         {/* Installed Plugins */}
         <div>
           <h2 className="mb-4 text-lg font-semibold text-foreground">Installed Plugins</h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {plugins.filter((p) => p.installed).map((plugin) => (
               <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
                 <CardContent className="flex items-center justify-between py-3 px-5">
@@ -728,7 +728,7 @@ export default function PluginsPage() {
         {/* All Plugins */}
         <div>
           <h2 className="mb-4 text-lg font-semibold text-foreground">Available Plugins</h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredPlugins.map((plugin) => {
               const creator = creators[plugin.authorId]
               const isFollowing = followedCreators.has(plugin.authorId)

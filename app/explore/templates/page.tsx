@@ -706,9 +706,9 @@ export default function TemplatesPage() {
 
         {/* Content */}
         <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-          <div className="p-6 space-y-6">
+          <div className="px-8 py-6 space-y-6">
         {/* Template Grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredTemplates.map((template) => {
             const creator = creators[template.authorId]
             const isFollowing = followedCreators.has(template.authorId)

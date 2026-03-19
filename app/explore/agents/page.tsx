@@ -823,14 +823,14 @@ export default function ExploreAgentsPage() {
 
         {/* Content */}
         <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-          <div className="p-6 space-y-6">
+          <div className="px-8 py-6 space-y-6">
         {/* Featured Agents */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-[#1F2937] flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-[#ee3224]" />
             Featured Agents
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAgents
               .filter((a) => a.featured)
               .map((agent) => {
@@ -967,7 +967,7 @@ export default function ExploreAgentsPage() {
         {/* All Agents */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-[#1F2937]">All Agents</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAgents.map((agent) => {
               const creator = creators[agent.authorId]
               const isFollowing = followedCreators.includes(agent.authorId)

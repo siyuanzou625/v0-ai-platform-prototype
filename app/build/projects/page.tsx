@@ -652,12 +652,12 @@ export default function ProjectsPage() {
 
         {/* Main Content */}
         <ScrollArea className="flex-1">
-          <div className="p-6 space-y-6">
+          <div className="px-8 py-6 space-y-6">
             {/* Dashboard View - Summary Cards */}
             {viewMode === "dashboard" && (
               <div className="space-y-6">
                 {/* Metric Summary Cards */}
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-6">
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}>
                     <CardContent className="py-3 px-5">
                       <div className="flex items-center justify-between">
@@ -814,7 +814,7 @@ export default function ProjectsPage() {
 
             {/* Grid View */}
             {viewMode === "grid" && (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {filteredProjects.map((project) => (
                   <Card
                     key={project.id}

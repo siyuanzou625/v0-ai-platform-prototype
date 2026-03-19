@@ -639,9 +639,9 @@ export default function KnowledgePage() {
 
         {/* Content */}
         <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-          <div className="p-6 space-y-6">
+          <div className="px-8 py-6 space-y-6">
           {/* Knowledge Base Grid */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredKnowledgeBases.map((kb) => {
               const KbIcon = getKnowledgeIcon(kb.primaryType)
               const iconColorClass = getKnowledgeIconColor(kb.primaryType)

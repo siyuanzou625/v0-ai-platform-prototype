@@ -193,7 +193,7 @@ export default function CreatorStatusPage() {
 
           {/* Content */}
           <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-            <div className="p-6 space-y-6">
+            <div className="px-8 py-6 space-y-6">
             {/* Tier Status Hero Card */}
           <Card className="bg-gradient-to-r from-[#F5F7FA] to-white">
             <CardContent className="p-6">

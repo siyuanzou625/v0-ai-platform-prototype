@@ -186,9 +186,9 @@ export default function PulsePage() {
 
           {/* Content */}
           <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-            <div className="p-6 space-y-6">
+            <div className="px-8 py-6 space-y-6">
             {/* Portfolio Summary Cards */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">

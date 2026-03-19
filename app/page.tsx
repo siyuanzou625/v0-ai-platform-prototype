@@ -249,9 +249,9 @@ export default function HomePage() {
 
         {/* Main Content */}
         <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-          <div className="p-6 space-y-6">
+          <div className="px-8 py-6 space-y-6">
         {/* Primary Action Cards (3-Card Row) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: Build an Agent */}
           <Card 
             className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
