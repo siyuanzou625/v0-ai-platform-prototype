@@ -1,5 +1,5 @@
 "use client"
-// Build cache reset: 2026-03-20-v1
+// Build cache reset: 2026-03-20-v2
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
