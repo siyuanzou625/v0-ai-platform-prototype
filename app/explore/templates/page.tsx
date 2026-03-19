@@ -846,10 +846,7 @@ export default function TemplatesPage() {
                     <FileCode className="h-8 w-8 text-primary" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <DialogTitle className="text-xl">{selectedTemplate?.name}</DialogTitle>
-                      <Badge variant="secondary">{selectedTemplate?.category}</Badge>
-                    </div>
+                    <DialogTitle className="text-xl">{selectedTemplate?.name}</DialogTitle>
                     <DialogDescription className="mt-1">{selectedTemplate?.description}</DialogDescription>
                     <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
                       <button 
@@ -869,9 +866,6 @@ export default function TemplatesPage() {
                     </div>
                   </div>
                 </div>
-                <Button className="gap-2">
-                  <Copy className="h-4 w-4" /> Use Template
-                </Button>
               </div>
             </DialogHeader>
 
