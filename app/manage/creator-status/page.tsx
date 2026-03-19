@@ -95,7 +95,7 @@ const payoutHistory = [
 ]
 
 const impactStats = [
-  { id: "assets", icon: Package, value: "12", label: "Assets Published", trend: "+2 this month", clickable: false },
+  { id: "assets", icon: Package, value: "6", label: "Assets Published", trend: "+2 this month", clickable: false },
   { id: "users", icon: Users, value: "45.2K", label: "Users Reached", trend: "+12%", clickable: false },
   { id: "rating", icon: Star, value: "4.6", label: "Avg Rating", trend: "+0.2", clickable: false },
   { id: "followers", icon: Users, value: "1.2K", label: "Followers", trend: "+156 this month", clickable: true },

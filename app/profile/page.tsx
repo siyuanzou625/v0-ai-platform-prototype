@@ -46,7 +46,7 @@ const userProfile = {
   website: "https://zoeydoyle.com",
   joinDate: "March 2024",
   verified: true,
-  assetsPublished: 12,
+  assetsPublished: 6,
   followers: 1200,
   following: 45,
 }
