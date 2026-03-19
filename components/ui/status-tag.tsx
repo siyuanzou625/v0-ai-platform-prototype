@@ -103,24 +103,31 @@ const DEFAULT_CONFIG = { icon: Circle, bg: "bg-slate-50", text: "text-slate-600"
 interface StatusTagProps {
   label: string
   showIcon?: boolean
+  variant?: "status" | "category"
   className?: string
 }
 
-export function StatusTag({ label, showIcon = true, className }: StatusTagProps) {
+export function StatusTag({ label, showIcon, variant = "status", className }: StatusTagProps) {
   const config = TAG_CONFIG[label] || DEFAULT_CONFIG
   const Icon = config.icon
+  
+  // Determine if icon should show based on variant (categories hide icons by default)
+  const shouldShowIcon = showIcon ?? (variant === "status")
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-md text-xs font-medium",
+        variant === "category" 
+          ? "gap-0 px-1.5 py-0.5 border-0" // Lighter category style: no border, smaller padding
+          : "gap-1 px-2 py-0.5 border", // Status style: with border, normal padding
         config.bg,
         config.text,
-        config.border,
+        variant === "status" && config.border,
         className
       )}
     >
-      {showIcon && <Icon className="h-3 w-3" />}
+      {shouldShowIcon && <Icon className="h-3 w-3" />}
       {label}
     </span>
   )

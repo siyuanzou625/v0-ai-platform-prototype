@@ -774,7 +774,7 @@ export default function PluginsPage() {
                     <CardDescription className="text-sm mt-2.5">{plugin.description}</CardDescription>
                     {/* Category and Version - Product Info */}
                     <div className="flex items-center gap-2 mt-2.5">
-                      <StatusTag label={plugin.category} />
+                      <StatusTag label={plugin.category} variant="category" />
                       <span className="text-xs text-muted-foreground">v{plugin.version}</span>
                     </div>
                   </CardHeader>

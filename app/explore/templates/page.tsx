@@ -729,7 +729,7 @@ export default function TemplatesPage() {
                       </div>
                       <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
                     </div>
-                    <StatusTag label={template.category} />
+                    <StatusTag label={template.category} variant="category" />
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-2.5">{template.description}</CardDescription>
                 </CardHeader>

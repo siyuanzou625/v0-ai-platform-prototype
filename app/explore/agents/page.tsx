@@ -886,7 +886,7 @@ export default function ExploreAgentsPage() {
                       <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
                       {/* Category and Version - Product Info */}
                       <div className="flex items-center gap-2 mt-2.5">
-                        <StatusTag label={agent.category} />
+                        <StatusTag label={agent.category} variant="category" />
                         <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
                     </CardHeader>
@@ -1071,7 +1071,7 @@ export default function ExploreAgentsPage() {
                     
                     {/* Category and Version */}
                     <div className="flex items-center gap-2">
-                      <StatusTag label={agent.category} />
+                      <StatusTag label={agent.category} variant="category" />
                       <span className="text-xs text-muted-foreground">{agent.version}</span>
                     </div>
                     
