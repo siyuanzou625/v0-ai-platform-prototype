@@ -374,7 +374,7 @@ const categories = ["All", "AI Models", "Databases", "Cloud", "Communication", "
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
   qa: { bg: "bg-blue-100", text: "text-blue-700" },
-  bug: { bg: "bg-red-100", text: "text-red-700" },
+  bug: { bg: "bg-gray-100", text: "text-[#ee3224]" },
   idea: { bg: "bg-purple-100", text: "text-purple-700" },
   general: { bg: "bg-gray-100", text: "text-gray-700" },
 }

@@ -738,7 +738,7 @@ export default function ExploreAgentsPage() {
   const getCategoryBadge = (category: string) => {
     const styles: Record<string, string> = {
       qa: "bg-blue-100 text-blue-700",
-      bug: "bg-red-100 text-red-700",
+      bug: "bg-gray-100 text-[#ee3224]",
       idea: "bg-purple-100 text-purple-700",
       general: "bg-gray-100 text-gray-700",
     }

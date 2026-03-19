@@ -161,7 +161,7 @@ function StatusBadge({ status }: { status: string }) {
     running: { bg: "bg-[#DCFCE7]", text: "text-[#166534]", dot: "bg-[#22C55E]" },
     idle: { bg: "bg-[#F3F4F6]", text: "text-[#374151]", dot: "bg-[#6B7280]" },
     paused: { bg: "bg-[#FEF3C7]", text: "text-[#92400E]", dot: "bg-[#F59E0B]" },
-    overloaded: { bg: "bg-[#FEE2E2]", text: "text-[#991B1B]", dot: "bg-[#ee3224]" },
+    overloaded: { bg: "bg-[#F5F7FA]", text: "text-[#ee3224]", dot: "bg-[#ee3224]" },
   }
   const style = styles[status] || styles.idle
   
@@ -176,7 +176,7 @@ function StatusBadge({ status }: { status: string }) {
 // Priority Badge Component
 function PriorityBadge({ priority }: { priority: string }) {
   const styles: Record<string, string> = {
-    high: "bg-[#FEE2E2] text-[#991B1B]",
+    high: "bg-[#F5F7FA] text-[#ee3224]",
     medium: "bg-[#FEF3C7] text-[#92400E]",
     low: "bg-[#F3F4F6] text-[#374151]",
   }
