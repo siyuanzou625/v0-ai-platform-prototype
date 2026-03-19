@@ -719,7 +719,7 @@ export default function TemplatesPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openTemplateModal(template)}
               >
-                <CardHeader className="py-3 px-5 pb-2">
+                <CardHeader className="py-2.5 px-5 pb-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">

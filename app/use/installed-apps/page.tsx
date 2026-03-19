@@ -499,7 +499,7 @@ export default function MyAppsPage() {
       <Card 
         className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
       >
-        <CardContent className="py-3 px-5">
+        <CardContent className="py-2.5 px-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -742,7 +742,7 @@ export default function MyAppsPage() {
                             key={recent.appId}
                             className="card-interactive group flex-shrink-0 w-[260px] border border-[#E5E7EB] bg-white shadow-sm"
                           >
-                            <CardContent className="py-3 px-5">
+                            <CardContent className="py-2.5 px-5">
                               <div className="flex items-center gap-3">
                                 <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
                                   <IconComponent className="h-4 w-4 text-slate-600" />

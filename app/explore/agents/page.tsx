@@ -846,7 +846,7 @@ export default function ExploreAgentsPage() {
                       setActiveTab("overview")
                     }}
                   >
-                    <CardHeader className="py-3 px-5 pb-2">
+                    <CardHeader className="py-2.5 px-5 pb-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
