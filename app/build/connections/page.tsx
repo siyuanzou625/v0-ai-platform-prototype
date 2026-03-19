@@ -640,7 +640,7 @@ export default function ConnectionsPage() {
                     {popularProviders.map((provider) => (
                       <Card
                         key={provider.id}
-                        className={`cursor-pointer p-4 transition-all hover:border-[#ee3224] ${
+                        className={`cursor-pointer p-4 transition-all duration-150 ease-out border border-[#E5E7EB] bg-white hover:border-[#ee3224] hover:shadow-md hover:-translate-y-0.5 ${
                           selectedProvider === provider.id ? "border-[#ee3224] bg-[#F5F7FA]" : ""
                         }`}
                         onClick={() => setSelectedProvider(provider.id)}
@@ -670,7 +670,7 @@ export default function ConnectionsPage() {
                     ].map((method) => (
                       <Card
                         key={method.value}
-                        className={`cursor-pointer p-4 transition-all hover:border-[#ee3224] ${
+                        className={`cursor-pointer p-4 transition-all duration-150 ease-out border border-[#E5E7EB] bg-white hover:border-[#ee3224] hover:shadow-md hover:-translate-y-0.5 ${
                           authMethod === method.value ? "border-[#ee3224] bg-[#F5F7FA]" : ""
                         }`}
                         onClick={() => setAuthMethod(method.value)}
