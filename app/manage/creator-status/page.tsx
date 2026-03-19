@@ -147,7 +147,7 @@ export default function CreatorStatusPage() {
       <TooltipProvider>
         <>
           {/* Page Header */}
-          <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
+          <div className="sticky top-0 z-10 bg-white px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">

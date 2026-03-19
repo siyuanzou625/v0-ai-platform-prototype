@@ -453,7 +453,7 @@ export default function ProjectsPage() {
     <AppLayout>
       <>
         {/* Header */}
-        <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
+        <div className="sticky top-0 z-10 bg-white px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">
@@ -655,12 +655,64 @@ export default function ProjectsPage() {
             {/* Dashboard View */}
             {viewMode === "dashboard" && (
               <div className="space-y-6">
-                {/* Metrics */}
+                {/* Summary Metric Cards */}
                 <div className="grid grid-cols-4 gap-4">
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}><CardContent className="py-2.5 px-5"><div className="flex items-center justify-between"><div><p className="text-sm text-muted-foreground">Total Projects</p><p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{totalProjects}</p></div><div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ee3224]/10"><Briefcase className="h-6 w-6 text-[#ee3224]" /></div></div><p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p></CardContent></Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}><CardContent className="py-2.5 px-5"><div className="flex items-center justify-between"><div><p className="text-sm text-muted-foreground">In Progress</p><p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{inProgressCount}</p></div><div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10"><PlayCircle className="h-6 w-6 text-amber-500" /></div></div><p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p></CardContent></Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}><CardContent className="py-2.5 px-5"><div className="flex items-center justify-between"><div><p className="text-sm text-muted-foreground">Ready to Deploy</p><p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{readyCount}</p></div><div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10"><CheckCircle2 className="h-6 w-6 text-emerald-500" /></div></div><p className="mt-2 text-xs text-emerald-600 hover:underline">View ready projects</p></CardContent></Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("blocked")}><CardContent className="py-2.5 px-5"><div className="flex items-center justify-between"><div><p className="text-sm text-muted-foreground">Blocked</p><p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{blockedCount}</p></div><div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5F7FA]"><AlertCircle className="h-6 w-6 text-[#ee3224]" /></div></div><p className="mt-2 text-xs text-red-600 hover:underline">View blocked projects</p></CardContent></Card>
+                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}>
+                    <CardContent className="py-2.5 px-5">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-muted-foreground">Total Projects</p>
+                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{totalProjects}</p>
+                        </div>
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ee3224]/10">
+                          <Briefcase className="h-6 w-6 text-[#ee3224]" />
+                        </div>
+                      </div>
+                      <p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
+                    <CardContent className="py-2.5 px-5">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-muted-foreground">In Progress</p>
+                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{inProgressCount}</p>
+                        </div>
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
+                          <PlayCircle className="h-6 w-6 text-amber-500" />
+                        </div>
+                      </div>
+                      <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}>
+                    <CardContent className="py-2.5 px-5">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-muted-foreground">Ready to Deploy</p>
+                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{readyCount}</p>
+                        </div>
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
+                          <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+                        </div>
+                      </div>
+                      <p className="mt-2 text-xs text-emerald-600 hover:underline">View ready projects</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("blocked")}>
+                    <CardContent className="py-2.5 px-5">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-muted-foreground">Blocked</p>
+                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{blockedCount}</p>
+                        </div>
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5F7FA]">
+                          <AlertCircle className="h-6 w-6 text-[#ee3224]" />
+                        </div>
+                      </div>
+                      <p className="mt-2 text-xs text-red-600 hover:underline">View blocked projects</p>
+                    </CardContent>
+                  </Card>
                 </div>
 
                 {/* Two Column Layout: Activity + Projects */}
