@@ -577,7 +577,7 @@ export default function MyAppsPage() {
         </button>
         
         {!isCollapsed && (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {apps.map(app => (
               <AppCard key={app.id} app={app} showEditButton={showEditButton} />
             ))}
@@ -720,7 +720,7 @@ export default function MyAppsPage() {
                       <Clock className="h-4 w-4 text-muted-foreground" />
                       <h2 className="text-lg font-semibold text-foreground">Continue</h2>
                     </div>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                       {recentlyUsed.map(recent => {
                         const app = allApps.find(a => a.id === recent.appId)
                         if (!app) return null

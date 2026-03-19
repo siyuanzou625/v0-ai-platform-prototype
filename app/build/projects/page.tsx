@@ -280,6 +280,7 @@ const getDueDateColor = (status: string) => {
   }
 }
 
+// Projects Page Component
 export default function ProjectsPage() {
   const router = useRouter()
   
