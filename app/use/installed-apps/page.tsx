@@ -531,13 +531,10 @@ export default function MyAppsPage() {
           </div>
           <p className="mt-3 text-sm text-muted-foreground truncate">{app.tagline}</p>
           
-          <div className="mt-3 flex items-center justify-between">
+          <div className="mt-3 flex items-center">
             <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(app.source)}`}>
               {app.source}
             </Badge>
-            {app.owner && app.source === "Team" && (
-              <span className="text-xs text-muted-foreground">Owned by: {app.owner}</span>
-            )}
           </div>
           
 
