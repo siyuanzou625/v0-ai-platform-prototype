@@ -462,13 +462,6 @@ export function TopBar() {
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-[#F5F7FA] focus:ring-2 focus:ring-[#ee3224] focus:ring-offset-1"
-                  onClick={() => router.push("/manage")}
-                >
-                  <Brush className="h-5 w-5 text-[#333]" />
-                  <span className="text-sm">Creator Studio</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-[#F5F7FA] focus:ring-2 focus:ring-[#ee3224] focus:ring-offset-1"
                   onClick={() => router.push("/settings")}
                 >
                   <Settings className="h-5 w-5 text-[#333]" />
