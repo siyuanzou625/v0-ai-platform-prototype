@@ -734,7 +734,7 @@ export default function TemplatesPage() {
                 </CardHeader>
                 <CardContent className="py-3 px-5">
                   {/* Divider */}
-                  <div className="w-full border-t border-[#E5E7EB] mb-3"></div>
+                  <div className="w-full border-t border-[#E5E7EB] mb-4"></div>
                   {/* Creator info with Follow button */}
                   <div className="mb-3">
                     <div className="flex items-center gap-2">
@@ -785,7 +785,7 @@ export default function TemplatesPage() {
                     </button>
                   </div>
 
-                  <div className="mb-2 flex items-center gap-2">
+                  <div className="mb-3 flex items-center gap-2">
                     <Badge variant="secondary">{template.category}</Badge>
                     <Badge
                       variant="outline"

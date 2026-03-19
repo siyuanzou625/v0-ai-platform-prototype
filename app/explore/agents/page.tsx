@@ -863,11 +863,11 @@ export default function ExploreAgentsPage() {
                       </div>
                       <CardDescription className="text-xs mt-3 line-clamp-2">{agent.description}</CardDescription>
                     </CardHeader>
-<CardContent className="py-3 px-5 space-y-2">
+<CardContent className="py-3 px-5">
                       {/* Divider */}
-                      <div className="w-full border-t border-[#E5E7EB] -mt-1 mb-2"></div>
+                      <div className="w-full border-t border-[#E5E7EB] mb-4"></div>
                       {/* Creator row with follow button */}
-                      <div className="space-y-1">
+                      <div className="space-y-1 mb-3">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={(e) => openCreatorProfile(agent.authorId, e)}
@@ -914,13 +914,13 @@ export default function ExploreAgentsPage() {
                       </div>
                       
                       {/* Category and Version */}
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-2 mb-3">
                         <Badge variant="secondary">{agent.category}</Badge>
                         <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
                       
                       {/* Stats row */}
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-3 text-sm text-muted-foreground pt-1">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="flex items-center gap-1">
