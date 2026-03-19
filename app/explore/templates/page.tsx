@@ -906,15 +906,26 @@ export default function TemplatesPage() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="documentation" className="m-0">
-                  <div className="prose max-w-none">
-                    <h3>Getting Started</h3>
-                    <p>This template provides a complete workflow for {selectedTemplate?.name.toLowerCase()}.</p>
-                    <h4>Prerequisites</h4>
-                    <ul>
+                <TabsContent value="documentation" className="m-0 space-y-4">
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold text-base mb-2">Getting Started</h4>
+                    <p className="text-sm text-muted-foreground">
+                      This template provides a complete workflow for {selectedTemplate?.name.toLowerCase()}.
+                    </p>
+                  </div>
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold text-base mb-2">Prerequisites</h4>
+                    <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
                       <li>Basic understanding of workflow concepts</li>
                       <li>API credentials for required integrations</li>
                     </ul>
+                  </div>
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold text-base mb-2">Usage</h4>
+                    <p className="text-sm text-muted-foreground mb-2">Import and configure the template in your project:</p>
+                    <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
+                      <code className="text-sm">import {'{'} {selectedTemplate?.name.replace(/\s+/g, '')} {'}'} from &apos;@templates/{selectedTemplate?.name.toLowerCase().replace(/\s+/g, '-')}&apos;</code>
+                    </pre>
                   </div>
                 </TabsContent>
 

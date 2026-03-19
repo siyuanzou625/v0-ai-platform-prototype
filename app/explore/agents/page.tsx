@@ -1181,14 +1181,25 @@ export default function ExploreAgentsPage() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="documentation" className="m-0">
-                  <div className="prose max-w-none">
-                    <h3>Getting Started</h3>
-                    <p>Follow these steps to set up {selectedAgent?.name} in your environment.</p>
-                    <h4>Installation</h4>
-                    <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
+                <TabsContent value="documentation" className="m-0 space-y-4">
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold text-base mb-2">Getting Started</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Follow these steps to set up {selectedAgent?.name} in your environment.
+                    </p>
+                  </div>
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold text-base mb-2">Installation</h4>
+                    <p className="text-sm text-muted-foreground mb-2">Install the agent package:</p>
+                    <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
                       <code className="text-sm">npm install @agents/{selectedAgent?.name.toLowerCase().replace(/\s+/g, "-")}</code>
                     </pre>
+                  </div>
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold text-base mb-2">Configuration</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Configure the agent with your API keys and customize its behavior through the settings panel.
+                    </p>
                   </div>
                 </TabsContent>
 
