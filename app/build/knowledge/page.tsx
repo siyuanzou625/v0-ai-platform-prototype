@@ -199,6 +199,10 @@ const getStatusBadge = (status: string) => {
 export default function KnowledgePage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
+  const [typeFilter, setTypeFilter] = useState("all")
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [ownerFilter, setOwnerFilter] = useState("all")
+  const [sortBy, setSortBy] = useState("recent")
 
   // Knowledge base creation states
   const [showNewKnowledge, setShowNewKnowledge] = useState(false)
@@ -213,11 +217,30 @@ export default function KnowledgePage() {
   const [kbEmbeddingModel, setKbEmbeddingModel] = useState("text-embedding-3-large")
   const [kbVisibility, setKbVisibility] = useState("private")
 
-  const filteredKnowledgeBases = knowledgeBases.filter(
-    (kb) =>
-      kb.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      kb.description.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredKnowledgeBases = knowledgeBases
+    .filter((kb) => {
+      const matchesSearch = kb.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        kb.description.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesType = typeFilter === "all" || kb.primaryType === typeFilter
+      const matchesStatus = statusFilter === "all" || kb.status === statusFilter
+      return matchesSearch && matchesType && matchesStatus
+    })
+    .sort((a, b) => {
+      if (sortBy === "recent") return 0 // Keep original order (mock data already sorted)
+      if (sortBy === "name") return a.name.localeCompare(b.name)
+      if (sortBy === "used") return b.usedByAgents - a.usedByAgents
+      return 0
+    })
+
+  const clearFilters = () => {
+    setSearchQuery("")
+    setTypeFilter("all")
+    setStatusFilter("all")
+    setOwnerFilter("all")
+    setSortBy("recent")
+  }
+
+  const hasActiveFilters = searchQuery || typeFilter !== "all" || statusFilter !== "all" || ownerFilter !== "all"
 
   const handleOpenKnowledge = (kbId: string) => {
     router.push(`/build/knowledge/${kbId}`)
@@ -563,9 +586,9 @@ export default function KnowledgePage() {
 
         {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Search */}
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1 max-w-md">
+          {/* Search and Filters */}
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search knowledge bases..."
@@ -574,6 +597,53 @@ export default function KnowledgePage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-36">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="document">Documents</SelectItem>
+                <SelectItem value="spreadsheet">Datasets</SelectItem>
+                <SelectItem value="video">Media</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-36">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="ready">Ready</SelectItem>
+                <SelectItem value="processing">Processing</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={ownerFilter} onValueChange={setOwnerFilter}>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="Owner" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="me">Me</SelectItem>
+                <SelectItem value="team">Team</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-36">
+                <SelectValue placeholder="Sort" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Most Recent</SelectItem>
+                <SelectItem value="used">Most Used</SelectItem>
+                <SelectItem value="name">Name</SelectItem>
+              </SelectContent>
+            </Select>
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                Clear filters
+              </Button>
+            )}
           </div>
 
           {/* Knowledge Base Grid */}
