@@ -126,9 +126,9 @@ export default function CrossDevicePage() {
               {devices.map((device) => (
                 <div
                   key={device.id}
-                  className={`group relative rounded border p-4 transition-all duration-150 ease-out ${
+                  className={`group relative rounded border p-4 transition-colors duration-150 ease-out ${
                     device.status === "online"
-                      ? "border-[#E5E7EB] cursor-pointer hover:border-[#ee3224] hover:shadow-md hover:-translate-y-0.5"
+                      ? "border-[#E5E7EB] cursor-pointer hover:border-[#ee3224]"
                       : "border-dashed border-border bg-secondary/30"
                   }`}
                 >
@@ -229,7 +229,7 @@ export default function CrossDevicePage() {
                 {crossDeviceFeatures.map((feature) => (
                   <div
                     key={feature.name}
-                    className="group flex items-center gap-4 rounded border border-[#E5E7EB] p-4 cursor-pointer transition-all duration-150 ease-out hover:border-[#ee3224] hover:shadow-md hover:-translate-y-0.5"
+                    className="group flex items-center gap-4 rounded border border-[#E5E7EB] p-4 cursor-pointer transition-colors duration-150 ease-out hover:border-[#ee3224]"
                   >
                     <div className="flex h-12 w-12 items-center justify-center rounded bg-primary/10">
                       <feature.icon className="h-6 w-6 text-primary" />
