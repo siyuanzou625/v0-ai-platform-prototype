@@ -395,7 +395,7 @@ export default function ConnectionsPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openDetailView(conn)}
               >
-                <CardContent className="py-2.5 px-5">
+                <CardContent className="py-2 px-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100 text-sm font-semibold text-slate-600">
@@ -412,7 +412,7 @@ export default function ConnectionsPage() {
                       <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 mt-3">
+                  <div className="flex items-center gap-2 mt-2">
                     <Badge variant="outline" className="text-xs">{getTypeBadge(conn.type)}</Badge>
                     <TooltipProvider>
                       <Tooltip>
@@ -428,7 +428,7 @@ export default function ConnectionsPage() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-3">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {conn.lastUsed}

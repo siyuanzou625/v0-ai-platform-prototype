@@ -553,7 +553,7 @@ export default function ProjectsPage() {
                     <Sparkles className="h-4 w-4 mr-2" />
                     Build My Agent
                   </Button>
-                  <div className="flex items-center justify-between mt-3">
+                  <div className="flex items-center justify-between mt-2">
                     <button
                       onClick={() => {
                         setNewProjectMode("workflow")
@@ -661,7 +661,7 @@ export default function ProjectsPage() {
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleMetricClick("all")}
                   >
-                    <CardContent className="py-2.5 px-5">
+                    <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">Total Projects</p>
@@ -674,11 +674,9 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p>
                     </CardContent>
                   </Card>
-                  <Card
-                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
-                    onClick={() => handleMetricClick("building")}
-                  >
-                    <CardContent className="py-2.5 px-5">
+                  {/* In Progress Card */}
+                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
+                    <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">In Progress</p>
@@ -691,11 +689,9 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
-                  <Card
-                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
-                    onClick={() => handleMetricClick("ready")}
-                  >
-                    <CardContent className="py-2.5 px-5">
+                  {/* Ready to Deploy Card */}
+                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}>
+                    <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">Ready to Deploy</p>
@@ -712,7 +708,7 @@ export default function ProjectsPage() {
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleMetricClick("blocked")}
                   >
-                    <CardContent className="py-2.5 px-5">
+                    <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">Blocked</p>
@@ -780,7 +776,7 @@ export default function ProjectsPage() {
                           className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <CardContent className="py-2.5 px-5">
+                          <CardContent className="py-2 px-4">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
                                 <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -799,7 +795,7 @@ export default function ProjectsPage() {
                               </div>
                               {getStatusBadge(project.status)}
                             </div>
-                            <div className="mt-3 flex items-center gap-2">
+                            <div className="mt-2 flex items-center gap-2">
                               <Progress 
                                 value={project.progress} 
                                 className={`h-1.5 flex-1 ${
@@ -811,7 +807,7 @@ export default function ProjectsPage() {
                               />
                               <span className="text-xs font-medium text-muted-foreground w-8 text-right">{project.progress}%</span>
                             </div>
-                            <div className="mt-3 flex items-center justify-between">
+                            <div className="mt-2 flex items-center justify-between">
                               <div>
                                 <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
                                 <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
@@ -858,7 +854,7 @@ export default function ProjectsPage() {
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleOpenProject(project.id)}
                   >
-                    <CardContent className="py-2.5 px-5">
+                    <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -907,12 +903,12 @@ export default function ProjectsPage() {
                         </div>
                       </div>
 
-                      <p className="mt-3 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
                         {project.description}
                       </p>
 
                       {/* Progress */}
-                      <div className="mt-3 flex items-center gap-2">
+                      <div className="mt-2 flex items-center gap-2">
                         <Progress 
                           value={project.progress} 
                           className={`h-1.5 flex-1 ${
@@ -926,7 +922,7 @@ export default function ProjectsPage() {
                       </div>
 
                       {/* Owner and Team */}
-                      <div className="mt-3 flex items-center justify-between">
+                      <div className="mt-2 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Avatar className="h-6 w-6">
                             <AvatarFallback className="text-xs bg-muted">{project.owner.initials}</AvatarFallback>
@@ -948,7 +944,7 @@ export default function ProjectsPage() {
                       </div>
 
                       {/* Metadata */}
-                      <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
                         <div className="flex items-center gap-3">
                           <span>{project.knowledgeBases} KB</span>
                           <span>{project.connections} connections</span>
@@ -961,7 +957,7 @@ export default function ProjectsPage() {
 
                       {/* Blocked Reason */}
                       {project.blockedReason && (
-                        <div className="mt-3 rounded bg-[#F5F7FA] px-2 py-1.5 text-xs text-[#ee3224]">
+                        <div className="mt-2 rounded bg-[#F5F7FA] px-2 py-1.5 text-xs text-[#ee3224]">
                           {project.blockedReason}
                         </div>
                       )}

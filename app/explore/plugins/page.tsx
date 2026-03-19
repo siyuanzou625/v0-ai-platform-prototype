@@ -692,7 +692,7 @@ export default function PluginsPage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {plugins.filter((p) => p.installed).map((plugin) => (
               <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                <CardContent className="flex items-center justify-between py-2.5 px-5">
+                <CardContent className="flex items-center justify-between py-2 px-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
                       <plugin.icon className="h-4 w-4 text-slate-600" />
@@ -726,7 +726,7 @@ export default function PluginsPage() {
 
               return (
                 <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                  <CardHeader className="py-2.5 px-5 pb-2">
+                  <CardHeader className="py-2 px-4 pb-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -742,7 +742,7 @@ export default function PluginsPage() {
                     </div>
                     <CardDescription className="text-sm mt-3">{plugin.description}</CardDescription>
                   </CardHeader>
-                  <CardContent className="py-2 px-5">
+                  <CardContent className="py-2 px-4">
                     {/* Creator info with Follow button */}
                     <div className="mb-3">
                       <div className="flex items-center gap-2">

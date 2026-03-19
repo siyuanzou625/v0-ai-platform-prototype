@@ -719,7 +719,7 @@ export default function TemplatesPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openTemplateModal(template)}
               >
-                <CardHeader className="py-2.5 px-5 pb-2">
+                <CardHeader className="py-2 px-4 pb-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -729,11 +729,11 @@ export default function TemplatesPage() {
                     </div>
                     <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(template.category)}`}>{template.category}</Badge>
                   </div>
-                  <CardDescription className="text-sm line-clamp-2 mt-3">{template.description}</CardDescription>
+                  <CardDescription className="text-sm line-clamp-2 mt-2">{template.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="py-2 px-5">
+                <CardContent className="py-2 px-4">
                   {/* Creator info with Follow button */}
-                  <div className="mb-3">
+                  <div className="mb-2">
                     <div className="flex items-center gap-2">
                       <button
                         className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
@@ -782,7 +782,7 @@ export default function TemplatesPage() {
                     </button>
                   </div>
 
-                  <div className="mb-3 flex items-center gap-2">
+                  <div className="mb-2 flex items-center gap-2">
                     <Badge variant="secondary">{template.category}</Badge>
                     <Badge
                       variant="outline"
@@ -1082,7 +1082,7 @@ export default function TemplatesPage() {
                               </div>
 
                               {/* Actions */}
-                              <div className="flex items-center gap-2 mt-3">
+                              <div className="flex items-center gap-2 mt-2">
                                 <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => setReplyingTo(discussion.id)}>
                                   <Reply className="h-3 w-3" /> Reply
                                 </Button>
@@ -1098,7 +1098,7 @@ export default function TemplatesPage() {
 
                               {/* Reply input */}
                               {replyingTo === discussion.id && (
-                                <div className="mt-3 flex gap-2">
+                                <div className="mt-2 flex gap-2">
                                   <Input
                                     placeholder="Write a reply..."
                                     value={replyContent}
@@ -1112,7 +1112,7 @@ export default function TemplatesPage() {
 
                               {/* Replies */}
                               {discussion.replies.length > 0 && (
-                                <div className="mt-3">
+                                <div className="mt-2">
                                   <button
                                     className="text-xs text-[#ee3224] hover:underline flex items-center gap-1"
                                     onClick={() => {
