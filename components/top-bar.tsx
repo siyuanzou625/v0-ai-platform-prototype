@@ -455,7 +455,7 @@ export function TopBar() {
               <div className="p-2">
                 <DropdownMenuItem 
                   className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-[#F5F7FA] focus:ring-2 focus:ring-[#ee3224] focus:ring-offset-1"
-                  onClick={() => router.push("/manage/creator-status")}
+                  onClick={() => router.push("/profile")}
                 >
                   <User className="h-5 w-5 text-[#333]" />
                   <span className="text-sm">My Profile</span>
