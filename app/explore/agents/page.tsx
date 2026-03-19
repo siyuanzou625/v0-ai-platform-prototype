@@ -1150,9 +1150,6 @@ export default function ExploreAgentsPage() {
                     </div>
                   </div>
                 </div>
-                <Button className="bg-[#ee3224] hover:bg-[#cc2a1e]">
-                  Install <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
               </div>
             </DialogHeader>
 
