@@ -764,20 +764,27 @@ export default function ExploreAgentsPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
+      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Agents</h1>
+        <div className="border-b border-border bg-white px-6 py-4">
+          <div className="mb-4">
+            <div className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-[#ee3224]" />
+              <h1 className="text-xl font-semibold text-foreground">Agents</h1>
+            </div>
             <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
               Discover and install AI agents from our marketplace.
             </p>
           </div>
-          <Button className="gap-2">
-            <Bot className="h-4 w-4" /> Build Agent
-          </Button>
+          <div className="flex items-center justify-end">
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+              <Bot className="h-4 w-4" /> Build Agent
+            </Button>
+          </div>
         </div>
 
+        {/* Content */}
+        <div className="flex-1 p-6 space-y-6">
         {/* Search and Filters */}
         <Card>
           <CardContent className="flex flex-wrap items-center gap-4 p-4">
@@ -1879,6 +1886,7 @@ export default function ExploreAgentsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
     </AppLayout>
   )
