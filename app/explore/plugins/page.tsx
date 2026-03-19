@@ -729,14 +729,12 @@ export default function PluginsPage() {
               return (
                 <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
                   <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10">
                           <plugin.icon className="h-5 w-5 text-primary" />
                         </div>
-                        <div>
-                          <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
-                        </div>
+                        <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
                       </div>
                       {plugin.installed ? (
                         <Badge className="bg-chart-3"><CheckCircle className="mr-1 h-3 w-3" /> Installed</Badge>

@@ -587,30 +587,30 @@ export default function KnowledgePage() {
                   onClick={() => handleOpenKnowledge(kb.id)}
                 >
                   <CardContent className="p-5">
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={`flex h-10 w-10 items-center justify-center rounded ${iconColorClass}`}>
                           <KbIcon className="h-5 w-5" />
                         </div>
-                        <div>
-                          <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
-                            {kb.name}
-                          </h3>
-                          {getStatusBadge(kb.status)}
-                        </div>
+                        <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
+                          {kb.name}
+                        </h3>
                       </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                          <DropdownMenuItem>Export</DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div className="flex items-center gap-2">
+                        {getStatusBadge(kb.status)}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                            <DropdownMenuItem>Export</DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
 
                     <p className="mt-3 line-clamp-2 text-sm text-muted-foreground leading-relaxed">

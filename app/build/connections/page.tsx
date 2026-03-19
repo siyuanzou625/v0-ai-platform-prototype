@@ -394,7 +394,7 @@ export default function ConnectionsPage() {
                 onClick={() => openDetailView(conn)}
               >
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded bg-muted text-sm font-semibold">
                         {conn.provider === "custom-webhook" ? (
@@ -403,13 +403,11 @@ export default function ConnectionsPage() {
                           conn.provider.charAt(0).toUpperCase()
                         )}
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="card-title-text font-medium text-foreground transition-colors duration-150">{conn.displayName}</h3>
-                          <div className={`h-2 w-2 rounded-full ${getStatusColor(conn.status)}`} />
-                        </div>
-                        <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
-                      </div>
+                      <h3 className="card-title-text font-medium text-foreground transition-colors duration-150">{conn.displayName}</h3>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`h-2 w-2 rounded-full ${getStatusColor(conn.status)}`} />
+                      <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 mb-2">

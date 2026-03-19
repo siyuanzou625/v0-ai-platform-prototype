@@ -500,19 +500,19 @@ export default function MyAppsPage() {
         className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
       >
         <CardContent className="p-4">
-          <div className="flex items-start justify-between">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded bg-[#ee3224]/10">
                 <IconComponent className="h-5 w-5 text-[#ee3224]" />
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{app.name}</h3>
-                  <div className={`h-2 w-2 rounded-full ${getStatusColor(app.status)}`} />
-                </div>
-                <p className="text-sm text-muted-foreground truncate">{app.tagline}</p>
-              </div>
+              <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{app.name}</h3>
             </div>
+            <div className="flex items-center gap-2">
+              <div className={`h-2 w-2 rounded-full ${getStatusColor(app.status)}`} />
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground truncate mb-2">{app.tagline}</p>
+          <div className="flex items-center justify-end">
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button 
                 variant="ghost" 

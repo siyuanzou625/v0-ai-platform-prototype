@@ -700,14 +700,12 @@ export default function TemplatesPage() {
                 onClick={() => openTemplateModal(template)}
               >
                 <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10">
                         <FileText className="h-5 w-5 text-primary" />
                       </div>
-                      <div>
-                        <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
-                      </div>
+                      <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
                     </div>
                     <Badge variant="secondary" className="text-xs">{template.category}</Badge>
                   </div>

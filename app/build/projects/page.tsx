@@ -860,7 +860,7 @@ export default function ProjectsPage() {
                     onClick={() => handleOpenProject(project.id)}
                   >
                     <CardContent className="p-5">
-                      <div className="flex items-start justify-between">
+                      <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
                           <div className={`flex h-10 w-10 items-center justify-center rounded ${
                             project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
@@ -871,45 +871,43 @@ export default function ProjectsPage() {
                               <Code2 className="h-5 w-5 text-blue-500" />
                             )}
                           </div>
-                          <div>
-                            <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
-                              {project.name}
-                            </h3>
-                            <div className="flex items-center gap-2 mt-1">
-                              {getEnvironmentBadge(project.environment)}
-                            </div>
-                          </div>
+                          <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
+                            {project.name}
+                          </h3>
                         </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <Pencil className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Share2 className="mr-2 h-4 w-4" />
-                              Share
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Rocket className="mr-2 h-4 w-4" />
-                              Deploy
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Settings className="mr-2 h-4 w-4" />
-                              Settings
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive">
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="flex items-center gap-2">
+                          {getEnvironmentBadge(project.environment)}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <Pencil className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Share2 className="mr-2 h-4 w-4" />
+                                Share
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Rocket className="mr-2 h-4 w-4" />
+                                Deploy
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Settings className="mr-2 h-4 w-4" />
+                                Settings
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-destructive">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </div>
 
                       <p className="mt-3 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
