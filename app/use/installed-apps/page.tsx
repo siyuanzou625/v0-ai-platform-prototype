@@ -580,7 +580,7 @@ export default function MyAppsPage() {
         </button>
         
         {!isCollapsed && (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
             {apps.map(app => (
               <AppCard key={app.id} app={app} showEditButton={showEditButton} />
             ))}
@@ -722,7 +722,7 @@ export default function MyAppsPage() {
                       <Clock className="h-4 w-4 text-muted-foreground" />
                       <h2 className="text-lg font-semibold text-foreground">Continue</h2>
                     </div>
-                    <div className="flex gap-4 overflow-x-auto pb-2">
+                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                       {recentlyUsed.map(recent => {
                         const app = allApps.find(a => a.id === recent.appId)
                         if (!app) return null
@@ -731,7 +731,7 @@ export default function MyAppsPage() {
                         return (
                           <Card 
                             key={recent.appId}
-                            className="card-interactive group flex-shrink-0 w-[260px] border border-[#E5E7EB] bg-white shadow-sm"
+                            className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           >
                             <CardContent className="py-2.5 px-5">
                               <div className="flex items-center gap-3">
