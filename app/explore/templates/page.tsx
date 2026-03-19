@@ -786,7 +786,6 @@ export default function TemplatesPage() {
                   </div>
 
                   <div className="mb-3 flex items-center gap-2">
-                    <Badge variant="secondary">{template.category}</Badge>
                     <Badge
                       variant="outline"
                       className={
