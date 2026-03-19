@@ -21,6 +21,7 @@ import {
   Award,
   Sparkles,
   Cpu,
+  MessageSquare,
 } from "lucide-react"
 
 const navigation = [
@@ -40,6 +41,7 @@ const navigation = [
       { name: "Agents", href: "/explore/agents", icon: Bot },
       { name: "Templates", href: "/explore/templates", icon: FileText },
       { name: "Plugins", href: "/explore/plugins", icon: Puzzle },
+      { name: "Community", href: "/community", icon: MessageSquare },
     ],
   },
   {

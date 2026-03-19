@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,7 +13,6 @@ import {
   Search,
   MessageSquare,
   ArrowUp,
-  ArrowLeft,
   Plus,
   TrendingUp,
   Users,
@@ -51,7 +49,6 @@ const topContributors = [
 ]
 
 export default function CommunityPage() {
-  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState("trending")
 
@@ -73,19 +70,11 @@ export default function CommunityPage() {
         <div className="sticky top-0 z-10 bg-white px-6 py-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-[#6B7280] hover:text-[#333]"
-                  onClick={() => router.back()}
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
+              <div className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5 text-[#ee3224]" />
                 <h1 className="text-2xl font-semibold text-foreground">Community</h1>
               </div>
-              <p className="text-sm text-muted-foreground ml-11 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Connect with other creators, share ideas, and get help
               </p>
             </div>

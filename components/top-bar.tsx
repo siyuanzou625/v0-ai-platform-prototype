@@ -144,8 +144,6 @@ export function TopBar() {
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [])
 
-  const unreadCount = discussions.filter((d) => d.unread).length
-
   return (
     <>
       <header className="sticky top-0 z-[1000] flex h-16 items-center justify-between border-b border-[#E5E7EB] bg-white px-6">
@@ -297,26 +295,12 @@ export function TopBar() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Community Button */}
-          <Button
-            variant="ghost"
-            className="relative gap-2 px-3 text-[#333] hover:bg-[#F5F7FA] hover:text-[#ee3224]"
-            onClick={() => router.push("/community")}
-          >
-            <MessageSquare className="h-5 w-5" />
-            <span className="text-sm font-normal">Community</span>
-            {unreadCount > 0 && (
-              <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#ee3224] text-[10px] font-medium text-white">
-                {unreadCount}
-              </span>
-            )}
-          </Button>
-
           {/* Help Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-[#333] hover:bg-[#F5F7FA] hover:text-[#ee3224]">
+              <Button variant="ghost" className="gap-2 px-3 text-[#333] hover:bg-[#F5F7FA] hover:text-[#ee3224]">
                 <HelpCircle className="h-5 w-5" />
+                <span className="text-sm font-normal">Help Center</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[250px] rounded border-[#E5E7EB] p-2 shadow-lg">
