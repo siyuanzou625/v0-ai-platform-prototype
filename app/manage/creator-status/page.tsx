@@ -166,13 +166,13 @@ export default function CreatorStatusPage() {
             
             {/* View Toggle */}
             <div className="flex items-center gap-3 mt-4">
-              <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1">
+              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
                 <button
                   onClick={() => setViewMode("personal")}
                   className={`px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "personal"
-                      ? "bg-[#ee3224] text-white shadow-sm"
-                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
                   }`}
                 >
                   Personal
@@ -181,8 +181,8 @@ export default function CreatorStatusPage() {
                   onClick={() => setViewMode("team")}
                   className={`px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "team"
-                      ? "bg-[#ee3224] text-white shadow-sm"
-                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
                   }`}
                 >
                   Team

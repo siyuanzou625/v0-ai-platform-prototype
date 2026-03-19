@@ -612,13 +612,13 @@ export default function ProjectsPage() {
                   Clear filters
                 </Button>
               )}
-              <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1 ml-auto">
+              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 ml-auto">
                 <button
                   onClick={() => handleViewChange("dashboard")}
                   className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "dashboard"
-                      ? "bg-[#ee3224] text-white shadow-sm"
-                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
                   }`}
                 >
                   <LayoutDashboard className="h-4 w-4" />
@@ -628,8 +628,8 @@ export default function ProjectsPage() {
                   onClick={() => handleViewChange("grid")}
                   className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "grid"
-                      ? "bg-[#ee3224] text-white shadow-sm"
-                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
                   }`}
                 >
                   <LayoutGrid className="h-4 w-4" />
@@ -639,8 +639,8 @@ export default function ProjectsPage() {
                   onClick={() => handleViewChange("list")}
                   className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "list"
-                      ? "bg-[#ee3224] text-white shadow-sm"
-                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
                   }`}
                 >
                   <List className="h-4 w-4" />
