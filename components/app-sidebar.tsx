@@ -76,43 +76,58 @@ export function AppSidebar() {
       </div>
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         {/* Home Link */}
-        <Link
-          href="/"
-          className="mb-4 flex items-center gap-2 px-3 text-xs font-medium uppercase tracking-wider text-[#6B7280] hover:text-[#ee3224] transition-colors"
-        >
-          <Home className="h-4 w-4" />
-          HOME
-        </Link>
+        {(() => {
+          const isHomeActive = pathname === "/"
+          return (
+            <Link
+              href="/"
+              className={cn(
+                "mb-4 flex items-center gap-2 rounded px-3 py-2 text-xs font-medium uppercase tracking-wider transition-colors",
+                isHomeActive
+                  ? "bg-[#ee3224] text-white"
+                  : "text-[#ee3224] hover:bg-[#F5F7FA]"
+              )}
+            >
+              <Home className="h-4 w-4" />
+              HOME
+            </Link>
+          )
+        })()}
         
-        {navigation.map((section) => (
-          <div key={section.title} className="mb-6">
-            <h3 className="mb-2 flex items-center gap-2 px-3 text-xs font-medium uppercase tracking-wider text-[#6B7280]">
-              <section.icon className="h-4 w-4" />
-              {section.title}
-            </h3>
-            <ul className="space-y-1">
-              {section.items.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
-                return (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
-                        isActive
-                          ? "border-l-[3px] border-[#ee3224] bg-[#ee3224] text-white"
-                          : "text-[#333] hover:bg-[#F5F7FA]"
-                      )}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {item.name}
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        ))}
+        {navigation.map((section) => {
+          const isSectionActive = section.items.some(
+            (item) => pathname === item.href || pathname.startsWith(item.href + "/")
+          )
+          return (
+            <div key={section.title} className="mb-6">
+              <h3 className="mb-2 flex items-center gap-2 px-3 text-xs font-medium uppercase tracking-wider text-[#ee3224]">
+                <section.icon className="h-4 w-4" />
+                {section.title}
+              </h3>
+              <ul className="space-y-1">
+                {section.items.map((item) => {
+                  const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          "flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
+                          isActive
+                            ? "bg-[#ee3224] text-white"
+                            : "text-[#333] hover:bg-[#F5F7FA]"
+                        )}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.name}
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          )
+        })}
       </nav>
     </aside>
   )
