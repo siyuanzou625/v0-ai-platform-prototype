@@ -861,13 +861,7 @@ export default function PluginsPage() {
                     </div>
                   )}
                   <div>
-                    <div className="flex items-center gap-2">
-                      <DialogTitle className="text-xl">{selectedPlugin?.name}</DialogTitle>
-                      <Badge variant="secondary">v{selectedPlugin?.version}</Badge>
-                      {selectedPlugin?.installed && (
-                        <Badge className="bg-chart-3"><CheckCircle className="mr-1 h-3 w-3" /> Installed</Badge>
-                      )}
-                    </div>
+                    <DialogTitle className="text-xl">{selectedPlugin?.name}</DialogTitle>
                     <DialogDescription className="mt-1">{selectedPlugin?.description}</DialogDescription>
                     <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
                       <button 
@@ -887,18 +881,6 @@ export default function PluginsPage() {
                     </div>
                   </div>
                 </div>
-                {selectedPlugin?.installed ? (
-                  <div className="flex gap-2">
-                    <Switch checked={selectedPlugin?.enabled} />
-                    <Button variant="outline" className="gap-2">
-                      <Settings className="h-4 w-4" /> Configure
-                    </Button>
-                  </div>
-                ) : (
-                  <Button className="gap-2">
-                    <Download className="h-4 w-4" /> Install Plugin
-                  </Button>
-                )}
               </div>
             </DialogHeader>
 
