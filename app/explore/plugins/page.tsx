@@ -173,6 +173,30 @@ const mockFollowers = [
   { id: "user8", name: "Maria Garcia", username: "mariagarcia", verified: false },
 ]
 
+// Category color mapping (matches Templates/Agents pages)
+const getCategoryBadgeStyle = (category: string): string => {
+  switch (category) {
+    case "AI Models":
+      return "bg-purple-50 text-purple-700 border border-purple-200"
+    case "Databases":
+      return "bg-blue-50 text-blue-700 border border-blue-200"
+    case "Cloud":
+      return "bg-sky-50 text-sky-700 border border-sky-200"
+    case "Communication":
+      return "bg-teal-50 text-teal-700 border border-teal-200"
+    case "Productivity":
+      return "bg-violet-50 text-violet-700 border border-violet-200"
+    case "Analytics":
+      return "bg-amber-50 text-amber-700 border border-amber-200"
+    case "Security":
+      return "bg-red-50 text-red-700 border border-red-200"
+    case "DevOps":
+      return "bg-orange-50 text-orange-700 border border-orange-200"
+    default:
+      return "bg-slate-50 text-slate-700 border border-slate-200"
+  }
+}
+
 const plugins = [
   {
     id: 1,
@@ -753,7 +777,7 @@ export default function PluginsPage() {
                     <CardDescription className="text-sm mt-2.5">{plugin.description}</CardDescription>
                     {/* Category and Version - Product Info */}
                     <div className="flex items-center gap-2 mt-2.5">
-                      <Badge variant="secondary">{plugin.category}</Badge>
+                      <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(plugin.category)}`}>{plugin.category}</Badge>
                       <span className="text-xs text-muted-foreground">v{plugin.version}</span>
                     </div>
                   </CardHeader>

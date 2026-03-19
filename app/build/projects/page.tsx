@@ -1088,7 +1088,11 @@ export default function ProjectsPage() {
 </TableCell>
                           <TableCell className="py-4">
                             <div className="flex items-center gap-2">
-                              <Avatar className="h-6 w-6"><AvatarFallback className="text-xs bg-[#ee3224]/10 text-[#ee3224]">{project.owner?.initials ?? "??"}</AvatarFallback></Avatar>
+                              <div className="h-6 w-6 rounded-full bg-[#ee3224]/10 flex items-center justify-center">
+                                <span className="text-xs text-[#ee3224] font-medium">
+                                  {project.owner?.initials ?? "??"}
+                                </span>
+                              </div>
                               <span className="text-sm">{project.owner?.name ?? "Unknown"}</span>
                             </div>
                           </TableCell>
