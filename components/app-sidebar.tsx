@@ -89,7 +89,7 @@ export function AppSidebar() {
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 )}
               >
-                <Home className={cn("h-4 w-4", isHomeActive ? "text-[#ee3224]" : "text-slate-400")} />
+                <Home className={cn("h-4 w-4", isHomeActive ? "text-[#ee3224]" : "text-[#1F2937]")} />
                 Home
               </Link>
               <div className="mb-6 flex justify-center">
@@ -123,7 +123,7 @@ export function AppSidebar() {
                               : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                           )}
                         >
-                          <item.icon className={cn("h-4 w-4", isActive ? "text-[#ee3224]" : "text-slate-400")} />
+                          <item.icon className={cn("h-4 w-4", isActive ? "text-[#ee3224]" : "text-[#1F2937]")} />
                           {item.name}
                         </Link>
                       </li>
