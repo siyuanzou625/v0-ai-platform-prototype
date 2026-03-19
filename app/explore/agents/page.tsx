@@ -1119,18 +1119,16 @@ export default function ExploreAgentsPage() {
             className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col"
             aria-describedby={undefined}
           >
-            <DialogHeader className="pb-0">
+            <DialogHeader>
               <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-xl bg-[#FEF2F2] flex items-center justify-center">
-                    <Bot className="h-7 w-7 text-[#ee3224]" />
+                <div className="flex items-start gap-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10">
+                    <Bot className="h-8 w-8 text-primary" />
                   </div>
                   <div>
-                    <DialogTitle className="text-xl">
-                      {selectedAgent?.name}
-                    </DialogTitle>
-                    <DialogDescription>{selectedAgent?.description}</DialogDescription>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-[#6B7280]">
+                    <DialogTitle className="text-xl">{selectedAgent?.name}</DialogTitle>
+                    <DialogDescription className="mt-1">{selectedAgent?.description}</DialogDescription>
+                    <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
                       <button
                         onClick={() => selectedAgent && openCreatorProfile(selectedAgent.authorId)}
                         className="hover:text-[#ee3224] hover:underline transition-colors"
@@ -1139,13 +1137,11 @@ export default function ExploreAgentsPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 text-[#F59E0B] fill-[#F59E0B]" />
-                        {selectedAgent?.rating}
+                        <Star className="h-4 w-4 fill-chart-4 text-chart-4" /> {selectedAgent?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Download className="h-4 w-4" />
-                        {selectedAgent?.downloads}
+                        <Download className="h-4 w-4" /> {selectedAgent?.downloads}
                       </span>
                     </div>
                   </div>
@@ -1153,99 +1149,68 @@ export default function ExploreAgentsPage() {
               </div>
             </DialogHeader>
 
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 overflow-hidden flex flex-col">
               <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
-                <TabsTrigger
-                  value="overview"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 shrink-0"
-                >
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger
-                  value="documentation"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 shrink-0"
-                >
-                  Documentation
-                </TabsTrigger>
-                <TabsTrigger
-                  value="reviews"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 shrink-0"
-                >
-                  Reviews
-                </TabsTrigger>
-                <TabsTrigger
-                  value="discussions"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 gap-1 shrink-0"
-                >
+                <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 shrink-0">Overview</TabsTrigger>
+                <TabsTrigger value="documentation" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 shrink-0">Documentation</TabsTrigger>
+                <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 shrink-0">Reviews</TabsTrigger>
+                <TabsTrigger value="discussions" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 gap-1 shrink-0">
                   <MessageSquare className="h-4 w-4" /> Discussions
-                  <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
-                    {selectedAgent?.commentCount}
-                  </Badge>
+                  <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">{selectedAgent?.commentCount}</Badge>
                 </TabsTrigger>
-                <TabsTrigger
-                  value="versions"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 shrink-0"
-                >
-                  Versions
-                </TabsTrigger>
+                <TabsTrigger value="versions" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#ee3224] data-[state=active]:bg-transparent data-[state=active]:text-[#ee3224] px-4 py-2 shrink-0">Versions</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="overview" className="flex-1 overflow-auto p-4">
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-[#1F2937]">About this agent</h3>
-                  <p className="text-sm text-[#6B7280]">
-                    {selectedAgent?.name} is a powerful AI assistant that helps you with {selectedAgent?.category.toLowerCase()} tasks.
-                    It features advanced natural language processing and integrates seamlessly with your existing workflow.
-                  </p>
-                  <h3 className="font-semibold text-[#1F2937]">Key Features</h3>
-                  <ul className="list-disc list-inside text-sm text-[#6B7280] space-y-1">
-                    <li>Advanced AI processing</li>
-                    <li>Real-time collaboration</li>
-                    <li>Enterprise-grade security</li>
-                    <li>Customizable workflows</li>
-                  </ul>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="documentation" className="flex-1 overflow-auto p-4">
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-[#1F2937]">Getting Started</h3>
-                  <p className="text-sm text-[#6B7280]">
-                    Follow these steps to set up {selectedAgent?.name} in your environment.
-                  </p>
-                  <div className="bg-[#F5F7FA] p-4 rounded-lg">
-                    <code className="text-sm">npm install @agents/{selectedAgent?.name.toLowerCase().replace(/\s+/g, "-")}</code>
+              <div className="flex-1 overflow-y-auto py-4">
+                <TabsContent value="overview" className="m-0 space-y-4">
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-medium mb-2">About this agent</h4>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedAgent?.name} is a powerful AI assistant that helps you with {selectedAgent?.category.toLowerCase()} tasks.
+                      It features advanced natural language processing and integrates seamlessly with your existing workflow.
+                    </p>
                   </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="reviews" className="flex-1 overflow-auto p-4">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Star className="h-6 w-6 text-[#F59E0B] fill-[#F59E0B]" />
-                    <span className="text-2xl font-bold">{selectedAgent?.rating}</span>
-                    <span className="text-[#6B7280]">out of 5</span>
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-medium mb-2">Key Features</h4>
+                    <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                      <li>Advanced AI processing</li>
+                      <li>Real-time collaboration</li>
+                      <li>Enterprise-grade security</li>
+                      <li>Customizable workflows</li>
+                    </ul>
                   </div>
-                  <p className="text-sm text-[#6B7280]">Based on {Math.floor(Math.random() * 500) + 100} reviews</p>
-                </div>
-              </TabsContent>
+                </TabsContent>
 
-              <TabsContent value="discussions" className="flex-1 overflow-hidden flex flex-col p-4">
-                <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-[#1F2937] flex items-center gap-2">
-                        <MessageSquare className="h-5 w-5" /> Discussions
-                      </h3>
-                      <p className="text-sm text-[#6B7280]">Ask questions, share tips, and connect with the creator</p>
+                <TabsContent value="documentation" className="m-0">
+                  <div className="prose max-w-none">
+                    <h3>Getting Started</h3>
+                    <p>Follow these steps to set up {selectedAgent?.name} in your environment.</p>
+                    <h4>Installation</h4>
+                    <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
+                      <code className="text-sm">npm install @agents/{selectedAgent?.name.toLowerCase().replace(/\s+/g, "-")}</code>
+                    </pre>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="reviews" className="m-0">
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Star className="h-12 w-12 mx-auto mb-2 opacity-20" />
+                    <p>No reviews yet. Be the first to review!</p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="discussions" className="m-0 space-y-4">
+                  {/* Discussion Header */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <MessageSquare className="h-5 w-5 text-[#1F2937]" />
+                      <h3 className="text-lg font-semibold text-[#1F2937]">Discussions</h3>
                     </div>
-                    <Button onClick={() => setShowNewDiscussion(true)} className="bg-[#ee3224] hover:bg-[#cc2a1e]">
-                      <Plus className="h-4 w-4 mr-2" /> New Discussion
-                    </Button>
+                    <p className="text-sm text-[#6B7280]">Ask questions, share tips, and connect with the creator</p>
                   </div>
 
-                  {/* Filters */}
-                  <div className="flex items-center gap-4 flex-wrap">
+                  {/* Filters and Search */}
+                  <div className="flex flex-wrap gap-3">
                     <Select value={discussionFilter} onValueChange={setDiscussionFilter}>
                       <SelectTrigger className="w-44">
                         <SelectValue placeholder="Filter" />
@@ -1288,42 +1253,33 @@ export default function ExploreAgentsPage() {
                         </button>
                       )}
                     </div>
+                    <Button className="gap-2" onClick={() => setShowNewDiscussion(true)}>
+                      <Plus className="h-4 w-4" /> New Discussion
+                    </Button>
                   </div>
 
-                  {/* Discussion List */}
-                  <ScrollArea className="flex-1">
-                    {isLoadingDiscussions ? (
-                      <div className="space-y-4">
-                        {[1, 2, 3].map((i) => (
-                          <div key={i} className="animate-pulse">
-                            <div className="h-4 bg-[#E5E7EB] rounded w-3/4 mb-2" />
-                            <div className="h-3 bg-[#E5E7EB] rounded w-1/2" />
-                          </div>
-                        ))}
-                      </div>
-                    ) : filteredDiscussions.length === 0 ? (
-                      <div className="text-center py-12">
-                        <MessageSquare className="h-12 w-12 text-[#9CA3AF] mx-auto mb-4" />
-                        <h3 className="text-lg font-semibold text-[#1F2937] mb-2">No discussions found</h3>
-                        <p className="text-sm text-[#6B7280] mb-4">
-                          {discussionSearch || discussionFilter !== "all"
-                            ? "Try adjusting your filters"
-                            : "Be the first to start a discussion"}
-                        </p>
-                        {(discussionSearch || discussionFilter !== "all") && (
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              setDiscussionSearch("")
-                              setDiscussionFilter("all")
-                            }}
-                          >
-                            Clear Filters
-                          </Button>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="space-y-3 pr-4">
+                  {/* Discussion Threads */}
+                  {isLoadingDiscussions ? (
+                    <div className="space-y-4">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="rounded-lg border p-4 animate-pulse">
+                          <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                          <div className="h-3 bg-muted rounded w-1/2" />
+                        </div>
+                      ))}
+                    </div>
+                  ) : filteredDiscussions.length === 0 ? (
+                    <div className="text-center py-8 border rounded-lg">
+                      <MessageSquare className="h-12 w-12 mx-auto mb-2 text-muted-foreground opacity-20" />
+                      <p className="text-muted-foreground">No discussions found</p>
+                      {(discussionFilter !== "all" || discussionSearch) && (
+                        <Button variant="link" onClick={() => { setDiscussionSearch(""); setDiscussionFilter("all"); }} className="mt-2 text-[#ee3224]">
+                          Clear filters
+                        </Button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
                         {paginatedDiscussions.map((discussion) => (
                           <Card
                             key={discussion.id}
@@ -1510,33 +1466,32 @@ export default function ExploreAgentsPage() {
                           </div>
                         )}
                       </div>
-                    )}
-                  </ScrollArea>
-                </div>
-              </TabsContent>
+                  )}
+                </TabsContent>
 
-              <TabsContent value="versions" className="flex-1 overflow-auto p-4">
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-[#1F2937]">Version History</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-[#F5F7FA] rounded-lg">
-                      <div>
-                        <span className="font-medium">v2.4.0</span>
-                        <span className="text-sm text-[#6B7280] ml-2">Current</span>
+                <TabsContent value="versions" className="m-0 space-y-4">
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-medium mb-2">Version History</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                        <div>
+                          <span className="font-medium">v2.4.0</span>
+                          <span className="text-sm text-muted-foreground ml-2">Current</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">Released 2 days ago</span>
                       </div>
-                      <span className="text-sm text-[#6B7280]">Released 2 days ago</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 border rounded-lg">
-                      <span className="font-medium">v2.3.1</span>
-                      <span className="text-sm text-[#6B7280]">Released 1 week ago</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 border rounded-lg">
-                      <span className="font-medium">v2.3.0</span>
-                      <span className="text-sm text-[#6B7280]">Released 2 weeks ago</span>
+                      <div className="flex items-center justify-between p-3 border rounded-lg">
+                        <span className="font-medium">v2.3.1</span>
+                        <span className="text-sm text-muted-foreground">Released 1 week ago</span>
+                      </div>
+                      <div className="flex items-center justify-between p-3 border rounded-lg">
+                        <span className="font-medium">v2.3.0</span>
+                        <span className="text-sm text-muted-foreground">Released 2 weeks ago</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </TabsContent>
+                </TabsContent>
+              </div>
             </Tabs>
           </DialogContent>
         </Dialog>
