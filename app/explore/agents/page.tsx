@@ -981,17 +981,15 @@ export default function ExploreAgentsPage() {
                     setActiveTab("overview")
                   }}
                 >
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between">
+                  <CardHeader className="py-2.5 px-5 pb-1">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Bot className="h-6 w-6 text-primary" />
+                        <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
+                          <Bot className="h-4 w-4 text-slate-600" />
                         </div>
-                        <div>
-                          <CardTitle className="card-title-text text-base transition-colors duration-150">
-                            {agent.name}
-                          </CardTitle>
-                        </div>
+                        <CardTitle className="card-title-text text-base transition-colors duration-150">
+                          {agent.name}
+                        </CardTitle>
                       </div>
                       <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
                         {agent.price}
@@ -999,7 +997,7 @@ export default function ExploreAgentsPage() {
                     </div>
                     <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
                   </CardHeader>
-                  <CardContent className="p-4 pt-0 space-y-3">
+                  <CardContent className="py-2.5 px-5 space-y-2">
                     {/* Creator row with follow button */}
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
@@ -1048,7 +1046,7 @@ export default function ExploreAgentsPage() {
                     </div>
                     
                     {/* Category and Version */}
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-2">
                       <Badge variant="secondary">{agent.category}</Badge>
                       <span className="text-xs text-muted-foreground">{agent.version}</span>
                     </div>

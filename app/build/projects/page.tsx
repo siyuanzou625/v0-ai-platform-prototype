@@ -652,10 +652,10 @@ export default function ProjectsPage() {
                 </button>
               </div>
             </div>
-            {/* Dashboard View */}
+            {/* Dashboard View - Metric Cards */}
             {viewMode === "dashboard" && (
               <div className="space-y-6">
-                {/* Summary Metrics */}
+                {/* Summary Metrics Row */}
                 <div className="grid grid-cols-4 gap-4">
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}>
                     <CardContent className="py-2.5 px-5">
