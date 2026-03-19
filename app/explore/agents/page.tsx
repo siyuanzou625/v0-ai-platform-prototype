@@ -170,6 +170,32 @@ const creators: Record<string, {
   },
 }
 
+// Category color mapping (matches Templates page)
+const getCategoryBadgeStyle = (category: string): string => {
+  switch (category) {
+    case "Productivity":
+      return "bg-violet-50 text-violet-700 border border-violet-200"
+    case "Support":
+      return "bg-teal-50 text-teal-700 border border-teal-200"
+    case "Data":
+      return "bg-blue-50 text-blue-700 border border-blue-200"
+    case "Marketing":
+      return "bg-pink-50 text-pink-700 border border-pink-200"
+    case "Sales":
+      return "bg-orange-50 text-orange-700 border border-orange-200"
+    case "HR":
+      return "bg-cyan-50 text-cyan-700 border border-cyan-200"
+    case "Knowledge":
+      return "bg-indigo-50 text-indigo-700 border border-indigo-200"
+    case "Research":
+      return "bg-amber-50 text-amber-700 border border-amber-200"
+    case "Content":
+      return "bg-rose-50 text-rose-700 border border-rose-200"
+    default:
+      return "bg-slate-50 text-slate-700 border border-slate-200"
+  }
+}
+
 // Agent data with creator info
 const agents = [
   {
@@ -826,10 +852,7 @@ export default function ExploreAgentsPage() {
           <div className="px-8 py-6 space-y-6">
         {/* Featured Agents */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-[#1F2937] flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-[#ee3224]" />
-            Featured Agents
-          </h2>
+          <h2 className="text-lg font-semibold text-[#1F2937]">Featured Agents</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAgents
               .filter((a) => a.featured)
@@ -864,7 +887,7 @@ export default function ExploreAgentsPage() {
                       <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
                       {/* Category and Version - Product Info */}
                       <div className="flex items-center gap-2 mt-2.5">
-                        <Badge variant="secondary">{agent.category}</Badge>
+                        <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(agent.category)}`}>{agent.category}</Badge>
                         <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
                     </CardHeader>
@@ -1051,7 +1074,7 @@ export default function ExploreAgentsPage() {
                     
                     {/* Category and Version */}
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary">{agent.category}</Badge>
+                      <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(agent.category)}`}>{agent.category}</Badge>
                       <span className="text-xs text-muted-foreground">{agent.version}</span>
                     </div>
                     

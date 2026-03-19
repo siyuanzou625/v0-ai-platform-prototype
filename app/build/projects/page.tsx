@@ -1,5 +1,5 @@
 "use client"
-
+// Last updated: Force cache clear - Avatar fix applied
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
