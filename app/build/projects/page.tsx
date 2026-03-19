@@ -684,10 +684,11 @@ export default function ProjectsPage() {
                           <p className="text-sm text-muted-foreground">In Progress</p>
                           <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{inProgressCount}</p>
                         </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
-                    <PlayCircle className="h-6 w-6 text-amber-500" />
-                  </div>
-                  <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
+                          <PlayCircle className="h-6 w-6 text-amber-500" />
+                        </div>
+                      </div>
+                      <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
                   <Card 
