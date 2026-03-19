@@ -148,17 +148,27 @@ export default function CreatorStatusPage() {
         <>
           {/* Page Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
                   <Award className="h-5 w-5 text-[#ee3224]" />
                   <h1 className="text-xl font-semibold text-foreground">Creator Status</h1>
                 </div>
-                <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+                <p className="mt-1 text-sm text-[#6B7280]">
                   Track your achievements, tier progress, and earnings as a creator.
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              <Button variant="link" className="text-[#ee3224] gap-1">
+                <HelpCircle className="h-4 w-4" />
+                How tiers work
+              </Button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 space-y-6">
+            {/* View Toggle */}
+            <div className="flex items-center gap-3">
               <div className="flex items-center rounded-lg border border-[#E5E7EB] p-1">
                 <Button
                   variant={viewMode === "personal" ? "default" : "ghost"}
@@ -177,17 +187,9 @@ export default function CreatorStatusPage() {
                   Team
                 </Button>
               </div>
-              <Button variant="link" className="text-[#ee3224] gap-1">
-                <HelpCircle className="h-4 w-4" />
-                How tiers work
-              </Button>
             </div>
-          </div>
-          </div>
 
-          {/* Content */}
-          <div className="p-6 space-y-6">
-          {/* Tier Status Hero Card */}
+            {/* Tier Status Hero Card */}
           <Card className="bg-gradient-to-r from-[#F5F7FA] to-white">
             <CardContent className="p-6">
               <div className="grid gap-6 md:grid-cols-2">

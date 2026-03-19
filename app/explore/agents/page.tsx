@@ -767,16 +767,16 @@ export default function ExploreAgentsPage() {
       <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Agents</h1>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Bot className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Agents</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Discover and install AI agents from our marketplace.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Discover and install AI agents from our marketplace.
-            </p>
-          </div>
-          <div className="flex items-center justify-end">
             <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
               <Bot className="h-4 w-4" /> Build Agent
             </Button>
@@ -785,9 +785,8 @@ export default function ExploreAgentsPage() {
 
         {/* Content */}
         <div className="p-6 space-y-6">
-        {/* Search and Filters */}
-        <Card>
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+          {/* Search and Filters */}
+          <div className="flex flex-wrap items-center gap-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -822,8 +821,7 @@ export default function ExploreAgentsPage() {
             <Button variant="outline" size="icon">
               <Filter className="h-4 w-4" />
             </Button>
-          </CardContent>
-        </Card>
+          </div>
 
         {/* Featured Agents */}
         <div className="space-y-4">

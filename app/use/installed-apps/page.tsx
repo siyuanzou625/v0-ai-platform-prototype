@@ -607,117 +607,15 @@ export default function MyAppsPage() {
       <>
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white border-b border-[#E5E7EB] px-6 py-4">
-          {/* Title Row */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Installed Apps</h1>
-            </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Launch and use your installed AI applications with one click.
-            </p>
-          </div>
-          
-          {/* Controls Row: Search + Filter Chips + View Toggle */}
-          <div className="flex items-center gap-4">
-            {/* Search */}
-            <div className="relative flex-1 min-w-[50%]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                ref={searchInputRef}
-                placeholder="Search apps... (Cmd/Ctrl+K)"
-                className="pl-10 pr-8 border-[#E5E7EB]"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setShowRecentSearches(true)}
-                onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
-              />
-              {searchQuery && (
-                <button 
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                  onClick={() => setSearchQuery("")}
-                >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                </button>
-              )}
-              
-              {/* Recent Searches Dropdown */}
-              {showRecentSearches && recentSearches.length > 0 && !searchQuery && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#E5E7EB] rounded shadow-md z-10">
-                  <div className="p-2">
-                    <p className="text-xs text-muted-foreground px-2 mb-1">Recent Searches</p>
-                    {recentSearches.map((search, idx) => (
-                      <button
-                        key={idx}
-                        className="w-full text-left px-2 py-1.5 text-sm text-foreground hover:bg-[#F5F7FA] rounded"
-                        onClick={() => setSearchQuery(search)}
-                      >
-                        {search}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Filter Chips */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setActiveFilters([])}
-                className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
-                  activeFilters.length === 0
-                    ? "bg-[#ee3224] text-white"
-                    : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
-                }`}
-              >
-                All
-              </button>
-              {(["Built-In", "My Agent", "Team"] as AppSource[]).map(source => (
-                <button
-                  key={source}
-                  onClick={() => toggleFilter(source)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
-                    activeFilters.includes(source)
-                      ? "bg-[#ee3224] text-white"
-                      : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
-                  }`}
-                >
-                  {source === "My Agent" ? "My Agents" : source === "Team" ? "Team Agents" : source}
-                </button>
-              ))}
-              {activeFilters.length > 0 && (
-                <button 
-                  onClick={() => setActiveFilters([])}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-            
-            {/* View Toggle */}
-            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                  viewMode === "grid"
-                    ? "bg-white text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                  viewMode === "list"
-                    ? "bg-white text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <List className="h-4 w-4" />
-              </button>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Installed Apps</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Launch and use your installed AI applications with one click.
+              </p>
             </div>
           </div>
         </div>
@@ -725,6 +623,108 @@ export default function MyAppsPage() {
         {/* Main Content */}
         <ScrollArea className="flex-1">
           <div className="p-6">
+            {/* Controls Row: Search + Filter Chips + View Toggle */}
+            <div className="flex flex-wrap items-center gap-4 mb-6">
+              {/* Search */}
+              <div className="relative flex-1 min-w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  ref={searchInputRef}
+                  placeholder="Search apps... (Cmd/Ctrl+K)"
+                  className="pl-10 pr-8 border-[#E5E7EB]"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setShowRecentSearches(true)}
+                  onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
+                />
+                {searchQuery && (
+                  <button 
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    onClick={() => setSearchQuery("")}
+                  >
+                    <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                  </button>
+                )}
+                
+                {/* Recent Searches Dropdown */}
+                {showRecentSearches && recentSearches.length > 0 && !searchQuery && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#E5E7EB] rounded shadow-md z-10">
+                    <div className="p-2">
+                      <p className="text-xs text-muted-foreground px-2 mb-1">Recent Searches</p>
+                      {recentSearches.map((search, idx) => (
+                        <button
+                          key={idx}
+                          className="w-full text-left px-2 py-1.5 text-sm text-foreground hover:bg-[#F5F7FA] rounded"
+                          onClick={() => setSearchQuery(search)}
+                        >
+                          {search}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Filter Chips */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveFilters([])}
+                  className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                    activeFilters.length === 0
+                      ? "bg-[#ee3224] text-white"
+                      : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+                  }`}
+                >
+                  All
+                </button>
+                {(["Built-In", "My Agent", "Team"] as AppSource[]).map(source => (
+                  <button
+                    key={source}
+                    onClick={() => toggleFilter(source)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                      activeFilters.includes(source)
+                        ? "bg-[#ee3224] text-white"
+                        : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+                    }`}
+                  >
+                    {source === "My Agent" ? "My Agents" : source === "Team" ? "Team Agents" : source}
+                  </button>
+                ))}
+                {activeFilters.length > 0 && (
+                  <button 
+                    onClick={() => setActiveFilters([])}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              
+              {/* View Toggle */}
+              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 ml-auto">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "grid"
+                      ? "bg-white text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "list"
+                      ? "bg-white text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <List className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
             {viewMode === "grid" ? (
               <>
                 {/* Continue Section (Recently Used) */}

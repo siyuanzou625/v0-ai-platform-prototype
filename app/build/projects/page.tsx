@@ -454,56 +454,16 @@ export default function ProjectsPage() {
       <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-          {/* Row 1: Title & Description */}
-          <div className="mb-4">
-  <div className="flex items-center gap-2">
-  <Folder className="h-5 w-5 text-[#ee3224]" />
-  <h1 className="text-xl font-semibold text-foreground">Projects</h1>
-  </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Create and manage your AI agents and workflows in one place.
-            </p>
-          </div>
-
-          {/* Row 2: Search + Filters + New Project Button */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="relative flex-1 min-w-[50%]">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search projects by name or owner..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Folder className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Projects</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Create and manage your AI agents and workflows in one place.
+              </p>
             </div>
-            <Select value={environmentFilter} onValueChange={(v) => setEnvironmentFilter(v as Environment)}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Environment" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Environments</SelectItem>
-                <SelectItem value="development">Development</SelectItem>
-                <SelectItem value="staging">Staging</SelectItem>
-                <SelectItem value="production">Production</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as Status)}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="building">Building</SelectItem>
-                <SelectItem value="ready">Ready to Deploy</SelectItem>
-                <SelectItem value="deployed">Deployed</SelectItem>
-                <SelectItem value="blocked">Blocked</SelectItem>
-              </SelectContent>
-            </Select>
-            {(searchQuery || environmentFilter !== "all" || statusFilter !== "all") && (
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                Clear filters
-              </Button>
-            )}
             <Dialog open={showNewProject} onOpenChange={(open) => {
               setShowNewProject(open)
               if (!open) {
@@ -612,50 +572,86 @@ export default function ProjectsPage() {
               </DialogContent>
             </Dialog>
           </div>
-
-          {/* Row 3: View Toggle */}
-          <div className="flex justify-center">
-            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
-            <button
-              onClick={() => handleViewChange("dashboard")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "dashboard"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <LayoutDashboard className="h-4 w-4" />
-              Dashboard
-            </button>
-            <button
-              onClick={() => handleViewChange("grid")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "grid"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <LayoutGrid className="h-4 w-4" />
-              Grid
-            </button>
-            <button
-              onClick={() => handleViewChange("list")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "list"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <List className="h-4 w-4" />
-              List
-            </button>
-            </div>
-          </div>
         </div>
 
         {/* Main Content */}
         <ScrollArea className="flex-1">
           <div className="p-6">
+            {/* Search, Filters, and View Toggle */}
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="relative flex-1 min-w-64">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search projects by name or owner..."
+                  className="pl-9"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Select value={environmentFilter} onValueChange={(v) => setEnvironmentFilter(v as Environment)}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Environment" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Environments</SelectItem>
+                  <SelectItem value="development">Development</SelectItem>
+                  <SelectItem value="staging">Staging</SelectItem>
+                  <SelectItem value="production">Production</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as Status)}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="building">Building</SelectItem>
+                  <SelectItem value="ready">Ready to Deploy</SelectItem>
+                  <SelectItem value="deployed">Deployed</SelectItem>
+                  <SelectItem value="blocked">Blocked</SelectItem>
+                </SelectContent>
+              </Select>
+              {(searchQuery || environmentFilter !== "all" || statusFilter !== "all") && (
+                <Button variant="ghost" size="sm" onClick={clearFilters}>
+                  Clear filters
+                </Button>
+              )}
+              <div className="flex items-center rounded-lg border border-[#E5E7EB] p-1 ml-auto">
+                <button
+                  onClick={() => handleViewChange("dashboard")}
+                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "dashboard"
+                      ? "bg-[#ee3224] text-white shadow-sm"
+                      : "text-[#333] hover:bg-white/50"
+                  }`}
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  Dashboard
+                </button>
+                <button
+                  onClick={() => handleViewChange("grid")}
+                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "grid"
+                      ? "bg-[#ee3224] text-white shadow-sm"
+                      : "text-[#333] hover:bg-white/50"
+                  }`}
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                  Grid
+                </button>
+                <button
+                  onClick={() => handleViewChange("list")}
+                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "list"
+                      ? "bg-[#ee3224] text-white shadow-sm"
+                      : "text-[#333] hover:bg-white/50"
+                  }`}
+                >
+                  <List className="h-4 w-4" />
+                  List
+                </button>
+              </div>
+            </div>
             {/* Dashboard View */}
             {viewMode === "dashboard" && (
               <div className="space-y-6">

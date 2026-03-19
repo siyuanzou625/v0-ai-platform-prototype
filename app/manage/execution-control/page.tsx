@@ -279,19 +279,23 @@ export default function ExecutionControlPage() {
         <>
           {/* Page Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
                   <Cpu className="h-5 w-5 text-[#ee3224]" />
                   <h1 className="text-xl font-semibold text-[#1F2937]">Execution Control</h1>
                 </div>
-                <p className="mt-2 text-sm text-[#6B7280]">
+                <p className="mt-1 text-sm text-[#6B7280]">
                   Manage compute resources and runtime behavior of AI agents
                 </p>
               </div>
-              
-              {/* Header Controls */}
-              <div className="flex flex-wrap items-center gap-6">
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 space-y-8">
+            {/* Controls */}
+            <div className="flex flex-wrap items-center gap-6">
               {/* Execution Mode */}
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-[#6B7280]">Execution Mode</label>
@@ -355,12 +359,8 @@ export default function ExecutionControlPage() {
                 </div>
               </div>
             </div>
-          </div>
-          </div>
 
-          {/* Content */}
-          <div className="p-6 space-y-8">
-          {/* Section A: System Overview */}
+            {/* Section A: System Overview */}
           <section aria-hidden={false}>
             <div className="flex items-center justify-between mb-4">
               <div>

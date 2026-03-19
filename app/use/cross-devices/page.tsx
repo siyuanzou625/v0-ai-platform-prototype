@@ -89,22 +89,24 @@ export default function CrossDevicePage() {
       <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <RefreshCw className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Cross Devices</h1>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <RefreshCw className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Cross Devices</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Seamlessly continue your tasks across phone, tablet, and computer.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Seamlessly continue your tasks across phone, tablet, and computer.
-            </p>
-          </div>
-          <div className="flex items-center justify-end gap-2">
-            <Button variant="outline" size="sm">
-              <RefreshCw className="mr-1 h-4 w-4" /> Sync All
-            </Button>
-            <Button size="sm" className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
-              <Smartphone className="h-4 w-4" /> Add Device
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm">
+                <RefreshCw className="mr-1 h-4 w-4" /> Sync All
+              </Button>
+              <Button size="sm" className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+                <Smartphone className="h-4 w-4" /> Add Device
+              </Button>
+            </div>
           </div>
         </div>
 

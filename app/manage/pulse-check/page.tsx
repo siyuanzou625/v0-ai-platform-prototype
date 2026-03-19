@@ -141,17 +141,27 @@ export default function PulsePage() {
         <>
           {/* Page Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
                   <Activity className="h-5 w-5 text-[#ee3224]" />
                   <h1 className="text-xl font-semibold text-foreground">Pulse Check</h1>
                 </div>
-                <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
+                <p className="mt-1 text-sm text-[#6B7280]">
                   Monitor the performance and health of your deployed agents.
                 </p>
               </div>
-              <div className="flex flex-wrap items-center gap-3">
+              <Button variant="outline" className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/10">
+                <FileText className="h-4 w-4" />
+                Export Report
+              </Button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 space-y-6">
+            {/* Filters */}
+            <div className="flex flex-wrap items-center gap-3">
               <Select value={selectedAsset} onValueChange={setSelectedAsset}>
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="All Assets" />
@@ -174,17 +184,9 @@ export default function PulsePage() {
                   <SelectItem value="custom">Custom</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/10">
-                <FileText className="h-4 w-4" />
-              Export Report
-            </Button>
             </div>
-          </div>
-          </div>
 
-          {/* Content */}
-          <div className="p-6 space-y-6">
-          {/* Portfolio Summary Cards */}
+            {/* Portfolio Summary Cards */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">

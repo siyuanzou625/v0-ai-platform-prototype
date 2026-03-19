@@ -642,16 +642,16 @@ export default function PluginsPage() {
       <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <Puzzle className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Plugins</h1>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Puzzle className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Plugins</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Extend your agents with reusable components and integrations.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Extend your agents with reusable components and integrations.
-            </p>
-          </div>
-          <div className="flex items-center justify-end">
             <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
               <Puzzle className="h-4 w-4" /> Develop Plugin
             </Button>
@@ -660,9 +660,8 @@ export default function PluginsPage() {
 
         {/* Content */}
         <div className="p-6 space-y-6">
-        {/* Filters */}
-        <Card>
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+          {/* Filters */}
+          <div className="flex flex-wrap items-center gap-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Search plugins..." className="pl-10" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
@@ -685,8 +684,7 @@ export default function PluginsPage() {
               </SelectContent>
             </Select>
             <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
-          </CardContent>
-        </Card>
+          </div>
 
         {/* Installed Plugins */}
         <div>

@@ -265,27 +265,15 @@ export default function KnowledgePage() {
       <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-  {/* Title Row */}
-  <div className="mb-4">
-  <div className="flex items-center gap-2">
-  <Database className="h-5 w-5 text-[#ee3224]" />
-  <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
-  </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Upload and organize documents to give your agents context and expertise.
-            </p>
-          </div>
-          
-          {/* Controls Row: Search + Button */}
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1 min-w-[50%]">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search knowledge bases..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Database className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Upload and organize documents to give your agents context and expertise.
+              </p>
             </div>
             <Dialog open={showNewKnowledge} onOpenChange={setShowNewKnowledge}>
               <DialogTrigger asChild>
@@ -573,8 +561,22 @@ export default function KnowledgePage() {
           </div>
         </div>
 
-        {/* Knowledge Base Grid */}
-        <div className="p-6">
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Search */}
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search knowledge bases..."
+                className="pl-9"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Knowledge Base Grid */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredKnowledgeBases.map((kb) => {
               const KbIcon = getKnowledgeIcon(kb.primaryType)

@@ -303,16 +303,16 @@ export default function ConnectionsPage() {
       <>
         {/* Page Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <Link2 className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Connections</h1>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Link2 className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Connections</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Securely connect your favorite tools and services to power your workflows.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Securely connect your favorite tools and services to power your workflows.
-            </p>
-          </div>
-          <div className="flex items-center justify-end">
             <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={() => { setCreateModalOpen(true); setCreateStep(1); setSelectedProvider(null); }}>
               <Plus className="h-4 w-4" />
               New Connection
@@ -322,9 +322,8 @@ export default function ConnectionsPage() {
 
         {/* Content */}
         <div className="p-6 space-y-6">
-        {/* Filter Bar */}
-        <Card>
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+          {/* Filter Bar */}
+          <div className="flex flex-wrap items-center gap-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -376,8 +375,7 @@ export default function ConnectionsPage() {
                 <List className="h-4 w-4" />
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
         {/* Connection Count */}
         <div className="text-sm text-muted-foreground">

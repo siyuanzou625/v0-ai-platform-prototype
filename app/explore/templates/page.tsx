@@ -627,16 +627,16 @@ export default function TemplatesPage() {
       <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-          <div className="mb-4">
-  <div className="flex items-center gap-2">
-  <FileText className="h-5 w-5 text-[#ee3224]" />
-  <h1 className="text-xl font-semibold text-foreground">Templates</h1>
-  </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Browse ready-made workflows to accelerate your agent development.
-            </p>
-          </div>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-xl font-semibold text-foreground">Templates</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Browse ready-made workflows to accelerate your agent development.
+              </p>
+            </div>
             <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
               <FileText className="h-4 w-4" /> Submit Template
             </Button>
@@ -645,9 +645,8 @@ export default function TemplatesPage() {
 
         {/* Content */}
         <div className="p-6 space-y-6">
-        {/* Search and Filters */}
-        <Card>
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+          {/* Search and Filters */}
+          <div className="flex flex-wrap items-center gap-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -683,8 +682,7 @@ export default function TemplatesPage() {
             <Button variant="outline" size="icon">
               <Filter className="h-4 w-4" />
             </Button>
-          </CardContent>
-        </Card>
+          </div>
 
         {/* Template Grid */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
