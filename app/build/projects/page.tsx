@@ -659,7 +659,7 @@ export default function ProjectsPage() {
                 {/* Metric Summary Cards */}
                 <div className="grid grid-cols-4 gap-4">
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}>
-                    <CardContent className="py-4 px-5">
+                    <CardContent className="py-3 px-5">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <p className="text-sm text-muted-foreground">Total Projects</p>
@@ -672,7 +672,7 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
-                    <CardContent className="py-4 px-5">
+                    <CardContent className="py-3 px-5">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <p className="text-sm text-muted-foreground">In Progress</p>
@@ -685,7 +685,7 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}>
-                    <CardContent className="py-4 px-5">
+                    <CardContent className="py-3 px-5">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <p className="text-sm text-muted-foreground">Ready to Deploy</p>
@@ -698,7 +698,7 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("blocked")}>
-                    <CardContent className="py-4 px-5">
+                    <CardContent className="py-3 px-5">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <p className="text-sm text-muted-foreground">Blocked</p>
@@ -765,7 +765,7 @@ export default function ProjectsPage() {
                           className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <CardContent className="py-4 px-5">
+                          <CardContent className="py-3 px-5">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
                                 <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -821,7 +821,7 @@ export default function ProjectsPage() {
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleOpenProject(project.id)}
                   >
-                    <CardContent className="py-4 px-5">
+                    <CardContent className="py-3 px-5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">

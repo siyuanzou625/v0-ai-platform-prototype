@@ -137,4 +137,7 @@
   .card-interactive:hover .card-title-text {
     color: #ee3224 !important;
   }
+  .card-title-text {
+    @apply text-[15px] font-semibold;
+  }
 }

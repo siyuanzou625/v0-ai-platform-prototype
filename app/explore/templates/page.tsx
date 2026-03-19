@@ -720,7 +720,7 @@ export default function TemplatesPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openTemplateModal(template)}
               >
-                <CardHeader className="py-2.5 px-5 pb-1">
+                <CardHeader className="py-3 px-5 pb-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -732,7 +732,7 @@ export default function TemplatesPage() {
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-3">{template.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="py-4 px-5">
+                <CardContent className="py-3 px-5">
                   {/* Creator info with Follow button */}
                   <div className="mb-3">
                     <div className="flex items-center gap-2">
@@ -843,7 +843,7 @@ export default function TemplatesPage() {
 
         {/* Create Template CTA */}
         <Card className="border-[#ee3224]/20 bg-[#ee3224]/5">
-          <CardContent className="flex items-center justify-between py-4 px-5">
+          <CardContent className="flex items-center justify-between py-3 px-5">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ee3224]">
                 <Sparkles className="h-5 w-5 text-white" />
