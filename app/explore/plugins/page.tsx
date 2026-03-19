@@ -692,7 +692,7 @@ export default function PluginsPage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {plugins.filter((p) => p.installed).map((plugin) => (
               <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                <CardContent className="flex items-center justify-between p-3">
+                <CardContent className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded bg-primary/10">
                       <plugin.icon className="h-4 w-4 text-primary" />
@@ -1264,7 +1264,7 @@ export default function PluginsPage() {
               {/* Published Assets */}
               <div>
                 <h4 className="text-sm font-semibold text-[#1F2937] mb-2">Published Plugins ({selectedCreatorData?.assetsPublished})</h4>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   {plugins.filter(p => p.authorId === selectedCreator).slice(0, 3).map(plugin => (
                     <div key={plugin.id} className="p-3 rounded-lg border hover:border-[#ee3224] cursor-pointer transition-colors" onClick={() => { setShowCreatorModal(false); openPluginModal(plugin); }}>
                       <div className="flex items-center gap-2 mb-1">

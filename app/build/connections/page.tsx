@@ -631,7 +631,7 @@ export default function ConnectionsPage() {
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input placeholder="Search providers..." className="pl-10" />
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-4">
                     {popularProviders.map((provider) => (
                       <Card
                         key={provider.id}

@@ -1007,7 +1007,7 @@ export default function ExploreAgentsPage() {
                     </div>
                     <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-0 space-y-3">
+                  <CardContent className="p-4 pt-0 space-y-3">
                     {/* Creator row with follow button */}
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
@@ -1618,7 +1618,7 @@ export default function ExploreAgentsPage() {
                         </h3>
                         <button className="text-sm text-[#ee3224] hover:underline">View All Assets</button>
                       </div>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-3 gap-4">
                         {getCreatorAssets(currentCreator.id).map((asset) => (
                           <Card
                             key={asset.id}
@@ -1629,7 +1629,7 @@ export default function ExploreAgentsPage() {
                               setActiveTab("overview")
                             }}
                           >
-                            <CardContent className="p-3">
+                            <CardContent className="p-4">
                               <div className="flex items-center gap-2 mb-2">
                                 <div className="h-8 w-8 rounded-lg bg-[#F5F7FA] flex items-center justify-center">
                                   <Bot className="h-4 w-4 text-[#6B7280]" />

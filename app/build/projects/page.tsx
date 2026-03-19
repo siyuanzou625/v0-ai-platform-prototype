@@ -520,7 +520,7 @@ export default function ProjectsPage() {
                     <Label className="text-sm font-medium text-[#333] flex items-center gap-1.5">
                       Or Choose a Template:
                     </Label>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-4">
                       {templates.map((template) => {
                         const IconComponent = template.icon
                         return (
@@ -728,7 +728,7 @@ export default function ProjectsPage() {
                 </div>
 
                 {/* Two Column Layout: Activity + Projects */}
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-3 gap-4">
                   {/* Team Activity Timeline */}
                   <Card className="col-span-1 border border-[#E5E7EB]">
                     <CardHeader className="pb-3">

@@ -1245,7 +1245,7 @@ export default function TemplatesPage() {
               {/* Published Assets */}
               <div>
                 <h4 className="text-sm font-semibold text-[#1F2937] mb-2">Published Templates ({selectedCreatorData?.assetsPublished})</h4>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   {templates.filter(t => t.authorId === selectedCreator).slice(0, 3).map(template => (
                     <div key={template.id} className="p-3 rounded-lg border hover:border-[#ee3224] cursor-pointer transition-colors" onClick={() => { setShowCreatorModal(false); openTemplateModal(template); }}>
                       <div className="flex items-center gap-2 mb-1">
