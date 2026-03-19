@@ -846,11 +846,11 @@ export default function ExploreAgentsPage() {
                       setActiveTab("overview")
                     }}
                   >
-                    <CardHeader className="p-4 pb-3">
+                    <CardHeader className="py-3 px-5 pb-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded bg-primary/10 flex items-center justify-center">
-                            <Bot className="h-4 w-4 text-primary" />
+                          <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
+                            <Bot className="h-4 w-4 text-slate-600" />
                           </div>
                           <CardTitle className="card-title-text text-base transition-colors duration-150">
                             {agent.name}
@@ -862,7 +862,7 @@ export default function ExploreAgentsPage() {
                       </div>
                       <CardDescription className="text-xs mt-3 line-clamp-2">{agent.description}</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0 space-y-3">
+<CardContent className="py-2 px-5 space-y-3">
                       {/* Creator row with follow button */}
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">

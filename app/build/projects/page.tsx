@@ -691,7 +691,8 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
-                  {/* Ready to Deploy */}
+
+                  {/* Ready to Deploy Card */}
                   <Card
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleMetricClick("ready")}
@@ -781,16 +782,14 @@ export default function ProjectsPage() {
                           className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <CardContent className="p-4">
+                          <CardContent className="py-3 px-5">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
-                                <div className={`flex h-9 w-9 items-center justify-center rounded ${
-                                  project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
-                                }`}>
+                                <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
                                   {project.mode === "workflow" ? (
-                                    <Workflow className="h-4 w-4 text-[#ee3224]" />
+                                    <Workflow className="h-4 w-4 text-slate-600" />
                                   ) : (
-                                    <Code2 className="h-4 w-4 text-blue-500" />
+                                    <Code2 className="h-4 w-4 text-slate-600" />
                                   )}
                                 </div>
                                 <div>
@@ -861,16 +860,14 @@ export default function ProjectsPage() {
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleOpenProject(project.id)}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="py-3 px-5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className={`flex h-9 w-9 items-center justify-center rounded ${
-                            project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
-                          }`}>
+                          <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
                             {project.mode === "workflow" ? (
-                              <Workflow className="h-4 w-4 text-[#ee3224]" />
+                              <Workflow className="h-4 w-4 text-slate-600" />
                             ) : (
-                              <Code2 className="h-4 w-4 text-blue-500" />
+                              <Code2 className="h-4 w-4 text-slate-600" />
                             )}
                           </div>
                           <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">

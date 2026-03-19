@@ -499,11 +499,11 @@ export default function MyAppsPage() {
       <Card 
         className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
       >
-        <CardContent className="p-4">
+        <CardContent className="py-3 px-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded bg-[#ee3224]/10">
-                <IconComponent className="h-4 w-4 text-[#ee3224]" />
+              <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
+                <IconComponent className="h-4 w-4 text-slate-600" />
               </div>
               <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{app.name}</h3>
             </div>
@@ -742,10 +742,10 @@ export default function MyAppsPage() {
                             key={recent.appId}
                             className="card-interactive group flex-shrink-0 w-[260px] border border-[#E5E7EB] bg-white shadow-sm"
                           >
-                            <CardContent className="p-4">
+                            <CardContent className="py-3 px-5">
                               <div className="flex items-center gap-3">
-                                <div className="flex h-9 w-9 items-center justify-center rounded bg-[#ee3224]/10">
-                                  <IconComponent className="h-4 w-4 text-[#ee3224]" />
+                                <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
+                                  <IconComponent className="h-4 w-4 text-slate-600" />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{recent.name}</h3>

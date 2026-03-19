@@ -395,12 +395,12 @@ export default function ConnectionsPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openDetailView(conn)}
               >
-                <CardContent className="p-4">
+                <CardContent className="py-3 px-5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded bg-muted text-sm font-semibold">
+                      <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100 text-sm font-semibold text-slate-600">
                         {conn.provider === "custom-webhook" ? (
-                          <Link2 className="h-4 w-4 text-muted-foreground" />
+                          <Link2 className="h-4 w-4 text-slate-600" />
                         ) : (
                           conn.provider.charAt(0).toUpperCase()
                         )}

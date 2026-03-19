@@ -692,10 +692,10 @@ export default function PluginsPage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {plugins.filter((p) => p.installed).map((plugin) => (
               <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                <CardContent className="flex items-center justify-between p-4">
+                <CardContent className="flex items-center justify-between py-3 px-5">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded bg-primary/10">
-                      <plugin.icon className="h-4 w-4 text-primary" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
+                      <plugin.icon className="h-4 w-4 text-slate-600" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -726,11 +726,11 @@ export default function PluginsPage() {
 
               return (
                 <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                  <CardHeader className="p-4 pb-3">
+                  <CardHeader className="py-3 px-5 pb-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded bg-primary/10">
-                          <plugin.icon className="h-4 w-4 text-primary" />
+                        <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
+                          <plugin.icon className="h-4 w-4 text-slate-600" />
                         </div>
                         <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
                       </div>
@@ -742,7 +742,7 @@ export default function PluginsPage() {
                     </div>
                     <CardDescription className="text-sm mt-3">{plugin.description}</CardDescription>
                   </CardHeader>
-                  <CardContent className="p-4 pt-0">
+                  <CardContent className="py-2 px-5">
                     {/* Creator info with Follow button */}
                     <div className="mb-3">
                       <div className="flex items-center gap-2">

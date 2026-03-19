@@ -155,16 +155,9 @@ const getKnowledgeIcon = (type: string) => {
   }
 }
 
-// Get icon color based on content type
-const getKnowledgeIconColor = (type: string) => {
-  switch (type) {
-    case "document": return "bg-blue-500/10 text-blue-500"
-    case "spreadsheet": return "bg-emerald-500/10 text-emerald-500"
-    case "video": return "bg-purple-500/10 text-purple-500"
-    case "audio": return "bg-amber-500/10 text-amber-500"
-    case "image": return "bg-pink-500/10 text-pink-500"
-    default: return "bg-blue-500/10 text-blue-500"
-  }
+// Get icon color based on content type - standardized to neutral
+const getKnowledgeIconColor = () => {
+  return "bg-slate-100 text-slate-600"
 }
 
 // Get status badge
@@ -658,7 +651,7 @@ export default function KnowledgePage() {
                   className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                   onClick={() => handleOpenKnowledge(kb.id)}
                 >
-                  <CardContent className="p-4">
+                  <CardContent className="py-3 px-5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={`flex h-9 w-9 items-center justify-center rounded ${iconColorClass}`}>
