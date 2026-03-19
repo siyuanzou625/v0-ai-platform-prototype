@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -256,17 +257,17 @@ export default function ConnectionsPage() {
     }
   }
 
-  const getStatusBadgeVariant = (status: string) => {
+  const getStatusLabel = (status: string) => {
     switch (status) {
-      case "connected": return "default"
-      case "warning": return "secondary"
-      case "expired": return "destructive"
-      case "error": return "destructive"
-      default: return "outline"
+      case "connected": return "Connected"
+      case "warning": return "Warning"
+      case "expired": return "Expired"
+      case "error": return "Error"
+      default: return status
     }
   }
 
-  const getTypeBadge = (type: string) => {
+  const getTypeLabel = (type: string) => {
     switch (type) {
       case "oauth2": return "OAuth 2.0"
       case "api-key": return "API Key"
@@ -276,12 +277,12 @@ export default function ConnectionsPage() {
     }
   }
 
-  const getEnvironmentColor = (env: string) => {
+  const getEnvironmentLabel = (env: string) => {
     switch (env) {
-      case "production": return "bg-green-100 text-green-800"
-      case "staging": return "bg-orange-100 text-orange-800"
-      case "development": return "bg-slate-100 text-slate-800"
-      default: return "bg-gray-100 text-gray-800"
+      case "production": return "Production"
+      case "staging": return "Staging"
+      case "development": return "Development"
+      default: return env
     }
   }
 
@@ -409,7 +410,7 @@ export default function ConnectionsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 mt-2">
-                    <Badge variant="outline" className="text-xs">{getTypeBadge(conn.type)}</Badge>
+                    <StatusTag label={getTypeLabel(conn.type)} />
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -494,7 +495,7 @@ export default function ConnectionsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-xs">{getTypeBadge(conn.type)}</Badge>
+                      <StatusTag label={getTypeLabel(conn.type)} />
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1.5">
@@ -518,9 +519,7 @@ export default function ConnectionsPage() {
                       </TooltipProvider>
                     </TableCell>
                     <TableCell>
-                      <Badge className={`text-xs ${getEnvironmentColor(conn.environment)}`}>
-                        {conn.environment.charAt(0).toUpperCase() + conn.environment.slice(1)}
-                      </Badge>
+                      <StatusTag label={getEnvironmentLabel(conn.environment)} />
                     </TableCell>
                     <TableCell className="text-muted-foreground">{conn.lastUsed}</TableCell>
                     <TableCell className="text-muted-foreground">{conn.usedByWorkflows} workflow{conn.usedByWorkflows !== 1 ? "s" : ""}</TableCell>
@@ -926,9 +925,7 @@ export default function ConnectionsPage() {
                           <Edit className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground flex-shrink-0" />
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge variant={getStatusBadgeVariant(selectedConnection.status)} className="capitalize">
-                            {selectedConnection.status}
-                          </Badge>
+                          <StatusTag label={getStatusLabel(selectedConnection.status)} />
                           <span className="text-xs text-muted-foreground whitespace-nowrap">Last checked: 5 min ago</span>
                         </div>
                       </div>
@@ -1002,13 +999,11 @@ export default function ConnectionsPage() {
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-muted-foreground">Auth Method</span>
-                              <span className="font-medium">{getTypeBadge(selectedConnection.type)}</span>
+                              <StatusTag label={getTypeLabel(selectedConnection.type)} />
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-muted-foreground">Environment</span>
-                              <Badge className={`text-xs ${getEnvironmentColor(selectedConnection.environment)}`}>
-                                {selectedConnection.environment}
-                              </Badge>
+                              <StatusTag label={getEnvironmentLabel(selectedConnection.environment)} />
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-muted-foreground">Created</span>

@@ -27,6 +27,9 @@ import {
   Globe,
   Server,
   Code,
+  Key,
+  Link2,
+  Webhook,
   type LucideIcon,
 } from "lucide-react"
 
@@ -81,6 +84,17 @@ export const TAG_CONFIG: Record<string, { icon: LucideIcon; bg: string; text: st
   "Free": { icon: CheckCircle, bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
   "Pro": { icon: Star, bg: "bg-violet-50", text: "text-violet-700", border: "border-violet-200" },
   "Enterprise": { icon: Briefcase, bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
+  
+  // Connection Statuses
+  "Connected": { icon: CheckCircle, bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
+  "Expired": { icon: AlertCircle, bg: "bg-red-50", text: "text-red-700", border: "border-red-200" },
+  "Warning": { icon: AlertCircle, bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
+  
+  // Connection Types
+  "OAuth 2.0": { icon: Shield, bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
+  "API Key": { icon: Key, bg: "bg-violet-50", text: "text-violet-700", border: "border-violet-200" },
+  "Webhook": { icon: Webhook, bg: "bg-teal-50", text: "text-teal-700", border: "border-teal-200" },
+  "Database": { icon: Database, bg: "bg-indigo-50", text: "text-indigo-700", border: "border-indigo-200" },
 }
 
 // Default fallback for unknown tags
