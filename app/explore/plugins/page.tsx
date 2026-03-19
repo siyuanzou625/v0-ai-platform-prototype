@@ -650,7 +650,7 @@ export default function PluginsPage() {
     <AppLayout>
       <>
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-white px-6 py-6">
+        <div className="sticky top-0 z-10 bg-white px-6 py-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">
@@ -667,7 +667,7 @@ export default function PluginsPage() {
           </div>
           
           {/* Search and Filters */}
-          <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
+          <div className="flex flex-wrap items-center gap-3 mt-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Search plugins..." className="pl-10 bg-white" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />

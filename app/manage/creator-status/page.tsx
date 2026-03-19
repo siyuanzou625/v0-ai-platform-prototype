@@ -147,7 +147,7 @@ export default function CreatorStatusPage() {
       <TooltipProvider>
         <>
           {/* Page Header */}
-          <div className="sticky top-0 z-10 bg-white px-6 py-6">
+          <div className="sticky top-0 z-10 bg-white px-6 py-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export default function CreatorStatusPage() {
             </div>
             
             {/* View Toggle */}
-            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
+            <div className="flex items-center gap-3 mt-4">
               <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1">
                 <button
                   onClick={() => setViewMode("personal")}

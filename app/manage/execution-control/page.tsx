@@ -278,7 +278,7 @@ export default function ExecutionControlPage() {
       <TooltipProvider delayDuration={500}>
         <>
           {/* Page Header */}
-          <div className="sticky top-0 z-10 bg-white px-6 py-6">
+          <div className="sticky top-0 z-10 bg-white px-6 py-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
