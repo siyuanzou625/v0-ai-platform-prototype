@@ -751,9 +751,9 @@ export default function TemplatesPage() {
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-2.5">{template.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="py-2.5 px-5">
+                <CardContent className="pt-0 pb-2.5 px-5">
                   {/* Level and Version - Plain text with vertical divider */}
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2.5">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground py-2.5">
                     <span>{template.complexity}</span>
                     <span className="text-[#E5E7EB]">|</span>
                     <span>v{template.version || "1.0.0"}</span>

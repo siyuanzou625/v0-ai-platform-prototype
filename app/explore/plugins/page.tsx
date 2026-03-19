@@ -796,9 +796,9 @@ export default function PluginsPage() {
                       <span className="text-xs text-muted-foreground">v{plugin.version}</span>
                     </div>
                   </CardHeader>
-                  <CardContent className="py-2.5 px-5">
+                  <CardContent className="pt-0 pb-2.5 px-5">
                     {/* Divider */}
-                    <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
+                    <div className="w-full border-t border-[#E5E7EB] my-2.5"></div>
                     {/* Creator info with Follow button - Creator & Engagement Info */}
                     <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-2">
