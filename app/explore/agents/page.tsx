@@ -947,7 +947,7 @@ export default function ExploreAgentsPage() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="flex items-center gap-1">
-                              <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" />
+                              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                               {agent.rating}
                             </span>
                           </TooltipTrigger>
@@ -1080,7 +1080,7 @@ export default function ExploreAgentsPage() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" />
+                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                             {agent.rating}
                           </span>
                         </TooltipTrigger>
@@ -1164,7 +1164,7 @@ export default function ExploreAgentsPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-chart-4 text-chart-4" /> {selectedAgent?.rating}
+                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> {selectedAgent?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">

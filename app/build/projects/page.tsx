@@ -1060,45 +1060,7 @@ export default function ProjectsPage() {
                               {project.dueDate}
                             </span>
 </TableCell>
-                          <TableCell className="py-4">
-                            <div className="flex items-center gap-2">
-                              <div className="h-6 w-6 rounded-full bg-[#ee3224]/10 flex items-center justify-center">
-                                <span className="text-xs text-[#ee3224] font-medium">
-                                  {project.owner?.initials ?? "??"}
-                                </span>
-                              </div>
-                              <span className="text-sm">{project.owner?.name ?? "Unknown"}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="py-4">{getEnvironmentBadge(project.environment)}</TableCell>
-                          <TableCell className="py-4">
-                            <div className="flex items-center gap-2">
-                              <Progress value={project.progress} className="w-16 h-1.5" />
-                              <span className="text-xs text-muted-foreground">{project.progress}%</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="py-4" onClick={(e) => e.stopPropagation()}>
-                            <Select defaultValue={project.status}>
-                              <SelectTrigger className="h-7 w-28 text-xs border-0 bg-transparent hover:bg-[#F5F7FA]">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Active">Active</SelectItem>
-                                <SelectItem value="Paused">Paused</SelectItem>
-                                <SelectItem value="Draft">Draft</SelectItem>
-                                <SelectItem value="Completed">Completed</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell className="py-4">
-                            <span className="text-sm text-muted-foreground">
-                              {new Date(project.dueDate).toLocaleDateString()}
-                            </span>
-                          </TableCell>
-                          <TableCell className="py-4">
-                            <span className="text-sm text-muted-foreground">{project.lastActivity}</span>
-                          </TableCell>
-                          <TableCell className="py-4" onClick={(e) => e.stopPropagation()}>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon" className="h-8 w-8 ">

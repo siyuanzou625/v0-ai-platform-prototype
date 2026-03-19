@@ -835,7 +835,7 @@ export default function PluginsPage() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" /> {plugin.rating}
+                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> {plugin.rating}
                           </span>
                         </TooltipTrigger>
                         <TooltipContent>Rating</TooltipContent>
@@ -899,7 +899,7 @@ export default function PluginsPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-chart-4 text-chart-4" /> {selectedPlugin?.rating}
+                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> {selectedPlugin?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
@@ -946,7 +946,7 @@ export default function PluginsPage() {
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Rating</span>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3 w-3 fill-chart-4 text-chart-4" /> {selectedPlugin?.rating}
+                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" /> {selectedPlugin?.rating}
                           </span>
                         </div>
                       </CardContent>
@@ -1272,7 +1272,7 @@ export default function PluginsPage() {
                   <div className="text-xs text-[#6B7280]">Downloads</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
-                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline fill-chart-4 text-chart-4" /></div>
+                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline fill-amber-400 text-amber-400" /></div>
                   <div className="text-xs text-[#6B7280]">Avg Rating</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
@@ -1292,7 +1292,7 @@ export default function PluginsPage() {
                         <span className="text-sm font-medium truncate">{plugin.name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[#6B7280]">
-                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 fill-chart-4 text-chart-4" /> {plugin.rating}</span>
+                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 fill-amber-400 text-amber-400" /> {plugin.rating}</span>
                         <span className="flex items-center gap-0.5"><Download className="h-3 w-3" /> {plugin.downloads}</span>
                       </div>
                     </div>
