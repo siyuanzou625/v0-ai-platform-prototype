@@ -736,7 +736,7 @@ export default function TemplatesPage() {
                   {/* Divider */}
                   <div className="w-full border-t border-[#E5E7EB] mb-4"></div>
                   {/* Creator info with Follow button */}
-                  <div className="mb-3">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <button
                         className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
@@ -749,40 +749,40 @@ export default function TemplatesPage() {
                           Verified
                         </Badge>
                       )}
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={(e) => handleFollow(template.authorId, e)}
-                            className={`ml-auto px-2 py-0.5 text-[11px] font-medium rounded transition-all ${
-                              isFollowing
-                                ? "bg-[#22C55E] text-white hover:bg-[#16A34A]"
-                                : "border border-[#6B7280] text-[#6B7280] bg-transparent hover:border-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]"
-                            }`}
-                          >
-                            {isFollowing ? (
-                              <span className="flex items-center gap-1">
-                                <Check className="h-3 w-3" /> Following
-                              </span>
-                            ) : (
-                              <span className="flex items-center gap-1">
-                                <Plus className="h-3 w-3" /> Follow
-                              </span>
-                            )}
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          {isFollowing ? `Unfollow ${template.author}` : `Follow ${template.author} for updates`}
-                        </TooltipContent>
-                      </Tooltip>
+                      <span className="text-[#E5E7EB]">·</span>
+                      <button
+                        className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
+                        onClick={(e) => openCreatorProfile(template.authorId, e)}
+                      >
+                        <Users className="h-3 w-3" />
+                        {formatFollowerCount(followerCount)}
+                      </button>
                     </div>
-                    {/* Follower count */}
-                    <button
-                      className="flex items-center gap-1 mt-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
-                      onClick={(e) => openCreatorProfile(template.authorId, e)}
-                    >
-                      <Users className="h-3 w-3" />
-                      {formatFollowerCount(followerCount)} followers
-                    </button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={(e) => handleFollow(template.authorId, e)}
+                          className={`px-2 py-0.5 text-[11px] font-medium rounded transition-all ${
+                            isFollowing
+                              ? "bg-[#22C55E] text-white hover:bg-[#16A34A]"
+                              : "border border-[#6B7280] text-[#6B7280] bg-transparent hover:border-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]"
+                          }`}
+                        >
+                          {isFollowing ? (
+                            <span className="flex items-center gap-1">
+                              <Check className="h-3 w-3" /> Following
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-1">
+                              <Plus className="h-3 w-3" /> Follow
+                            </span>
+                          )}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {isFollowing ? `Unfollow ${template.author}` : `Follow ${template.author} for updates`}
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
 
                   <div className="mb-3 flex items-center gap-2">
