@@ -284,35 +284,33 @@ export default function CreatorStatusPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-3">
                 {filteredBadges.slice(0, 6).map((badge) => {
                   const IconComponent = badge.icon
                   return (
                     <Tooltip key={badge.id}>
                       <TooltipTrigger asChild>
                         <Card className={`border border-[#E5E7EB] bg-white shadow-sm ${!badge.earned ? "opacity-50" : ""}`}>
-                          <CardContent className="p-3">
-                            <div className="flex items-center gap-3">
-                              <div
-                                className="flex h-9 w-9 items-center justify-center rounded-full relative flex-shrink-0"
-                                style={{ backgroundColor: `${getTierColor(badge.tier)}20` }}
-                              >
-                                <IconComponent className="h-4 w-4" style={{ color: getTierColor(badge.tier) }} />
-                                {!badge.earned && (
-                                  <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-full">
-                                    <Lock className="h-3 w-3 text-muted-foreground" />
-                                  </div>
-                                )}
-                              </div>
-                              <p className="font-semibold text-sm flex-shrink-0">{badge.name}</p>
-                              <p className="text-xs text-muted-foreground flex-1 truncate">{badge.description}</p>
-                              <div className="flex-shrink-0 text-right">
-                                {badge.earned ? (
-                                  <p className="text-xs text-muted-foreground">{badge.earnedDate}</p>
-                                ) : (
-                                  <Badge variant="outline" className="text-xs">Locked</Badge>
-                                )}
-                              </div>
+                          <CardContent className="p-4 flex flex-col items-center text-center">
+                            <div
+                              className="flex h-10 w-10 items-center justify-center rounded-full relative mb-2"
+                              style={{ backgroundColor: `${getTierColor(badge.tier)}20` }}
+                            >
+                              <IconComponent className="h-5 w-5" style={{ color: getTierColor(badge.tier) }} />
+                              {!badge.earned && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-full">
+                                  <Lock className="h-3 w-3 text-muted-foreground" />
+                                </div>
+                              )}
+                            </div>
+                            <p className="font-semibold text-sm">{badge.name}</p>
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{badge.description}</p>
+                            <div className="mt-2">
+                              {badge.earned ? (
+                                <p className="text-xs text-muted-foreground">{badge.earnedDate}</p>
+                              ) : (
+                                <Badge variant="outline" className="text-xs">Locked</Badge>
+                              )}
                             </div>
                           </CardContent>
                         </Card>
