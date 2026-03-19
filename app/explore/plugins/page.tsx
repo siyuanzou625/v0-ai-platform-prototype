@@ -751,11 +751,16 @@ export default function PluginsPage() {
                       )}
                     </div>
                     <CardDescription className="text-sm mt-2">{plugin.description}</CardDescription>
+                    {/* Category and Version - Product Info */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant="secondary">{plugin.category}</Badge>
+                      <span className="text-xs text-muted-foreground">v{plugin.version}</span>
+                    </div>
                   </CardHeader>
                   <CardContent className="py-2.5 px-5">
                     {/* Divider */}
                     <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
-                    {/* Creator info with Follow button */}
+                    {/* Creator info with Follow button - Creator & Engagement Info */}
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <button
@@ -803,11 +808,6 @@ export default function PluginsPage() {
                           {isFollowing ? `Unfollow ${plugin.author}` : `Follow ${plugin.author} for updates`}
                         </TooltipContent>
                       </Tooltip>
-                    </div>
-
-                    <div className="mb-2 flex items-center gap-2">
-                      <Badge variant="secondary">{plugin.category}</Badge>
-                      <span className="text-xs text-muted-foreground">v{plugin.version}</span>
                     </div>
                     {/* Metrics row with comment count */}
                     <div className="flex items-center gap-3 text-sm text-muted-foreground">

@@ -1088,9 +1088,11 @@ export default function ProjectsPage() {
                           <TableCell className="py-4">
                             <div className="flex items-center gap-2">
                               <Avatar className="h-6 w-6">
-                                <AvatarFallback className="text-xs bg-[#ee3224]/10 text-[#ee3224]">{project.owner.initials}</AvatarFallback>
+                                <AvatarFallback className="text-xs bg-[#ee3224]/10 text-[#ee3224]">
+                                  {project.owner?.initials || "??"}
+                                </AvatarFallback>
                               </Avatar>
-                              <span className="text-sm">{project.owner.name}</span>
+                              <span className="text-sm">{project.owner?.name || "Unknown"}</span>
                             </div>
                           </TableCell>
                           <TableCell className="py-4">{getEnvironmentBadge(project.environment)}</TableCell>

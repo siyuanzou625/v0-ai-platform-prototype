@@ -731,11 +731,27 @@ export default function TemplatesPage() {
                     <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(template.category)}`}>{template.category}</Badge>
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-2">{template.description}</CardDescription>
+                  {/* Complexity and Version - Product Info */}
+                  <div className="flex items-center gap-2 mt-2">
+                    <Badge
+                      variant="outline"
+                      className={
+                        template.complexity === "Beginner"
+                          ? "border-chart-3 text-chart-3"
+                          : template.complexity === "Intermediate"
+                          ? "border-chart-4 text-chart-4"
+                          : "border-primary text-primary"
+                      }
+                    >
+                      {template.complexity}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">v{template.version || "1.0.0"}</span>
+                  </div>
                 </CardHeader>
                 <CardContent className="py-2.5 px-5">
                   {/* Divider */}
                   <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
-                  {/* Creator info with Follow button */}
+                  {/* Creator info with Follow button - Creator & Engagement Info */}
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <button
@@ -784,22 +800,6 @@ export default function TemplatesPage() {
                         </TooltipContent>
                       </Tooltip>
                     </div>
-                  </div>
-
-                  <div className="mb-2 flex items-center gap-2">
-                    <Badge
-                      variant="outline"
-                      className={
-                        template.complexity === "Beginner"
-                          ? "border-chart-3 text-chart-3"
-                          : template.complexity === "Intermediate"
-                          ? "border-chart-4 text-chart-4"
-                          : "border-primary text-primary"
-                      }
-                    >
-                      {template.complexity}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">v{template.version || "1.0.0"}</span>
                   </div>
                   {/* Metrics row with comment count */}
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">
