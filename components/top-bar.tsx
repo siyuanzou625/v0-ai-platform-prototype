@@ -157,27 +157,34 @@ export function TopBar() {
   return (
     <>
       <header className="sticky top-0 z-[1000] flex h-16 items-center justify-between border-b border-[#E5E7EB] bg-white px-6">
-        {/* Left Section: Global Search Bar */}
-        <div className="relative flex-1 min-w-[50%] max-w-[60%]">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-          <Input
-            ref={searchInputRef}
-            type="search"
-            placeholder="Search anything..."
-            className="h-10 w-full rounded border-[#E5E7EB] bg-[#F5F7FA] pl-10 pr-10 text-sm placeholder:text-[#6B7280] focus:border-[#ee3224] focus:ring-[#ee3224]"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
-          />
-          {searchQuery && (
-            <button
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#333]"
-              onClick={() => setSearchQuery("")}
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
+        {/* Left Section: Logo */}
+        <div className="flex items-center">
+          <span className="text-lg font-semibold text-[#1F2937]">AgentStudio</span>
+        </div>
+
+        {/* Right Section: Search + Actions */}
+        <div className="flex items-center gap-3">
+          {/* Compact Search Bar */}
+          <div className="relative w-64">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
+            <Input
+              ref={searchInputRef}
+              type="search"
+              placeholder="Search anything..."
+              className="h-9 w-full rounded border-[#E5E7EB] bg-[#F5F7FA] pl-9 pr-8 text-sm placeholder:text-[#6B7280] focus:border-[#ee3224] focus:ring-[#ee3224]"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
+            />
+            {searchQuery && (
+              <button
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#333]"
+                onClick={() => setSearchQuery("")}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
 
           {/* Search Dropdown */}
           {searchFocused && (
@@ -255,10 +262,8 @@ export function TopBar() {
               </div>
             </div>
           )}
-        </div>
+          </div>
 
-        {/* Right Section: Utility Icons */}
-        <div className="flex items-center gap-1">
           {/* Resources Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
