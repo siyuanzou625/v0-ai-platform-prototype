@@ -147,7 +147,7 @@ export default function CreatorStatusPage() {
       <TooltipProvider>
         <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
           {/* Page Header */}
-          <div className="border-b border-border bg-white px-6 py-4">
+          <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="flex items-center gap-2">

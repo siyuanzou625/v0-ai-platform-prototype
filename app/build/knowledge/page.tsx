@@ -264,7 +264,7 @@ export default function KnowledgePage() {
     <AppLayout>
       <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
         {/* Header */}
-        <div className="border-b border-border bg-card px-6 py-4">
+        <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
           {/* Title Row */}
           <div className="mb-4">
             <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>

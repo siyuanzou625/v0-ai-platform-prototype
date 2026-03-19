@@ -604,9 +604,9 @@ export default function MyAppsPage() {
 
   return (
     <AppLayout>
-      <div className="flex flex-col h-full bg-[#F5F7FA]">
+      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
         {/* Header */}
-        <div className="bg-white border-b border-[#E5E7EB] px-6 py-4">
+        <div className="sticky top-0 z-10 bg-white border-b border-[#E5E7EB] px-6 py-4">
           {/* Title Row */}
           <div className="mb-4">
             <div className="flex items-center gap-2">

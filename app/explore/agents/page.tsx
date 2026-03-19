@@ -766,7 +766,7 @@ export default function ExploreAgentsPage() {
     <AppLayout>
       <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
         {/* Header */}
-        <div className="border-b border-border bg-white px-6 py-4">
+        <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
           <div className="mb-4">
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-[#ee3224]" />
