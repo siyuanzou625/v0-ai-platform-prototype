@@ -382,11 +382,6 @@ export default function ConnectionsPage() {
         {/* Content */}
         <div className="flex-1 overflow-auto bg-[#F5F7FA]">
           <div className="p-6 space-y-6">
-        {/* Connection Count */}
-        <div className="text-sm text-muted-foreground">
-          {filteredConnections.length} connection{filteredConnections.length !== 1 ? "s" : ""}
-        </div>
-
         {/* Grid View */}
         {viewMode === "grid" && (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -396,7 +391,7 @@ export default function ConnectionsPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openDetailView(conn)}
               >
-                <CardContent className="py-2.5 px-5">
+                <CardContent className="py-4 px-5 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100 text-sm font-semibold text-slate-600">

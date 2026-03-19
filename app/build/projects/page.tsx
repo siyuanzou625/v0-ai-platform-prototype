@@ -659,9 +659,9 @@ export default function ProjectsPage() {
                 {/* Metric Summary Cards */}
                 <div className="grid grid-cols-4 gap-4">
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}>
-                    <CardContent className="py-2.5 px-5">
+                    <CardContent className="py-4 px-5">
                       <div className="flex items-center justify-between">
-                        <div>
+                        <div className="space-y-1">
                           <p className="text-sm text-muted-foreground">Total Projects</p>
                           <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{totalProjects}</p>
                         </div>
@@ -672,9 +672,9 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
-                    <CardContent className="py-2.5 px-5">
+                    <CardContent className="py-4 px-5">
                       <div className="flex items-center justify-between">
-                        <div>
+                        <div className="space-y-1">
                           <p className="text-sm text-muted-foreground">In Progress</p>
                           <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{inProgressCount}</p>
                         </div>
@@ -685,9 +685,9 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}>
-                    <CardContent className="py-2.5 px-5">
+                    <CardContent className="py-4 px-5">
                       <div className="flex items-center justify-between">
-                        <div>
+                        <div className="space-y-1">
                           <p className="text-sm text-muted-foreground">Ready to Deploy</p>
                           <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{readyCount}</p>
                         </div>
@@ -698,9 +698,9 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("blocked")}>
-                    <CardContent className="py-2.5 px-5">
+                    <CardContent className="py-4 px-5">
                       <div className="flex items-center justify-between">
-                        <div>
+                        <div className="space-y-1">
                           <p className="text-sm text-muted-foreground">Blocked</p>
                           <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{blockedCount}</p>
                         </div>
@@ -765,7 +765,7 @@ export default function ProjectsPage() {
                           className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <CardContent className="py-2.5 px-5">
+                          <CardContent className="py-4 px-5">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
                                 <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -775,7 +775,7 @@ export default function ProjectsPage() {
                                     <Code2 className="h-4 w-4 text-slate-600" />
                                   )}
                                 </div>
-                                <div>
+                                <div className="space-y-1">
                                   <h3 className="card-title-text text-sm font-semibold text-foreground transition-colors duration-150 line-clamp-1">
                                     {project.name}
                                   </h3>
@@ -784,7 +784,7 @@ export default function ProjectsPage() {
                               </div>
                               {getStatusBadge(project.status)}
                             </div>
-                            <div className="mt-2 flex items-center gap-2">
+                            <div className="mt-3 flex items-center gap-2">
                               <Progress 
                                 value={project.progress} 
                                 className={`h-1.5 flex-1 ${
@@ -796,7 +796,7 @@ export default function ProjectsPage() {
                               />
                               <span className="text-xs font-medium text-muted-foreground w-8 text-right">{project.progress}%</span>
                             </div>
-                            <div className="mt-2">
+                            <div className="mt-3 space-y-1">
                               <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
                               <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
                                 {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
@@ -821,7 +821,7 @@ export default function ProjectsPage() {
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleOpenProject(project.id)}
                   >
-                    <CardContent className="py-2.5 px-5">
+                    <CardContent className="py-4 px-5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">

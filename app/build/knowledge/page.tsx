@@ -652,7 +652,7 @@ export default function KnowledgePage() {
                   className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                   onClick={() => handleOpenKnowledge(kb.id)}
                 >
-                  <CardContent className="py-2.5 px-5">
+                  <CardContent className="py-4 px-5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={`flex h-9 w-9 items-center justify-center rounded ${iconColorClass}`}>
@@ -679,12 +679,12 @@ export default function KnowledgePage() {
                       </div>
                     </div>
 
-                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+                    <p className="mt-3 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
                       {kb.description}
                     </p>
 
                     {/* Metadata */}
-                    <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
                       <span>{kb.documentCount} documents</span>
                       <span>{kb.chunkCount.toLocaleString()} chunks</span>
                       <span className="font-mono">{kb.embeddingModel}</span>

@@ -730,11 +730,11 @@ export default function TemplatesPage() {
                     </div>
                     <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(template.category)}`}>{template.category}</Badge>
                   </div>
-                  <CardDescription className="text-sm line-clamp-2 mt-2">{template.description}</CardDescription>
+                  <CardDescription className="text-sm line-clamp-2 mt-3">{template.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="py-2.5 px-5">
+                <CardContent className="py-4 px-5">
                   {/* Creator info with Follow button */}
-                  <div className="mb-2">
+                  <div className="mb-3">
                     <div className="flex items-center gap-2">
                       <button
                         className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"

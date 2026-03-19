@@ -499,7 +499,7 @@ export default function MyAppsPage() {
       <Card 
         className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
       >
-        <CardContent className="py-2.5 px-5">
+        <CardContent className="py-4 px-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -529,9 +529,9 @@ export default function MyAppsPage() {
               )}
             </div>
           </div>
-          <p className="mt-2 text-sm text-muted-foreground truncate">{app.tagline}</p>
+          <p className="mt-3 text-sm text-muted-foreground truncate">{app.tagline}</p>
           
-          <div className="mt-2 flex items-center justify-between">
+          <div className="mt-3 flex items-center justify-between">
             <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(app.source)}`}>
               {app.source}
             </Badge>
@@ -734,19 +734,19 @@ export default function MyAppsPage() {
                             key={recent.appId}
                             className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           >
-                            <CardContent className="py-2.5 px-5">
+                            <CardContent className="py-4 px-5">
                               <div className="flex items-center gap-3">
                                 <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
                                   <IconComponent className="h-4 w-4 text-slate-600" />
                                 </div>
-                                <div className="flex-1 min-w-0">
+                                <div className="flex-1 min-w-0 space-y-1">
                                   <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{recent.name}</h3>
                                   <p className="text-xs text-muted-foreground">{recent.lastUsed}</p>
                                 </div>
                               </div>
-                              <p className="mt-2 text-sm text-muted-foreground truncate">{recent.taskInProgress}</p>
+                              <p className="mt-3 text-sm text-muted-foreground truncate">{recent.taskInProgress}</p>
                               {recent.progress !== null && recent.progress < 100 && (
-                                <div className="mt-2 flex items-center gap-2">
+                                <div className="mt-3 flex items-center gap-2">
                                   <Progress value={recent.progress} className="h-1.5 flex-1" />
                                   <span className="text-xs font-medium text-muted-foreground w-8 text-right">{recent.progress}%</span>
                                 </div>
