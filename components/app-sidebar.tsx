@@ -65,7 +65,7 @@ export function AppSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="flex h-[calc(100vh-4rem)] w-64 flex-col border-r border-[#E5E7EB] bg-white">
+    <aside className="sticky top-0 flex h-[calc(100vh-4rem)] w-64 flex-shrink-0 flex-col border-r border-[#E5E7EB] bg-white">
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         {/* Home Link */}
         {(() => {
