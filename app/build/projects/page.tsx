@@ -258,7 +258,10 @@ const getDueDateColor = (status: string) => {
   }
 }
 
-// Projects Page Component
+/**
+ * ProjectsPage Component
+ * Note: Uses AvatarFallback only - owner data is object with .initials and .name
+ */
 export default function ProjectsPage() {
   const router = useRouter()
   
