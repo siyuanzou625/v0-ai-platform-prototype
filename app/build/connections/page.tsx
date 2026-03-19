@@ -395,7 +395,7 @@ export default function ConnectionsPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openDetailView(conn)}
               >
-                <CardContent className="py-2 px-4">
+                <CardContent className="py-2.5 px-5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100 text-sm font-semibold text-slate-600">

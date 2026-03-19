@@ -719,7 +719,7 @@ export default function TemplatesPage() {
                 className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openTemplateModal(template)}
               >
-                <CardHeader className="py-2 px-4 pb-1">
+                <CardHeader className="py-2.5 px-5 pb-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
@@ -731,7 +731,7 @@ export default function TemplatesPage() {
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-2">{template.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="py-2 px-4">
+                <CardContent className="py-2.5 px-5">
                   {/* Creator info with Follow button */}
                   <div className="mb-2">
                     <div className="flex items-center gap-2">
