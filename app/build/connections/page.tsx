@@ -396,11 +396,11 @@ export default function ConnectionsPage() {
                 onClick={() => openDetailView(conn)}
               >
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded bg-muted text-sm font-semibold">
+                      <div className="flex h-9 w-9 items-center justify-center rounded bg-muted text-sm font-semibold">
                         {conn.provider === "custom-webhook" ? (
-                          <Link2 className="h-5 w-5 text-muted-foreground" />
+                          <Link2 className="h-4 w-4 text-muted-foreground" />
                         ) : (
                           conn.provider.charAt(0).toUpperCase()
                         )}
@@ -412,37 +412,30 @@ export default function ConnectionsPage() {
                       <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mt-2">
                     <Badge variant="outline" className="text-xs">{getTypeBadge(conn.type)}</Badge>
-                    <Badge className={`text-xs ${getEnvironmentColor(conn.environment)}`}>
-                      {conn.environment.charAt(0).toUpperCase() + conn.environment.slice(1)}
-                    </Badge>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F5F7FA] text-[#6B7280]">
+                            <Lock className="h-3 w-3" />
+                            <span className="text-[11px]">Never in Git</span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Credentials are encrypted and never synced to version control</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
-                  {/* Never in Git Badge */}
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F5F7FA] text-[#6B7280] mb-2">
-                          <Lock className="h-3 w-3" />
-                          <span className="text-[11px]">Never in Git</span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Credentials are encrypted and never synced to version control</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {conn.lastUsed}
                     </span>
-                    <span>{conn.usedByWorkflows} workflow{conn.usedByWorkflows !== 1 ? "s" : ""}</span>
+                    <span>{conn.usedByWorkflows} workflow{conn.usedByWorkflows !== 1 ? "s" : ""} · {conn.scopes.length} permission{conn.scopes.length !== 1 ? "s" : ""}</span>
                   </div>
-                  <div className="text-xs text-muted-foreground mb-3">
-                    {conn.scopes.length} permission{conn.scopes.length !== 1 ? "s" : ""}
-                  </div>
-                  <div className="flex items-center gap-2 pt-3 border-t border-[#E5E7EB]">
+                  <div className="flex items-center gap-2 pt-3 mt-3 border-t border-[#E5E7EB]">
                     <Button variant="ghost" size="sm" className="flex-1" onClick={(e) => { e.stopPropagation(); handleTestConnection(); }}>
                       <Play className="h-3 w-3 mr-1" />
                       Test

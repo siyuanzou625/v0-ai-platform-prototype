@@ -692,17 +692,17 @@ export default function PluginsPage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {plugins.filter((p) => p.installed).map((plugin) => (
               <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                <CardContent className="flex items-center justify-between p-4">
+                <CardContent className="flex items-center justify-between p-3">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10">
-                      <plugin.icon className="h-5 w-5 text-primary" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded bg-primary/10">
+                      <plugin.icon className="h-4 w-4 text-primary" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <h4 className="card-title-text font-medium text-foreground transition-colors duration-150">{plugin.name}</h4>
                         <Badge variant="secondary" className="text-xs">v{plugin.version}</Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">{plugin.description}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{plugin.description}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -726,11 +726,11 @@ export default function PluginsPage() {
 
               return (
                 <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                  <CardHeader className="pb-3">
+                  <CardHeader className="p-4 pb-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10">
-                          <plugin.icon className="h-5 w-5 text-primary" />
+                        <div className="flex h-9 w-9 items-center justify-center rounded bg-primary/10">
+                          <plugin.icon className="h-4 w-4 text-primary" />
                         </div>
                         <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
                       </div>
@@ -740,9 +740,9 @@ export default function PluginsPage() {
                         <Badge variant="secondary">Available</Badge>
                       )}
                     </div>
-                    <CardDescription className="text-sm mt-2">{plugin.description}</CardDescription>
+                    <CardDescription className="text-sm mt-1">{plugin.description}</CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-4 pt-0">
                     {/* Creator info with Follow button */}
                     <div className="mb-3">
                       <div className="flex items-center gap-2">

@@ -500,20 +500,15 @@ export default function MyAppsPage() {
         className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
       >
         <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded bg-[#ee3224]/10">
-                <IconComponent className="h-5 w-5 text-[#ee3224]" />
+              <div className="flex h-9 w-9 items-center justify-center rounded bg-[#ee3224]/10">
+                <IconComponent className="h-4 w-4 text-[#ee3224]" />
               </div>
               <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{app.name}</h3>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <div className={`h-2 w-2 rounded-full ${getStatusColor(app.status)}`} />
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground truncate mb-2">{app.tagline}</p>
-          <div className="flex items-center justify-end">
-            <div className="flex items-center gap-1 ">
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -534,6 +529,7 @@ export default function MyAppsPage() {
               )}
             </div>
           </div>
+          <p className="mt-1 text-sm text-muted-foreground truncate">{app.tagline}</p>
           
           <div className="mt-3 flex items-center justify-between">
             <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(app.source)}`}>
@@ -544,10 +540,11 @@ export default function MyAppsPage() {
             )}
           </div>
           
-          <div className="mt-4">
+          <div className="mt-3">
             <Button 
               className="w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
               variant="outline"
+              size="sm"
               onClick={() => launchApp(app)}
             >
               {app.requiresAccess ? "Request Access" : "Launch"}
@@ -743,12 +740,12 @@ export default function MyAppsPage() {
                         return (
                           <Card 
                             key={recent.appId}
-                            className="card-interactive group flex-shrink-0 w-[280px] border border-[#E5E7EB] bg-white shadow-sm"
+                            className="card-interactive group flex-shrink-0 w-[260px] border border-[#E5E7EB] bg-white shadow-sm"
                           >
-                            <CardContent className="p-4">
+                            <CardContent className="p-3">
                               <div className="flex items-center gap-3">
-                                <div className="flex h-10 w-10 items-center justify-center rounded bg-[#ee3224]/10">
-                                  <IconComponent className="h-5 w-5 text-[#ee3224]" />
+                                <div className="flex h-9 w-9 items-center justify-center rounded bg-[#ee3224]/10">
+                                  <IconComponent className="h-4 w-4 text-[#ee3224]" />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{recent.name}</h3>
@@ -757,7 +754,10 @@ export default function MyAppsPage() {
                               </div>
                               <p className="mt-2 text-sm text-muted-foreground truncate">{recent.taskInProgress}</p>
                               {recent.progress !== null && recent.progress < 100 && (
-                                <Progress value={recent.progress} className="h-1 mt-2" />
+                                <div className="mt-2 flex items-center gap-2">
+                                  <Progress value={recent.progress} className="h-1 flex-1" />
+                                  <span className="text-xs font-medium text-muted-foreground w-8 text-right">{recent.progress}%</span>
+                                </div>
                               )}
                               <Button 
                                 className="w-full mt-3 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"

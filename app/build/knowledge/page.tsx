@@ -658,11 +658,11 @@ export default function KnowledgePage() {
                   className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                   onClick={() => handleOpenKnowledge(kb.id)}
                 >
-                  <CardContent className="p-5">
+                  <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded ${iconColorClass}`}>
-                          <KbIcon className="h-5 w-5" />
+                        <div className={`flex h-9 w-9 items-center justify-center rounded ${iconColorClass}`}>
+                          <KbIcon className="h-4 w-4" />
                         </div>
                         <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
                           {kb.name}
@@ -672,7 +672,7 @@ export default function KnowledgePage() {
                         {getStatusBadge(kb.status)}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 ">
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -685,46 +685,42 @@ export default function KnowledgePage() {
                       </div>
                     </div>
 
-                    <p className="mt-3 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
                       {kb.description}
                     </p>
 
                     {/* Metadata */}
-                    <div className="mt-3 space-y-1.5 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-4">
-                        <span>{kb.documentCount} documents</span>
-                        <span>{kb.chunkCount.toLocaleString()} chunks</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="font-mono">{kb.embeddingModel}</span>
-                      </div>
+                    <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+                      <span>{kb.documentCount} documents</span>
+                      <span>{kb.chunkCount.toLocaleString()} chunks</span>
+                      <span className="font-mono">{kb.embeddingModel}</span>
                     </div>
 
-                    <div className="mt-4 flex items-center justify-between">
+                    <div className="mt-3 flex items-center justify-between">
                       <div className="flex items-center -space-x-2">
                         {kb.members.slice(0, 3).map((member, idx) => (
-                          <Avatar key={idx} className="h-7 w-7 border-2 border-white">
-                            <AvatarFallback className="text-xs bg-muted text-muted-foreground">
+                          <Avatar key={idx} className="h-6 w-6 border-2 border-white">
+                            <AvatarFallback className="text-[10px] bg-muted text-muted-foreground">
                               {member.initials}
                             </AvatarFallback>
                           </Avatar>
                         ))}
                         {kb.members.length > 3 && (
-                          <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-muted text-xs font-medium text-muted-foreground">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-muted text-[10px] font-medium text-muted-foreground">
                             +{kb.members.length - 3}
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        {kb.lastUpdated}
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Bot className="h-3 w-3" />
+                          <span>{kb.usedByAgents} agents</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {kb.lastUpdated}
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Agent Usage */}
-                    <div className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Bot className="h-3.5 w-3.5" />
-                      <span>Used by {kb.usedByAgents} agents</span>
                     </div>
 
                     <div className="mt-4 flex gap-2">

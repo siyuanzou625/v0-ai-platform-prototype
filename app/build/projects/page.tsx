@@ -780,8 +780,8 @@ export default function ProjectsPage() {
                           className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between">
+                          <CardContent className="p-3">
+                            <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <div className={`flex h-8 w-8 items-center justify-center rounded ${
                                   project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
@@ -801,14 +801,19 @@ export default function ProjectsPage() {
                               </div>
                               {getStatusBadge(project.status)}
                             </div>
-                            <div className="mt-3">
-                              <div className="flex items-center justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Progress</span>
-                                <span className="font-medium">{project.progress}%</span>
-                              </div>
-                              <Progress value={project.progress} className="h-1.5" />
+                            <div className="mt-2 flex items-center gap-2">
+                              <Progress 
+                                value={project.progress} 
+                                className={`h-1.5 flex-1 ${
+                                  project.status === "deployed" ? "[&>div]:bg-emerald-500" :
+                                  project.status === "ready" ? "[&>div]:bg-emerald-500" :
+                                  project.status === "building" ? "[&>div]:bg-blue-500" :
+                                  project.status === "blocked" ? "[&>div]:bg-[#ee3224]" : ""
+                                }`}
+                              />
+                              <span className="text-xs font-medium text-muted-foreground w-8 text-right">{project.progress}%</span>
                             </div>
-                            <div className="mt-3 flex items-center justify-between">
+                            <div className="mt-2 flex items-center justify-between">
                               <div>
                                 <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
                                 <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
@@ -855,16 +860,16 @@ export default function ProjectsPage() {
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleOpenProject(project.id)}
                   >
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between mb-2">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className={`flex h-10 w-10 items-center justify-center rounded ${
+                          <div className={`flex h-9 w-9 items-center justify-center rounded ${
                             project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
                           }`}>
                             {project.mode === "workflow" ? (
-                              <Workflow className="h-5 w-5 text-[#ee3224]" />
+                              <Workflow className="h-4 w-4 text-[#ee3224]" />
                             ) : (
-                              <Code2 className="h-5 w-5 text-blue-500" />
+                              <Code2 className="h-4 w-4 text-blue-500" />
                             )}
                           </div>
                           <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
@@ -872,10 +877,10 @@ export default function ProjectsPage() {
                           </h3>
                         </div>
                         <div className="flex items-center gap-2">
-                          {getEnvironmentBadge(project.environment)}
+                          {getStatusBadge(project.status)}
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 ">
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
                                 <MoreHorizontal className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
@@ -906,24 +911,26 @@ export default function ProjectsPage() {
                         </div>
                       </div>
 
-                      <p className="mt-3 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
                         {project.description}
                       </p>
 
                       {/* Progress */}
-                      <div className="mt-3">
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="text-muted-foreground">Progress</span>
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">{project.progress}%</span>
-                            {getStatusBadge(project.status)}
-                          </div>
-                        </div>
-                        <Progress value={project.progress} className="h-1.5" />
+                      <div className="mt-3 flex items-center gap-2">
+                        <Progress 
+                          value={project.progress} 
+                          className={`h-1.5 flex-1 ${
+                            project.status === "deployed" ? "[&>div]:bg-emerald-500" :
+                            project.status === "ready" ? "[&>div]:bg-emerald-500" :
+                            project.status === "building" ? "[&>div]:bg-blue-500" :
+                            project.status === "blocked" ? "[&>div]:bg-[#ee3224]" : ""
+                          }`}
+                        />
+                        <span className="text-xs font-medium text-muted-foreground w-8 text-right">{project.progress}%</span>
                       </div>
 
                       {/* Owner and Team */}
-                      <div className="mt-4 flex items-center justify-between">
+                      <div className="mt-3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Avatar className="h-6 w-6">
                             <AvatarFallback className="text-xs bg-muted">{project.owner.initials}</AvatarFallback>
