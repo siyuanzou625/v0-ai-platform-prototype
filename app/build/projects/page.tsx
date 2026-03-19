@@ -671,7 +671,10 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p>
                     </CardContent>
                   </Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
+                  <Card
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
+                    onClick={() => handleMetricClick("building")}
+                  >
                     <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -685,7 +688,10 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}>
+                  <Card
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
+                    onClick={() => handleMetricClick("ready")}
+                  >
                     <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -799,34 +805,12 @@ export default function ProjectsPage() {
                               />
                               <span className="text-xs font-medium text-muted-foreground w-8 text-right">{project.progress}%</span>
                             </div>
-                            <div className="mt-2 flex items-center justify-between">
-                              <div>
-                                <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
-                                <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
-                                  {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
-                                  Due {project.dueDate}
-                                </p>
-                              </div>
-                              <div className="flex gap-1">
-                                <Button 
-                                  size="sm" 
-                                  className="h-7 px-2 bg-[#ee3224] hover:bg-[#cc2a1e] text-xs"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleOpenProject(project.id)
-                                  }}
-                                >
-                                  Open
-                                </Button>
-                                <Button 
-                                  size="sm" 
-                                  variant="ghost" 
-                                  className="h-7 px-2 text-xs"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <Pencil className="h-3 w-3" />
-                                </Button>
-                              </div>
+                            <div className="mt-2">
+                              <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
+                              <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
+                                {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
+                                Due {project.dueDate}
+                              </p>
                             </div>
                           </CardContent>
                         </Card>
