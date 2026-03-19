@@ -763,12 +763,15 @@ export default function TemplatesPage() {
                   {/* Creator info with Follow button - Creator & Engagement Info */}
                   <div className="flex items-center justify-between mb-2.5">
                     <div className="flex items-center gap-2">
-                      <button
-                        className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
-                        onClick={(e) => openCreatorProfile(template.authorId, e)}
-                      >
-                        by {template.author}
-                      </button>
+                      <span className="text-xs text-[#6B7280]">
+                        by{" "}
+                        <button
+                          onClick={(e) => openCreatorProfile(template.authorId, e)}
+                          className="underline decoration-[#6B7280]/50 hover:text-[#ee3224] hover:decoration-[#ee3224] transition-colors"
+                        >
+                          {template.author}
+                        </button>
+                      </span>
                       {creator?.verified && (
                         <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">
                           Verified

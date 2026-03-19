@@ -914,12 +914,15 @@ export default function ExploreAgentsPage() {
                       {/* Creator row with follow button - Creator & Engagement Info */}
                       <div className="flex items-center justify-between mb-2.5">
                         <div className="flex items-center gap-2">
+<span className="text-xs text-[#6B7280]">
+                          by{" "}
                           <button
                             onClick={(e) => openCreatorProfile(agent.authorId, e)}
-                            className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
+                            className="underline decoration-[#6B7280]/50 hover:text-[#ee3224] hover:decoration-[#ee3224] transition-colors"
                           >
-                            by {agent.author}
+                            {agent.author}
                           </button>
+                        </span>
                           {creator?.verified && (
                             <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">Verified</Badge>
                           )}
@@ -1058,12 +1061,15 @@ export default function ExploreAgentsPage() {
                     {/* Creator row with follow button - Creator & Engagement Info */}
                     <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={(e) => openCreatorProfile(agent.authorId, e)}
-                          className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
-                        >
-                          by {agent.author}
-                        </button>
+                        <span className="text-xs text-[#6B7280]">
+                          by{" "}
+                          <button
+                            onClick={(e) => openCreatorProfile(agent.authorId, e)}
+                            className="underline decoration-[#6B7280]/50 hover:text-[#ee3224] hover:decoration-[#ee3224] transition-colors"
+                          >
+                            {agent.author}
+                          </button>
+                        </span>
                         {creator?.verified && (
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">Verified</Badge>
                         )}
