@@ -273,14 +273,6 @@ export default function ProfilePage() {
                     <Edit3 className="h-4 w-4" />
                     Edit Profile
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    className="gap-2 border-[#E5E7EB] rounded-lg"
-                    onClick={() => window.location.href = "/settings"}
-                  >
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </Button>
                 </div>
               )}
             </div>
