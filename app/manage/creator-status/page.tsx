@@ -409,10 +409,10 @@ export default function CreatorStatusPage() {
 
           {/* Your Impact Section */}
           <Card>
-            <CardHeader className="pb-2">
+            <CardHeader className="py-3 px-5 pb-1">
               <CardTitle className="text-lg font-semibold">Your Impact</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="py-3 px-5">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {impactStats.map((stat) => {
                   const IconComponent = stat.icon
@@ -424,7 +424,7 @@ export default function CreatorStatusPage() {
                           className={`border border-[#E5E7EB] bg-white shadow-sm ${isClickable ? "card-interactive group" : ""}`}
                           onClick={() => isClickable && setFollowersModalOpen(true)}
                         >
-                          <CardContent className="p-5">
+                          <CardContent className="py-3 px-5">
                             <div className="flex items-center gap-3">
                               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#ee3224]/10">
                                 <IconComponent className="h-6 w-6 text-[#ee3224]" />
@@ -455,10 +455,10 @@ export default function CreatorStatusPage() {
 
           {/* Leaderboard Position */}
           <Card>
-            <CardHeader className="pb-2">
+            <CardHeader className="py-3 px-5 pb-1">
               <CardTitle className="text-lg font-semibold">Leaderboard Position</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="py-3 px-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-3xl font-bold text-[#ee3224]">#47</p>
