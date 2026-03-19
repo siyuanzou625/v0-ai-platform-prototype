@@ -1,5 +1,5 @@
 "use client"
-// Build timestamp: 2024-03-20T12:00:00Z - All Avatar code fixed
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -429,7 +429,7 @@ export default function ProjectsPage() {
     <AppLayout>
       <>
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-white px-6 py-6 shadow-sm">
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">

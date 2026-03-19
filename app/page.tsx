@@ -237,7 +237,7 @@ export default function HomePage() {
     <AppLayout>
       <>
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-white px-6 py-6 shadow-sm">
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
           <div className="flex items-center gap-2 mb-1">
             <Home className="h-5 w-5 text-[#ee3224]" />
             <h1 className="text-2xl font-semibold text-foreground">Home</h1>

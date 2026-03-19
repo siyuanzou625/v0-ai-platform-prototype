@@ -140,7 +140,7 @@ export default function PulsePage() {
       <TooltipProvider>
         <>
           {/* Page Header */}
-          <div className="sticky top-0 z-10 bg-white px-6 py-6 shadow-sm">
+          <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">

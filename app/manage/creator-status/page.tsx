@@ -147,7 +147,7 @@ export default function CreatorStatusPage() {
       <TooltipProvider>
         <>
           {/* Page Header */}
-          <div className="sticky top-0 z-10 bg-white px-6 py-6 shadow-sm">
+          <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
@@ -194,60 +194,60 @@ export default function CreatorStatusPage() {
           {/* Content */}
           <div className="flex-1 overflow-auto bg-[#F5F7FA]">
             <div className="px-8 py-6 space-y-6">
-            {/* Tier Status Hero Card */}
-          <Card className="bg-gradient-to-r from-[#F5F7FA] to-white">
-            <CardContent className="p-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                {/* Left: Tier Badge */}
-                <div className="flex flex-col items-center justify-center text-center">
+            {/* Tier Status and Badges - Side by Side */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* Left: Current Tier Card */}
+            <Card className="bg-gradient-to-r from-[#F5F7FA] to-white flex flex-col">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg font-semibold">Current Tier</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 pt-2 flex-1 flex flex-col">
+                {/* Tier Badge - Centered */}
+                <div className="flex flex-col items-center justify-center text-center flex-1">
                   <div 
                     className="flex h-20 w-20 items-center justify-center rounded-full border-4 shadow-lg"
                     style={{ borderColor: tierData.currentColor, backgroundColor: `${tierData.currentColor}20` }}
                   >
                     <Trophy className="h-10 w-10" style={{ color: tierData.currentColor }} />
                   </div>
-                  <p className="mt-4 text-xl font-semibold">Current Tier: {tierData.current.toUpperCase()}</p>
+                  <p className="mt-4 text-xl font-semibold">{tierData.current.toUpperCase()}</p>
                   <p className="text-sm text-muted-foreground">Member since Jan 2025</p>
                 </div>
 
-                {/* Right: Progress & Benefits */}
-                <div className="space-y-4">
-                  {/* Progress Section */}
-                  <div>
-                    <p className="text-sm text-muted-foreground">Progress to {tierData.next}</p>
-                    <div className="mt-2">
-                      <Progress value={tierData.progress.percentage} className="h-3" />
-                    </div>
-                    <p className="mt-2 font-mono text-sm">
-                      {tierData.progress.installs.toLocaleString()} / {tierData.progress.installsRequired.toLocaleString()} installs
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Requirements remaining: +{(tierData.progress.installsRequired - tierData.progress.installs).toLocaleString()} installs, +{(tierData.progress.ratingRequired - tierData.progress.rating).toFixed(1)} avg rating
-                    </p>
+                {/* Progress Section */}
+                <div className="mt-6 pt-4 border-t">
+                  <p className="text-sm text-muted-foreground">Progress to {tierData.next}</p>
+                  <div className="mt-2">
+                    <Progress value={tierData.progress.percentage} className="h-3" />
                   </div>
-
-                  {/* Benefits Section */}
-                  <div>
-                    <p className="font-semibold text-sm">Unlocked Benefits:</p>
-                    <ul className="mt-2 space-y-1">
-                      {tierData.benefits.map((benefit, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm">
-                          <Check className="h-4 w-4 text-emerald-500" />
-                          {benefit}
-                        </li>
-                      ))}
-                    </ul>
-                    <Button variant="link" className="text-[#ee3224] p-0 h-auto mt-2">
-                      View All Benefits
-                    </Button>
-                  </div>
+                  <p className="mt-2 font-mono text-sm">
+                    {tierData.progress.installs.toLocaleString()} / {tierData.progress.installsRequired.toLocaleString()} installs
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Requirements remaining: +{(tierData.progress.installsRequired - tierData.progress.installs).toLocaleString()} installs, +{(tierData.progress.ratingRequired - tierData.progress.rating).toFixed(1)} avg rating
+                  </p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Badges Earned Grid */}
-          <Card>
+                {/* Benefits Section */}
+                <div className="mt-4">
+                  <p className="font-semibold text-sm">Unlocked Benefits:</p>
+                  <ul className="mt-2 space-y-1">
+                    {tierData.benefits.map((benefit, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-sm">
+                        <Check className="h-4 w-4 text-emerald-500" />
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button variant="link" className="text-[#ee3224] p-0 h-auto mt-2">
+                    View All Benefits
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Right: Badges Earned Card */}
+            <Card className="flex flex-col">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -332,6 +332,7 @@ export default function CreatorStatusPage() {
               </div>
             </CardContent>
           </Card>
+          </div>
 
           {/* Revenue Summary Card */}
           <Card>
