@@ -182,6 +182,7 @@ const plugins = [
     authorId: "openai",
     category: "AI Models",
     icon: Code,
+    logo: "https://cdn.worldvectorlogo.com/logos/openai-2.svg",
     downloads: "125K",
     rating: 4.9,
     installed: true,
@@ -197,6 +198,7 @@ const plugins = [
     authorId: "anthropic",
     category: "AI Models",
     icon: Code,
+    logo: "https://cdn.brandfetch.io/idxH6FUZgx/theme/dark/symbol.svg",
     downloads: "89K",
     rating: 4.8,
     installed: true,
@@ -212,6 +214,7 @@ const plugins = [
     authorId: "dbtools",
     category: "Databases",
     icon: Database,
+    logo: "https://cdn.worldvectorlogo.com/logos/postgresql.svg",
     downloads: "67K",
     rating: 4.7,
     installed: true,
@@ -227,6 +230,7 @@ const plugins = [
     authorId: "aws",
     category: "Cloud",
     icon: Cloud,
+    logo: "https://cdn.worldvectorlogo.com/logos/aws-2.svg",
     downloads: "54K",
     rating: 4.6,
     installed: false,
@@ -242,6 +246,7 @@ const plugins = [
     authorId: "google",
     category: "Communication",
     icon: Mail,
+    logo: "https://cdn.worldvectorlogo.com/logos/google-g-2015.svg",
     downloads: "92K",
     rating: 4.8,
     installed: true,
@@ -257,6 +262,7 @@ const plugins = [
     authorId: "google",
     category: "Productivity",
     icon: Calendar,
+    logo: "https://cdn.worldvectorlogo.com/logos/google-calendar-2020.svg",
     downloads: "78K",
     rating: 4.7,
     installed: false,
@@ -272,6 +278,7 @@ const plugins = [
     authorId: "slack",
     category: "Communication",
     icon: MessageSquare,
+    logo: "https://cdn.worldvectorlogo.com/logos/slack-new-logo.svg",
     downloads: "85K",
     rating: 4.8,
     installed: true,
@@ -287,6 +294,7 @@ const plugins = [
     authorId: "notion",
     category: "Productivity",
     icon: FileText,
+    logo: "https://cdn.worldvectorlogo.com/logos/notion-2.svg",
     downloads: "45K",
     rating: 4.6,
     installed: false,
@@ -302,6 +310,7 @@ const plugins = [
     authorId: "openai",
     category: "AI Models",
     icon: Image,
+    logo: "https://cdn.worldvectorlogo.com/logos/openai-2.svg",
     downloads: "112K",
     rating: 4.9,
     installed: true,
@@ -694,8 +703,8 @@ export default function PluginsPage() {
               <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
                 <CardContent className="flex items-center justify-between py-2.5 px-5">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
-                      <plugin.icon className="h-4 w-4 text-slate-600" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-50 p-1.5">
+                      <img src={plugin.logo} alt={plugin.name} className="h-full w-full object-contain" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -729,8 +738,8 @@ export default function PluginsPage() {
                   <CardHeader className="py-2.5 px-5 pb-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
-                          <plugin.icon className="h-4 w-4 text-slate-600" />
+                        <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-50 p-1.5">
+                          <img src={plugin.logo} alt={plugin.name} className="h-full w-full object-contain" />
                         </div>
                         <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
                       </div>
