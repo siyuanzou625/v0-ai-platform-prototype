@@ -181,6 +181,28 @@ const mockFollowers = [
   { id: "user8", name: "Maria Garcia", username: "mariagarcia", verified: false },
 ]
 
+// Category color mapping
+const getCategoryBadgeStyle = (category: string): string => {
+  switch (category) {
+    case "Productivity":
+      return "bg-violet-50 text-violet-700 border border-violet-200"
+    case "Support":
+      return "bg-teal-50 text-teal-700 border border-teal-200"
+    case "Data":
+      return "bg-blue-50 text-blue-700 border border-blue-200"
+    case "Marketing":
+      return "bg-pink-50 text-pink-700 border border-pink-200"
+    case "Sales":
+      return "bg-orange-50 text-orange-700 border border-orange-200"
+    case "HR":
+      return "bg-cyan-50 text-cyan-700 border border-cyan-200"
+    case "Knowledge":
+      return "bg-indigo-50 text-indigo-700 border border-indigo-200"
+    default:
+      return "bg-slate-50 text-slate-700 border border-slate-200"
+  }
+}
+
 const templates = [
   {
     id: 1,
@@ -705,7 +727,7 @@ export default function TemplatesPage() {
                       </div>
                       <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
                     </div>
-                    <Badge variant="secondary" className="text-xs">{template.category}</Badge>
+                    <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(template.category)}`}>{template.category}</Badge>
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-3">{template.description}</CardDescription>
                 </CardHeader>

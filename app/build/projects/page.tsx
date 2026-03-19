@@ -691,7 +691,8 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
-                  <Card 
+                  {/* Ready to Deploy */}
+                  <Card
                     className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => handleMetricClick("ready")}
                   >
