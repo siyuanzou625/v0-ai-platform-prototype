@@ -716,25 +716,7 @@ export default function KnowledgePage() {
                       </div>
                     </div>
 
-                    <div className="mt-4 flex gap-2">
-                      <Button
-                        className="flex-1 bg-[#ee3224] hover:bg-[#cc2a1e]"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleOpenKnowledge(kb.id)
-                        }}
-                      >
-                        Open
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-9 w-9"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Share2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+
                   </CardContent>
                 </Card>
               )

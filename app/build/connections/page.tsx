@@ -435,19 +435,7 @@ export default function ConnectionsPage() {
                     </span>
                     <span>{conn.usedByWorkflows} workflow{conn.usedByWorkflows !== 1 ? "s" : ""} · {conn.scopes.length} permission{conn.scopes.length !== 1 ? "s" : ""}</span>
                   </div>
-                  <div className="flex items-center gap-2 pt-3 mt-3 border-t border-[#E5E7EB]">
-                    <Button variant="ghost" size="sm" className="flex-1" onClick={(e) => { e.stopPropagation(); handleTestConnection(); }}>
-                      <Play className="h-3 w-3 mr-1" />
-                      Test
-                    </Button>
-                    <Button variant="ghost" size="sm" className="flex-1" onClick={(e) => { e.stopPropagation(); openDetailView(conn); }}>
-                      <Edit className="h-3 w-3 mr-1" />
-                      Edit
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]" onClick={(e) => e.stopPropagation()}>
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
+
                 </CardContent>
               </Card>
             ))}

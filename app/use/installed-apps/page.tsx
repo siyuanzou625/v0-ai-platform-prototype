@@ -540,16 +540,7 @@ export default function MyAppsPage() {
             )}
           </div>
           
-          <div className="mt-3">
-            <Button 
-              className="w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
-              variant="outline"
-              size="sm"
-              onClick={() => launchApp(app)}
-            >
-              {app.requiresAccess ? "Request Access" : "Launch"}
-            </Button>
-          </div>
+
         </CardContent>
       </Card>
     )
@@ -759,14 +750,7 @@ export default function MyAppsPage() {
                                   <span className="text-xs font-medium text-muted-foreground w-8 text-right">{recent.progress}%</span>
                                 </div>
                               )}
-                              <Button 
-                                className="w-full mt-3 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => launchApp(app, true)}
-                              >
-                                Resume
-                              </Button>
+
                             </CardContent>
                           </Card>
                         )

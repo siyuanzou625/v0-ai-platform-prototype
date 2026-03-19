@@ -832,20 +832,7 @@ export default function PluginsPage() {
                         <TooltipContent>Downloads</TooltipContent>
                       </Tooltip>
                     </div>
-                    <div className="mt-4 flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                        <ExternalLink className="h-3 w-3" /> Docs
-                      </Button>
-                      {plugin.installed ? (
-                        <Button size="sm" variant="secondary" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                          <Settings className="h-3 w-3" /> Configure
-                        </Button>
-                      ) : (
-                        <Button size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                          <Download className="h-3 w-3" /> Install
-                        </Button>
-                      )}
-                    </div>
+
                   </CardContent>
                 </Card>
               )

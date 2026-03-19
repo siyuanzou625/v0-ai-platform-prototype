@@ -674,7 +674,10 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p>
                     </CardContent>
                   </Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
+                  <Card
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
+                    onClick={() => handleMetricClick("building")}
+                  >
                     <CardContent className="py-2.5 px-5">
                       <div className="flex items-center justify-between">
                         <div>
@@ -963,39 +966,7 @@ export default function ProjectsPage() {
                         </div>
                       )}
 
-                      {/* Actions */}
-                      <div className="mt-4 flex gap-2">
-                        <Button
-                          className="flex-1 bg-[#ee3224] hover:bg-[#cc2a1e]"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleOpenProject(project.id)
-                          }}
-                        >
-                          Open
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Share2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Rocket className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Settings className="h-4 w-4" />
-                        </Button>
-                      </div>
+
                     </CardContent>
                   </Card>
                 ))}

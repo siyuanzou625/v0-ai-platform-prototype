@@ -955,15 +955,7 @@ export default function ExploreAgentsPage() {
                           <TooltipContent>Total downloads</TooltipContent>
                         </Tooltip>
                       </div>
-                      {/* Action buttons */}
-                      <div className="mt-4 flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                          <Eye className="h-3 w-3" /> Preview
-                        </Button>
-                        <Button size="sm" className="flex-1 gap-1 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={(e) => e.stopPropagation()}>
-                          <ArrowRight className="h-3 w-3" /> Install
-                        </Button>
-                      </div>
+
                     </CardContent>
                   </Card>
                 )
@@ -1100,15 +1092,7 @@ export default function ExploreAgentsPage() {
                         <TooltipContent>Total downloads</TooltipContent>
                       </Tooltip>
                     </div>
-                    {/* Action buttons */}
-                    <div className="mt-4 flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                        <Eye className="h-3 w-3" /> Preview
-                      </Button>
-                      <Button size="sm" className="flex-1 gap-1 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={(e) => e.stopPropagation()}>
-                        <ArrowRight className="h-3 w-3" /> Install
-                      </Button>
-                    </div>
+
                   </CardContent>
                 </Card>
               )
