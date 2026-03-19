@@ -186,8 +186,8 @@ const getStatusBadge = (status: string) => {
       )
     case "failed":
       return (
-        <Badge variant="secondary" className="bg-red-50 text-red-600 border border-red-200">
-          <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-red-500 inline-block" />
+        <Badge variant="secondary" className="bg-[#F5F7FA] text-[#ee3224] border border-[#E5E7EB]">
+          <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-[#ee3224] inline-block" />
           Failed
         </Badge>
       )

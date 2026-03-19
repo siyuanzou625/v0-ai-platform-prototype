@@ -247,7 +247,7 @@ const getStatusBadge = (status: string) => {
       )
     case "blocked":
       return (
-        <Badge variant="secondary" className="bg-red-50 text-red-600 border border-red-200">
+        <Badge variant="secondary" className="bg-[#F5F7FA] text-[#ee3224] border border-[#E5E7EB]">
           <AlertCircle className="mr-1 h-3 w-3" />
           Blocked
         </Badge>
@@ -722,8 +722,8 @@ export default function ProjectsPage() {
                           <p className="text-sm text-muted-foreground">Blocked</p>
                           <p className="text-3xl font-bold text-foreground">{blockedCount}</p>
                         </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
-                          <AlertCircle className="h-6 w-6 text-red-500" />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5F7FA]">
+                          <AlertCircle className="h-6 w-6 text-[#ee3224]" />
                         </div>
                       </div>
                       <p className="mt-2 text-xs text-red-600 hover:underline">View blocked projects</p>
@@ -964,7 +964,7 @@ export default function ProjectsPage() {
 
                       {/* Blocked Reason */}
                       {project.blockedReason && (
-                        <div className="mt-3 rounded bg-red-50 px-2 py-1.5 text-xs text-red-600">
+                        <div className="mt-3 rounded bg-[#F5F7FA] px-2 py-1.5 text-xs text-[#ee3224]">
                           {project.blockedReason}
                         </div>
                       )}

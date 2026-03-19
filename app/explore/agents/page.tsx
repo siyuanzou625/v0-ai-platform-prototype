@@ -1407,7 +1407,7 @@ export default function ExploreAgentsPage() {
                                             <div
                                               key={reply.id}
                                               className={`${
-                                                reply.author.isCreator ? "border-l-2 border-[#ee3224] pl-3 bg-[#FEF2F2]/50 rounded-r-lg py-2" : ""
+                                                reply.author.isCreator ? "border-l-2 border-[#ee3224] pl-3 bg-[#F5F7FA] rounded-r-lg py-2" : ""
                                               }`}
                                             >
                                               <div className="flex items-center gap-2 mb-1">
@@ -1522,7 +1522,7 @@ export default function ExploreAgentsPage() {
                 <DialogHeader className="pb-4 border-b">
                   <div className="flex items-start gap-4">
                     <Avatar className="h-20 w-20 border-2 border-[#E5E7EB]">
-                      <AvatarFallback className="bg-[#FEF2F2] text-[#ee3224] text-2xl font-semibold">
+                      <AvatarFallback className="bg-[#F5F7FA] text-[#ee3224] text-2xl font-semibold">
                         {currentCreator.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>

@@ -618,7 +618,7 @@ export default function ExecutionControlPage() {
                       <>
                         <TableHead className="font-semibold text-[#333]">CPU %</TableHead>
                         <TableHead className="font-semibold text-[#333]">GPU %</TableHead>
-                        <TableHead className="font-semibold text-[#333] bg-[#FEF2F2]/50">NPU %</TableHead>
+                        <TableHead className="font-semibold text-[#333] bg-[#F5F7FA]">NPU %</TableHead>
                       </>
                     )}
                     <TableHead className="font-semibold text-[#333]">Priority</TableHead>
@@ -656,7 +656,7 @@ export default function ExecutionControlPage() {
                             {agent.gpu}%
                             <MiniSparkline data={sparklineData[agent.id].map(v => v * 1.5)} />
                           </TableCell>
-                          <TableCell className={`${getUsageColor(agent.npu)} bg-[#FEF2F2]/30`}>
+                          <TableCell className={`${getUsageColor(agent.npu)} bg-[#F5F7FA]`}>
                             {agent.npu}%
                             <MiniSparkline data={sparklineData[agent.id].map(v => v * 2)} />
                           </TableCell>
@@ -835,7 +835,7 @@ export default function ExecutionControlPage() {
                     <TableHead className="font-semibold text-[#333] text-center">CPU Access</TableHead>
                     <TableHead className="font-semibold text-[#333] text-center">GPU Access</TableHead>
                     {advancedMode && (
-                      <TableHead className="font-semibold text-[#333] text-center bg-[#FEF2F2]/50">NPU Access</TableHead>
+                      <TableHead className="font-semibold text-[#333] text-center bg-[#F5F7FA]">NPU Access</TableHead>
                     )}
                     {advancedMode && (
                       <>
@@ -870,7 +870,7 @@ export default function ExecutionControlPage() {
                         <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
                       </TableCell>
                       {advancedMode && (
-                        <TableCell className="text-center bg-[#FEF2F2]/30">
+                        <TableCell className="text-center bg-[#F5F7FA]">
                           <Switch checked={agent.npu} className="data-[state=checked]:bg-[#ee3224]" />
                         </TableCell>
                       )}
@@ -939,7 +939,7 @@ export default function ExecutionControlPage() {
               <Card className="hover:shadow-md hover:border-[#ee3224] transition-all">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
-                    <div className="h-12 w-12 rounded-full bg-[#FEF2F2] flex items-center justify-center">
+                    <div className="h-12 w-12 rounded-full bg-[#F5F7FA] flex items-center justify-center">
                       <Zap className="h-6 w-6 text-[#ee3224]" />
                     </div>
                     <Badge className="bg-[#22C55E] text-white text-[10px]">High Impact</Badge>

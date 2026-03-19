@@ -449,7 +449,7 @@ export default function ConnectionsPage() {
                       <Edit className="h-3 w-3 mr-1" />
                       Edit
                     </Button>
-                    <Button variant="ghost" size="sm" className="text-[#ee3224] hover:text-[#ee3224] hover:bg-red-50" onClick={(e) => e.stopPropagation()}>
+                    <Button variant="ghost" size="sm" className="text-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]" onClick={(e) => e.stopPropagation()}>
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
@@ -641,7 +641,7 @@ export default function ConnectionsPage() {
                       <Card
                         key={provider.id}
                         className={`cursor-pointer p-4 transition-all hover:border-[#ee3224] ${
-                          selectedProvider === provider.id ? "border-[#ee3224] bg-red-50" : ""
+                          selectedProvider === provider.id ? "border-[#ee3224] bg-[#F5F7FA]" : ""
                         }`}
                         onClick={() => setSelectedProvider(provider.id)}
                       >
@@ -671,7 +671,7 @@ export default function ConnectionsPage() {
                       <Card
                         key={method.value}
                         className={`cursor-pointer p-4 transition-all hover:border-[#ee3224] ${
-                          authMethod === method.value ? "border-[#ee3224] bg-red-50" : ""
+                          authMethod === method.value ? "border-[#ee3224] bg-[#F5F7FA]" : ""
                         }`}
                         onClick={() => setAuthMethod(method.value)}
                       >
@@ -816,7 +816,7 @@ export default function ConnectionsPage() {
                   <div className="text-center py-8">
                     <Button
                       variant="outline"
-                      className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-red-50"
+                      className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-[#F5F7FA]"
                       onClick={handleTestConnection}
                       disabled={testResult === "testing"}
                     >
@@ -838,11 +838,11 @@ export default function ConnectionsPage() {
                     </div>
                   )}
                   {testResult === "failure" && (
-                    <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <XCircle className="h-5 w-5 text-red-600" />
+                    <div className="flex items-center gap-3 p-4 bg-[#F5F7FA] border border-[#E5E7EB] rounded-lg">
+                      <XCircle className="h-5 w-5 text-[#ee3224]" />
                       <div className="flex-1">
-                        <p className="font-medium text-red-800">Connection failed</p>
-                        <p className="text-sm text-red-700">Invalid credentials or service unavailable</p>
+                        <p className="font-medium text-[#333]">Connection failed</p>
+                        <p className="text-sm text-[#6B7280]">Invalid credentials or service unavailable</p>
                       </div>
                       <Button variant="outline" size="sm" onClick={handleTestConnection}>Retry</Button>
                     </div>
@@ -959,11 +959,11 @@ export default function ConnectionsPage() {
                         <Edit className="h-4 w-4 mr-1" />
                         Edit
                       </Button>
-                      <Button variant="outline" size="sm" className="border-[#ee3224] text-[#ee3224] hover:bg-red-50">
+                      <Button variant="outline" size="sm" className="border-[#ee3224] text-[#ee3224] hover:bg-[#F5F7FA]">
                         <Play className="h-4 w-4 mr-1" />
                         Test
                       </Button>
-                      <Button variant="outline" size="sm" className="text-[#ee3224] hover:bg-red-50">
+                      <Button variant="outline" size="sm" className="text-[#ee3224] hover:bg-[#F5F7FA]">
                         <Trash2 className="h-4 w-4 mr-1" />
                         Revoke
                       </Button>

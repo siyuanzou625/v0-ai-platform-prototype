@@ -775,7 +775,7 @@ export default function PulsePage() {
                 <Button variant="outline" className="border-[#ee3224] text-[#ee3224]">
                   Edit in Builder
                 </Button>
-                <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-50">
+                <Button variant="outline" className="border-[#ee3224] text-[#ee3224] hover:bg-[#F5F7FA]">
                   Pause Asset
                 </Button>
                 <Button variant="ghost" onClick={() => setAssetDetailOpen(false)}>
