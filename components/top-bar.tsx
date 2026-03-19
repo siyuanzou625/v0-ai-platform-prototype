@@ -444,7 +444,7 @@ export function TopBar() {
                         </div>
                       </TooltipTrigger>
                       <TooltipContent side="bottom">
-                        <p>{userData.enterpriseMode ? "Hidden in Enterprise Mode" : `${userData.followers.toLocaleString()} users follow you`}</p>
+                        <p>{userData.enterpriseMode ? "Hidden in Enterprise Mode" : `${userData.followers >= 1000 ? `${(userData.followers / 1000).toFixed(1)}K` : userData.followers} users follow you`}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>

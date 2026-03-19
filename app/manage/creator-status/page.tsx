@@ -5,6 +5,8 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -32,6 +34,8 @@ import {
   Target,
   Shield,
   Lightbulb,
+  Search,
+  CheckCircle,
 } from "lucide-react"
 
 // Mock data
@@ -91,10 +95,23 @@ const payoutHistory = [
 ]
 
 const impactStats = [
-  { icon: Package, value: "12", label: "Total assets published" },
-  { icon: Users, value: "45.2K", label: "Across all assets" },
-  { icon: Star, value: "4.6 ★", label: "Across all assets" },
-  { icon: Clock, value: "4.2h", label: "Avg discussion response" },
+  { id: "assets", icon: Package, value: "12", label: "Assets Published", trend: "+2 this month", clickable: false },
+  { id: "users", icon: Users, value: "45.2K", label: "Users Reached", trend: "+12%", clickable: false },
+  { id: "rating", icon: Star, value: "4.6", label: "Avg Rating", trend: "+0.2", clickable: false },
+  { id: "followers", icon: Users, value: "1.2K", label: "Followers", trend: "+156 this month", clickable: true },
+]
+
+const followersData = [
+  { id: "f1", name: "Alex Chen", username: "@alexchen", avatar: "", verified: true },
+  { id: "f2", name: "Sarah Kim", username: "@sarahkim", avatar: "", verified: false },
+  { id: "f3", name: "Michael Ross", username: "@mross", avatar: "", verified: true },
+  { id: "f4", name: "Emily Davis", username: "@emilyd", avatar: "", verified: false },
+  { id: "f5", name: "James Wilson", username: "@jwilson", avatar: "", verified: false },
+  { id: "f6", name: "Lisa Wang", username: "@lisawang", avatar: "", verified: true },
+  { id: "f7", name: "David Park", username: "@dpark", avatar: "", verified: false },
+  { id: "f8", name: "Jennifer Lee", username: "@jlee", avatar: "", verified: false },
+  { id: "f9", name: "Robert Taylor", username: "@rtaylor", avatar: "", verified: true },
+  { id: "f10", name: "Amanda White", username: "@awhite", avatar: "", verified: false },
 ]
 
 export default function CreatorStatusPage() {
@@ -104,6 +121,7 @@ export default function CreatorStatusPage() {
   const [payoutHistoryOpen, setPayoutHistoryOpen] = useState(false)
   const [allBadgesOpen, setAllBadgesOpen] = useState(false)
   const [payoutMethod, setPayoutMethod] = useState("bank")
+  const [followersModalOpen, setFollowersModalOpen] = useState(false)
 
   const getTierColor = (tier: string) => {
     switch (tier) {
@@ -378,27 +396,51 @@ export default function CreatorStatusPage() {
             </CardContent>
           </Card>
 
-          {/* Your Impact Mini-Stats */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {impactStats.map((stat, idx) => {
-              const IconComponent = stat.icon
-              return (
-                <Card key={idx}>
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#ee3224]/10">
-                        <IconComponent className="h-5 w-5 text-[#ee3224]" />
-                      </div>
-                      <div>
-                        <p className="text-2xl font-bold">{stat.value}</p>
-                        <p className="text-xs text-muted-foreground">{stat.label}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
+          {/* Your Impact Section */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-semibold">Your Impact</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {impactStats.map((stat) => {
+                  const IconComponent = stat.icon
+                  const isClickable = stat.clickable
+                  return (
+                    <Tooltip key={stat.id}>
+                      <TooltipTrigger asChild>
+                        <Card 
+                          className={`transition-all ${isClickable ? "cursor-pointer hover:shadow-md hover:border-[#ee3224]" : ""}`}
+                          onClick={() => isClickable && setFollowersModalOpen(true)}
+                        >
+                          <CardContent className="p-5">
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#ee3224]/10">
+                                <IconComponent className="h-6 w-6 text-[#ee3224]" />
+                              </div>
+                              <div>
+                                <p className="text-[28px] font-bold text-[#1F2937]">{stat.value}</p>
+                                <p className="text-[13px] text-[#6B7280]">{stat.label}</p>
+                                <div className="flex items-center gap-1 text-xs text-[#22C55E] mt-1">
+                                  <TrendingUp className="h-3 w-3" />
+                                  {stat.trend}
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </TooltipTrigger>
+                      {isClickable && (
+                        <TooltipContent>
+                          <p>View all users who follow you</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Leaderboard Position */}
           <Card>
@@ -557,6 +599,49 @@ export default function CreatorStatusPage() {
                   })}
                 </div>
               </ScrollArea>
+            </DialogContent>
+          </Dialog>
+
+          {/* Followers List Modal */}
+          <Dialog open={followersModalOpen} onOpenChange={setFollowersModalOpen}>
+            <DialogContent className="max-w-[500px] max-h-[70vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
+              <DialogHeader>
+                <DialogTitle className="text-[16px] font-semibold text-[#1F2937]">Your Followers</DialogTitle>
+                <p className="text-[13px] text-[#6B7280]">1.2K users follow you</p>
+              </DialogHeader>
+              <div className="relative mt-2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B7280]" />
+                <Input placeholder="Search followers..." className="pl-9 rounded-lg border-[#E5E7EB]" />
+              </div>
+              <ScrollArea className="flex-1 mt-4">
+                <div className="space-y-2 pr-4">
+                  {followersData.map((follower) => (
+                    <div 
+                      key={follower.id} 
+                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#F5F7FA] cursor-pointer transition-colors"
+                    >
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={follower.avatar} alt={follower.name} />
+                        <AvatarFallback className="bg-[#F5F7FA] text-sm font-medium">
+                          {follower.name.split(" ").map(n => n[0]).join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1">
+                          <p className="text-[14px] font-medium text-[#1F2937] truncate">{follower.name}</p>
+                          {follower.verified && (
+                            <CheckCircle className="h-4 w-4 fill-[#22C55E] text-white flex-shrink-0" />
+                          )}
+                        </div>
+                        <p className="text-[12px] text-[#6B7280]">{follower.username}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+              <div className="pt-4 border-t border-[#E5E7EB] text-center">
+                <p className="text-[13px] text-[#6B7280]">Showing 1-10 of 1.2K</p>
+              </div>
             </DialogContent>
           </Dialog>
         </div>
