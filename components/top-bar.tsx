@@ -27,6 +27,9 @@ import {
   Command,
   ArrowUp,
   ChevronRight,
+  Package,
+  Users,
+  CheckCircle,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -42,18 +45,25 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 
 // Mock Data
 const userData = {
   id: "user-001",
   name: "Zoey Doyle",
+  username: "@zoeydoyle",
   email: "zoey.doyle@company.com",
   avatar: "",
   initials: "ZD",
   tier: "Enterprise",
   status: "online",
   unreadNotifications: 5,
+  verified: true,
+  assetsPublished: 6,
+  followers: 1200,
+  following: 45,
+  enterpriseMode: false,
 }
 
 const recentSearches = [
@@ -379,64 +389,99 @@ export function TopBar() {
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[280px] rounded border-[#E5E7EB] p-0 shadow-lg">
+            <DropdownMenuContent align="end" className="w-[280px] rounded-lg border-[#E5E7EB] p-0 shadow-lg">
               {/* Header */}
-              <div className="bg-[#F5F7FA] p-4">
+              <div className="p-4">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
+                  <Avatar className="h-12 w-12 bg-white">
                     <AvatarImage src={userData.avatar} alt={userData.name} />
                     <AvatarFallback className="bg-white text-base font-medium">{userData.initials}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold">{userData.name}</p>
-                    <p className="text-xs text-[#6B7280]">{userData.email}</p>
-                    <Badge className="mt-1 bg-[#ee3224] text-xs text-white hover:bg-[#cc2a1e]">{userData.tier}</Badge>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-[15px] font-semibold text-[#1F2937]">{userData.name}</p>
+                      {userData.verified && (
+                        <CheckCircle className="h-4 w-4 fill-[#22C55E] text-white" />
+                      )}
+                    </div>
+                    <p className="text-[13px] text-[#6B7280]">{userData.username}</p>
+                    {userData.verified && (
+                      <Badge className="mt-1 bg-[#22C55E] text-[10px] text-white hover:bg-[#16A34A]">Verified</Badge>
+                    )}
                   </div>
                 </div>
-                <button className="mt-2 text-sm font-medium text-[#ee3224] hover:underline">View Profile</button>
               </div>
 
-              {/* Navigation */}
+              {/* Metrics Row */}
+              <div className="border-t border-b border-[#E5E7EB] px-4 py-3">
+                <div className="flex items-center justify-around">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center gap-2 cursor-default">
+                          <Package className="h-3.5 w-3.5 text-[#6B7280]" />
+                          <span className="text-sm font-semibold text-[#1F2937]">{userData.assetsPublished}</span>
+                          <span className="text-xs text-[#6B7280]">Assets</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p>You have published {userData.assetsPublished} assets</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <div className="h-4 w-px bg-[#E5E7EB]" />
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center gap-2 cursor-default">
+                          <Users className="h-3.5 w-3.5 text-[#6B7280]" />
+                          <span className="text-sm font-semibold text-[#1F2937]">
+                            {userData.enterpriseMode ? "—" : userData.followers >= 1000 ? `${(userData.followers / 1000).toFixed(1)}K` : userData.followers}
+                          </span>
+                          <span className="text-xs text-[#6B7280]">Followers</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p>{userData.enterpriseMode ? "Hidden in Enterprise Mode" : `${userData.followers.toLocaleString()} users follow you`}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+
+              {/* Menu Items */}
               <div className="p-2">
-                <DropdownMenuItem className="flex cursor-pointer items-center gap-3 rounded p-2 hover:bg-[#F5F7FA]">
+                <DropdownMenuItem 
+                  className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-[#F5F7FA] focus:ring-2 focus:ring-[#ee3224] focus:ring-offset-1"
+                  onClick={() => router.push("/manage/creator-status")}
+                >
                   <User className="h-5 w-5 text-[#333]" />
-                  <span className="text-sm">Profile</span>
+                  <span className="text-sm">My Profile</span>
                 </DropdownMenuItem>
-                
-                <DropdownMenuItem className="flex cursor-pointer items-center gap-3 rounded p-2 hover:bg-[#F5F7FA]">
+                <DropdownMenuItem 
+                  className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-[#F5F7FA] focus:ring-2 focus:ring-[#ee3224] focus:ring-offset-1"
+                  onClick={() => router.push("/manage")}
+                >
+                  <Brush className="h-5 w-5 text-[#333]" />
+                  <span className="text-sm">Creator Studio</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-[#F5F7FA] focus:ring-2 focus:ring-[#ee3224] focus:ring-offset-1"
+                  onClick={() => router.push("/settings")}
+                >
                   <Settings className="h-5 w-5 text-[#333]" />
                   <span className="text-sm">Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex cursor-pointer items-center justify-between gap-3 rounded p-2 hover:bg-[#F5F7FA]">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="h-5 w-5 text-[#333]" />
-                    <span className="text-sm">Billing & Subscription</span>
-                  </div>
-                  <span className="text-xs text-[#6B7280]">Pro - $29/mo</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex cursor-pointer items-center justify-between gap-3 rounded p-2 hover:bg-[#F5F7FA]">
-                  <div className="flex items-center gap-3">
-                    <Bell className="h-5 w-5 text-[#333]" />
-                    <span className="text-sm">Notifications</span>
-                  </div>
-                  {userData.unreadNotifications > 0 && (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ee3224] text-[10px] font-medium text-white">
-                      {userData.unreadNotifications}
-                    </span>
-                  )}
                 </DropdownMenuItem>
               </div>
 
               <DropdownMenuSeparator className="my-0 bg-[#E5E7EB]" />
 
-              {/* Footer */}
+              {/* Logout */}
               <div className="p-2">
-                <DropdownMenuItem className="flex cursor-pointer items-center gap-3 rounded p-2 hover:bg-[#F5F7FA]">
-                  <Book className="h-5 w-5 text-[#333]" />
-                  <span className="text-sm">Documentation</span>
-                </DropdownMenuItem>
                 <DropdownMenuItem 
-                  className="flex cursor-pointer items-center gap-3 rounded p-2 text-[#ee3224] hover:bg-[#F5F7FA]"
+                  className="flex cursor-pointer items-center gap-3 rounded-lg p-2 text-[#ee3224] hover:bg-[#FEF2F2] focus:ring-2 focus:ring-[#ee3224] focus:ring-offset-1"
                   onClick={() => router.push("/login")}
                 >
                   <LogOut className="h-5 w-5" />
