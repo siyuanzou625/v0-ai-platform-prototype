@@ -1359,17 +1359,18 @@ export default function ExploreAgentsPage() {
                                     {discussion.isAnswered && (
                                       <Badge className="bg-[#22C55E] text-white text-xs">Answered</Badge>
                                     )}
-                                    <h4
-                                      className="font-medium text-[#1F2937] hover:text-[#ee3224] cursor-pointer truncate"
-                                      onClick={() =>
-                                        setExpandedDiscussion(
-                                          expandedDiscussion === discussion.id ? null : discussion.id
-                                        )
-                                      }
-                                    >
-                                      {discussion.title}
-                                    </h4>
                                   </div>
+                                  <h4
+                                    className="font-medium text-[#1F2937] hover:text-[#ee3224] cursor-pointer mb-1"
+                                    onClick={() =>
+                                      setExpandedDiscussion(
+                                        expandedDiscussion === discussion.id ? null : discussion.id
+                                      )
+                                    }
+                                  >
+                                    {discussion.title}
+                                  </h4>
+                                  <p className="text-sm text-[#6B7280] line-clamp-2 mb-2">{discussion.content}</p>
 
                                   <div className="flex items-center gap-3 text-xs text-[#6B7280] mb-2">
                                     <span className="flex items-center gap-1">
