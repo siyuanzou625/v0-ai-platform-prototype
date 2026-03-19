@@ -730,9 +730,9 @@ export default function TemplatesPage() {
                     </div>
                     <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(template.category)}`}>{template.category}</Badge>
                   </div>
-                  <CardDescription className="text-sm line-clamp-2 mt-2">{template.description}</CardDescription>
+                  <CardDescription className="text-sm line-clamp-2 mt-2.5">{template.description}</CardDescription>
                   {/* Complexity and Version - Product Info */}
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-2 mt-2.5">
                     <Badge
                       variant="outline"
                       className={
@@ -752,7 +752,7 @@ export default function TemplatesPage() {
                   {/* Divider */}
                   <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
                   {/* Creator info with Follow button - Creator & Engagement Info */}
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2.5">
                     <div className="flex items-center gap-2">
                       <button
                         className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"

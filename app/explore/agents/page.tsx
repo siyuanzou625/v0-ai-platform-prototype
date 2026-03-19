@@ -861,9 +861,9 @@ export default function ExploreAgentsPage() {
                           {agent.price}
                         </Badge>
                       </div>
-                      <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
+                      <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
                       {/* Category and Version - Product Info */}
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-2 mt-2.5">
                         <Badge variant="secondary">{agent.category}</Badge>
                         <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
@@ -872,7 +872,7 @@ export default function ExploreAgentsPage() {
                       {/* Divider */}
                       <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
                       {/* Creator row with follow button - Creator & Engagement Info */}
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center justify-between mb-2.5">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={(e) => openCreatorProfile(agent.authorId, e)}

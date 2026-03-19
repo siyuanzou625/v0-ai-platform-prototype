@@ -750,9 +750,9 @@ export default function PluginsPage() {
                         <Badge className="badge-neutral">Available</Badge>
                       )}
                     </div>
-                    <CardDescription className="text-sm mt-2">{plugin.description}</CardDescription>
+                    <CardDescription className="text-sm mt-2.5">{plugin.description}</CardDescription>
                     {/* Category and Version - Product Info */}
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-2 mt-2.5">
                       <Badge variant="secondary">{plugin.category}</Badge>
                       <span className="text-xs text-muted-foreground">v{plugin.version}</span>
                     </div>
@@ -761,7 +761,7 @@ export default function PluginsPage() {
                     {/* Divider */}
                     <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
                     {/* Creator info with Follow button - Creator & Engagement Info */}
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-2">
                         <button
                           className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
