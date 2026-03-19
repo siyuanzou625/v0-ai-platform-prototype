@@ -29,18 +29,18 @@ import {
 } from "lucide-react"
 
 const nodeTypes = [
-  { name: "Trigger", icon: Circle, color: "bg-chart-4" },
-  { name: "Action", icon: Square, color: "bg-primary" },
-  { name: "Condition", icon: Diamond, color: "bg-chart-2" },
-  { name: "Output", icon: ArrowRight, color: "bg-chart-3" },
+  { name: "Trigger", icon: Circle, bgColor: "bg-amber-50", iconColor: "text-amber-600" },
+  { name: "Action", icon: Square, bgColor: "bg-[#ee3224]/10", iconColor: "text-[#ee3224]" },
+  { name: "Condition", icon: Diamond, bgColor: "bg-violet-50", iconColor: "text-violet-600" },
+  { name: "Output", icon: ArrowRight, bgColor: "bg-emerald-50", iconColor: "text-emerald-600" },
 ]
 
 const workflowNodes = [
-  { id: 1, type: "Trigger", name: "Email Received", x: 100, y: 150, color: "bg-chart-4" },
-  { id: 2, type: "Condition", name: "Is Important?", x: 300, y: 150, color: "bg-chart-2" },
-  { id: 3, type: "Action", name: "Summarize Content", x: 500, y: 100, color: "bg-primary" },
-  { id: 4, type: "Action", name: "Archive Email", x: 500, y: 200, color: "bg-primary" },
-  { id: 5, type: "Output", name: "Send Notification", x: 700, y: 150, color: "bg-chart-3" },
+  { id: 1, type: "Trigger", name: "Email Received", x: 100, y: 150, bgColor: "bg-amber-50", iconColor: "text-amber-600" },
+  { id: 2, type: "Condition", name: "Is Important?", x: 300, y: 150, bgColor: "bg-violet-50", iconColor: "text-violet-600" },
+  { id: 3, type: "Action", name: "Summarize Content", x: 500, y: 100, bgColor: "bg-[#ee3224]/10", iconColor: "text-[#ee3224]" },
+  { id: 4, type: "Action", name: "Archive Email", x: 500, y: 200, bgColor: "bg-[#ee3224]/10", iconColor: "text-[#ee3224]" },
+  { id: 5, type: "Output", name: "Send Notification", x: 700, y: 150, bgColor: "bg-emerald-50", iconColor: "text-emerald-600" },
 ]
 
 export default function WorkflowBuilderPage() {
@@ -85,11 +85,11 @@ export default function WorkflowBuilderPage() {
                 {nodeTypes.map((node) => (
                   <div
                     key={node.name}
-                    className="flex cursor-grab items-center gap-3 rounded border border-border bg-card p-3 transition-colors hover:border-primary active:cursor-grabbing"
+                    className="flex cursor-grab items-center gap-3 rounded border border-border bg-card p-3 transition-colors hover:border-[#ee3224]/50 active:cursor-grabbing"
                     draggable
                   >
-                    <div className={`flex h-8 w-8 items-center justify-center rounded ${node.color}`}>
-                      <node.icon className="h-4 w-4 text-primary-foreground" />
+                    <div className={`flex h-8 w-8 items-center justify-center rounded ${node.bgColor}`}>
+                      <node.icon className={`h-4 w-4 ${node.iconColor}`} />
                     </div>
                     <span className="text-sm font-medium text-foreground">{node.name}</span>
                   </div>
@@ -149,16 +149,16 @@ export default function WorkflowBuilderPage() {
                   <div
                     key={node.id}
                     className={`absolute flex cursor-pointer items-center gap-2 rounded border-2 bg-card px-3 py-2 shadow-sm transition-all ${
-                      selectedNode === node.id ? "border-primary" : "border-border hover:border-primary/50"
+                      selectedNode === node.id ? "border-[#ee3224]" : "border-border hover:border-[#ee3224]/50"
                     }`}
                     style={{ left: node.x, top: node.y }}
                     onClick={() => setSelectedNode(node.id)}
                   >
-                    <div className={`flex h-6 w-6 items-center justify-center rounded ${node.color}`}>
-                      {node.type === "Trigger" && <Circle className="h-3 w-3 text-primary-foreground" />}
-                      {node.type === "Condition" && <Diamond className="h-3 w-3 text-primary-foreground" />}
-                      {node.type === "Action" && <Square className="h-3 w-3 text-primary-foreground" />}
-                      {node.type === "Output" && <ArrowRight className="h-3 w-3 text-primary-foreground" />}
+                    <div className={`flex h-6 w-6 items-center justify-center rounded ${node.bgColor}`}>
+                      {node.type === "Trigger" && <Circle className={`h-3 w-3 ${node.iconColor}`} />}
+                      {node.type === "Condition" && <Diamond className={`h-3 w-3 ${node.iconColor}`} />}
+                      {node.type === "Action" && <Square className={`h-3 w-3 ${node.iconColor}`} />}
+                      {node.type === "Output" && <ArrowRight className={`h-3 w-3 ${node.iconColor}`} />}
                     </div>
                     <span className="text-xs font-medium text-foreground">{node.name}</span>
                   </div>
@@ -295,7 +295,7 @@ export default function WorkflowBuilderPage() {
                 <p className="text-sm text-muted-foreground">Last Run</p>
                 <p className="text-xl font-semibold text-foreground">2m ago</p>
               </div>
-              <Badge className="bg-chart-3 text-primary-foreground">Success</Badge>
+              <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200">Success</Badge>
             </CardContent>
           </Card>
           <Card>
