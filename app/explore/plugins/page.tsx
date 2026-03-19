@@ -695,9 +695,9 @@ export default function PluginsPage() {
             {plugins.filter((p) => p.installed).map((plugin) => (
               <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
                 <CardContent className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded bg-primary/10">
-                      <plugin.icon className="h-6 w-6 text-primary" />
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10">
+                      <plugin.icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -730,8 +730,13 @@ export default function PluginsPage() {
                 <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
-                      <div className="flex h-12 w-12 items-center justify-center rounded bg-primary/10">
-                        <plugin.icon className="h-6 w-6 text-primary" />
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10">
+                          <plugin.icon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
+                        </div>
                       </div>
                       {plugin.installed ? (
                         <Badge className="bg-chart-3"><CheckCircle className="mr-1 h-3 w-3" /> Installed</Badge>
@@ -739,8 +744,7 @@ export default function PluginsPage() {
                         <Badge variant="secondary">Available</Badge>
                       )}
                     </div>
-                    <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
-                    <CardDescription className="text-sm">{plugin.description}</CardDescription>
+                    <CardDescription className="text-sm mt-2">{plugin.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     {/* Creator info with Follow button */}

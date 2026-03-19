@@ -396,16 +396,18 @@ export default function ConnectionsPage() {
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-lg font-semibold">
+                      <div className="flex h-10 w-10 items-center justify-center rounded bg-muted text-sm font-semibold">
                         {conn.provider === "custom-webhook" ? (
-                          <Link2 className="h-6 w-6 text-muted-foreground" />
+                          <Link2 className="h-5 w-5 text-muted-foreground" />
                         ) : (
                           conn.provider.charAt(0).toUpperCase()
                         )}
                       </div>
                       <div>
-                        <h3 className="card-title-text font-medium text-foreground transition-colors duration-150">{conn.displayName}</h3>
-                        <div className={`h-2 w-2 rounded-full inline-block mr-1.5 ${getStatusColor(conn.status)}`} />
+                        <div className="flex items-center gap-2">
+                          <h3 className="card-title-text font-medium text-foreground transition-colors duration-150">{conn.displayName}</h3>
+                          <div className={`h-2 w-2 rounded-full ${getStatusColor(conn.status)}`} />
+                        </div>
                         <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
                       </div>
                     </div>

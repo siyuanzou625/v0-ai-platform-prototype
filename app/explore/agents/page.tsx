@@ -851,8 +851,8 @@ export default function ExploreAgentsPage() {
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Bot className="h-6 w-6 text-primary" />
+                          <div className="h-10 w-10 rounded bg-primary/10 flex items-center justify-center">
+                            <Bot className="h-5 w-5 text-primary" />
                           </div>
                           <div>
                             <CardTitle className="card-title-text text-base transition-colors duration-150">

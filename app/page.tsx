@@ -254,11 +254,13 @@ export default function HomePage() {
             className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
             onClick={() => router.push("/build/projects")}
           >
-            <CardContent className="p-6">
-              <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
-                <Hammer className="h-8 w-8 text-[#ee3224]" />
+            <CardContent className="p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center justify-center h-10 w-10 rounded bg-[#FEF2F2]">
+                  <Hammer className="h-5 w-5 text-[#ee3224]" />
+                </div>
+                <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150">Build an Agent</h3>
               </div>
-              <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150 mb-1">Build an Agent</h3>
               <p className="text-[13px] text-[#6B7280] mb-4">Create AI agents and workflows from scratch</p>
               <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
                 Get Started
@@ -271,11 +273,13 @@ export default function HomePage() {
             className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
             onClick={() => router.push("/use/installed-apps")}
           >
-            <CardContent className="p-6">
-              <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
-                <Rocket className="h-8 w-8 text-[#ee3224]" />
+            <CardContent className="p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center justify-center h-10 w-10 rounded bg-[#FEF2F2]">
+                  <Rocket className="h-5 w-5 text-[#ee3224]" />
+                </div>
+                <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150">Launch an App</h3>
               </div>
-              <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150 mb-1">Launch an App</h3>
               <p className="text-[13px] text-[#6B7280] mb-4">Open your installed AI applications</p>
               <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
                 Open Apps
@@ -288,11 +292,13 @@ export default function HomePage() {
             className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
             onClick={() => router.push("/explore/agents")}
           >
-            <CardContent className="p-6">
-              <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-[#FEF2F2] mb-4">
-                <Compass className="h-8 w-8 text-[#ee3224]" />
+            <CardContent className="p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center justify-center h-10 w-10 rounded bg-[#FEF2F2]">
+                  <Compass className="h-5 w-5 text-[#ee3224]" />
+                </div>
+                <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150">Explore Marketplace</h3>
               </div>
-              <h3 className="card-title-text text-base font-semibold text-[#1F2937] transition-colors duration-150 mb-1">Explore Marketplace</h3>
               <p className="text-[13px] text-[#6B7280] mb-4">Discover agents, templates, and plugins</p>
               <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white">
                 Browse

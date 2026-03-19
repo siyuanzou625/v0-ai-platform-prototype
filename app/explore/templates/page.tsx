@@ -638,7 +638,7 @@ export default function TemplatesPage() {
           </div>
           <div className="flex items-center justify-end">
             <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
-              <FileCode className="h-4 w-4" /> Submit Template
+              <FileText className="h-4 w-4" /> Submit Template
             </Button>
           </div>
         </div>
@@ -700,11 +700,18 @@ export default function TemplatesPage() {
                 onClick={() => openTemplateModal(template)}
               >
                 <CardHeader className="pb-3">
-                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded bg-primary/10">
-                    <FileCode className="h-6 w-6 text-primary" />
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10">
+                        <FileText className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="text-xs">{template.category}</Badge>
                   </div>
-                  <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
-                  <CardDescription className="text-sm line-clamp-2">{template.description}</CardDescription>
+                  <CardDescription className="text-sm line-clamp-2 mt-2">{template.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {/* Creator info with Follow button */}
@@ -850,7 +857,7 @@ export default function TemplatesPage() {
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
                   <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10">
-                    <FileCode className="h-8 w-8 text-primary" />
+                    <FileText className="h-8 w-8 text-primary" />
                   </div>
                   <div>
                     <DialogTitle className="text-xl">{selectedTemplate?.name}</DialogTitle>
@@ -1246,7 +1253,7 @@ export default function TemplatesPage() {
                   {templates.filter(t => t.authorId === selectedCreator).slice(0, 3).map(template => (
                     <div key={template.id} className="p-3 rounded-lg border hover:border-[#ee3224] cursor-pointer transition-colors" onClick={() => { setShowCreatorModal(false); openTemplateModal(template); }}>
                       <div className="flex items-center gap-2 mb-1">
-                        <FileCode className="h-4 w-4 text-[#ee3224]" />
+                        <FileText className="h-4 w-4 text-[#ee3224]" />
                         <span className="text-sm font-medium truncate">{template.name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[#6B7280]">

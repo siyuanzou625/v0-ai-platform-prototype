@@ -502,8 +502,8 @@ export default function MyAppsPage() {
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB] shadow-sm">
-                <IconComponent className="h-6 w-6 text-[#ee3224]" />
+              <div className="flex h-10 w-10 items-center justify-center rounded bg-[#ee3224]/10">
+                <IconComponent className="h-5 w-5 text-[#ee3224]" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
@@ -747,8 +747,8 @@ export default function MyAppsPage() {
                           >
                             <CardContent className="p-4">
                               <div className="flex items-center gap-3">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB] shadow-sm">
-                                  <IconComponent className="h-6 w-6 text-[#ee3224]" />
+                                <div className="flex h-10 w-10 items-center justify-center rounded bg-[#ee3224]/10">
+                                  <IconComponent className="h-5 w-5 text-[#ee3224]" />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{recent.name}</h3>
