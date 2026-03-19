@@ -420,14 +420,14 @@ export default function NativeAppsDashboardPage() {
           ].map((metric) => (
             <Card
               key={metric.key}
-              className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
+              className="border border-[#E5E7EB] bg-white shadow-sm"
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <metric.icon className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">{metric.title}</span>
                 </div>
-                <p className="card-title-text text-2xl font-bold text-foreground transition-colors duration-150">{metric.value}</p>
+                <p className="text-2xl font-bold text-foreground">{metric.value}</p>
                 <div className="flex items-center gap-2 mt-1">
                   <span className={`flex items-center gap-1 text-xs ${
                     metric.trend === "up" ? "text-emerald-600" : metric.trend === "down" ? "text-emerald-600" : "text-muted-foreground"
@@ -657,37 +657,37 @@ export default function NativeAppsDashboardPage() {
 
           {/* Engagement Metrics Row */}
           <div className="grid grid-cols-4 gap-4">
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">7-Day Retention</p>
-                <p className="card-title-text text-2xl font-bold text-foreground transition-colors duration-150 mt-1">68.4%</p>
+                <p className="text-2xl font-bold text-foreground mt-1">68.4%</p>
                 <div className="flex items-center gap-1 text-xs text-emerald-600 mt-1">
                   <TrendingUp className="h-3 w-3" />
                   +2.1% vs last week
                 </div>
               </CardContent>
             </Card>
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">Top Feature Adoption</p>
-                <p className="card-title-text text-2xl font-bold text-foreground transition-colors duration-150 mt-1">AI Query: 82%</p>
+                <p className="text-2xl font-bold text-foreground mt-1">AI Query: 82%</p>
                 <p className="text-xs text-muted-foreground mt-1">Search: 76%</p>
               </CardContent>
             </Card>
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">Avg Session Duration</p>
-                <p className="card-title-text text-2xl font-bold text-foreground transition-colors duration-150 mt-1">4m 32s</p>
+                <p className="text-2xl font-bold text-foreground mt-1">4m 32s</p>
                 <div className="flex items-center gap-1 text-xs text-emerald-600 mt-1">
                   <TrendingUp className="h-3 w-3" />
                   +18s vs last week
                 </div>
               </CardContent>
             </Card>
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">Funnel Completion</p>
-                <p className="card-title-text text-2xl font-bold text-foreground transition-colors duration-150 mt-1">34.2%</p>
+                <p className="text-2xl font-bold text-foreground mt-1">34.2%</p>
                 <p className="text-xs text-muted-foreground mt-1">Sign-up to First AI Query</p>
               </CardContent>
             </Card>

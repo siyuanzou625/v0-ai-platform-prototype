@@ -186,7 +186,7 @@ export default function PulsePage() {
           <div className="p-6 space-y-6">
           {/* Portfolio Summary Cards */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Download className="h-5 w-5 text-muted-foreground" />
@@ -195,12 +195,12 @@ export default function PulsePage() {
                     +12%
                   </div>
                 </div>
-                <p className="card-title-text mt-2 text-2xl font-bold transition-colors duration-150">{formatNumber(pulseMetrics.totalInstalls)}</p>
+                <p className="mt-2 text-2xl font-bold">{formatNumber(pulseMetrics.totalInstalls)}</p>
                 <p className="text-xs text-muted-foreground">Total Installs</p>
               </CardContent>
             </Card>
 
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Users className="h-5 w-5 text-muted-foreground" />
@@ -209,12 +209,12 @@ export default function PulsePage() {
                     +8%
                   </div>
                 </div>
-                <p className="card-title-text mt-2 text-2xl font-bold transition-colors duration-150">{formatNumber(pulseMetrics.wau)}</p>
+                <p className="mt-2 text-2xl font-bold">{formatNumber(pulseMetrics.wau)}</p>
                 <p className="text-xs text-muted-foreground">Weekly Active Users</p>
               </CardContent>
             </Card>
 
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Users className="h-5 w-5 text-muted-foreground" />
@@ -223,12 +223,12 @@ export default function PulsePage() {
                     +5%
                   </div>
                 </div>
-                <p className="card-title-text mt-2 text-2xl font-bold transition-colors duration-150">{formatNumber(pulseMetrics.mau)}</p>
+                <p className="mt-2 text-2xl font-bold">{formatNumber(pulseMetrics.mau)}</p>
                 <p className="text-xs text-muted-foreground">Monthly Active Users</p>
               </CardContent>
             </Card>
 
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Clock className="h-5 w-5 text-muted-foreground" />
@@ -237,12 +237,12 @@ export default function PulsePage() {
                     -3%
                   </div>
                 </div>
-                <p className="card-title-text mt-2 text-2xl font-bold transition-colors duration-150">{pulseMetrics.avgSessionDuration}</p>
+                <p className="mt-2 text-2xl font-bold">{pulseMetrics.avgSessionDuration}</p>
                 <p className="text-xs text-muted-foreground">Avg Session Duration</p>
               </CardContent>
             </Card>
 
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <AlertTriangle className="h-5 w-5 text-muted-foreground" />
@@ -251,12 +251,12 @@ export default function PulsePage() {
                     -0.05%
                   </div>
                 </div>
-                <p className="card-title-text mt-2 text-2xl font-bold transition-colors duration-150">{pulseMetrics.errorRate}%</p>
+                <p className="mt-2 text-2xl font-bold">{pulseMetrics.errorRate}%</p>
                 <p className="text-xs text-muted-foreground">Error Rate</p>
               </CardContent>
             </Card>
 
-            <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Activity className="h-5 w-5 text-muted-foreground" />
@@ -265,7 +265,7 @@ export default function PulsePage() {
                     +0.02%
                   </div>
                 </div>
-                <p className="card-title-text mt-2 text-2xl font-bold transition-colors duration-150">{pulseMetrics.uptime}%</p>
+                <p className="mt-2 text-2xl font-bold">{pulseMetrics.uptime}%</p>
                 <p className="text-xs text-muted-foreground">Uptime</p>
               </CardContent>
             </Card>

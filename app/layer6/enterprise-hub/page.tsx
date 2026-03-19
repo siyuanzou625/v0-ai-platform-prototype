@@ -161,14 +161,14 @@ export default function EnterpriseHubPage() {
             {solutions.map((solution) => (
               <Card
                 key={solution.id}
-                className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
+                className="border border-[#E5E7EB] bg-white shadow-sm"
               >
                 <CardHeader className="pb-3">
                   <div className="mb-3 flex h-12 w-12 items-center justify-center rounded bg-primary/10">
                     <solution.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{solution.name}</CardTitle>
+                    <CardTitle className="text-base font-medium">{solution.name}</CardTitle>
                     <Badge variant="secondary">{solution.industry}</Badge>
                   </div>
                   <CardDescription className="text-sm">{solution.description}</CardDescription>

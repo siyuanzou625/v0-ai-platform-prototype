@@ -379,7 +379,7 @@ export default function ExecutionControlPage() {
             {/* Metric Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 mb-6">
               {/* CPU Usage */}
-              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -387,7 +387,7 @@ export default function ExecutionControlPage() {
                         <Cpu className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">CPU Usage</span>
                       </div>
-                      <p className="card-title-text text-2xl font-bold text-[#1F2937] transition-colors duration-150">{systemMetrics.cpu.usage}%</p>
+                      <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.cpu.usage}%</p>
                       <p className="text-xs text-[#22C55E] flex items-center gap-1 mt-1">
                         <span>↑</span> {systemMetrics.cpu.trend} vs last min
                       </p>
@@ -407,7 +407,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* GPU Usage */}
-              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -415,7 +415,7 @@ export default function ExecutionControlPage() {
                         <Monitor className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">GPU Usage</span>
                       </div>
-                      <p className="card-title-text text-2xl font-bold text-[#1F2937] transition-colors duration-150">{systemMetrics.gpu.usage}%</p>
+                      <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.gpu.usage}%</p>
                       <p className="text-xs text-[#F59E0B] flex items-center gap-1 mt-1">
                         <span>↑</span> {systemMetrics.gpu.trend} vs last min
                       </p>
@@ -435,7 +435,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* NPU Usage */}
-              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -443,7 +443,7 @@ export default function ExecutionControlPage() {
                         <Brain className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">NPU Usage</span>
                       </div>
-                      <p className="card-title-text text-2xl font-bold text-[#1F2937] transition-colors duration-150">{systemMetrics.npu.usage}%</p>
+                      <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.npu.usage}%</p>
                       <p className="text-xs text-[#ee3224] flex items-center gap-1 mt-1">
                         <span>●</span> AI Acceleration Active
                       </p>
@@ -463,7 +463,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Memory Usage */}
-              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -471,7 +471,7 @@ export default function ExecutionControlPage() {
                         <MemoryStick className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">Memory Usage</span>
                       </div>
-                      <p className="card-title-text text-2xl font-bold text-[#1F2937] transition-colors duration-150">{systemMetrics.memory.used}GB / {systemMetrics.memory.total}GB</p>
+                      <p className="text-2xl font-bold text-[#1F2937]">{systemMetrics.memory.used}GB / {systemMetrics.memory.total}GB</p>
                       <p className="text-xs text-[#6B7280] mt-1">{systemMetrics.memory.trend}</p>
                       {advancedMode ? (
                         <Tooltip>
@@ -499,7 +499,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Idle Capacity */}
-              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -507,7 +507,7 @@ export default function ExecutionControlPage() {
                         <Battery className="h-5 w-5 text-[#6B7280]" />
                         <span className="text-sm text-[#6B7280]">Idle Capacity</span>
                       </div>
-                      <p className="card-title-text text-2xl font-bold text-[#22C55E] transition-colors duration-150">{systemMetrics.idle.value}%</p>
+                      <p className="text-2xl font-bold text-[#22C55E]">{systemMetrics.idle.value}%</p>
                       <p className="text-xs text-[#22C55E] mt-1">{systemMetrics.idle.trend}</p>
                     </div>
                     {advancedMode ? (
@@ -936,7 +936,7 @@ export default function ExecutionControlPage() {
 
             <div className="grid gap-4 lg:grid-cols-3">
               {/* Optimization Suggestion */}
-              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="h-12 w-12 rounded-full bg-[#F5F7FA] flex items-center justify-center">
@@ -944,7 +944,7 @@ export default function ExecutionControlPage() {
                     </div>
                     <Badge className="bg-[#22C55E] text-white text-[10px]">High Impact</Badge>
                   </div>
-                  <h4 className="card-title-text font-semibold text-[#1F2937] transition-colors duration-150 mb-2">Optimization Suggestion</h4>
+                  <h4 className="font-semibold text-[#1F2937] mb-2">Optimization Suggestion</h4>
                   <p className="text-sm text-[#333] mb-2">Move &apos;Sales Agent&apos; to NPU to reduce latency by 18%</p>
                   <p className="text-xs text-[#6B7280] mb-4">
                     {advancedMode 
@@ -963,7 +963,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Resource Conflict */}
-              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="h-12 w-12 rounded-full bg-[#FFFBEB] flex items-center justify-center">
@@ -971,7 +971,7 @@ export default function ExecutionControlPage() {
                     </div>
                     <Badge className="bg-[#F59E0B] text-white text-[10px]">Medium Impact</Badge>
                   </div>
-                  <h4 className="card-title-text font-semibold text-[#1F2937] transition-colors duration-150 mb-2">Resource Conflict</h4>
+                  <h4 className="font-semibold text-[#1F2937] mb-2">Resource Conflict</h4>
                   <p className="text-sm text-[#333] mb-2">2 agents competing for GPU resources</p>
                   <p className="text-xs text-[#6B7280] mb-4">
                     {advancedMode 
@@ -990,7 +990,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Efficiency Tip */}
-              <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="h-12 w-12 rounded-full bg-[#EFF6FF] flex items-center justify-center">
@@ -998,7 +998,7 @@ export default function ExecutionControlPage() {
                     </div>
                     <Badge className="bg-[#3B82F6] text-white text-[10px]">Low Impact</Badge>
                   </div>
-                  <h4 className="card-title-text font-semibold text-[#1F2937] transition-colors duration-150 mb-2">Efficiency Tip</h4>
+                  <h4 className="font-semibold text-[#1F2937] mb-2">Efficiency Tip</h4>
                   <p className="text-sm text-[#333] mb-2">Idle agent consuming unnecessary CPU resources</p>
                   <p className="text-xs text-[#6B7280] mb-4">
                     {advancedMode 

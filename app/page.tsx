@@ -555,7 +555,7 @@ export default function HomePage() {
             {recommendations.map((rec) => (
               <Card 
                 key={rec.id}
-                className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
+                className="border border-[#E5E7EB] bg-white shadow-sm"
               >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3 mb-3">
@@ -564,7 +564,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h4 className="card-title-text text-sm font-semibold text-[#1F2937] transition-colors duration-150">{rec.name}</h4>
+                        <h4 className="text-sm font-semibold text-[#1F2937]">{rec.name}</h4>
                         <Badge variant="secondary" className="text-xs bg-[#F5F7FA] text-[#333]">
                           {rec.type}
                         </Badge>
