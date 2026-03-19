@@ -624,7 +624,7 @@ export default function TemplatesPage() {
 
   return (
     <AppLayout>
-      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
+      <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
           <div className="mb-4">
@@ -644,7 +644,7 @@ export default function TemplatesPage() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 p-6 space-y-6">
+        <div className="p-6 space-y-6">
         {/* Search and Filters */}
         <Card>
           <CardContent className="flex flex-wrap items-center gap-4 p-4">
@@ -1444,7 +1444,7 @@ export default function TemplatesPage() {
           </DialogContent>
         </Dialog>
         </div>
-      </div>
+      </>
     </AppLayout>
   )
 }

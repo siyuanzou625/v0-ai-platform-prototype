@@ -138,7 +138,7 @@ export default function PulsePage() {
   return (
     <AppLayout>
       <TooltipProvider>
-        <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
+        <>
           {/* Page Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -183,7 +183,7 @@ export default function PulsePage() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-6 space-y-6">
+          <div className="p-6 space-y-6">
           {/* Portfolio Summary Cards */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             <Card className="cursor-pointer transition-shadow hover:shadow-md">
@@ -785,7 +785,7 @@ export default function PulsePage() {
             </DialogContent>
           </Dialog>
           </div>
-        </div>
+        </>
       </TooltipProvider>
     </AppLayout>
   )

@@ -276,7 +276,7 @@ export default function ExecutionControlPage() {
   return (
     <AppLayout>
       <TooltipProvider delayDuration={500}>
-        <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
+        <>
           {/* Page Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -359,7 +359,7 @@ export default function ExecutionControlPage() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-6 space-y-8">
+          <div className="p-6 space-y-8">
           {/* Section A: System Overview */}
           <section aria-hidden={false}>
             <div className="flex items-center justify-between mb-4">
@@ -1124,7 +1124,7 @@ export default function ExecutionControlPage() {
             </Card>
           </section>
           </div>
-        </div>
+        </>
       </TooltipProvider>
     </AppLayout>
   )

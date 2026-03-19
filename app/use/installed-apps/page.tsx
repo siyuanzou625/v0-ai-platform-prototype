@@ -604,7 +604,7 @@ export default function MyAppsPage() {
 
   return (
     <AppLayout>
-      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
+      <>
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white border-b border-[#E5E7EB] px-6 py-4">
           {/* Title Row */}
@@ -1020,7 +1020,7 @@ export default function MyAppsPage() {
             )}
           </DialogContent>
         </Dialog>
-      </div>
+      </>
     </AppLayout>
   )
 }

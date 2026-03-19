@@ -145,7 +145,7 @@ export default function CreatorStatusPage() {
   return (
     <AppLayout>
       <TooltipProvider>
-        <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
+        <>
           {/* Page Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -186,7 +186,7 @@ export default function CreatorStatusPage() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-6 space-y-6">
+          <div className="p-6 space-y-6">
           {/* Tier Status Hero Card */}
           <Card className="bg-gradient-to-r from-[#F5F7FA] to-white">
             <CardContent className="p-6">
@@ -649,7 +649,7 @@ export default function CreatorStatusPage() {
             </DialogContent>
           </Dialog>
           </div>
-        </div>
+        </>
       </TooltipProvider>
     </AppLayout>
   )

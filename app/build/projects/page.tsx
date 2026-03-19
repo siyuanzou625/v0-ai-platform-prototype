@@ -451,7 +451,7 @@ export default function ProjectsPage() {
 
   return (
     <AppLayout>
-      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
+      <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
           {/* Row 1: Title & Description */}
@@ -1249,7 +1249,7 @@ export default function ProjectsPage() {
             )}
           </div>
         </ScrollArea>
-      </div>
+      </>
     </AppLayout>
   )
 }
