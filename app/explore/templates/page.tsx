@@ -732,13 +732,16 @@ export default function TemplatesPage() {
                     <StatusTag label={template.category} />
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-2.5">{template.description}</CardDescription>
-                  {/* Complexity and Version - Product Info */}
-                  <div className="flex items-center gap-2 mt-2.5">
-                    <StatusTag label={template.complexity} />
-                    <span className="text-xs text-muted-foreground">v{template.version || "1.0.0"}</span>
-                  </div>
                 </CardHeader>
                 <CardContent className="py-2.5 px-5">
+                  {/* Divider */}
+                  <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
+                  {/* Level and Version - Plain text */}
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2.5">
+                    <span>{template.complexity}</span>
+                    <span className="text-[#E5E7EB]">·</span>
+                    <span>v{template.version || "1.0.0"}</span>
+                  </div>
                   {/* Divider */}
                   <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
                   {/* Creator info with Follow button - Creator & Engagement Info */}

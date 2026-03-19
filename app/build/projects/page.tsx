@@ -1,5 +1,9 @@
 "use client"
-
+/**
+ * Projects Page - Build Section
+ * Uses AvatarFallback only (no AvatarImage)
+ * Owner data: project.owner.initials, project.owner.name
+ */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
