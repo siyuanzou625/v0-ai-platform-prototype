@@ -878,7 +878,8 @@ export default function ExploreAgentsPage() {
                           {creator?.verified && (
                             <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">Verified</Badge>
                           )}
-                          <span className="text-[#E5E7EB]">·</span>
+                        </div>
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={(e) => openCreatorProfile(agent.authorId, e)}
                             className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
@@ -886,32 +887,32 @@ export default function ExploreAgentsPage() {
                             <Users className="h-3 w-3" />
                             {formatFollowers(followerCount)}
                           </button>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={(e) => handleFollow(agent.authorId, agent.author, e)}
+                                className={`text-[11px] font-medium px-2 py-0.5 rounded transition-colors ${
+                                  isFollowing
+                                    ? "bg-[#22C55E] text-white hover:bg-[#16A34A]"
+                                    : "border border-[#6B7280] text-[#6B7280] hover:border-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]"
+                                }`}
+                              >
+                                {isFollowing ? (
+                                  <span className="flex items-center gap-1">
+                                    <Check className="h-3 w-3" /> Following
+                                  </span>
+                                ) : (
+                                  "+ Follow"
+                                )}
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {isFollowing
+                                ? `You're following ${agent.author}. Click to unfollow.`
+                                : `Follow to get notified when ${agent.author} publishes new assets`}
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              onClick={(e) => handleFollow(agent.authorId, agent.author, e)}
-                              className={`text-[11px] font-medium px-2 py-0.5 rounded transition-colors ${
-                                isFollowing
-                                  ? "bg-[#22C55E] text-white hover:bg-[#16A34A]"
-                                  : "border border-[#6B7280] text-[#6B7280] hover:border-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]"
-                              }`}
-                            >
-                              {isFollowing ? (
-                                <span className="flex items-center gap-1">
-                                  <Check className="h-3 w-3" /> Following
-                                </span>
-                              ) : (
-                                "+ Follow"
-                              )}
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {isFollowing
-                              ? `You're following ${agent.author}. Click to unfollow.`
-                              : `Follow to get notified when ${agent.author} publishes new assets`}
-                          </TooltipContent>
-                        </Tooltip>
                       </div>
                       
                       {/* Category and Version */}

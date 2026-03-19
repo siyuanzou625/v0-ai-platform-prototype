@@ -1,6 +1,6 @@
 "use client"
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// Force rebuild - code updated
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
