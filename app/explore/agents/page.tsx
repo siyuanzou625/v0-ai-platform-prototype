@@ -1007,7 +1007,7 @@ export default function ExploreAgentsPage() {
                     setActiveTab("overview")
                   }}
                 >
-                  <CardHeader className="py-3 px-5 pb-1">
+                  <CardHeader className="py-2.5 px-5 pb-1">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
@@ -1019,11 +1019,18 @@ export default function ExploreAgentsPage() {
                       </div>
                       <StatusTag label={agent.price} />
                     </div>
-                    <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
+                    <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
+                    {/* Category and Version - Product Info */}
+                    <div className="flex items-center gap-2 mt-2.5">
+                      <StatusTag label={agent.category} variant="category" />
+                      <span className="text-xs text-muted-foreground">{agent.version}</span>
+                    </div>
                   </CardHeader>
-                  <CardContent className="py-3 px-5 space-y-2">
-                    {/* Creator row with follow button */}
-                    <div className="space-y-1">
+                  <CardContent className="py-2.5 px-5">
+                    {/* Divider */}
+                    <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
+                    {/* Creator row with follow button - Creator & Engagement Info */}
+                    <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={(e) => openCreatorProfile(agent.authorId, e)}
@@ -1034,6 +1041,15 @@ export default function ExploreAgentsPage() {
                         {creator?.verified && (
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">Verified</Badge>
                         )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => openCreatorProfile(agent.authorId, e)}
+                          className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
+                        >
+                          <Users className="h-3 w-3" />
+                          {formatFollowers(followerCount)}
+                        </button>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
@@ -1060,19 +1076,6 @@ export default function ExploreAgentsPage() {
                           </TooltipContent>
                         </Tooltip>
                       </div>
-                      <button
-                        onClick={(e) => openCreatorProfile(agent.authorId, e)}
-                        className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
-                      >
-                        <Users className="h-3 w-3" />
-                        {formatFollowers(followerCount)} followers
-                      </button>
-                    </div>
-                    
-                    {/* Category and Version */}
-                    <div className="flex items-center gap-2">
-                      <StatusTag label={agent.category} variant="category" />
-                      <span className="text-xs text-muted-foreground">{agent.version}</span>
                     </div>
                     
                     {/* Stats row */}
