@@ -837,7 +837,7 @@ export default function TemplatesPage() {
         </div>
 
         {/* Create Template CTA */}
-        <Card className="border-[#ee3224]/20 bg-[#ee3224]/5">
+        <Card className="border-[#ee3224]/20 bg-[#ee3224]/10">
           <CardContent className="flex items-center justify-between py-3 px-5">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ee3224]">

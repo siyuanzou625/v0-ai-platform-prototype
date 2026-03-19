@@ -1,4 +1,5 @@
 "use client"
+// @refresh reset - Force complete HMR refresh
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
