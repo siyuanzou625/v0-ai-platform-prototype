@@ -1,5 +1,5 @@
 "use client"
-// Build cache reset: 2026-03-20-v2
+// Cache invalidation timestamp: 1742488800000
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
@@ -652,10 +652,10 @@ export default function ProjectsPage() {
                 </button>
               </div>
             </div>
-            {/* Dashboard View - Metric Cards */}
+            {/* Dashboard View */}
             {viewMode === "dashboard" && (
               <div className="space-y-6">
-                {/* Summary Metrics Row */}
+                {/* Metrics */}
                 <div className="grid grid-cols-4 gap-4">
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}><CardContent className="py-2.5 px-5"><div className="flex items-center justify-between"><div><p className="text-sm text-muted-foreground">Total Projects</p><p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{totalProjects}</p></div><div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ee3224]/10"><Briefcase className="h-6 w-6 text-[#ee3224]" /></div></div><p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p></CardContent></Card>
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}><CardContent className="py-2.5 px-5"><div className="flex items-center justify-between"><div><p className="text-sm text-muted-foreground">In Progress</p><p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{inProgressCount}</p></div><div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10"><PlayCircle className="h-6 w-6 text-amber-500" /></div></div><p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p></CardContent></Card>

@@ -235,18 +235,21 @@ export default function HomePage() {
 
   return (
     <AppLayout>
-      <div className="space-y-8">
-        {/* Component 2: Page Header */}
-        <div>
-  <div className="flex items-center gap-2 mb-2">
-  <Home className="h-6 w-6 text-[#ee3224]" />
-  <h1 className="text-2xl font-semibold text-[#1F2937]">Home</h1>
-  </div>
+      <>
+        {/* Header */}
+        <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Home className="h-5 w-5 text-[#ee3224]" />
+            <h1 className="text-xl font-semibold text-foreground">Home</h1>
+          </div>
           <p className="text-sm text-[#6B7280]">
             Welcome back, Zoey. What would you like to do today?
           </p>
         </div>
 
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="p-6 space-y-6">
         {/* Primary Action Cards (3-Card Row) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Card 1: Build an Agent */}
@@ -876,7 +879,9 @@ export default function HomePage() {
             </ScrollArea>
           </DialogContent>
         </Dialog>
-      </div>
+          </div>
+        </div>
+      </>
     </AppLayout>
   )
 }
