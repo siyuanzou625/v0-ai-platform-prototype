@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -880,14 +881,12 @@ export default function ExploreAgentsPage() {
                             {agent.name}
                           </CardTitle>
                         </div>
-                        <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
-                          {agent.price}
-                        </Badge>
+                        <StatusTag label={agent.price} />
                       </div>
                       <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
                       {/* Category and Version - Product Info */}
                       <div className="flex items-center gap-2 mt-2.5">
-                        <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(agent.category)}`}>{agent.category}</Badge>
+                        <StatusTag label={agent.category} />
                         <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
                     </CardHeader>
@@ -1018,9 +1017,7 @@ export default function ExploreAgentsPage() {
                           {agent.name}
                         </CardTitle>
                       </div>
-                      <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
-                        {agent.price}
-                      </Badge>
+                      <StatusTag label={agent.price} />
                     </div>
                     <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
                   </CardHeader>
@@ -1074,7 +1071,7 @@ export default function ExploreAgentsPage() {
                     
                     {/* Category and Version */}
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(agent.category)}`}>{agent.category}</Badge>
+                      <StatusTag label={agent.category} />
                       <span className="text-xs text-muted-foreground">{agent.version}</span>
                     </div>
                     

@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -728,23 +729,12 @@ export default function TemplatesPage() {
                       </div>
                       <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
                     </div>
-                    <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(template.category)}`}>{template.category}</Badge>
+                    <StatusTag label={template.category} />
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-2.5">{template.description}</CardDescription>
                   {/* Complexity and Version - Product Info */}
                   <div className="flex items-center gap-2 mt-2.5">
-                    <Badge
-                      variant="outline"
-                      className={
-                        template.complexity === "Beginner"
-                          ? "border-chart-3 text-chart-3"
-                          : template.complexity === "Intermediate"
-                          ? "border-chart-4 text-chart-4"
-                          : "border-primary text-primary"
-                      }
-                    >
-                      {template.complexity}
-                    </Badge>
+                    <StatusTag label={template.complexity} />
                     <span className="text-xs text-muted-foreground">v{template.version || "1.0.0"}</span>
                   </div>
                 </CardHeader>

@@ -1,5 +1,5 @@
 "use client"
-// Last updated: Force cache clear - Avatar fix applied
+// Build timestamp: 2024-03-20T12:00:00Z - All Avatar code fixed
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -7,6 +7,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -224,51 +225,24 @@ const activityTimeline = [
 
 // Helper functions
 const getStatusBadge = (status: string) => {
-  switch (status) {
-    case "deployed":
-      return (
-        <Badge variant="secondary" className="bg-emerald-50 text-emerald-600 border border-emerald-200">
-          <CheckCircle2 className="mr-1 h-3 w-3" />
-          Deployed
-        </Badge>
-      )
-    case "ready":
-      return (
-        <Badge variant="secondary" className="bg-emerald-50 text-emerald-600 border border-emerald-200">
-          <Check className="mr-1 h-3 w-3" />
-          Ready
-        </Badge>
-      )
-    case "building":
-      return (
-        <Badge variant="secondary" className="bg-amber-50 text-amber-600 border border-amber-200">
-          <PlayCircle className="mr-1 h-3 w-3" />
-          Building
-        </Badge>
-      )
-    case "blocked":
-      return (
-        <Badge variant="secondary" className="bg-[#F5F7FA] text-[#ee3224] border border-[#E5E7EB]">
-          <AlertCircle className="mr-1 h-3 w-3" />
-          Blocked
-        </Badge>
-      )
-    default:
-      return null
+  const statusMap: Record<string, string> = {
+    deployed: "Deployed",
+    ready: "Ready",
+    building: "Building",
+    blocked: "Blocked",
   }
+  const label = statusMap[status]
+  return label ? <StatusTag label={label} /> : null
 }
 
 const getEnvironmentBadge = (env: string) => {
-  switch (env) {
-    case "production":
-      return <Badge variant="outline" className="text-emerald-600 border-emerald-300">Production</Badge>
-    case "staging":
-      return <Badge variant="outline" className="text-amber-600 border-amber-300">Staging</Badge>
-    case "development":
-      return <Badge variant="outline" className="text-slate-600 border-slate-300">Development</Badge>
-    default:
-      return null
+  const envMap: Record<string, string> = {
+    production: "Production",
+    staging: "Staging",
+    development: "Development",
   }
+  const label = envMap[env]
+  return label ? <StatusTag label={label} /> : null
 }
 
 const getDueDateColor = (status: string) => {

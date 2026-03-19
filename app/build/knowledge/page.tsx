@@ -6,6 +6,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -162,31 +163,13 @@ const getKnowledgeIconColor = () => {
 
 // Get status badge
 const getStatusBadge = (status: string) => {
-  switch (status) {
-    case "ready":
-      return (
-        <Badge variant="secondary" className="bg-emerald-50 text-emerald-600 border border-emerald-200">
-          <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block" />
-          Ready
-        </Badge>
-      )
-    case "processing":
-      return (
-        <Badge variant="secondary" className="bg-amber-50 text-amber-600 border border-amber-200">
-          <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse inline-block" />
-          Processing
-        </Badge>
-      )
-    case "failed":
-      return (
-        <Badge variant="secondary" className="bg-[#F5F7FA] text-[#ee3224] border border-[#E5E7EB]">
-          <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-[#ee3224] inline-block" />
-          Failed
-        </Badge>
-      )
-    default:
-      return null
+  const statusMap: Record<string, string> = {
+    ready: "Ready",
+    processing: "Processing",
+    failed: "Failed",
   }
+  const label = statusMap[status]
+  return label ? <StatusTag label={label} /> : null
 }
 
 export default function KnowledgePage() {

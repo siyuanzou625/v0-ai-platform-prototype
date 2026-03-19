@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -768,16 +769,12 @@ export default function PluginsPage() {
                         </div>
                         <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
                       </div>
-                      {plugin.installed ? (
-                        <Badge className="badge-primary"><CheckCircle className="mr-1 h-3 w-3" /> Installed</Badge>
-                      ) : (
-                        <Badge className="badge-neutral">Available</Badge>
-                      )}
+                      <StatusTag label={plugin.installed ? "Installed" : "Available"} />
                     </div>
                     <CardDescription className="text-sm mt-2.5">{plugin.description}</CardDescription>
                     {/* Category and Version - Product Info */}
                     <div className="flex items-center gap-2 mt-2.5">
-                      <Badge variant="secondary" className={`text-xs ${getCategoryBadgeStyle(plugin.category)}`}>{plugin.category}</Badge>
+                      <StatusTag label={plugin.category} />
                       <span className="text-xs text-muted-foreground">v{plugin.version}</span>
                     </div>
                   </CardHeader>
