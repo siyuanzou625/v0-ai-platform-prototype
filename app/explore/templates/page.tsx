@@ -432,6 +432,16 @@ export default function TemplatesPage() {
   const [followersModalType, setFollowersModalType] = useState<"followers" | "following">("followers")
   const [dailyFollowCount, setDailyFollowCount] = useState(0)
   const DAILY_FOLLOW_LIMIT = 50
+  const [favoritedTemplates, setFavoritedTemplates] = useState<number[]>([])
+  
+  const handleFavorite = (templateId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setFavoritedTemplates(prev => 
+      prev.includes(templateId) 
+        ? prev.filter(id => id !== templateId)
+        : [...prev, templateId]
+    )
+  }
 
   // Load follow state from localStorage
   useEffect(() => {
@@ -729,7 +739,15 @@ export default function TemplatesPage() {
                       </div>
                       <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
                     </div>
-                    <StatusTag label={template.category} variant="category" />
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => handleFavorite(template.id, e)}
+                        className="p-1 rounded hover:bg-[#F5F7FA] transition-colors"
+                      >
+                        <Star className={`h-4 w-4 ${favoritedTemplates.includes(template.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
+                      </button>
+                      <StatusTag label={template.category} variant="category" />
+                    </div>
                   </div>
                   <CardDescription className="text-sm line-clamp-2 mt-2.5">{template.description}</CardDescription>
                 </CardHeader>
@@ -797,7 +815,7 @@ export default function TemplatesPage() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className="flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> {template.rating}
+                          <Star className="h-3.5 w-3.5 text-[#9CA3AF]" /> {template.rating}
                         </span>
                       </TooltipTrigger>
                       <TooltipContent>Rating</TooltipContent>
@@ -876,7 +894,7 @@ export default function TemplatesPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> {selectedTemplate?.rating}
+                        <Star className="h-4 w-4 text-[#9CA3AF]" /> {selectedTemplate?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
@@ -1242,7 +1260,7 @@ export default function TemplatesPage() {
                   <div className="text-xs text-[#6B7280]">Downloads</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
-                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline fill-amber-400 text-amber-400" /></div>
+                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline text-[#9CA3AF]" /></div>
                   <div className="text-xs text-[#6B7280]">Avg Rating</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
@@ -1262,7 +1280,7 @@ export default function TemplatesPage() {
                         <span className="text-sm font-medium truncate">{template.name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[#6B7280]">
-                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 fill-amber-400 text-amber-400" /> {template.rating}</span>
+                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-[#9CA3AF]" /> {template.rating}</span>
                         <span className="flex items-center gap-0.5"><Download className="h-3 w-3" /> {template.downloads}</span>
                       </div>
                     </div>

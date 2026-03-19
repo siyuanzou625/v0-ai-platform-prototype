@@ -589,6 +589,16 @@ export default function ExploreAgentsPage() {
   const [isLoadingDiscussions, setIsLoadingDiscussions] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const discussionsPerPage = 5
+  const [favoritedAgents, setFavoritedAgents] = useState<number[]>([])
+  
+  const handleFavorite = (agentId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setFavoritedAgents(prev => 
+      prev.includes(agentId) 
+        ? prev.filter(id => id !== agentId)
+        : [...prev, agentId]
+    )
+  }
 
   // Initialize follower counts from creator data
   useEffect(() => {
@@ -881,7 +891,15 @@ export default function ExploreAgentsPage() {
                             {agent.name}
                           </CardTitle>
                         </div>
-                        <StatusTag label={agent.price} />
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => handleFavorite(agent.id, e)}
+                            className="p-1 rounded hover:bg-[#F5F7FA] transition-colors"
+                          >
+                            <Star className={`h-4 w-4 ${favoritedAgents.includes(agent.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
+                          </button>
+                          <StatusTag label={agent.price} />
+                        </div>
                       </div>
                       <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
                       {/* Category and Version - Product Info */}
@@ -947,7 +965,7 @@ export default function ExploreAgentsPage() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="flex items-center gap-1">
-                              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                              <Star className="h-3.5 w-3.5 text-[#9CA3AF]" />
                               {agent.rating}
                             </span>
                           </TooltipTrigger>
@@ -1017,7 +1035,15 @@ export default function ExploreAgentsPage() {
                           {agent.name}
                         </CardTitle>
                       </div>
-                      <StatusTag label={agent.price} />
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => handleFavorite(agent.id, e)}
+                          className="p-1 rounded hover:bg-[#F5F7FA] transition-colors"
+                        >
+                          <Star className={`h-4 w-4 ${favoritedAgents.includes(agent.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
+                        </button>
+                        <StatusTag label={agent.price} />
+                      </div>
                     </div>
                     <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
                     {/* Category and Version - Product Info */}
@@ -1083,7 +1109,7 @@ export default function ExploreAgentsPage() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                            <Star className="h-3.5 w-3.5 text-[#9CA3AF]" />
                             {agent.rating}
                           </span>
                         </TooltipTrigger>
@@ -1167,7 +1193,7 @@ export default function ExploreAgentsPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> {selectedAgent?.rating}
+                        <Star className="h-4 w-4 text-[#9CA3AF]" /> {selectedAgent?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">

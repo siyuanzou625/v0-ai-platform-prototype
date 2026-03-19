@@ -458,6 +458,16 @@ export default function PluginsPage() {
   const [followersModalType, setFollowersModalType] = useState<"followers" | "following">("followers")
   const [dailyFollowCount, setDailyFollowCount] = useState(0)
   const DAILY_FOLLOW_LIMIT = 50
+  const [favoritedPlugins, setFavoritedPlugins] = useState<number[]>([])
+  
+  const handleFavorite = (pluginId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setFavoritedPlugins(prev => 
+      prev.includes(pluginId) 
+        ? prev.filter(id => id !== pluginId)
+        : [...prev, pluginId]
+    )
+  }
 
   // Load follow state from localStorage
   useEffect(() => {
@@ -769,7 +779,15 @@ export default function PluginsPage() {
                         </div>
                         <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
                       </div>
-                      <StatusTag label={plugin.installed ? "Installed" : "Available"} />
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => handleFavorite(plugin.id, e)}
+                          className="p-1 rounded hover:bg-[#F5F7FA] transition-colors"
+                        >
+                          <Star className={`h-4 w-4 ${favoritedPlugins.includes(plugin.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
+                        </button>
+                        <StatusTag label={plugin.installed ? "Installed" : "Available"} />
+                      </div>
                     </div>
                     <CardDescription className="text-sm mt-2.5">{plugin.description}</CardDescription>
                     {/* Category and Version - Product Info */}
@@ -835,7 +853,7 @@ export default function PluginsPage() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> {plugin.rating}
+                            <Star className="h-3.5 w-3.5 text-[#9CA3AF]" /> {plugin.rating}
                           </span>
                         </TooltipTrigger>
                         <TooltipContent>Rating</TooltipContent>
@@ -899,7 +917,7 @@ export default function PluginsPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> {selectedPlugin?.rating}
+                        <Star className="h-4 w-4 text-[#9CA3AF]" /> {selectedPlugin?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
@@ -946,7 +964,7 @@ export default function PluginsPage() {
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Rating</span>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" /> {selectedPlugin?.rating}
+                            <Star className="h-3 w-3 text-[#9CA3AF]" /> {selectedPlugin?.rating}
                           </span>
                         </div>
                       </CardContent>
@@ -1272,7 +1290,7 @@ export default function PluginsPage() {
                   <div className="text-xs text-[#6B7280]">Downloads</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
-                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline fill-amber-400 text-amber-400" /></div>
+                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline text-[#9CA3AF]" /></div>
                   <div className="text-xs text-[#6B7280]">Avg Rating</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
@@ -1292,7 +1310,7 @@ export default function PluginsPage() {
                         <span className="text-sm font-medium truncate">{plugin.name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[#6B7280]">
-                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 fill-amber-400 text-amber-400" /> {plugin.rating}</span>
+                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-[#9CA3AF]" /> {plugin.rating}</span>
                         <span className="flex items-center gap-0.5"><Download className="h-3 w-3" /> {plugin.downloads}</span>
                       </div>
                     </div>
