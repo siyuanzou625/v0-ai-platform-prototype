@@ -745,9 +745,9 @@ export default function PluginsPage() {
                         <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
                       </div>
                       {plugin.installed ? (
-                        <Badge className="bg-chart-3"><CheckCircle className="mr-1 h-3 w-3" /> Installed</Badge>
+                        <Badge className="badge-primary"><CheckCircle className="mr-1 h-3 w-3" /> Installed</Badge>
                       ) : (
-                        <Badge variant="secondary">Available</Badge>
+                        <Badge className="badge-neutral">Available</Badge>
                       )}
                     </div>
                     <CardDescription className="text-sm mt-3">{plugin.description}</CardDescription>
