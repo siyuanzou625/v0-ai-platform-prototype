@@ -280,7 +280,7 @@ export default function ConnectionsPage() {
     switch (env) {
       case "production": return "bg-green-100 text-green-800"
       case "staging": return "bg-orange-100 text-orange-800"
-      case "development": return "bg-blue-100 text-blue-800"
+      case "development": return "bg-slate-100 text-slate-800"
       default: return "bg-gray-100 text-gray-800"
     }
   }

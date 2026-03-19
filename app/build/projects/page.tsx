@@ -240,7 +240,7 @@ const getStatusBadge = (status: string) => {
       )
     case "building":
       return (
-        <Badge variant="secondary" className="bg-blue-50 text-blue-600 border border-blue-200">
+        <Badge variant="secondary" className="bg-amber-50 text-amber-600 border border-amber-200">
           <PlayCircle className="mr-1 h-3 w-3" />
           Building
         </Badge>
@@ -264,7 +264,7 @@ const getEnvironmentBadge = (env: string) => {
     case "staging":
       return <Badge variant="outline" className="text-amber-600 border-amber-300">Staging</Badge>
     case "development":
-      return <Badge variant="outline" className="text-blue-600 border-blue-300">Development</Badge>
+      return <Badge variant="outline" className="text-slate-600 border-slate-300">Development</Badge>
     default:
       return null
   }
@@ -684,11 +684,10 @@ export default function ProjectsPage() {
                           <p className="text-sm text-muted-foreground">In Progress</p>
                           <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{inProgressCount}</p>
                         </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
-                          <PlayCircle className="h-6 w-6 text-blue-500" />
-                        </div>
-                      </div>
-                      <p className="mt-2 text-xs text-blue-600 hover:underline">View building projects</p>
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
+                    <PlayCircle className="h-6 w-6 text-amber-500" />
+                  </div>
+                  <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
                   <Card 
@@ -807,7 +806,7 @@ export default function ProjectsPage() {
                                 className={`h-1.5 flex-1 ${
                                   project.status === "deployed" ? "[&>div]:bg-emerald-500" :
                                   project.status === "ready" ? "[&>div]:bg-emerald-500" :
-                                  project.status === "building" ? "[&>div]:bg-blue-500" :
+                                  project.status === "building" ? "[&>div]:bg-amber-500" :
                                   project.status === "blocked" ? "[&>div]:bg-[#ee3224]" : ""
                                 }`}
                               />
@@ -922,7 +921,7 @@ export default function ProjectsPage() {
                           className={`h-1.5 flex-1 ${
                             project.status === "deployed" ? "[&>div]:bg-emerald-500" :
                             project.status === "ready" ? "[&>div]:bg-emerald-500" :
-                            project.status === "building" ? "[&>div]:bg-blue-500" :
+                            project.status === "building" ? "[&>div]:bg-amber-500" :
                             project.status === "blocked" ? "[&>div]:bg-[#ee3224]" : ""
                           }`}
                         />
