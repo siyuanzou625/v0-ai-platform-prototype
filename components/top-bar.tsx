@@ -163,7 +163,7 @@ export function TopBar() {
           <Input
             ref={searchInputRef}
             type="search"
-            placeholder="Search assets, docs, discussions... (Cmd/Ctrl+K)"
+            placeholder="Search anything..."
             className="h-10 w-full rounded border-[#E5E7EB] bg-[#F5F7FA] pl-10 pr-10 text-sm placeholder:text-[#6B7280] focus:border-[#ee3224] focus:ring-[#ee3224]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
