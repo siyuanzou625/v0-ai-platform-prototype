@@ -99,6 +99,7 @@ const impactStats = [
   { id: "users", icon: Users, value: "45.2K", label: "Users Reached", trend: "+12%", clickable: false },
   { id: "rating", icon: Star, value: "4.6", label: "Avg Rating", trend: "+0.2", clickable: false },
   { id: "followers", icon: Users, value: "1.2K", label: "Followers", trend: "+156 this month", clickable: true },
+  { id: "leaderboard", icon: Trophy, value: "#47", label: "Leaderboard Position", trend: "+12 positions", clickable: false },
 ]
 
 const followersData = [
@@ -195,9 +196,9 @@ export default function CreatorStatusPage() {
           <div className="flex-1 overflow-auto bg-[#F5F7FA]">
             <div className="px-8 py-6 space-y-6">
             {/* Tier Status and Badges - Side by Side */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Left: Current Tier Card */}
-            <Card className="bg-gradient-to-r from-[#F5F7FA] to-white flex flex-col">
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Left: Current Tier Card - Takes 1 column */}
+            <Card className="bg-gradient-to-r from-[#F5F7FA] to-white flex flex-col lg:col-span-1">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg font-semibold">Current Tier</CardTitle>
               </CardHeader>
@@ -246,8 +247,8 @@ export default function CreatorStatusPage() {
               </CardContent>
             </Card>
 
-            {/* Right: Badges Earned Card */}
-            <Card className="flex flex-col">
+            {/* Right: Badges Earned Card - Takes 2 columns */}
+            <Card className="flex flex-col lg:col-span-2">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -283,8 +284,8 @@ export default function CreatorStatusPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {filteredBadges.slice(0, 8).map((badge) => {
+              <div className="space-y-3">
+                {filteredBadges.slice(0, 6).map((badge) => {
                   const IconComponent = badge.icon
                   return (
                     <Tooltip key={badge.id}>
@@ -414,7 +415,7 @@ export default function CreatorStatusPage() {
               <CardTitle className="text-lg font-semibold">Your Impact</CardTitle>
             </CardHeader>
             <CardContent className="py-3 px-5">
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 {impactStats.map((stat) => {
                   const IconComponent = stat.icon
                   const isClickable = stat.clickable
@@ -451,32 +452,6 @@ export default function CreatorStatusPage() {
                   )
                 })}
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Leaderboard Position */}
-          <Card>
-            <CardHeader className="py-3 px-5 pb-1">
-              <CardTitle className="text-lg font-semibold">Leaderboard Position</CardTitle>
-            </CardHeader>
-            <CardContent className="py-3 px-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-3xl font-bold text-[#ee3224]">#47</p>
-                  <p className="text-sm text-muted-foreground">out of 1,234 creators</p>
-                </div>
-                <div className="text-right">
-                  <Badge className="bg-emerald-500">Top 4%</Badge>
-                  <div className="flex items-center gap-1 mt-2 text-sm text-emerald-600">
-                    <TrendingUp className="h-4 w-4" />
-                    +12 positions from last month
-                  </div>
-                </div>
-              </div>
-              <Button variant="link" className="text-[#ee3224] p-0 h-auto mt-3">
-                View Full Leaderboard
-                <ExternalLink className="h-4 w-4 ml-1" />
-              </Button>
             </CardContent>
           </Card>
 
