@@ -631,7 +631,7 @@ export default function MyAppsPage() {
                 <Input
                   ref={searchInputRef}
                   placeholder="Search apps... (Cmd/Ctrl+K)"
-                  className="pl-10 pr-8 border-[#E5E7EB]"
+                  className="pl-10 pr-8 bg-white border-[#E5E7EB]"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setShowRecentSearches(true)}
@@ -670,10 +670,10 @@ export default function MyAppsPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveFilters([])}
-                  className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                  className={`px-3 py-1.5 text-sm font-medium rounded border transition-colors ${
                     activeFilters.length === 0
-                      ? "bg-[#ee3224] text-white"
-                      : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+                      ? "bg-[#ee3224] text-white border-[#ee3224]"
+                      : "bg-white text-[#333] border-[#E5E7EB] hover:bg-[#F5F7FA]"
                   }`}
                 >
                   All
@@ -682,10 +682,10 @@ export default function MyAppsPage() {
                   <button
                     key={source}
                     onClick={() => toggleFilter(source)}
-                    className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                    className={`px-3 py-1.5 text-sm font-medium rounded border transition-colors ${
                       activeFilters.includes(source)
-                        ? "bg-[#ee3224] text-white"
-                        : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+                        ? "bg-[#ee3224] text-white border-[#ee3224]"
+                        : "bg-white text-[#333] border-[#E5E7EB] hover:bg-[#F5F7FA]"
                     }`}
                   >
                     {source === "My Agent" ? "My Agents" : source === "Team" ? "Team Agents" : source}
@@ -702,13 +702,13 @@ export default function MyAppsPage() {
               </div>
               
               {/* View Toggle */}
-              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 ml-auto">
+              <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1 ml-auto">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "grid"
-                      ? "bg-white text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-[#ee3224] text-white shadow-sm"
+                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
                   }`}
                 >
                   <LayoutGrid className="h-4 w-4" />
@@ -717,8 +717,8 @@ export default function MyAppsPage() {
                   onClick={() => setViewMode("list")}
                   className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "list"
-                      ? "bg-white text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-[#ee3224] text-white shadow-sm"
+                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
                   }`}
                 >
                   <List className="h-4 w-4" />

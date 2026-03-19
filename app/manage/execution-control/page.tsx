@@ -300,7 +300,7 @@ export default function ExecutionControlPage() {
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-[#6B7280]">Execution Mode</label>
                 <Select value={executionMode} onValueChange={setExecutionMode}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-40 bg-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

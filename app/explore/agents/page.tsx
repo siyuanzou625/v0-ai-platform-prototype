@@ -791,13 +791,13 @@ export default function ExploreAgentsPage() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search agents..."
-                className="pl-10"
+                className="pl-10 bg-white"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 bg-white">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -809,7 +809,7 @@ export default function ExploreAgentsPage() {
               </SelectContent>
             </Select>
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 bg-white">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>

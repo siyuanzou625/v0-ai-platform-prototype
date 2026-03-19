@@ -583,13 +583,13 @@ export default function ProjectsPage() {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search projects by name or owner..."
-                  className="pl-9"
+                  className="pl-9 bg-white"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <Select value={environmentFilter} onValueChange={(v) => setEnvironmentFilter(v as Environment)}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-40 bg-white">
                   <SelectValue placeholder="Environment" />
                 </SelectTrigger>
                 <SelectContent>
@@ -600,7 +600,7 @@ export default function ProjectsPage() {
                 </SelectContent>
               </Select>
               <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as Status)}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-40 bg-white">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -616,13 +616,13 @@ export default function ProjectsPage() {
                   Clear filters
                 </Button>
               )}
-              <div className="flex items-center rounded-lg border border-[#E5E7EB] p-1 ml-auto">
+              <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1 ml-auto">
                 <button
                   onClick={() => handleViewChange("dashboard")}
                   className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "dashboard"
                       ? "bg-[#ee3224] text-white shadow-sm"
-                      : "text-[#333] hover:bg-white/50"
+                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
                   }`}
                 >
                   <LayoutDashboard className="h-4 w-4" />
@@ -633,7 +633,7 @@ export default function ProjectsPage() {
                   className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "grid"
                       ? "bg-[#ee3224] text-white shadow-sm"
-                      : "text-[#333] hover:bg-white/50"
+                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
                   }`}
                 >
                   <LayoutGrid className="h-4 w-4" />
@@ -644,7 +644,7 @@ export default function ProjectsPage() {
                   className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
                     viewMode === "list"
                       ? "bg-[#ee3224] text-white shadow-sm"
-                      : "text-[#333] hover:bg-white/50"
+                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
                   }`}
                 >
                   <List className="h-4 w-4" />

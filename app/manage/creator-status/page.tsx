@@ -169,23 +169,27 @@ export default function CreatorStatusPage() {
           <div className="p-6 space-y-6">
             {/* View Toggle */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center rounded-lg border border-[#E5E7EB] p-1">
-                <Button
-                  variant={viewMode === "personal" ? "default" : "ghost"}
-                  size="sm"
+              <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1">
+                <button
                   onClick={() => setViewMode("personal")}
-                  className={viewMode === "personal" ? "bg-[#ee3224] hover:bg-[#cc2a1e]" : ""}
+                  className={`px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "personal"
+                      ? "bg-[#ee3224] text-white shadow-sm"
+                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                  }`}
                 >
                   Personal
-                </Button>
-                <Button
-                  variant={viewMode === "team" ? "default" : "ghost"}
-                  size="sm"
+                </button>
+                <button
                   onClick={() => setViewMode("team")}
-                  className={viewMode === "team" ? "bg-[#ee3224] hover:bg-[#cc2a1e]" : ""}
+                  className={`px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "team"
+                      ? "bg-[#ee3224] text-white shadow-sm"
+                      : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                  }`}
                 >
                   Team
-                </Button>
+                </button>
               </div>
             </div>
 

@@ -163,7 +163,7 @@ export default function PulsePage() {
             {/* Filters */}
             <div className="flex flex-wrap items-center gap-3">
               <Select value={selectedAsset} onValueChange={setSelectedAsset}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-40 bg-white">
                   <SelectValue placeholder="All Assets" />
                 </SelectTrigger>
                 <SelectContent>
@@ -174,7 +174,7 @@ export default function PulsePage() {
                 </SelectContent>
               </Select>
               <Select value={dateRange} onValueChange={setDateRange}>
-                <SelectTrigger className="w-36">
+                <SelectTrigger className="w-36 bg-white">
                   <SelectValue placeholder="Date Range" />
                 </SelectTrigger>
                 <SelectContent>

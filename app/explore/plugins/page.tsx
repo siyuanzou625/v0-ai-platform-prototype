@@ -664,10 +664,10 @@ export default function PluginsPage() {
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search plugins..." className="pl-10" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <Input placeholder="Search plugins..." className="pl-10 bg-white" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
             <Select value={activeCategory} onValueChange={setActiveCategory}>
-              <SelectTrigger className="w-40"><SelectValue placeholder="Category" /></SelectTrigger>
+              <SelectTrigger className="w-40 bg-white"><SelectValue placeholder="Category" /></SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>{category}</SelectItem>
@@ -675,7 +675,7 @@ export default function PluginsPage() {
               </SelectContent>
             </Select>
             <Select defaultValue="popular">
-              <SelectTrigger className="w-40"><SelectValue placeholder="Sort by" /></SelectTrigger>
+              <SelectTrigger className="w-40 bg-white"><SelectValue placeholder="Sort by" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="popular">Most Popular</SelectItem>
                 <SelectItem value="recent">Most Recent</SelectItem>

@@ -592,13 +592,13 @@ export default function KnowledgePage() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search knowledge bases..."
-                className="pl-9"
+                className="pl-9 bg-white"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 bg-white">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
@@ -609,7 +609,7 @@ export default function KnowledgePage() {
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 bg-white">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -620,7 +620,7 @@ export default function KnowledgePage() {
               </SelectContent>
             </Select>
             <Select value={ownerFilter} onValueChange={setOwnerFilter}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-32 bg-white">
                 <SelectValue placeholder="Owner" />
               </SelectTrigger>
               <SelectContent>
@@ -630,7 +630,7 @@ export default function KnowledgePage() {
               </SelectContent>
             </Select>
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 bg-white">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>

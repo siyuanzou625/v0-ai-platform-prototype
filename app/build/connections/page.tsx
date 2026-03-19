@@ -328,13 +328,13 @@ export default function ConnectionsPage() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search connections..."
-                className="pl-10"
+                className="pl-10 bg-white"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 bg-white">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -346,7 +346,7 @@ export default function ConnectionsPage() {
               </SelectContent>
             </Select>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 bg-white">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
@@ -357,23 +357,27 @@ export default function ConnectionsPage() {
                 <SelectItem value="database">Database</SelectItem>
               </SelectContent>
             </Select>
-            <div className="flex items-center gap-1 border rounded-md">
-              <Button
-                variant={viewMode === "grid" ? "secondary" : "ghost"}
-                size="sm"
-                className="rounded-r-none"
+            <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1 ml-auto">
+              <button
                 onClick={() => setViewMode("grid")}
+                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "grid"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                }`}
               >
                 <LayoutGrid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "secondary" : "ghost"}
-                size="sm"
-                className="rounded-l-none"
+              </button>
+              <button
                 onClick={() => setViewMode("list")}
+                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "list"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "bg-white text-[#333] hover:bg-[#F5F7FA]"
+                }`}
               >
                 <List className="h-4 w-4" />
-              </Button>
+              </button>
             </div>
           </div>
 
