@@ -156,12 +156,7 @@ export function TopBar() {
 
   return (
     <>
-      <header className="sticky top-0 z-[1000] flex h-16 items-center justify-between border-b border-[#E5E7EB] bg-white px-6">
-        {/* Left Section: Logo */}
-        <div className="flex items-center">
-          <span className="text-lg font-semibold text-[#1F2937]">AgentStudio</span>
-        </div>
-
+      <header className="sticky top-0 z-[1000] flex h-16 items-center justify-end border-b border-[#E5E7EB] bg-white px-6">
         {/* Right Section: Search + Actions */}
         <div className="flex items-center gap-3">
           {/* Compact Search Bar */}
