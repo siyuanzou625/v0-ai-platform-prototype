@@ -840,19 +840,19 @@ export default function TemplatesPage() {
           })}
         </div>
 
-        {/* Featured Templates Banner */}
-        <Card className="border-primary bg-primary/5">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary">
-                <Sparkles className="h-7 w-7 text-primary-foreground" />
+        {/* Create Template CTA */}
+        <Card className="border-[#ee3224]/20 bg-[#ee3224]/5">
+          <CardContent className="flex items-center justify-between py-4 px-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ee3224]">
+                <Sparkles className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-foreground">Create Your Own Template</h3>
-                <p className="text-muted-foreground">Share your workflows with the community and earn recognition</p>
+                <h3 className="text-base font-semibold text-foreground">Create Your Own Template</h3>
+                <p className="text-sm text-muted-foreground">Share your workflows with the community and earn recognition</p>
               </div>
             </div>
-            <Button size="lg" className="gap-2">
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
               Start Building <ArrowRight className="h-4 w-4" />
             </Button>
           </CardContent>

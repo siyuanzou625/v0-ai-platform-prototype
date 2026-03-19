@@ -1098,6 +1098,24 @@ export default function ExploreAgentsPage() {
           </div>
         </div>
 
+        {/* Create Agent CTA */}
+        <Card className="border-[#ee3224]/20 bg-[#ee3224]/5">
+          <CardContent className="flex items-center justify-between py-4 px-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ee3224]">
+                <Bot className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-foreground">Create Your Own Agent</h3>
+                <p className="text-sm text-muted-foreground">Build custom AI agents and share them with the community</p>
+              </div>
+            </div>
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+              Start Building <ArrowRight className="h-4 w-4" />
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Agent Detail Modal */}
         <Dialog open={!!selectedAgent} onOpenChange={() => setSelectedAgent(null)}>
           <DialogContent
