@@ -648,12 +648,12 @@ export default function TemplatesPage() {
     <AppLayout>
       <>
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-white px-6 py-4">
+        <div className="sticky top-0 z-10 bg-white px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-[#ee3224]" />
-                <h1 className="text-xl font-semibold text-foreground">Templates</h1>
+                <h1 className="text-2xl font-semibold text-foreground">Templates</h1>
               </div>
               <p className="mt-1 text-sm text-[#6B7280]">
                 Browse ready-made workflows to accelerate your agent development.
