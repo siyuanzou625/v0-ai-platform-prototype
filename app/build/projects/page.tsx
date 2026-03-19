@@ -657,10 +657,7 @@ export default function ProjectsPage() {
               <div className="space-y-6">
                 {/* Summary Metrics */}
                 <div className="grid grid-cols-4 gap-4">
-                  <Card 
-                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
-                    onClick={() => handleMetricClick("all")}
-                  >
+                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}>
                     <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -674,7 +671,6 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p>
                     </CardContent>
                   </Card>
-                  {/* In Progress Card */}
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
                     <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
@@ -689,7 +685,6 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-amber-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
-                  {/* Ready to Deploy Card */}
                   <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}>
                     <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
@@ -704,10 +699,7 @@ export default function ProjectsPage() {
                       <p className="mt-2 text-xs text-emerald-600 hover:underline">View ready projects</p>
                     </CardContent>
                   </Card>
-                  <Card 
-                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
-                    onClick={() => handleMetricClick("blocked")}
-                  >
+                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("blocked")}>
                     <CardContent className="py-2 px-4">
                       <div className="flex items-center justify-between">
                         <div>
