@@ -529,7 +529,7 @@ export default function MyAppsPage() {
               )}
             </div>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground truncate">{app.tagline}</p>
+          <p className="mt-3 text-sm text-muted-foreground truncate">{app.tagline}</p>
           
           <div className="mt-3 flex items-center justify-between">
             <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(app.source)}`}>
@@ -742,7 +742,7 @@ export default function MyAppsPage() {
                             key={recent.appId}
                             className="card-interactive group flex-shrink-0 w-[260px] border border-[#E5E7EB] bg-white shadow-sm"
                           >
-                            <CardContent className="p-3">
+                            <CardContent className="p-4">
                               <div className="flex items-center gap-3">
                                 <div className="flex h-9 w-9 items-center justify-center rounded bg-[#ee3224]/10">
                                   <IconComponent className="h-4 w-4 text-[#ee3224]" />
@@ -752,10 +752,10 @@ export default function MyAppsPage() {
                                   <p className="text-xs text-muted-foreground">{recent.lastUsed}</p>
                                 </div>
                               </div>
-                              <p className="mt-2 text-sm text-muted-foreground truncate">{recent.taskInProgress}</p>
+                              <p className="mt-3 text-sm text-muted-foreground truncate">{recent.taskInProgress}</p>
                               {recent.progress !== null && recent.progress < 100 && (
-                                <div className="mt-2 flex items-center gap-2">
-                                  <Progress value={recent.progress} className="h-1 flex-1" />
+                                <div className="mt-3 flex items-center gap-2">
+                                  <Progress value={recent.progress} className="h-1.5 flex-1" />
                                   <span className="text-xs font-medium text-muted-foreground w-8 text-right">{recent.progress}%</span>
                                 </div>
                               )}

@@ -846,7 +846,7 @@ export default function ExploreAgentsPage() {
                       setActiveTab("overview")
                     }}
                   >
-                    <CardHeader className="p-4 pb-2">
+                    <CardHeader className="p-4 pb-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded bg-primary/10 flex items-center justify-center">
@@ -860,9 +860,9 @@ export default function ExploreAgentsPage() {
                           {agent.price}
                         </Badge>
                       </div>
-                      <CardDescription className="text-xs mt-1 line-clamp-2">{agent.description}</CardDescription>
+                      <CardDescription className="text-xs mt-3 line-clamp-2">{agent.description}</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0 space-y-2">
+                    <CardContent className="p-4 pt-0 space-y-3">
                       {/* Creator row with follow button */}
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">

@@ -412,7 +412,7 @@ export default function ConnectionsPage() {
                       <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-2 mt-3">
                     <Badge variant="outline" className="text-xs">{getTypeBadge(conn.type)}</Badge>
                     <TooltipProvider>
                       <Tooltip>
@@ -428,7 +428,7 @@ export default function ConnectionsPage() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-3">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {conn.lastUsed}

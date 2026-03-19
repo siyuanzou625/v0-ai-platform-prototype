@@ -726,7 +726,7 @@ export default function PluginsPage() {
 
               return (
                 <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
-                  <CardHeader className="p-4 pb-2">
+                  <CardHeader className="p-4 pb-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded bg-primary/10">
@@ -740,7 +740,7 @@ export default function PluginsPage() {
                         <Badge variant="secondary">Available</Badge>
                       )}
                     </div>
-                    <CardDescription className="text-sm mt-1">{plugin.description}</CardDescription>
+                    <CardDescription className="text-sm mt-3">{plugin.description}</CardDescription>
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
                     {/* Creator info with Follow button */}

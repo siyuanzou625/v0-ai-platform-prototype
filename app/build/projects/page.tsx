@@ -780,10 +780,10 @@ export default function ProjectsPage() {
                           className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <CardContent className="p-3">
+                          <CardContent className="p-4">
                             <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                <div className={`flex h-8 w-8 items-center justify-center rounded ${
+                              <div className="flex items-center gap-3">
+                                <div className={`flex h-9 w-9 items-center justify-center rounded ${
                                   project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
                                 }`}>
                                   {project.mode === "workflow" ? (
@@ -801,7 +801,7 @@ export default function ProjectsPage() {
                               </div>
                               {getStatusBadge(project.status)}
                             </div>
-                            <div className="mt-2 flex items-center gap-2">
+                            <div className="mt-3 flex items-center gap-2">
                               <Progress 
                                 value={project.progress} 
                                 className={`h-1.5 flex-1 ${
@@ -813,7 +813,7 @@ export default function ProjectsPage() {
                               />
                               <span className="text-xs font-medium text-muted-foreground w-8 text-right">{project.progress}%</span>
                             </div>
-                            <div className="mt-2 flex items-center justify-between">
+                            <div className="mt-3 flex items-center justify-between">
                               <div>
                                 <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
                                 <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
@@ -911,7 +911,7 @@ export default function ProjectsPage() {
                         </div>
                       </div>
 
-                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+                      <p className="mt-3 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
                         {project.description}
                       </p>
 
