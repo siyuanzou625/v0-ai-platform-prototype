@@ -79,52 +79,64 @@ export function AppSidebar() {
         {(() => {
           const isHomeActive = pathname === "/"
           return (
-            <Link
-              href="/"
-              className={cn(
-                "mb-4 flex items-center gap-2 rounded px-3 py-2 text-xs font-medium uppercase tracking-wider transition-colors",
-                isHomeActive
-                  ? "bg-[#ee3224] text-white"
-                  : "text-[#ee3224] hover:bg-[#F5F7FA]"
-              )}
-            >
-              <Home className="h-4 w-4" />
-              HOME
-            </Link>
+            <>
+              <Link
+                href="/"
+                className={cn(
+                  "mb-4 flex items-center gap-2 rounded px-3 py-2 text-sm font-semibold uppercase tracking-wider transition-colors",
+                  isHomeActive
+                    ? "bg-[#ee3224] text-white"
+                    : "text-[#ee3224] hover:bg-[#F5F7FA]"
+                )}
+              >
+                <Home className="h-5 w-5" />
+                HOME
+              </Link>
+              <div className="mb-6 flex justify-center">
+                <div className="h-px w-4/5 bg-[#E5E7EB]" />
+              </div>
+            </>
           )
         })()}
         
-        {navigation.map((section) => {
+        {navigation.map((section, index) => {
           const isSectionActive = section.items.some(
             (item) => pathname === item.href || pathname.startsWith(item.href + "/")
           )
           return (
-            <div key={section.title} className="mb-6">
-              <h3 className="mb-2 flex items-center gap-2 px-3 text-xs font-medium uppercase tracking-wider text-[#ee3224]">
-                <section.icon className="h-4 w-4" />
-                {section.title}
-              </h3>
-              <ul className="space-y-1">
-                {section.items.map((item) => {
-                  const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
-                  return (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className={cn(
-                          "flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
-                          isActive
-                            ? "bg-[#ee3224] text-white"
-                            : "text-[#333] hover:bg-[#F5F7FA]"
-                        )}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        {item.name}
-                      </Link>
-                    </li>
-                  )
-                })}
-              </ul>
+            <div key={section.title}>
+              <div className="mb-8">
+                <h3 className="mb-2 flex items-center gap-2 px-3 text-sm font-semibold uppercase tracking-wider text-[#ee3224]">
+                  <section.icon className="h-5 w-5" />
+                  {section.title}
+                </h3>
+                <ul className="space-y-1">
+                  {section.items.map((item) => {
+                    const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+                    return (
+                      <li key={item.name}>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            "flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-colors",
+                            isActive
+                              ? "bg-[#ee3224] text-white"
+                              : "text-[#333] hover:bg-[#F5F7FA]"
+                          )}
+                        >
+                          <item.icon className="h-4 w-4" />
+                          {item.name}
+                        </Link>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+              {index < navigation.length - 1 && (
+                <div className="mb-6 flex justify-center">
+                  <div className="h-px w-4/5 bg-[#E5E7EB]" />
+                </div>
+              )}
             </div>
           )
         })}
