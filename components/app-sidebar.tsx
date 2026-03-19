@@ -34,20 +34,20 @@ const navigation = [
     ],
   },
   {
-    title: "Use",
-    icon: Rocket,
-    items: [
-      { name: "Installed Apps", href: "/use/installed-apps", icon: LayoutGrid },
-      { name: "Cross Devices", href: "/use/cross-devices", icon: RefreshCw },
-    ],
-  },
-  {
     title: "Explore",
     icon: Compass,
     items: [
       { name: "Agents", href: "/explore/agents", icon: Bot },
       { name: "Templates", href: "/explore/templates", icon: FileText },
       { name: "Plugins", href: "/explore/plugins", icon: Puzzle },
+    ],
+  },
+  {
+    title: "Use",
+    icon: Rocket,
+    items: [
+      { name: "Installed Apps", href: "/use/installed-apps", icon: LayoutGrid },
+      { name: "Cross Devices", href: "/use/cross-devices", icon: RefreshCw },
     ],
   },
   {
