@@ -253,10 +253,6 @@ const getDueDateColor = (status: string) => {
   }
 }
 
-/**
- * ProjectsPage Component
- * Note: Uses AvatarFallback only - owner data is object with .initials and .name
- */
 export default function ProjectsPage() {
   const router = useRouter()
   
@@ -512,7 +508,7 @@ export default function ProjectsPage() {
                             }`}
                           >
                             <IconComponent className={`h-5 w-5 mb-2 ${selectedTemplate === template.id ? "text-[#ee3224]" : "text-[#6B7280]"}`} />
-                            <span className="text-sm font-medium text-[#1F2937]">{template.name}</span>
+                            <span className={`text-sm font-medium ${selectedTemplate === template.id ? "text-[#ee3224]" : "text-[#1F2937]"}`}>{template.name}</span>
                             <span className="text-xs text-[#6B7280] mt-0.5">{template.description}</span>
                           </button>
                         )
@@ -522,636 +518,462 @@ export default function ProjectsPage() {
                 </div>
                 
                 {/* Modal Footer */}
-                <div className="px-8 py-4 bg-[#F9FAFB] border-t border-[#E5E7EB]">
-                  <Button
-                    className="w-full h-12 bg-[#ee3224] hover:bg-[#cc2a1e] text-white font-medium"
+                <div className="flex justify-end gap-3 px-8 py-4 bg-[#F5F7FA] border-t border-[#E5E7EB]">
+                  <Button variant="outline" onClick={() => setShowNewProject(false)}>
+                    Cancel
+                  </Button>
+                  <Button 
+                    className="bg-[#ee3224] hover:bg-[#cc2a1e]"
                     onClick={handleCreateProject}
-                    disabled={!newProjectDescription.trim()}
+                    disabled={!newProjectDescription.trim() && !selectedTemplate}
                   >
                     <Sparkles className="h-4 w-4 mr-2" />
-                    Build My Agent
+                    Start Building
                   </Button>
-                  <div className="flex items-center justify-between mt-2">
-                    <button
-                      onClick={() => {
-                        setNewProjectMode("workflow")
-                        setShowNewProject(false)
-                        router.push("/build/workspace?id=new&mode=workflow")
-                      }}
-                      className="text-sm text-[#6B7280] hover:text-[#ee3224] transition-colors"
-                    >
-                      Skip to Visual Editor
-                    </button>
-                    <span className="text-xs text-[#9CA3AF]">
-                      You can always switch to visual editor or code later.
-                    </span>
-                  </div>
                 </div>
               </DialogContent>
             </Dialog>
           </div>
           
-          {/* Search, Filters, and View Toggle */}
-          <div className="flex flex-wrap items-center gap-3 mt-4">
-              <div className="relative flex-1 min-w-64">
+          {/* Filters Row */}
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center gap-3">
+              <div className="relative w-64">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Search projects by name or owner..."
-                  className="pl-9 bg-white"
+                  placeholder="Search projects..."
+                  className="pl-9"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <Select value={environmentFilter} onValueChange={(v) => setEnvironmentFilter(v as Environment)}>
-                <SelectTrigger className="w-40 bg-white">
+                <SelectTrigger className="w-36">
                   <SelectValue placeholder="Environment" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Environments</SelectItem>
-                  <SelectItem value="development">Development</SelectItem>
-                  <SelectItem value="staging">Staging</SelectItem>
                   <SelectItem value="production">Production</SelectItem>
+                  <SelectItem value="staging">Staging</SelectItem>
+                  <SelectItem value="development">Development</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as Status)}>
-                <SelectTrigger className="w-40 bg-white">
+                <SelectTrigger className="w-32">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="building">Building</SelectItem>
-                  <SelectItem value="ready">Ready to Deploy</SelectItem>
+                  <SelectItem value="ready">Ready</SelectItem>
                   <SelectItem value="deployed">Deployed</SelectItem>
                   <SelectItem value="blocked">Blocked</SelectItem>
                 </SelectContent>
               </Select>
               {(searchQuery || environmentFilter !== "all" || statusFilter !== "all") && (
                 <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  Clear filters
+                  Clear Filters
                 </Button>
               )}
-              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 ml-auto">
-                <button
-                  onClick={() => handleViewChange("dashboard")}
-                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                    viewMode === "dashboard"
-                      ? "bg-white text-[#333] shadow-sm"
-                      : "text-[#6B7280] hover:text-[#333]"
-                  }`}
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => handleViewChange("grid")}
-                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                    viewMode === "grid"
-                      ? "bg-white text-[#333] shadow-sm"
-                      : "text-[#6B7280] hover:text-[#333]"
-                  }`}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                  Grid
-                </button>
-                <button
-                  onClick={() => handleViewChange("list")}
-                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                    viewMode === "list"
-                      ? "bg-white text-[#333] shadow-sm"
-                      : "text-[#6B7280] hover:text-[#333]"
-                  }`}
-                >
-                  <List className="h-4 w-4" />
-                  List
-                </button>
-              </div>
             </div>
+            <div className="flex items-center gap-1 border rounded-md p-1">
+              <Button
+                variant={viewMode === "dashboard" ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 px-3"
+                onClick={() => handleViewChange("dashboard")}
+              >
+                <LayoutDashboard className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "grid" ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 px-3"
+                onClick={() => handleViewChange("grid")}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 px-3"
+                onClick={() => handleViewChange("list")}
+              >
+                <List className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
 
-        {/* Main Content */}
-        <ScrollArea className="flex-1">
-          <div className="px-8 py-6 space-y-6">
-            {/* Dashboard View - Summary Cards */}
-            {viewMode === "dashboard" && (
-              <div className="space-y-6">
-                {/* Metric Summary Cards */}
-                <div className="grid grid-cols-4 gap-6">
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("all")}>
-                    <CardContent className="py-3 px-5">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <p className="text-sm text-muted-foreground">Total Projects</p>
-                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{totalProjects}</p>
-                        </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ee3224]/10">
-                          <Briefcase className="h-6 w-6 text-[#ee3224]" />
-                        </div>
+        {/* Content Area */}
+        <div className="p-8 bg-[#F5F7FA] min-h-[calc(100vh-200px)]">
+          {viewMode === "dashboard" && (
+            <div className="space-y-6">
+              {/* Metrics Row */}
+              <div className="grid grid-cols-4 gap-4">
+                <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleMetricClick("all")}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Total Projects</p>
+                        <p className="text-2xl font-semibold">{totalProjects}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("building")}>
-                    <CardContent className="py-3 px-5">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <p className="text-sm text-muted-foreground">In Progress</p>
-                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{inProgressCount}</p>
-                        </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
-                          <PlayCircle className="h-6 w-6 text-amber-500" />
-                        </div>
+                      <Folder className="h-8 w-8 text-muted-foreground/50" />
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleMetricClick("building")}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">In Progress</p>
+                        <p className="text-2xl font-semibold text-amber-600">{inProgressCount}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("ready")}>
-                    <CardContent className="py-3 px-5">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <p className="text-sm text-muted-foreground">Ready to Deploy</p>
-                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{readyCount}</p>
-                        </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
-                          <CheckCircle2 className="h-6 w-6 text-emerald-500" />
-                        </div>
+                      <PlayCircle className="h-8 w-8 text-amber-600/50" />
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleMetricClick("ready")}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Ready to Deploy</p>
+                        <p className="text-2xl font-semibold text-emerald-600">{readyCount}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => handleMetricClick("blocked")}>
-                    <CardContent className="py-3 px-5">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <p className="text-sm text-muted-foreground">Blocked</p>
-                          <p className="card-title-text text-3xl font-bold text-foreground transition-colors duration-150">{blockedCount}</p>
-                        </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5F7FA]">
-                          <AlertCircle className="h-6 w-6 text-[#ee3224]" />
-                        </div>
+                      <CheckCircle2 className="h-8 w-8 text-emerald-600/50" />
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleMetricClick("blocked")}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Blocked</p>
+                        <p className="text-2xl font-semibold text-red-600">{blockedCount}</p>
                       </div>
+                      <AlertCircle className="h-8 w-8 text-red-600/50" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Dashboard Content */}
+              <div className="grid grid-cols-3 gap-6">
+                {/* Recent Projects */}
+                <div className="col-span-2">
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base font-medium">Recent Projects</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {filteredProjects.slice(0, 5).map((project) => (
+                        <div
+                          key={project.id}
+                          className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 cursor-pointer transition-colors group"
+                          onClick={() => handleOpenProject(project.id)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
+                              project.mode === "workflow" ? "bg-violet-100" : "bg-blue-100"
+                            }`}>
+                              {project.mode === "workflow" ? (
+                                <Workflow className="h-5 w-5 text-violet-600" />
+                              ) : (
+                                <Code2 className="h-5 w-5 text-blue-600" />
+                              )}
+                            </div>
+                            <div>
+                              <p className="font-medium group-hover:text-[#ee3224] transition-colors">{project.name}</p>
+                              <p className="text-xs text-muted-foreground">{project.lastActivity}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            {getStatusBadge(project.status)}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem>
+                                  <Pencil className="mr-2 h-4 w-4" /> Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <Share2 className="mr-2 h-4 w-4" /> Share
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-destructive">
+                                  <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </div>
+                      ))}
                     </CardContent>
                   </Card>
                 </div>
 
-                {/* Two Column Layout: Activity + Projects */}
-                <div className="grid grid-cols-3 gap-4">
-                  {/* Team Activity Timeline */}
-                  <Card className="col-span-1 border border-[#E5E7EB]">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-semibold">Recent Activity</CardTitle>
-                      <p className="text-xs text-muted-foreground">Last 7 days</p>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      <div className="divide-y divide-border">
+                {/* Activity Timeline */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-medium">Activity</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ScrollArea className="h-[300px] pr-4">
+                      <div className="space-y-4">
                         {activityTimeline.map((activity) => (
-                          <div 
-                            key={activity.id} 
-                            className="flex items-start gap-3 px-4 py-3 hover:bg-[#F5F7FA] cursor-pointer transition-colors"
-                            onClick={() => handleOpenProject(activity.projectId)}
-                          >
-                            <Avatar className={`h-8 w-8 ${activity.isCurrentUser ? "ring-2 ring-[#ee3224]" : ""}`}>
-                              <AvatarFallback className="text-xs bg-muted">{activity.initials}</AvatarFallback>
+                          <div key={activity.id} className="flex gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback className={`text-xs ${activity.isCurrentUser ? "bg-[#ee3224]/10 text-[#ee3224]" : "bg-muted"}`}>
+                                {activity.initials}
+                              </AvatarFallback>
                             </Avatar>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm">
+                            <div className="flex-1 text-sm">
+                              <p>
                                 <span className="font-medium">{activity.user}</span>{" "}
                                 <span className="text-muted-foreground">{activity.action}</span>{" "}
-                                <span className="font-medium text-[#ee3224]">{activity.project}</span>
+                                <span className="font-medium text-[#ee3224] cursor-pointer hover:underline" onClick={() => handleOpenProject(activity.projectId)}>
+                                  {activity.project}
+                                </span>
                               </p>
-                              <p className="text-xs text-muted-foreground mt-0.5">{activity.timestamp}</p>
+                              <p className="text-xs text-muted-foreground">{activity.timestamp}</p>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <div className="p-4 border-t border-border">
-                        <Button variant="ghost" className="w-full text-sm text-muted-foreground">
-                          View Full Activity Log
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Project Progress Grid */}
-                  <div className="col-span-2">
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-base font-semibold text-foreground">Project Progress</h2>
-                      <Button variant="ghost" size="sm" onClick={() => handleViewChange("grid")}>
-                        View all
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      {filteredProjects.slice(0, 6).map((project) => (
-                        <Card 
-                          key={project.id}
-                          className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
-                          onClick={() => handleOpenProject(project.id)}
-                        >
-                          <CardContent className="py-3 px-5">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
-                                  {project.mode === "workflow" ? (
-                                    <Workflow className="h-4 w-4 text-slate-600" />
-                                  ) : (
-                                    <Code2 className="h-4 w-4 text-slate-600" />
-                                  )}
-                                </div>
-                                <div className="space-y-1">
-                                  <h3 className="card-title-text text-sm font-semibold text-foreground transition-colors duration-150 line-clamp-1">
-                                    {project.name}
-                                  </h3>
-                                  <p className="text-xs text-muted-foreground">{project.owner.name}</p>
-                                </div>
-                              </div>
-                              {getStatusBadge(project.status)}
-                            </div>
-                            <div className="mt-3 flex items-center gap-2">
-                              <Progress 
-                                value={project.progress} 
-                                className={`h-1.5 flex-1 ${
-                                  project.status === "deployed" ? "[&>div]:bg-emerald-500" :
-                                  project.status === "ready" ? "[&>div]:bg-emerald-500" :
-                                  project.status === "building" ? "[&>div]:bg-amber-500" :
-                                  project.status === "blocked" ? "[&>div]:bg-[#ee3224]" : ""
-                                }`}
-                              />
-                              <span className="text-xs font-medium text-muted-foreground w-8 text-right">{project.progress}%</span>
-                            </div>
-                            <div className="mt-3 space-y-1">
-                              <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
-                              <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
-                                {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
-                                Due {project.dueDate}
-                              </p>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Grid View */}
-            {viewMode === "grid" && (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {filteredProjects.map((project) => (
-                  <Card
-                    key={project.id}
-                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
-                    onClick={() => handleOpenProject(project.id)}
-                  >
-                    <CardContent className="py-3 px-5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
-                            {project.mode === "workflow" ? (
-                              <Workflow className="h-4 w-4 text-slate-600" />
-                            ) : (
-                              <Code2 className="h-4 w-4 text-slate-600" />
-                            )}
-                          </div>
-                          <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
-                            {project.name}
-                          </h3>
+          {viewMode === "grid" && (
+            <div className="grid grid-cols-3 gap-4">
+              {filteredProjects.map((project) => (
+                <Card 
+                  key={project.id} 
+                  className="cursor-pointer hover:shadow-lg hover:-translate-y-0.5 hover:border-[#ee3224] transition-all duration-200 group"
+                  onClick={() => handleOpenProject(project.id)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
+                        project.mode === "workflow" ? "bg-violet-100" : "bg-blue-100"
+                      }`}>
+                        {project.mode === "workflow" ? (
+                          <Workflow className="h-5 w-5 text-violet-600" />
+                        ) : (
+                          <Code2 className="h-5 w-5 text-blue-600" />
+                        )}
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem><Pencil className="mr-2 h-4 w-4" /> Edit</DropdownMenuItem>
+                          <DropdownMenuItem><Share2 className="mr-2 h-4 w-4" /> Share</DropdownMenuItem>
+                          <DropdownMenuItem><Rocket className="mr-2 h-4 w-4" /> Deploy</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive"><Trash2 className="mr-2 h-4 w-4" /> Delete</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                    <h3 className="font-medium mb-1 group-hover:text-[#ee3224] transition-colors">{project.name}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{project.description}</p>
+                    <div className="flex items-center gap-2 mb-3">
+                      {getStatusBadge(project.status)}
+                      {getEnvironmentBadge(project.environment)}
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Avatar className="h-5 w-5">
+                          <AvatarFallback className="text-[10px] bg-muted">{project.owner.initials}</AvatarFallback>
+                        </Avatar>
+                        <span>{project.owner.name}</span>
+                      </div>
+                      <span>{project.lastActivity}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {viewMode === "list" && (
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">
+                        <Checkbox
+                          checked={selectedProjects.length === paginatedProjects.length && paginatedProjects.length > 0}
+                          onCheckedChange={handleSelectAll}
+                        />
+                      </TableHead>
+                      <TableHead className="cursor-pointer" onClick={() => handleSort("name")}>
+                        <div className="flex items-center">
+                          Project <SortIcon field="name" />
                         </div>
-                        <div className="flex items-center gap-2">
-                          {getStatusBadge(project.status)}
+                      </TableHead>
+                      <TableHead className="cursor-pointer" onClick={() => handleSort("owner")}>
+                        <div className="flex items-center">
+                          Owner <SortIcon field="owner" />
+                        </div>
+                      </TableHead>
+                      <TableHead className="cursor-pointer" onClick={() => handleSort("environment")}>
+                        <div className="flex items-center">
+                          Environment <SortIcon field="environment" />
+                        </div>
+                      </TableHead>
+                      <TableHead className="cursor-pointer" onClick={() => handleSort("progress")}>
+                        <div className="flex items-center">
+                          Progress <SortIcon field="progress" />
+                        </div>
+                      </TableHead>
+                      <TableHead className="cursor-pointer" onClick={() => handleSort("status")}>
+                        <div className="flex items-center">
+                          Status <SortIcon field="status" />
+                        </div>
+                      </TableHead>
+                      <TableHead className="cursor-pointer" onClick={() => handleSort("dueDate")}>
+                        <div className="flex items-center">
+                          Due Date <SortIcon field="dueDate" />
+                        </div>
+                      </TableHead>
+                      <TableHead className="cursor-pointer" onClick={() => handleSort("lastActivity")}>
+                        <div className="flex items-center">
+                          Last Activity <SortIcon field="lastActivity" />
+                        </div>
+                      </TableHead>
+                      <TableHead className="w-12"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedProjects.map((project) => (
+                      <TableRow 
+                        key={project.id} 
+                        className="cursor-pointer group"
+                        onClick={() => handleOpenProject(project.id)}
+                      >
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <Checkbox
+                            checked={selectedProjects.includes(project.id)}
+                            onCheckedChange={() => handleSelectProject(project.id)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${
+                              project.mode === "workflow" ? "bg-violet-100" : "bg-blue-100"
+                            }`}>
+                              {project.mode === "workflow" ? (
+                                <Workflow className="h-4 w-4 text-violet-600" />
+                              ) : (
+                                <Code2 className="h-4 w-4 text-blue-600" />
+                              )}
+                            </div>
+                            <div>
+                              <p className="font-medium group-hover:text-[#ee3224] transition-colors">{project.name}</p>
+                              <p className="text-xs text-muted-foreground line-clamp-1">{project.description}</p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-6 w-6">
+                              <AvatarFallback className="text-xs bg-muted">{project.owner.initials}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm">{project.owner.name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{getEnvironmentBadge(project.environment)}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 w-32">
+                            <Progress value={project.progress} className="h-1.5 flex-1" />
+                            <span className="text-xs font-medium w-8">{project.progress}%</span>
+                          </div>
+                        </TableCell>
+                        <TableCell onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenuTrigger asChild>
+                              <div className="cursor-pointer">
+                                {getStatusBadge(project.status)}
+                              </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem>Building</DropdownMenuItem>
+                              <DropdownMenuItem>Ready to Deploy</DropdownMenuItem>
+                              <DropdownMenuItem>Deployed</DropdownMenuItem>
+                              <DropdownMenuItem>Blocked</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                        <TableCell>
+                          <span className={getDueDateColor(project.dueDateStatus)}>
+                            {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
+                            {project.dueDate}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground text-sm">{project.lastActivity}</TableCell>
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="icon" className="h-8 w-8">
                                 <MoreHorizontal className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
-                                <Pencil className="mr-2 h-4 w-4" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Share2 className="mr-2 h-4 w-4" />
-                                Share
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Rocket className="mr-2 h-4 w-4" />
-                                Deploy
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Settings className="mr-2 h-4 w-4" />
-                                Settings
-                              </DropdownMenuItem>
+                              <DropdownMenuItem><Pencil className="mr-2 h-4 w-4" /> Edit</DropdownMenuItem>
+                              <DropdownMenuItem><Share2 className="mr-2 h-4 w-4" /> Share</DropdownMenuItem>
+                              <DropdownMenuItem><Rocket className="mr-2 h-4 w-4" /> Deploy</DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-destructive">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-destructive"><Trash2 className="mr-2 h-4 w-4" /> Delete</DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
-                        </div>
-                      </div>
-
-                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
-                        {project.description}
-                      </p>
-
-                      {/* Progress */}
-                      <div className="mt-2 flex items-center gap-2">
-                        <Progress 
-                          value={project.progress} 
-                          className={`h-1.5 flex-1 ${
-                            project.status === "deployed" ? "[&>div]:bg-emerald-500" :
-                            project.status === "ready" ? "[&>div]:bg-emerald-500" :
-                            project.status === "building" ? "[&>div]:bg-amber-500" :
-                            project.status === "blocked" ? "[&>div]:bg-[#ee3224]" : ""
-                          }`}
-                        />
-                        <span className="text-xs font-medium text-muted-foreground w-8 text-right">{project.progress}%</span>
-                      </div>
-
-                      {/* Owner and Team */}
-                      <div className="mt-2 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <AvatarFallback className="text-xs bg-muted">{project.owner.initials}</AvatarFallback>
-                          </Avatar>
-                          <span className="text-xs text-muted-foreground">{project.owner.name}</span>
-                        </div>
-                        <div className="flex items-center -space-x-2">
-                          {project.members.slice(0, 3).map((member, idx) => (
-                            <Avatar key={idx} className="h-6 w-6 border-2 border-white">
-                              <AvatarFallback className="text-[10px] bg-muted">{member.initials}</AvatarFallback>
-                            </Avatar>
-                          ))}
-                          {project.members.length > 3 && (
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-muted text-[10px] font-medium">
-                              +{project.members.length - 3}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Metadata */}
-                      <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                        <div className="flex items-center gap-3">
-                          <span>{project.knowledgeBases} KB</span>
-                          <span>{project.connections} connections</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {project.lastActivity}
-                        </div>
-                      </div>
-
-                      {/* Blocked Reason */}
-                      {project.blockedReason && (
-                        <div className="mt-2 rounded bg-[#F5F7FA] px-2 py-1.5 text-xs text-[#ee3224]">
-                          {project.blockedReason}
-                        </div>
-                      )}
-
-
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* List View */}
-            {viewMode === "list" && (
-              <div className="space-y-4">
-                {/* Bulk Actions */}
-                {selectedProjects.length > 0 && (
-                  <div className="flex items-center gap-3 rounded-lg bg-[#ee3224]/5 border border-[#ee3224]/20 p-3">
-                    <span className="text-sm font-medium">{selectedProjects.length} selected</span>
-                    <Button variant="outline" size="sm">
-                      <Share2 className="mr-2 h-3 w-3" />
-                      Share
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Rocket className="mr-2 h-3 w-3" />
-                      Deploy
-                    </Button>
-                    <Button variant="outline" size="sm" className="text-destructive">
-                      <Trash2 className="mr-2 h-3 w-3" />
-                      Delete
-                    </Button>
-                  </div>
-                )}
-
-                {/* Table */}
-                <Card className="border border-[#E5E7EB]">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="h-12">
-                        <TableHead className="w-14 pl-4">
-                          <Checkbox 
-                            checked={selectedProjects.length === paginatedProjects.length && paginatedProjects.length > 0}
-                            onCheckedChange={handleSelectAll}
-                          />
-                        </TableHead>
-                        <TableHead className="cursor-pointer" onClick={() => handleSort("name")}>
-                          <div className="flex items-center">
-                            Project Name
-                            <SortIcon field="name" />
-                          </div>
-                        </TableHead>
-                        <TableHead className="cursor-pointer" onClick={() => handleSort("owner")}>
-                          <div className="flex items-center">
-                            Owner
-                            <SortIcon field="owner" />
-                          </div>
-                        </TableHead>
-                        <TableHead className="cursor-pointer" onClick={() => handleSort("environment")}>
-                          <div className="flex items-center">
-                            Environment
-                            <SortIcon field="environment" />
-                          </div>
-                        </TableHead>
-                        <TableHead className="cursor-pointer" onClick={() => handleSort("progress")}>
-                          <div className="flex items-center">
-                            Progress
-                            <SortIcon field="progress" />
-                          </div>
-                        </TableHead>
-                        <TableHead className="cursor-pointer" onClick={() => handleSort("status")}>
-                          <div className="flex items-center">
-                            Status
-                            <SortIcon field="status" />
-                          </div>
-                        </TableHead>
-                        <TableHead className="cursor-pointer" onClick={() => handleSort("dueDate")}>
-                          <div className="flex items-center">
-                            Due Date
-                            <SortIcon field="dueDate" />
-                          </div>
-                        </TableHead>
-                        <TableHead className="cursor-pointer" onClick={() => handleSort("lastActivity")}>
-                          <div className="flex items-center">
-                            Last Activity
-                            <SortIcon field="lastActivity" />
-                          </div>
-                        </TableHead>
-                        <TableHead className="w-12"></TableHead>
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {paginatedProjects.map((project) => (
-                        <TableRow 
-                          key={project.id} 
-                          className="cursor-pointer hover:bg-[#F5F7FA] group h-14"
-                          onClick={() => handleOpenProject(project.id)}
-                        >
-                          <TableCell className="pl-4 pr-2" onClick={(e) => e.stopPropagation()}>
-                            <Checkbox 
-                              checked={selectedProjects.includes(project.id)}
-                              onCheckedChange={() => handleSelectProject(project.id)}
-                            />
-                          </TableCell>
-                          <TableCell className="py-4">
-                            <div className="flex items-center gap-3">
-                              <div className={`flex h-8 w-8 items-center justify-center rounded ${
-                                project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
-                              }`}>
-                                {project.mode === "workflow" ? (
-                                  <Workflow className="h-4 w-4 text-[#ee3224]" />
-                                ) : (
-                                  <Code2 className="h-4 w-4 text-blue-500" />
-                                )}
-                              </div>
-                              <div>
-                                <p className="font-medium text-foreground group-hover:text-[#ee3224] transition-colors">
-                                  {project.name}
-                                </p>
-                                <p className="text-xs text-muted-foreground line-clamp-1">
-                                  {project.description}
-                                </p>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Avatar className="h-6 w-6">
-                                <AvatarFallback className="text-xs bg-muted">{project.owner.initials}</AvatarFallback>
-                              </Avatar>
-                              <span className="text-sm">{project.owner.name}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>{getEnvironmentBadge(project.environment)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2 w-32">
-                              <Progress value={project.progress} className="h-1.5 flex-1" />
-                              <span className="text-xs font-medium w-8">{project.progress}%</span>
-                            </div>
-                          </TableCell>
-                          <TableCell onClick={(e) => e.stopPropagation()}>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <div className="cursor-pointer">
-                                  {getStatusBadge(project.status)}
-                                </div>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent>
-                                <DropdownMenuItem>Building</DropdownMenuItem>
-                                <DropdownMenuItem>Ready to Deploy</DropdownMenuItem>
-                                <DropdownMenuItem>Deployed</DropdownMenuItem>
-                                <DropdownMenuItem>Blocked</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                          <TableCell>
-                            <span className={getDueDateColor(project.dueDateStatus)}>
-                              {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
-                              {project.dueDate}
-                            </span>
-</TableCell>
-                          <TableCell onClick={(e) => e.stopPropagation()}>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 ">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => handleOpenProject(project.id)}>
-                                  <ExternalLink className="mr-2 h-4 w-4" />
-                                  Open
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Pencil className="mr-2 h-4 w-4" />
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Share2 className="mr-2 h-4 w-4" />
-                                  Share
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Rocket className="mr-2 h-4 w-4" />
-                                  Deploy
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-destructive">
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-
-                  {/* Pagination + Export */}
-                  <div className="flex items-center justify-between border-t border-border p-4">
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Download className="h-4 w-4" />
-                      Export CSV
-                    </Button>
+                    ))}
+                  </TableBody>
+                </Table>
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between px-4 py-3 border-t">
+                    <p className="text-sm text-muted-foreground">
+                      Showing {(currentPage - 1) * projectsPerPage + 1} to {Math.min(currentPage * projectsPerPage, sortedProjects.length)} of {sortedProjects.length} projects
+                    </p>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">
-                        Page {currentPage} of {totalPages}
-                      </span>
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-8 w-8"
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                         disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(currentPage - 1)}
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-8 w-8"
+                      <span className="text-sm">Page {currentPage} of {totalPages}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                         disabled={currentPage === totalPages}
-                        onClick={() => setCurrentPage(currentPage + 1)}
                       >
                         <ChevronRight className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
-                </Card>
-              </div>
-            )}
-
-            {/* Empty State */}
-            {filteredProjects.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-16">
-                <FolderOpen className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium text-foreground">No projects found</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Try adjusting your filters or create a new project.
-                </p>
-                <Button 
-                  className="mt-4 gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]"
-                  onClick={() => setShowNewProject(true)}
-                >
-                  <Plus className="h-4 w-4" />
-                  New Agent
-                </Button>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </>
     </AppLayout>
   )
