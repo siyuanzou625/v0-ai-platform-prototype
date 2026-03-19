@@ -198,7 +198,7 @@ const plugins = [
     authorId: "anthropic",
     category: "AI Models",
     icon: Code,
-    logo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg",
+    logo: "https://www.anthropic.com/images/icons/apple-touch-icon.png",
     downloads: "89K",
     rating: 4.8,
     installed: true,
