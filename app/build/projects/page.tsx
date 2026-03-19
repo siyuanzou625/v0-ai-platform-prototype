@@ -23,77 +23,76 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-// Project type definition
-interface ProjectData {
-  id: number
-  name: string
-  description: string
-  status: "deployed" | "building" | "ready" | "blocked"
-  environment: "production" | "staging" | "development"
-  lastActivity: string
-  ownerName: string
-  ownerInitials: string
-}
-
-// Sample projects data
-const projectsData: ProjectData[] = [
+const projectsData = [
   {
     id: 1,
     name: "Customer Support Agent",
-    description: "AI-powered customer support automation",
-    status: "deployed",
-    environment: "production",
-    lastActivity: "2 hours ago",
-    ownerName: "Zoey Davis",
-    ownerInitials: "ZD",
+    desc: "AI-powered customer support automation",
+    stat: "deployed",
+    env: "production",
+    time: "2 hours ago",
+    userName: "Zoey Davis",
+    userInit: "ZD",
   },
   {
     id: 2,
     name: "Sales Assistant Bot",
-    description: "Automated sales qualification and scheduling",
-    status: "building",
-    environment: "staging",
-    lastActivity: "5 hours ago",
-    ownerName: "Marcus Chen",
-    ownerInitials: "MC",
+    desc: "Automated sales qualification and scheduling",
+    stat: "building",
+    env: "staging",
+    time: "5 hours ago",
+    userName: "Marcus Chen",
+    userInit: "MC",
   },
   {
     id: 3,
     name: "Document Analyzer",
-    description: "Extract insights from documents using AI",
-    status: "ready",
-    environment: "development",
-    lastActivity: "1 day ago",
-    ownerName: "Sarah Kim",
-    ownerInitials: "SK",
+    desc: "Extract insights from documents using AI",
+    stat: "ready",
+    env: "development",
+    time: "1 day ago",
+    userName: "Sarah Kim",
+    userInit: "SK",
   },
   {
     id: 4,
     name: "Email Classifier",
-    description: "Automatically categorize and route emails",
-    status: "blocked",
-    environment: "staging",
-    lastActivity: "3 days ago",
-    ownerName: "James Wilson",
-    ownerInitials: "JW",
+    desc: "Automatically categorize and route emails",
+    stat: "blocked",
+    env: "staging",
+    time: "3 days ago",
+    userName: "James Wilson",
+    userInit: "JW",
   },
 ]
 
+const getStatusLabel = (s: string) => {
+  if (s === "deployed") return "Deployed"
+  if (s === "building") return "Building"
+  if (s === "ready") return "Ready"
+  return "Blocked"
+}
+
+const getEnvLabel = (e: string) => {
+  if (e === "production") return "Production"
+  if (e === "staging") return "Staging"
+  return "Development"
+}
+
 export default function ProjectsPage() {
   const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [query, setQuery] = useState("")
+  const [mode, setMode] = useState<"grid" | "list">("grid")
 
-  const filteredProjects = projectsData.filter(
-    (project) =>
-      project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const items = projectsData.filter(
+    (p) =>
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
+      p.desc.toLowerCase().includes(query.toLowerCase())
   )
 
   return (
     <AppLayout>
       <div className="flex-1 overflow-auto bg-[#F5F7FA]">
-        {/* Header Section */}
         <div className="bg-white border-b border-[#E5E7EB]">
           <div className="px-8 py-6">
             <div className="flex items-center justify-between mb-4">
@@ -108,30 +107,28 @@ export default function ProjectsPage() {
                 New Project
               </Button>
             </div>
-
-            {/* Search and View Toggle */}
             <div className="flex items-center justify-between">
               <div className="relative w-80">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search projects..."
                   className="pl-10"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                 />
               </div>
               <div className="flex items-center gap-2">
                 <Button
-                  variant={viewMode === "grid" ? "secondary" : "ghost"}
+                  variant={mode === "grid" ? "secondary" : "ghost"}
                   size="sm"
-                  onClick={() => setViewMode("grid")}
+                  onClick={() => setMode("grid")}
                 >
                   <LayoutGrid className="h-4 w-4" />
                 </Button>
                 <Button
-                  variant={viewMode === "list" ? "secondary" : "ghost"}
+                  variant={mode === "list" ? "secondary" : "ghost"}
                   size="sm"
-                  onClick={() => setViewMode("list")}
+                  onClick={() => setMode("list")}
                 >
                   <List className="h-4 w-4" />
                 </Button>
@@ -140,20 +137,19 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {/* Content */}
         <div className="px-8 py-6">
           <div
             className={
-              viewMode === "grid"
+              mode === "grid"
                 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 : "space-y-4"
             }
           >
-            {filteredProjects.map((project) => (
+            {items.map((p) => (
               <Card
-                key={project.id}
+                key={p.id}
                 className="card-interactive border border-[#E5E7EB] bg-white shadow-sm cursor-pointer"
-                onClick={() => router.push(`/build/projects/${project.id}`)}
+                onClick={() => router.push(`/build/projects/${p.id}`)}
               >
                 <CardHeader className="py-4 px-5">
                   <div className="flex items-center justify-between">
@@ -163,10 +159,10 @@ export default function ProjectsPage() {
                       </div>
                       <div>
                         <CardTitle className="card-title-text text-base">
-                          {project.name}
+                          {p.name}
                         </CardTitle>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {project.description}
+                          {p.desc}
                         </p>
                       </div>
                     </div>
@@ -190,42 +186,22 @@ export default function ProjectsPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="py-3 px-5 border-t border-[#E5E7EB]">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <StatusTag
-                        label={
-                          project.status === "deployed"
-                            ? "Deployed"
-                            : project.status === "building"
-                            ? "Building"
-                            : project.status === "ready"
-                            ? "Ready"
-                            : "Blocked"
-                        }
-                      />
-                      <StatusTag
-                        label={
-                          project.environment === "production"
-                            ? "Production"
-                            : project.environment === "staging"
-                            ? "Staging"
-                            : "Development"
-                        }
-                      />
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <StatusTag label={getStatusLabel(p.stat)} />
+                    <StatusTag label={getEnvLabel(p.env)} />
                   </div>
                   <div className="flex items-center justify-between mt-3 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <div className="h-5 w-5 rounded-full bg-[#ee3224]/10 flex items-center justify-center">
                         <span className="text-[10px] text-[#ee3224] font-medium">
-                          {project.ownerInitials}
+                          {p.userInit}
                         </span>
                       </div>
-                      <span>{project.ownerName}</span>
+                      <span>{p.userName}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      <span>{project.lastActivity}</span>
+                      <span>{p.time}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -233,7 +209,7 @@ export default function ProjectsPage() {
             ))}
           </div>
 
-          {filteredProjects.length === 0 && (
+          {items.length === 0 && (
             <div className="text-center py-12">
               <FolderOpen className="h-12 w-12 mx-auto text-muted-foreground/50" />
               <h3 className="mt-4 text-lg font-medium text-[#1F2937]">

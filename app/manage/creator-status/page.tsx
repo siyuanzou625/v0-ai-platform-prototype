@@ -284,33 +284,33 @@ export default function CreatorStatusPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {filteredBadges.slice(0, 6).map((badge) => {
                   const IconComponent = badge.icon
                   return (
                     <Tooltip key={badge.id}>
                       <TooltipTrigger asChild>
                         <Card className={`border border-[#E5E7EB] bg-white shadow-sm ${!badge.earned ? "opacity-50" : ""}`}>
-                          <CardContent className="p-4">
-                            <div className="flex items-start gap-3">
+                          <CardContent className="p-3">
+                            <div className="flex items-center gap-3">
                               <div
-                                className="flex h-12 w-12 items-center justify-center rounded-full relative"
+                                className="flex h-9 w-9 items-center justify-center rounded-full relative flex-shrink-0"
                                 style={{ backgroundColor: `${getTierColor(badge.tier)}20` }}
                               >
-                                <IconComponent className="h-6 w-6" style={{ color: getTierColor(badge.tier) }} />
+                                <IconComponent className="h-4 w-4" style={{ color: getTierColor(badge.tier) }} />
                                 {!badge.earned && (
                                   <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-full">
-                                    <Lock className="h-4 w-4 text-muted-foreground" />
+                                    <Lock className="h-3 w-3 text-muted-foreground" />
                                   </div>
                                 )}
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="font-semibold text-sm truncate">{badge.name}</p>
-                                <p className="text-xs text-muted-foreground line-clamp-2">{badge.description}</p>
+                              <p className="font-semibold text-sm flex-shrink-0">{badge.name}</p>
+                              <p className="text-xs text-muted-foreground flex-1 truncate">{badge.description}</p>
+                              <div className="flex-shrink-0 text-right">
                                 {badge.earned ? (
-                                  <p className="text-xs text-muted-foreground mt-1">Earned {badge.earnedDate}</p>
+                                  <p className="text-xs text-muted-foreground">{badge.earnedDate}</p>
                                 ) : (
-                                  <Badge variant="outline" className="mt-1 text-xs">Locked</Badge>
+                                  <Badge variant="outline" className="text-xs">Locked</Badge>
                                 )}
                               </div>
                             </div>
