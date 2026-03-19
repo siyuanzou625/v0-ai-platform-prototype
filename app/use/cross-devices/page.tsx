@@ -126,42 +126,38 @@ export default function CrossDevicePage() {
               {devices.map((device) => (
                 <div
                   key={device.id}
-                  className={`group relative rounded border p-4 transition-colors duration-150 ease-out ${
+                  className={`group relative rounded-lg border p-4 transition-colors duration-150 ease-out ${
                     device.status === "online"
-                      ? "border-[#E5E7EB] cursor-pointer hover:border-[#ee3224]"
+                      ? "border-[#E5E7EB] cursor-pointer hover:border-[#ee3224] bg-white"
                       : "border-dashed border-border bg-secondary/30"
                   }`}
                 >
                   <div className="flex flex-col items-center text-center">
-                    <div
-                      className={`mb-3 flex h-14 w-14 items-center justify-center rounded-full ${
-                        device.status === "online" ? "bg-primary/10" : "bg-secondary"
-                      }`}
-                    >
+                    <div className="mb-3">
                       <device.icon
-                        className={`h-7 w-7 ${
-                          device.status === "online" ? "text-primary" : "text-muted-foreground"
+                        className={`h-10 w-10 ${
+                          device.status === "online" ? "text-[#333]" : "text-muted-foreground/50"
                         }`}
+                        strokeWidth={1.5}
                       />
                     </div>
                     <h4 className={`font-medium text-foreground transition-colors duration-150 ${device.status === "online" ? "group-hover:text-[#ee3224]" : ""}`}>{device.name}</h4>
-                    <div className="mt-2 flex items-center gap-1">
+                    <div className="mt-2 flex items-center gap-1.5">
                       {device.status === "online" ? (
-                        <Wifi className="h-3 w-3 text-chart-3" />
+                        <>
+                          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                          <span className="text-xs text-emerald-600 font-medium capitalize">{device.status}</span>
+                        </>
                       ) : (
-                        <WifiOff className="h-3 w-3 text-muted-foreground" />
+                        <>
+                          <WifiOff className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground capitalize">{device.status}</span>
+                        </>
                       )}
-                      <span
-                        className={`text-xs ${
-                          device.status === "online" ? "text-chart-3" : "text-muted-foreground"
-                        }`}
-                      >
-                        {device.status}
-                      </span>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">{device.lastSync}</p>
                   </div>
-                  <Button variant="ghost" size="icon" className="absolute right-2 top-2 h-6 w-6">
+                  <Button variant="ghost" size="icon" className="absolute right-2 top-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Settings className="h-3 w-3" />
                   </Button>
                 </div>
