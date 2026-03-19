@@ -660,15 +660,12 @@ export default function TemplatesPage() {
               </p>
             </div>
             <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
-              <FileText className="h-4 w-4" /> Submit Template
+              <Plus className="h-4 w-4" /> New Template
             </Button>
           </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6 space-y-6">
+          
           {/* Search and Filters */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -705,7 +702,11 @@ export default function TemplatesPage() {
               <Filter className="h-4 w-4" />
             </Button>
           </div>
+        </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="p-6 space-y-6">
         {/* Template Grid */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {filteredTemplates.map((template) => {
@@ -1461,6 +1462,7 @@ export default function TemplatesPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+          </div>
         </div>
       </>
     </AppLayout>

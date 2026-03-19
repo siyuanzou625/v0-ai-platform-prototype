@@ -163,12 +163,9 @@ export default function CreatorStatusPage() {
                 How tiers work
               </Button>
             </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-6 space-y-6">
+            
             {/* View Toggle */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
               <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white p-1">
                 <button
                   onClick={() => setViewMode("personal")}
@@ -192,7 +189,11 @@ export default function CreatorStatusPage() {
                 </button>
               </div>
             </div>
+          </div>
 
+          {/* Content */}
+          <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+            <div className="p-6 space-y-6">
             {/* Tier Status Hero Card */}
           <Card className="bg-gradient-to-r from-[#F5F7FA] to-white">
             <CardContent className="p-6">
@@ -654,6 +655,7 @@ export default function CreatorStatusPage() {
               </div>
             </DialogContent>
           </Dialog>
+            </div>
           </div>
         </>
       </TooltipProvider>

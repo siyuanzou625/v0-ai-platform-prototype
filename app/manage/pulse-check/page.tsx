@@ -156,12 +156,9 @@ export default function PulsePage() {
                 Export Report
               </Button>
             </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-6 space-y-6">
+            
             {/* Filters */}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
               <Select value={selectedAsset} onValueChange={setSelectedAsset}>
                 <SelectTrigger className="w-40 bg-white">
                   <SelectValue placeholder="All Assets" />
@@ -185,7 +182,11 @@ export default function PulsePage() {
                 </SelectContent>
               </Select>
             </div>
+          </div>
 
+          {/* Content */}
+          <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+            <div className="p-6 space-y-6">
             {/* Portfolio Summary Cards */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             <Card className="border border-[#E5E7EB] bg-white shadow-sm">
@@ -786,6 +787,7 @@ export default function PulsePage() {
               </div>
             </DialogContent>
           </Dialog>
+            </div>
           </div>
         </>
       </TooltipProvider>

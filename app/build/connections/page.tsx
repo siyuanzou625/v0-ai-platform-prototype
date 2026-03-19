@@ -318,12 +318,9 @@ export default function ConnectionsPage() {
               New Connection
             </Button>
           </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6 space-y-6">
+          
           {/* Search and Filters */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -380,7 +377,11 @@ export default function ConnectionsPage() {
               </button>
             </div>
           </div>
+        </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="p-6 space-y-6">
         {/* Connection Count */}
         <div className="text-sm text-muted-foreground">
           {filteredConnections.length} connection{filteredConnections.length !== 1 ? "s" : ""}
@@ -1354,6 +1355,7 @@ export default function ConnectionsPage() {
             )}
           </DialogContent>
         </Dialog>
+          </div>
         </div>
       </>
     </AppLayout>

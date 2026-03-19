@@ -606,15 +606,11 @@ export default function MyAppsPage() {
               </p>
             </div>
           </div>
-        </div>
-        
-        {/* Main Content */}
-        <ScrollArea className="flex-1">
-          <div className="p-6">
-            {/* Controls Row: Search + Filter Chips + View Toggle */}
-            <div className="flex flex-wrap items-center gap-3 mb-6">
-              {/* Search */}
-              <div className="relative flex-1 min-w-64">
+          
+          {/* Controls Row: Search + Filter Chips + View Toggle */}
+          <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
+            {/* Search */}
+            <div className="relative flex-1 min-w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   ref={searchInputRef}
@@ -713,6 +709,11 @@ export default function MyAppsPage() {
                 </button>
               </div>
             </div>
+        </div>
+        
+        {/* Main Content */}
+        <ScrollArea className="flex-1">
+          <div className="p-6 space-y-6">
             {viewMode === "grid" ? (
               <>
                 {/* Continue Section (Recently Used) */}

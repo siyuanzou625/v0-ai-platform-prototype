@@ -572,13 +572,9 @@ export default function ProjectsPage() {
               </DialogContent>
             </Dialog>
           </div>
-        </div>
-
-        {/* Main Content */}
-        <ScrollArea className="flex-1">
-          <div className="p-6">
-            {/* Search, Filters, and View Toggle */}
-            <div className="flex flex-wrap items-center gap-3 mb-6">
+          
+          {/* Search, Filters, and View Toggle */}
+          <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
               <div className="relative flex-1 min-w-64">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -652,6 +648,11 @@ export default function ProjectsPage() {
                 </button>
               </div>
             </div>
+        </div>
+
+        {/* Main Content */}
+        <ScrollArea className="flex-1">
+          <div className="p-6 space-y-6">
             {/* Dashboard View - Summary Cards */}
             {viewMode === "dashboard" && (
               <div className="space-y-6">

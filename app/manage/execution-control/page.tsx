@@ -293,7 +293,8 @@ export default function ExecutionControlPage() {
           </div>
 
           {/* Content */}
-          <div className="p-6 space-y-8">
+          <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+            <div className="p-6 space-y-8">
             {/* Controls */}
             <div className="flex flex-wrap items-center gap-6">
               {/* Execution Mode */}
@@ -1123,6 +1124,7 @@ export default function ExecutionControlPage() {
               </CardContent>
             </Card>
           </section>
+            </div>
           </div>
         </>
       </TooltipProvider>

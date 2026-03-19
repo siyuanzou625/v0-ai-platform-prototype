@@ -662,15 +662,12 @@ export default function PluginsPage() {
               </p>
             </div>
             <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
-              <Puzzle className="h-4 w-4" /> Develop Plugin
+              <Plus className="h-4 w-4" /> New Plugin
             </Button>
           </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6 space-y-6">
+          
           {/* Search and Filters */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-[#E5E7EB]">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Search plugins..." className="pl-10 bg-white" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
@@ -694,7 +691,11 @@ export default function PluginsPage() {
             </Select>
             <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
           </div>
+        </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="p-6 space-y-6">
         {/* Installed Plugins */}
         <div>
           <h2 className="mb-4 text-lg font-semibold text-foreground">Installed Plugins</h2>
@@ -1461,6 +1462,7 @@ export default function PluginsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+          </div>
         </div>
       </>
     </AppLayout>
