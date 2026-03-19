@@ -962,8 +962,8 @@ export default function ProjectsPage() {
                 <Card className="border border-[#E5E7EB]">
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-12">
+                      <TableRow className="h-12">
+                        <TableHead className="w-14 pl-4">
                           <Checkbox 
                             checked={selectedProjects.length === paginatedProjects.length && paginatedProjects.length > 0}
                             onCheckedChange={handleSelectAll}
@@ -1018,17 +1018,17 @@ export default function ProjectsPage() {
                       {paginatedProjects.map((project) => (
                         <TableRow 
                           key={project.id} 
-                          className="cursor-pointer hover:bg-[#F5F7FA] group"
+                          className="cursor-pointer hover:bg-[#F5F7FA] group h-14"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <TableCell onClick={(e) => e.stopPropagation()}>
+                          <TableCell className="pl-4 pr-2" onClick={(e) => e.stopPropagation()}>
                             <Checkbox 
                               checked={selectedProjects.includes(project.id)}
                               onCheckedChange={() => handleSelectProject(project.id)}
                             />
                           </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
+                          <TableCell className="py-4">
+                            <div className="flex items-center gap-3">
                               <div className={`flex h-8 w-8 items-center justify-center rounded ${
                                 project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
                               }`}>
@@ -1083,11 +1083,45 @@ export default function ProjectsPage() {
                               {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
                               {project.dueDate}
                             </span>
+</TableCell>
+                          <TableCell className="py-4">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-6 w-6">
+                                <AvatarImage src={project.ownerAvatar} />
+                                <AvatarFallback className="text-xs bg-[#ee3224]/10 text-[#ee3224]">{project.owner.substring(0, 2)}</AvatarFallback>
+                              </Avatar>
+                              <span className="text-sm">{project.owner}</span>
+                            </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="py-4">{getEnvironmentBadge(project.environment)}</TableCell>
+                          <TableCell className="py-4">
+                            <div className="flex items-center gap-2">
+                              <Progress value={project.progress} className="w-16 h-1.5" />
+                              <span className="text-xs text-muted-foreground">{project.progress}%</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="py-4" onClick={(e) => e.stopPropagation()}>
+                            <Select defaultValue={project.status}>
+                              <SelectTrigger className="h-7 w-28 text-xs border-0 bg-transparent hover:bg-[#F5F7FA]">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Active">Active</SelectItem>
+                                <SelectItem value="Paused">Paused</SelectItem>
+                                <SelectItem value="Draft">Draft</SelectItem>
+                                <SelectItem value="Completed">Completed</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+                          <TableCell className="py-4">
+                            <span className="text-sm text-muted-foreground">
+                              {new Date(project.dueDate).toLocaleDateString()}
+                            </span>
+                          </TableCell>
+                          <TableCell className="py-4">
                             <span className="text-sm text-muted-foreground">{project.lastActivity}</span>
                           </TableCell>
-                          <TableCell onClick={(e) => e.stopPropagation()}>
+                          <TableCell className="py-4" onClick={(e) => e.stopPropagation()}>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon" className="h-8 w-8 ">
