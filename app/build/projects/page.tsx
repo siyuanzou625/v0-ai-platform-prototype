@@ -24,7 +24,7 @@ import {
   Code2,
   Clock,
   MoreHorizontal,
-  FolderOpen,
+  Folder,
   LayoutDashboard,
   LayoutGrid,
   List,
@@ -456,10 +456,10 @@ export default function ProjectsPage() {
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
           {/* Row 1: Title & Description */}
           <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <FolderOpen className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Projects</h1>
-            </div>
+  <div className="flex items-center gap-2">
+  <Folder className="h-5 w-5 text-[#ee3224]" />
+  <h1 className="text-xl font-semibold text-foreground">Projects</h1>
+  </div>
             <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
               Create and manage your AI agents and workflows in one place.
             </p>

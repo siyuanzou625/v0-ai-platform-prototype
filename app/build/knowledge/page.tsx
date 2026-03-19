@@ -265,9 +265,12 @@ export default function KnowledgePage() {
       <>
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-border bg-white px-6 py-4">
-          {/* Title Row */}
-          <div className="mb-4">
-            <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
+  {/* Title Row */}
+  <div className="mb-4">
+  <div className="flex items-center gap-2">
+  <Database className="h-5 w-5 text-[#ee3224]" />
+  <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
+  </div>
             <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
               Upload and organize documents to give your agents context and expertise.
             </p>

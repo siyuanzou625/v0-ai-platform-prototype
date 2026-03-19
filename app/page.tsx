@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { 
-  House,
+  Home,
   Hammer,
   Rocket,
   Compass,
@@ -238,10 +238,10 @@ export default function HomePage() {
       <div className="space-y-8">
         {/* Component 2: Page Header */}
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <House className="h-6 w-6 text-[#ee3224]" />
-            <h1 className="text-2xl font-semibold text-[#1F2937]">Home</h1>
-          </div>
+  <div className="flex items-center gap-2 mb-2">
+  <Home className="h-6 w-6 text-[#ee3224]" />
+  <h1 className="text-2xl font-semibold text-[#1F2937]">Home</h1>
+  </div>
           <p className="text-sm text-[#6B7280]">
             Welcome back, Zoey. What would you like to do today?
           </p>
