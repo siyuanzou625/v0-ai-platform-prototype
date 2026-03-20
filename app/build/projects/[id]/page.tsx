@@ -1,17 +1,16 @@
 "use client"
 
+import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Play,
   Save,
-  Undo,
-  Redo,
   ZoomIn,
   ZoomOut,
   Maximize2,
@@ -28,6 +27,12 @@ import {
   Bot,
   Sparkles,
   FolderKanban,
+  Users,
+  Rocket,
+  Settings,
+  Code,
+  Workflow,
+  MoreHorizontal,
 } from "lucide-react"
 
 // Project data
@@ -59,6 +64,8 @@ export default function ProjectWorkflowPage() {
   const params = useParams()
   const router = useRouter()
   const projectId = typeof params.id === "string" ? params.id : ""
+  const [buildMode, setBuildMode] = useState("workflow")
+  const [chatInput, setChatInput] = useState("")
   
   const project = PROJECT_DATA[projectId]
 
@@ -96,30 +103,60 @@ export default function ProjectWorkflowPage() {
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <div>
-              <h1 className="text-lg font-semibold text-foreground">{project.name}</h1>
-              <p className="text-xs text-muted-foreground">{project.description}</p>
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded bg-[#ee3224]/10 flex items-center justify-center">
+                <Bot className="h-5 w-5 text-[#ee3224]" />
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold text-foreground">{project.name}</h1>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className={`text-xs ${
+                    project.status === "active" ? "bg-emerald-50 text-emerald-700" :
+                    project.status === "draft" ? "bg-slate-100 text-slate-700" :
+                    "bg-amber-50 text-amber-700"
+                  }`}>
+                    {project.status}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">{project.environment}</span>
+                </div>
+              </div>
             </div>
-            <Badge variant="secondary" className={
-              project.status === "active" ? "bg-emerald-50 text-emerald-700" :
-              project.status === "draft" ? "bg-slate-100 text-slate-700" :
-              "bg-amber-50 text-amber-700"
-            }>
-              {project.status}
-            </Badge>
           </div>
+
+          {/* Build Mode Tabs */}
+          <Tabs value={buildMode} onValueChange={setBuildMode}>
+            <TabsList className="bg-[#F5F7FA]">
+              <TabsTrigger value="ai" className="gap-1.5 text-xs data-[state=active]:bg-white">
+                <Sparkles className="h-3.5 w-3.5" /> Build with AI
+              </TabsTrigger>
+              <TabsTrigger value="workflow" className="gap-1.5 text-xs data-[state=active]:bg-white">
+                <Workflow className="h-3.5 w-3.5" /> Workflow
+              </TabsTrigger>
+              <TabsTrigger value="code" className="gap-1.5 text-xs data-[state=active]:bg-white">
+                <Code className="h-3.5 w-3.5" /> Code
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {/* Action Buttons */}
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Undo className="mr-1 h-4 w-4" /> Undo
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <GitBranch className="h-3.5 w-3.5" /> main
             </Button>
-            <Button variant="outline" size="sm">
-              <Redo className="mr-1 h-4 w-4" /> Redo
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Users className="h-3.5 w-3.5" /> Invite
             </Button>
-            <Button variant="outline" size="sm">
-              <Save className="mr-1 h-4 w-4" /> Save
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Play className="h-3.5 w-3.5" /> Run
             </Button>
-            <Button size="sm" className="bg-[#ee3224] hover:bg-[#cc2a1e]">
-              <Play className="h-4 w-4 mr-1" /> Run
+            <Button size="sm" className="gap-1.5 text-xs bg-[#ee3224] hover:bg-[#cc2a1e]">
+              <Rocket className="h-3.5 w-3.5" /> Deploy
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Settings className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontal className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -264,6 +301,8 @@ export default function ProjectWorkflowPage() {
                 <Input 
                   placeholder="Ask AI for help..." 
                   className="flex-1"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
                 />
                 <Button size="icon" className="bg-[#ee3224] hover:bg-[#cc2a1e]">
                   <Send className="h-4 w-4" />
