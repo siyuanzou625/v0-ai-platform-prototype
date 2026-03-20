@@ -1,16 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   Play,
   Save,
@@ -25,7 +21,6 @@ import {
   Diamond,
   ArrowRight,
   ArrowLeft,
-  Settings,
   Trash2,
   Copy,
   Plus,
@@ -36,15 +31,7 @@ import {
 } from "lucide-react"
 
 // Project data
-type ProjectData = {
-  id: string
-  name: string
-  description: string
-  status: string
-  environment: string
-}
-
-const PROJECT_DATA: Record<string, ProjectData> = {
+const PROJECT_DATA: Record<string, { id: string; name: string; description: string; status: string; environment: string }> = {
   "proj-001": { id: "proj-001", name: "Customer Support Bot", description: "AI-powered customer support agent", status: "active", environment: "production" },
   "proj-002": { id: "proj-002", name: "Sales Assistant", description: "Lead qualification bot", status: "draft", environment: "development" },
   "proj-003": { id: "proj-003", name: "HR Onboarding Agent", description: "Employee onboarding automation", status: "active", environment: "staging" },
@@ -68,40 +55,14 @@ const workflowNodes = [
   { id: 5, type: "Output", name: "Send Notification", x: 700, y: 150, bgColor: "bg-emerald-50", iconColor: "text-emerald-600" },
 ]
 
-// AI Assistant chat messages
-const initialMessages = [
-  { id: 1, role: "assistant", content: "Hello! I'm your AI assistant for this workflow. I can help you build, optimize, and debug your automation. What would you like to do?" },
-]
-
 export default function ProjectWorkflowPage() {
   const params = useParams()
   const router = useRouter()
-  const projectId = params.id as string
+  const projectId = typeof params.id === "string" ? params.id : ""
   
   const project = PROJECT_DATA[projectId]
-  
-  const [selectedNode, setSelectedNode] = useState<number | null>(null)
-  const [messages, setMessages] = useState(initialMessages)
-  const [inputMessage, setInputMessage] = useState("")
 
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return
-    
-    const newUserMessage = { id: messages.length + 1, role: "user", content: inputMessage }
-    setMessages([...messages, newUserMessage])
-    setInputMessage("")
-    
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = { 
-        id: messages.length + 2, 
-        role: "assistant", 
-        content: "I understand you want to work on this workflow. Let me help you with that. You can drag nodes from the left panel to the canvas, or tell me what automation you'd like to create and I'll help set it up." 
-      }
-      setMessages(prev => [...prev, aiResponse])
-    }, 1000)
-  }
-
+  // Project not found state
   if (!project) {
     return (
       <AppLayout>
@@ -238,11 +199,8 @@ export default function ProjectWorkflowPage() {
               {workflowNodes.map((node) => (
                 <div
                   key={node.id}
-                  className={`absolute flex cursor-pointer items-center gap-2 rounded border-2 bg-white px-3 py-2 shadow-sm transition-all ${
-                    selectedNode === node.id ? "border-[#ee3224]" : "border-[#E5E7EB] hover:border-[#ee3224]/50"
-                  }`}
+                  className="absolute flex cursor-pointer items-center gap-2 rounded border-2 bg-white px-3 py-2 shadow-sm transition-all border-[#E5E7EB] hover:border-[#ee3224]/50"
                   style={{ left: node.x, top: node.y }}
-                  onClick={() => setSelectedNode(node.id)}
                 >
                   <div className={`flex h-6 w-6 items-center justify-center rounded ${node.bgColor}`}>
                     {node.type === "Trigger" && <Circle className={`h-3 w-3 ${node.iconColor}`} />}
@@ -289,24 +247,14 @@ export default function ProjectWorkflowPage() {
             {/* Chat Messages */}
             <ScrollArea className="flex-1 p-4">
               <div className="space-y-4">
-                {messages.map((msg) => (
-                  <div key={msg.id} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : ""}`}>
-                    {msg.role === "assistant" && (
-                      <Avatar className="h-7 w-7">
-                        <AvatarFallback className="bg-[#ee3224]/10 text-[#ee3224]">
-                          <Bot className="h-4 w-4" />
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
-                    <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
-                      msg.role === "user" 
-                        ? "bg-[#ee3224] text-white" 
-                        : "bg-slate-100 text-foreground"
-                    }`}>
-                      {msg.content}
-                    </div>
+                <div className="flex gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ee3224]/10 flex-shrink-0">
+                    <Bot className="h-4 w-4 text-[#ee3224]" />
                   </div>
-                ))}
+                  <div className="max-w-[85%] rounded-lg px-3 py-2 text-sm bg-slate-100 text-foreground">
+                    Hello! I am your AI assistant for this workflow. I can help you build, optimize, and debug your automation. What would you like to do?
+                  </div>
+                </div>
               </div>
             </ScrollArea>
 
@@ -315,49 +263,13 @@ export default function ProjectWorkflowPage() {
               <div className="flex gap-2">
                 <Input 
                   placeholder="Ask AI for help..." 
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
                   className="flex-1"
                 />
-                <Button size="icon" onClick={handleSendMessage} className="bg-[#ee3224] hover:bg-[#cc2a1e]">
+                <Button size="icon" className="bg-[#ee3224] hover:bg-[#cc2a1e]">
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
             </div>
-
-            {/* Node Properties (shown when node selected) */}
-            {selectedNode && (
-              <div className="border-t border-[#E5E7EB] p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Settings className="h-4 w-4 text-muted-foreground" />
-                  <h4 className="font-semibold text-sm">Node Properties</h4>
-                </div>
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <Label className="text-xs">Name</Label>
-                    <Input
-                      defaultValue={workflowNodes.find((n) => n.id === selectedNode)?.name}
-                      className="h-8 text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-xs">Type</Label>
-                    <Select defaultValue={workflowNodes.find((n) => n.id === selectedNode)?.type}>
-                      <SelectTrigger className="h-8 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Trigger">Trigger</SelectItem>
-                        <SelectItem value="Action">Action</SelectItem>
-                        <SelectItem value="Condition">Condition</SelectItem>
-                        <SelectItem value="Output">Output</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
