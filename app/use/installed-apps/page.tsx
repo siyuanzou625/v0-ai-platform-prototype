@@ -531,12 +531,19 @@ export default function MyAppsPage() {
           </div>
           <p className="mt-3 text-sm text-muted-foreground truncate">{app.tagline}</p>
           
-          <div className="mt-3 flex items-center">
+          <div className="mt-3 flex items-center justify-between">
             <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(app.source)}`}>
               {app.source}
             </Badge>
+            <Button 
+              size="sm" 
+              className="h-7 px-3 text-xs bg-[#ee3224] hover:bg-[#d62d1f] text-white"
+              onClick={(e) => { e.stopPropagation(); launchApp(app) }}
+            >
+              <ExternalLink className="h-3 w-3 mr-1" />
+              Launch
+            </Button>
           </div>
-          
 
         </CardContent>
       </Card>
