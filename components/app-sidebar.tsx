@@ -41,7 +41,6 @@ const navigation = [
       { name: "Agents", href: "/explore/agents", icon: Bot },
       { name: "Templates", href: "/explore/templates", icon: FileText },
       { name: "Plugins", href: "/explore/plugins", icon: Puzzle },
-      { name: "Community", href: "/community", icon: MessageSquare },
     ],
   },
   {
@@ -50,6 +49,7 @@ const navigation = [
     items: [
       { name: "Installed Apps", href: "/use/installed-apps", icon: LayoutGrid },
       { name: "Cross Devices", href: "/use/cross-devices", icon: RefreshCw },
+      { name: "Community", href: "/community", icon: MessageSquare },
     ],
   },
   {
