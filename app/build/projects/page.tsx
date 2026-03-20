@@ -1,5 +1,5 @@
 "use client"
-
+// FRESH BUILD - v2 - No Avatar components used
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
@@ -9,31 +9,31 @@ import { Input } from "@/components/ui/input"
 import { StatusTag } from "@/components/ui/status-tag"
 import { Search, Plus, LayoutGrid, List } from "lucide-react"
 
-interface ProjectData {
+type TProjectItem = {
   id: number
-  name: string
-  desc: string
-  status: string
-  env: string
-  userInitials: string
-  userName: string
+  title: string
+  description: string
+  statusLabel: string
+  envLabel: string
+  ownerInitials: string
+  ownerDisplayName: string
 }
 
-const DATA: ProjectData[] = [
-  { id: 1, name: "Customer Support Bot", desc: "AI-powered support agent", status: "Active", env: "Production", userInitials: "ZD", userName: "Zoey" },
-  { id: 2, name: "Sales Assistant", desc: "Lead qualification bot", status: "Draft", env: "Development", userInitials: "AP", userName: "Alex" },
-  { id: 3, name: "HR Onboarding", desc: "Employee onboarding automation", status: "Active", env: "Staging", userInitials: "MJ", userName: "Maria" },
-  { id: 4, name: "Data Analyzer", desc: "Analytics dashboard agent", status: "Paused", env: "Production", userInitials: "RK", userName: "Raj" },
+const PROJECT_LIST: TProjectItem[] = [
+  { id: 1, title: "Customer Support Bot", description: "AI-powered support agent", statusLabel: "Active", envLabel: "Production", ownerInitials: "ZD", ownerDisplayName: "Zoey" },
+  { id: 2, title: "Sales Assistant", description: "Lead qualification bot", statusLabel: "Draft", envLabel: "Development", ownerInitials: "AP", ownerDisplayName: "Alex" },
+  { id: 3, title: "HR Onboarding", description: "Employee onboarding automation", statusLabel: "Active", envLabel: "Staging", ownerInitials: "MJ", ownerDisplayName: "Maria" },
+  { id: 4, title: "Data Analyzer", description: "Analytics dashboard agent", statusLabel: "Paused", envLabel: "Production", ownerInitials: "RK", ownerDisplayName: "Raj" },
 ]
 
-export default function ProjectsPage() {
+export default function BuildProjectsPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
   const [viewType, setViewType] = useState<"grid" | "list">("grid")
 
-  const filtered = DATA.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.desc.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProjects = PROJECT_LIST.filter(item => 
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
@@ -78,35 +78,35 @@ export default function ProjectsPage() {
         </div>
 
         <div className={viewType === "grid" ? "grid gap-4 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-3"}>
-          {filtered.map((proj) => (
+          {filteredProjects.map((item) => (
             <Card
-              key={proj.id}
+              key={item.id}
               className="cursor-pointer hover:shadow-md transition-shadow border border-[#E5E7EB]"
-              onClick={() => router.push(`/build/projects/${proj.id}`)}
+              onClick={() => router.push(`/build/projects/${item.id}`)}
             >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="font-medium text-[#1F2937]">{proj.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{proj.desc}</p>
+                    <h3 className="font-medium text-[#1F2937]">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
                   </div>
-                  <StatusTag label={proj.status} />
+                  <StatusTag label={item.statusLabel} />
                 </div>
                 <div className="flex items-center justify-between pt-3 border-t border-[#E5E7EB]">
                   <div className="flex items-center gap-2">
                     <div className="h-6 w-6 rounded-full bg-[#ee3224]/10 flex items-center justify-center">
-                      <span className="text-xs font-medium text-[#ee3224]">{proj.userInitials}</span>
+                      <span className="text-xs font-medium text-[#ee3224]">{item.ownerInitials}</span>
                     </div>
-                    <span className="text-sm text-muted-foreground">{proj.userName}</span>
+                    <span className="text-sm text-muted-foreground">{item.ownerDisplayName}</span>
                   </div>
-                  <StatusTag label={proj.env} variant="category" />
+                  <StatusTag label={item.envLabel} variant="category" />
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {filtered.length === 0 && (
+        {filteredProjects.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             No projects found matching your search.
           </div>
