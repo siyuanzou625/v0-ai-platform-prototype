@@ -72,8 +72,6 @@ export default function ProjectWorkflowPage() {
   const [chatInput, setChatInput] = useState("")
   const [activeTab, setActiveTab] = useState("workflow")
   
-  console.log("[v0] ProjectWorkflowPage rendering with projectId:", projectId)
-  
   const project = PROJECT_DATA[projectId] || { name: "Enterprise Sales Agent", status: "active", environment: "Production" }
 
   // Project not found
