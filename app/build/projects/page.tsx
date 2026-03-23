@@ -576,10 +576,10 @@ export default function ProjectsPage() {
 
           {/* Row 2: Search + Filters */}
           <div className="flex items-center gap-3">
-            <div className="relative flex-1 min-w-[50%]">
+            <div className="relative w-[280px]">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search projects by name or owner..."
+                placeholder="Search projects..."
                 className="pl-9"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
