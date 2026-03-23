@@ -820,18 +820,7 @@ export default function ProjectsPage() {
                                   Due {project.dueDate}
                                 </p>
                               </div>
-                              <div className="flex gap-1">
-                                <Button 
-                                  size="sm" 
-                                  className="h-7 px-2 bg-[#ee3224] hover:bg-[#cc2a1e] text-xs"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleOpenProject(project.id)
-                                  }}
-                                >
-                                  Open
-                                </Button>
-                                <Button 
+                              <Button 
                                   size="sm" 
                                   variant="ghost" 
                                   className="h-7 px-2 text-xs"
@@ -839,7 +828,6 @@ export default function ProjectsPage() {
                                 >
                                   <Pencil className="h-3 w-3" />
                                 </Button>
-                              </div>
                             </div>
                           </CardContent>
                         </Card>
@@ -970,16 +958,7 @@ export default function ProjectsPage() {
                       )}
 
                       {/* Actions */}
-                      <div className="mt-4 flex gap-2">
-                        <Button
-                          className="flex-1 bg-[#ee3224] hover:bg-[#cc2a1e]"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleOpenProject(project.id)
-                          }}
-                        >
-                          Open
-                        </Button>
+                      <div className="mt-4 flex gap-2 justify-end">
                         <Button
                           variant="outline"
                           size="icon"
