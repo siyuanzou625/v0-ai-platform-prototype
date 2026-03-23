@@ -1,5 +1,5 @@
 "use client"
-// Project Workflow Builder Page
+// Project Workflow Builder Page - Full UI with AI Assistant
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
