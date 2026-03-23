@@ -1049,13 +1049,13 @@ export default function ProjectsPage() {
                           className="cursor-pointer hover:bg-[#F5F7FA] group"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <TableCell onClick={(e) => e.stopPropagation()}>
+                          <TableCell className="py-4" onClick={(e) => e.stopPropagation()}>
                             <Checkbox 
                               checked={selectedProjects.includes(project.id)}
                               onCheckedChange={() => handleSelectProject(project.id)}
                             />
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="py-4">
                             <div className="flex items-center gap-2">
                               <div className={`flex h-8 w-8 items-center justify-center rounded ${
                                 project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
@@ -1076,7 +1076,7 @@ export default function ProjectsPage() {
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="py-4">
                             <div className="flex items-center gap-2">
                               <Avatar className="h-6 w-6">
                                 <AvatarFallback className="text-xs bg-muted">{project.owner.initials}</AvatarFallback>
@@ -1084,14 +1084,14 @@ export default function ProjectsPage() {
                               <span className="text-sm">{project.owner.name}</span>
                             </div>
                           </TableCell>
-                          <TableCell>{getEnvironmentBadge(project.environment)}</TableCell>
-                          <TableCell>
+                          <TableCell className="py-4">{getEnvironmentBadge(project.environment)}</TableCell>
+                          <TableCell className="py-4">
                             <div className="flex items-center gap-2 w-32">
                               <Progress value={project.progress} className="h-1.5 flex-1" />
                               <span className="text-xs font-medium w-8">{project.progress}%</span>
                             </div>
                           </TableCell>
-                          <TableCell onClick={(e) => e.stopPropagation()}>
+                          <TableCell className="py-4" onClick={(e) => e.stopPropagation()}>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <div className="cursor-pointer">
