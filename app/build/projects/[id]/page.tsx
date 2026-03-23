@@ -1,5 +1,5 @@
 "use client"
-
+// Fixed: Project Workflow Page with 3-panel layout
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
