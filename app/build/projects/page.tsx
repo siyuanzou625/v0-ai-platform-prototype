@@ -665,10 +665,10 @@ export default function ProjectsPage() {
                     className="cursor-pointer border border-[#E5E7EB] hover:border-[#ee3224]/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("all")}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">Total Projects</p>
+                          <p className="text-sm text-[#ee3224] font-medium">Total Projects</p>
                           <p className="text-3xl font-bold text-foreground">{totalProjects}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ee3224]/10">
@@ -682,10 +682,10 @@ export default function ProjectsPage() {
                     className="cursor-pointer border border-[#E5E7EB] hover:border-blue-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("building")}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">In Progress</p>
+                          <p className="text-sm text-blue-500 font-medium">In Progress</p>
                           <p className="text-3xl font-bold text-foreground">{inProgressCount}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
@@ -699,10 +699,10 @@ export default function ProjectsPage() {
                     className="cursor-pointer border border-[#E5E7EB] hover:border-emerald-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("ready")}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">Ready to Deploy</p>
+                          <p className="text-sm text-emerald-500 font-medium">Ready to Deploy</p>
                           <p className="text-3xl font-bold text-foreground">{readyCount}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
@@ -716,10 +716,10 @@ export default function ProjectsPage() {
                     className="cursor-pointer border border-[#E5E7EB] hover:border-red-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("blocked")}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">Blocked</p>
+                          <p className="text-sm text-red-500 font-medium">Blocked</p>
                           <p className="text-3xl font-bold text-foreground">{blockedCount}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
@@ -812,22 +812,12 @@ export default function ProjectsPage() {
                               </div>
                               <Progress value={project.progress} className="h-1.5" />
                             </div>
-                            <div className="mt-3 flex items-center justify-between">
-                              <div>
-                                <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
-                                <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
-                                  {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
-                                  Due {project.dueDate}
-                                </p>
-                              </div>
-                              <Button 
-                                  size="sm" 
-                                  variant="ghost" 
-                                  className="h-7 px-2 text-xs"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <Pencil className="h-3 w-3" />
-                                </Button>
+                            <div className="mt-3">
+                              <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
+                              <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
+                                {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
+                                Due {project.dueDate}
+                              </p>
                             </div>
                           </CardContent>
                         </Card>
