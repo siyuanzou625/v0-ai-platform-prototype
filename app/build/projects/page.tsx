@@ -957,30 +957,7 @@ export default function ProjectsPage() {
                         </div>
                       )}
 
-                      {/* Actions */}
-                      <div className="mt-4 flex gap-2 justify-end">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Share2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Rocket className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Settings className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      
                     </CardContent>
                   </Card>
                 ))}
