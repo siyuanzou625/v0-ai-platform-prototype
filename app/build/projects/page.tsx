@@ -613,44 +613,42 @@ export default function ProjectsPage() {
                 Clear filters
               </Button>
             )}
-          </div>
-
-          {/* Row 3: View Toggle */}
-          <div className="flex justify-center">
-            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
-            <button
-              onClick={() => handleViewChange("dashboard")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "dashboard"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <LayoutDashboard className="h-4 w-4" />
-              Dashboard
-            </button>
-            <button
-              onClick={() => handleViewChange("grid")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "grid"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <LayoutGrid className="h-4 w-4" />
-              Grid
-            </button>
-            <button
-              onClick={() => handleViewChange("list")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "list"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <List className="h-4 w-4" />
-              List
-            </button>
+            
+            {/* View Toggle */}
+            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 ml-auto">
+              <button
+                onClick={() => handleViewChange("dashboard")}
+                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "dashboard"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </button>
+              <button
+                onClick={() => handleViewChange("grid")}
+                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "grid"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+                Grid
+              </button>
+              <button
+                onClick={() => handleViewChange("list")}
+                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "list"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <List className="h-4 w-4" />
+                List
+              </button>
             </div>
           </div>
         </div>
