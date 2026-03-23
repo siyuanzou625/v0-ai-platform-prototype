@@ -190,7 +190,7 @@ export default function ProjectsPage() {
   const hasActiveFilters = searchQuery || statusFilter !== "all" || envFilter !== "all"
 
   const handleOpenProject = (projectId: string) => {
-    router.push(`/layer4/workflow?project=${projectId}`)
+    router.push(`/build/projects/${projectId}`)
   }
 
   const handleCreateProject = () => {
