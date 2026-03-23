@@ -480,47 +480,6 @@ export default function ProjectsPage() {
                   New Agent
                 </Button>
               </DialogTrigger>
-          </div>
-
-          {/* Row 2: Search + Filters */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1 min-w-[50%]">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search projects by name or owner..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Select value={environmentFilter} onValueChange={(v) => setEnvironmentFilter(v as Environment)}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Environment" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Environments</SelectItem>
-                <SelectItem value="development">Development</SelectItem>
-                <SelectItem value="staging">Staging</SelectItem>
-                <SelectItem value="production">Production</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as Status)}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="building">Building</SelectItem>
-                <SelectItem value="ready">Ready to Deploy</SelectItem>
-                <SelectItem value="deployed">Deployed</SelectItem>
-                <SelectItem value="blocked">Blocked</SelectItem>
-              </SelectContent>
-            </Select>
-            {(searchQuery || environmentFilter !== "all" || statusFilter !== "all") && (
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                Clear filters
-              </Button>
-            )}
               <DialogContent className="max-w-[700px] p-0 overflow-hidden" aria-describedby={undefined}>
                 {/* Modal Header */}
                 <div className="text-center pt-8 pb-4 px-8">
@@ -613,6 +572,47 @@ export default function ProjectsPage() {
                 </div>
               </DialogContent>
             </Dialog>
+          </div>
+
+          {/* Row 2: Search + Filters */}
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1 min-w-[50%]">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search projects by name or owner..."
+                className="pl-9"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Select value={environmentFilter} onValueChange={(v) => setEnvironmentFilter(v as Environment)}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Environment" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Environments</SelectItem>
+                <SelectItem value="development">Development</SelectItem>
+                <SelectItem value="staging">Staging</SelectItem>
+                <SelectItem value="production">Production</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as Status)}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="building">Building</SelectItem>
+                <SelectItem value="ready">Ready to Deploy</SelectItem>
+                <SelectItem value="deployed">Deployed</SelectItem>
+                <SelectItem value="blocked">Blocked</SelectItem>
+              </SelectContent>
+            </Select>
+            {(searchQuery || environmentFilter !== "all" || statusFilter !== "all") && (
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                Clear filters
+              </Button>
+            )}
           </div>
 
           {/* Row 3: View Toggle */}
