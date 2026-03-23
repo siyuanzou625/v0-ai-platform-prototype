@@ -675,7 +675,6 @@ export default function ProjectsPage() {
                           <Briefcase className="h-6 w-6 text-[#ee3224]" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p>
                     </CardContent>
                   </Card>
                   <Card 
@@ -692,7 +691,6 @@ export default function ProjectsPage() {
                           <PlayCircle className="h-6 w-6 text-blue-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-blue-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
                   <Card 
@@ -709,7 +707,6 @@ export default function ProjectsPage() {
                           <CheckCircle2 className="h-6 w-6 text-emerald-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-emerald-600 hover:underline">View ready projects</p>
                     </CardContent>
                   </Card>
                   <Card 
@@ -726,7 +723,6 @@ export default function ProjectsPage() {
                           <AlertCircle className="h-6 w-6 text-red-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-red-600 hover:underline">View blocked projects</p>
                     </CardContent>
                   </Card>
                 </div>
