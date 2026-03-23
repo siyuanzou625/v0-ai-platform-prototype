@@ -151,7 +151,7 @@ const builtInApps: AppData[] = [
     icon: "Search",
     lastUsed: "3 days ago",
     quickActions: ["Search Recent Files", "Find Photos from Last Month", "Locate Email Attachments", "Search Across All Apps"],
-    welcomeMessage: "Find anything. Privately. What are you looking for?"
+    welcomeMessage: "Find anything privately. What are you looking for?"
   },
   {
     id: "app-006",
