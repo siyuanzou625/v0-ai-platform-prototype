@@ -654,7 +654,7 @@ export default function ProjectsPage() {
         </div>
 
         {/* Main Content */}
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-auto">
           <div className="p-6">
             {/* Dashboard View */}
             {viewMode === "dashboard" && (
@@ -1204,7 +1204,7 @@ export default function ProjectsPage() {
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
       </div>
     </AppLayout>
   )
