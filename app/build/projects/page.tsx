@@ -453,20 +453,37 @@ export default function ProjectsPage() {
     <AppLayout>
       <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-[#F5F7FA]">
         {/* Header */}
-        <div className="border-b border-border bg-card px-6 py-4">
-          {/* Row 1: Title & Description */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <FolderOpen className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Projects</h1>
+        <div className="sticky top-0 z-10 bg-white border-b border-border px-6 py-6 shadow-sm">
+          {/* Row 1: Title, Description & New Agent Button */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <FolderOpen className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Projects</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Create and manage your AI agents and workflows in one place.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Create and manage your AI agents and workflows in one place.
-            </p>
+            <Dialog open={showNewProject} onOpenChange={(open) => {
+              setShowNewProject(open)
+              if (!open) {
+                setNewProjectName("")
+                setNewProjectDescription("")
+                setSelectedTemplate(null)
+                setNewProjectMode("build-ai")
+              }
+            }}>
+              <DialogTrigger asChild>
+                <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+                  <Plus className="h-4 w-4" />
+                  New Agent
+                </Button>
+              </DialogTrigger>
           </div>
 
-          {/* Row 2: Search + Filters + New Project Button */}
-          <div className="flex items-center gap-3 mb-4">
+          {/* Row 2: Search + Filters */}
+          <div className="flex items-center gap-3">
             <div className="relative flex-1 min-w-[50%]">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -504,21 +521,6 @@ export default function ProjectsPage() {
                 Clear filters
               </Button>
             )}
-            <Dialog open={showNewProject} onOpenChange={(open) => {
-              setShowNewProject(open)
-              if (!open) {
-                setNewProjectName("")
-                setNewProjectDescription("")
-                setSelectedTemplate(null)
-                setNewProjectMode("build-ai")
-              }
-            }}>
-              <DialogTrigger asChild>
-                <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
-                  <Plus className="h-4 w-4" />
-                  New Agent
-                </Button>
-              </DialogTrigger>
               <DialogContent className="max-w-[700px] p-0 overflow-hidden" aria-describedby={undefined}>
                 {/* Modal Header */}
                 <div className="text-center pt-8 pb-4 px-8">
