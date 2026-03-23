@@ -658,9 +658,9 @@ export default function ProjectsPage() {
           <div className="p-6">
             {/* Dashboard View */}
             {viewMode === "dashboard" && (
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {/* Summary Metrics */}
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-2">
                   <Card 
                     className="cursor-pointer border border-[#E5E7EB] hover:border-[#ee3224]/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("all")}
@@ -728,7 +728,7 @@ export default function ProjectsPage() {
                 </div>
 
                 {/* Two Column Layout: Activity + Projects */}
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-3 gap-3">
                   {/* Team Activity Timeline */}
                   <Card className="col-span-1 border border-[#E5E7EB]">
                     <CardHeader className="pb-3">
@@ -773,7 +773,7 @@ export default function ProjectsPage() {
                         View all
                       </Button>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-2">
                       {filteredProjects.slice(0, 6).map((project) => (
                         <Card 
                           key={project.id}
@@ -826,7 +826,7 @@ export default function ProjectsPage() {
 
             {/* Grid View */}
             {viewMode === "grid" && (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 {filteredProjects.map((project) => (
                   <Card
                     key={project.id}
@@ -952,7 +952,7 @@ export default function ProjectsPage() {
 
             {/* List View */}
             {viewMode === "list" && (
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {/* Bulk Actions */}
                 {selectedProjects.length > 0 && (
                   <div className="flex items-center gap-3 rounded-lg bg-[#ee3224]/5 border border-[#ee3224]/20 p-3">
