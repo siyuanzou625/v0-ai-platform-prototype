@@ -249,50 +249,62 @@ export default function SettingsPage() {
               
               {/* Account Type Selection */}
               <div className="space-y-3 pl-1">
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="githubAccount"
-                    checked={githubAccountType === "personal"}
-                    onChange={() => setGithubAccountType("personal")}
-                    className="mt-1 h-4 w-4 accent-[#ee3224]"
-                  />
-                  <div className="space-y-0.5">
-                    <span className="text-[14px] font-medium text-[#1F2937]">Personal Account</span>
-                    <p className="text-[13px] text-[#6B7280]">Connect with your personal GitHub account for individual projects</p>
-                  </div>
-                </label>
+                <div className="flex items-start justify-between gap-4">
+                  <label className="flex items-start gap-3 cursor-pointer flex-1">
+                    <input
+                      type="radio"
+                      name="githubAccount"
+                      checked={githubAccountType === "personal"}
+                      onChange={() => setGithubAccountType("personal")}
+                      className="mt-1 h-4 w-4 accent-[#ee3224]"
+                    />
+                    <div className="space-y-0.5">
+                      <span className="text-[14px] font-medium text-[#1F2937]">Personal Account</span>
+                      <p className="text-[13px] text-[#6B7280]">Connect with your personal GitHub account for individual projects</p>
+                    </div>
+                  </label>
+                  <Button 
+                    className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white shrink-0"
+                    onClick={() => toast({
+                      title: "GitHub Connection",
+                      description: "Reconnecting to GitHub Personal account...",
+                      duration: 3000,
+                    })}
+                  >
+                    <Github className="h-4 w-4 mr-2" />
+                    Reconnect Account
+                  </Button>
+                </div>
                 
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="githubAccount"
-                    checked={githubAccountType === "enterprise"}
-                    onChange={() => setGithubAccountType("enterprise")}
-                    className="mt-1 h-4 w-4 accent-[#ee3224]"
-                  />
-                  <div className="space-y-0.5">
-                    <span className="text-[14px] font-medium text-[#1F2937]">Enterprise Account</span>
-                    <p className="text-[13px] text-[#6B7280]">Connect with your organization's GitHub Enterprise for team collaboration</p>
-                  </div>
-                </label>
+                <div className="flex items-start justify-between gap-4">
+                  <label className="flex items-start gap-3 cursor-pointer flex-1">
+                    <input
+                      type="radio"
+                      name="githubAccount"
+                      checked={githubAccountType === "enterprise"}
+                      onChange={() => setGithubAccountType("enterprise")}
+                      className="mt-1 h-4 w-4 accent-[#ee3224]"
+                    />
+                    <div className="space-y-0.5">
+                      <span className="text-[14px] font-medium text-[#1F2937]">Enterprise Account</span>
+                      <p className="text-[13px] text-[#6B7280]">Connect with your organization's GitHub Enterprise for team collaboration</p>
+                    </div>
+                  </label>
+                  <Button 
+                    className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white shrink-0"
+                    onClick={() => toast({
+                      title: "GitHub Connection",
+                      description: "Reconnecting to GitHub Enterprise account...",
+                      duration: 3000,
+                    })}
+                  >
+                    <Github className="h-4 w-4 mr-2" />
+                    Reconnect Account
+                  </Button>
+                </div>
               </div>
               
-              {/* Connect Button */}
-              <div className="pt-2">
-                <Button 
-                  className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white"
-                  onClick={() => toast({
-                    title: "GitHub Connection",
-                    description: `Connecting to GitHub ${githubAccountType === "personal" ? "Personal" : "Enterprise"} account...`,
-                    duration: 3000,
-                  })}
-                >
-                  <Github className="h-4 w-4 mr-2" />
-                  Connect GitHub
-                </Button>
-                <p className="text-[12px] text-[#9CA3AF] mt-2">You can switch between account types at any time</p>
-              </div>
+              <p className="text-[12px] text-[#9CA3AF]">You can switch between account types at any time</p>
             </div>
           </CardContent>
         </Card>
