@@ -837,12 +837,9 @@ export default function ProjectsPage() {
                               </div>
                               {getStatusBadge(project.status)}
                             </div>
-                            <div className="mt-3">
-                              <div className="flex items-center justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Progress</span>
-                                <span className="font-medium">{project.progress}%</span>
-                              </div>
-                              <Progress value={project.progress} className={`h-1.5 ${getProgressBarColor(project.status)}`} />
+                            <div className="mt-3 flex items-center gap-2">
+                              <Progress value={project.progress} className={`h-1.5 flex-1 ${getProgressBarColor(project.status)}`} />
+                              <span className="text-xs font-medium w-8 text-right">{project.progress}%</span>
                             </div>
                             <div className="mt-3">
                               <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
