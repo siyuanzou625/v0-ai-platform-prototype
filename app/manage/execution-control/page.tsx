@@ -619,7 +619,7 @@ export default function ExecutionControlPage() {
                       <>
                         <TableHead className="font-semibold text-[#333]">CPU %</TableHead>
                         <TableHead className="font-semibold text-[#333]">GPU %</TableHead>
-                        <TableHead className="font-semibold text-[#333] bg-[#F5F7FA]">NPU %</TableHead>
+                        <TableHead className="font-semibold text-[#333]">NPU %</TableHead>
                       </>
                     )}
                     <TableHead className="font-semibold text-[#333]">Priority</TableHead>
@@ -657,7 +657,7 @@ export default function ExecutionControlPage() {
                             {agent.gpu}%
                             <MiniSparkline data={sparklineData[agent.id].map(v => v * 1.5)} />
                           </TableCell>
-                          <TableCell className={`${getUsageColor(agent.npu)} bg-[#F5F7FA]`}>
+                          <TableCell className={getUsageColor(agent.npu)}>
                             {agent.npu}%
                             <MiniSparkline data={sparklineData[agent.id].map(v => v * 2)} />
                           </TableCell>
@@ -836,7 +836,7 @@ export default function ExecutionControlPage() {
                     <TableHead className="font-semibold text-[#333] text-center">CPU Access</TableHead>
                     <TableHead className="font-semibold text-[#333] text-center">GPU Access</TableHead>
                     {advancedMode && (
-                      <TableHead className="font-semibold text-[#333] text-center bg-[#F5F7FA]">NPU Access</TableHead>
+                      <TableHead className="font-semibold text-[#333] text-center">NPU Access</TableHead>
                     )}
                     {advancedMode && (
                       <>
