@@ -417,7 +417,7 @@ export default function ProjectsPage() {
   // Summary metrics
   const totalProjects = projects.length
   const inProgressCount = projects.filter(p => p.status === "building").length
-  const readyCount = projects.filter(p => p.status === "ready").length
+  const readyCount = projects.filter(p => p.status === "ready" || p.status === "deployed").length
   const blockedCount = projects.filter(p => p.status === "blocked").length
 
   const handleOpenProject = (projectId: string) => {
