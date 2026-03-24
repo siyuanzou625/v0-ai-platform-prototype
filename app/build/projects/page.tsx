@@ -244,6 +244,20 @@ const activityTimeline = [
 ]
 
 // Helper functions
+const getProgressBarColor = (status: string) => {
+  switch (status) {
+    case "deployed":
+    case "ready":
+      return "[&>div]:bg-emerald-500"
+    case "building":
+      return "[&>div]:bg-orange-500"
+    case "blocked":
+      return "[&>div]:bg-red-500"
+    default:
+      return "[&>div]:bg-[#ee3224]"
+  }
+}
+
 const getStatusBadge = (status: string) => {
   switch (status) {
     case "deployed":
@@ -262,7 +276,7 @@ const getStatusBadge = (status: string) => {
       )
     case "building":
       return (
-        <Badge variant="secondary" className="bg-blue-50 text-blue-600 border border-blue-200">
+        <Badge variant="secondary" className="bg-orange-50 text-orange-600 border border-orange-200">
           <PlayCircle className="mr-1 h-3 w-3" />
           Building
         </Badge>
@@ -700,17 +714,17 @@ export default function ProjectsPage() {
                     </CardContent>
                   </Card>
                   <Card 
-                    className="cursor-pointer border border-[#E5E7EB] hover:border-blue-500/30 hover:shadow-md transition-all"
+                    className="cursor-pointer border border-[#E5E7EB] hover:border-orange-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("building")}
                   >
                     <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-blue-500 font-medium">In Progress</p>
+                          <p className="text-sm text-orange-500 font-medium">In Progress</p>
                           <p className="text-3xl font-bold text-foreground">{inProgressCount}</p>
                         </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
-                          <PlayCircle className="h-6 w-6 text-blue-500" />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
+                          <PlayCircle className="h-6 w-6 text-orange-500" />
                         </div>
                       </div>
                     </CardContent>
@@ -828,7 +842,7 @@ export default function ProjectsPage() {
                                 <span className="text-muted-foreground">Progress</span>
                                 <span className="font-medium">{project.progress}%</span>
                               </div>
-                              <Progress value={project.progress} className="h-1.5" />
+                              <Progress value={project.progress} className={`h-1.5 ${getProgressBarColor(project.status)}`} />
                             </div>
                             <div className="mt-3">
                               <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
@@ -921,7 +935,7 @@ export default function ProjectsPage() {
                             {getStatusBadge(project.status)}
                           </div>
                         </div>
-                        <Progress value={project.progress} className="h-1.5" />
+                        <Progress value={project.progress} className={`h-1.5 ${getProgressBarColor(project.status)}`} />
                       </div>
 
                       {/* Owner and Team */}
@@ -1095,7 +1109,7 @@ export default function ProjectsPage() {
                           <TableCell className="py-4">{getEnvironmentBadge(project.environment)}</TableCell>
                           <TableCell className="py-4">
                             <div className="flex items-center gap-2 w-32">
-                              <Progress value={project.progress} className="h-1.5 flex-1" />
+                              <Progress value={project.progress} className={`h-1.5 flex-1 ${getProgressBarColor(project.status)}`} />
                               <span className="text-xs font-medium w-8">{project.progress}%</span>
                             </div>
                           </TableCell>
