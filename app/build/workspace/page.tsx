@@ -2597,7 +2597,7 @@ export default function ProjectWorkspacePage() {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex-1 overflow-auto px-6 py-4 min-h-0">
+          <div className="flex-1 overflow-hidden px-6 py-4 min-h-0">
             {projectType === "code" ? (
               /* Code Diff View for code-based projects */
               <div className="rounded-lg border border-[#E5E7EB] bg-[#1E1E1E] overflow-hidden h-[320px] flex flex-col">
@@ -2613,7 +2613,7 @@ export default function ProjectWorkspacePage() {
                   </div>
                 </div>
                 {/* Code Diff Content */}
-                <div className="flex-1 overflow-auto font-mono text-xs">
+                <div className="flex-1 overflow-hidden font-mono text-xs">
                   {/* Unchanged lines */}
                   <div className="flex">
                     <div className="w-12 text-right pr-3 py-0.5 text-[#6B7280] bg-[#1E1E1E] select-none border-r border-[#404040]">14</div>
@@ -3284,7 +3284,7 @@ export class MyAgent {
         </div>
 
         {/* Code Editor */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-hidden">
           <div className="flex h-full">
             {/* Line Numbers */}
             <div className="flex-shrink-0 select-none bg-zinc-900 py-4 text-right font-mono text-xs text-zinc-500">
@@ -3293,7 +3293,7 @@ export class MyAgent {
               ))}
             </div>
             {/* Code */}
-            <pre className="flex-1 overflow-auto bg-zinc-900 p-4 font-mono text-xs text-zinc-100 leading-5">
+            <pre className="flex-1 overflow-hidden bg-zinc-900 p-4 font-mono text-xs text-zinc-100 leading-5">
               <code>{codeContent}</code>
             </pre>
           </div>
@@ -3310,7 +3310,7 @@ export class MyAgent {
             <ChevronDown className={`ml-auto h-3 w-3 text-zinc-400 transition-transform ${!terminalExpanded ? "-rotate-90" : ""}`} />
           </div>
           {terminalExpanded && (
-            <div className="h-[calc(100%-32px)] overflow-auto bg-zinc-900 p-3 font-mono text-xs">
+            <div className="h-[calc(100%-32px)] overflow-hidden bg-zinc-900 p-3 font-mono text-xs">
               {consoleOutput.map((line, index) => (
                 <div key={index} className="flex items-start gap-2">
                   <span className="text-zinc-500">{line.time}</span>
