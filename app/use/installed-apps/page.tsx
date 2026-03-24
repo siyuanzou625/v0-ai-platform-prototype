@@ -170,7 +170,7 @@ const builtInApps: AppData[] = [
   {
     id: "app-007",
     name: "ProcessBoost AI",
-    tagline: "Optimize your workflow performance.",
+    tagline: "Allocates processors for active tasks",
     category: "Productivity",
     source: "Built-In",
     status: "ready",
@@ -182,7 +182,7 @@ const builtInApps: AppData[] = [
   {
     id: "app-008",
     name: "FeedbackSync AI",
-    tagline: "Learn from community insights.",
+    tagline: "Incorporates community feedback automatically",
     category: "Productivity",
     source: "Built-In",
     status: "updating",
