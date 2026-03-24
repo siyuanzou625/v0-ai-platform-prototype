@@ -1057,21 +1057,19 @@ export default function ExecutionControlPage() {
 
               {/* Run on Cloud */}
               <Card 
-                className={`cursor-pointer transition-all ${executionStrategy === "cloud" ? "border-[#ee3224] shadow-md" : "hover:shadow-md"}`}
+                className="cursor-pointer transition-all border-[#ee3224] shadow-md"
                 onClick={() => setExecutionStrategy("cloud")}
               >
                 <CardContent className="p-5 text-center">
                   <div className="flex justify-center mb-3">
-                    <Cloud className={`h-10 w-10 ${executionStrategy === "cloud" ? "text-[#ee3224]" : "text-[#6B7280]"}`} />
+                    <Cloud className="h-10 w-10 text-[#ee3224]" />
                   </div>
                   <h4 className="font-semibold text-[#1F2937] mb-1">Run on Cloud</h4>
                   <p className="text-sm text-[#6B7280] mb-3">Agents execute on cloud infrastructure</p>
-                  {executionStrategy === "cloud" && (
-                    <Badge className="bg-[#22C55E] text-white">Active</Badge>
-                  )}
+                  <Badge className="bg-[#22C55E] text-white">Active</Badge>
                   <div className="mt-3 flex justify-center">
-                    <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${executionStrategy === "cloud" ? "border-[#ee3224]" : "border-[#E5E7EB]"}`}>
-                      {executionStrategy === "cloud" && <div className="h-3 w-3 rounded-full bg-[#ee3224]" />}
+                    <div className="h-5 w-5 rounded-full border-2 flex items-center justify-center border-[#ee3224]">
+                      <div className="h-3 w-3 rounded-full bg-[#ee3224]" />
                     </div>
                   </div>
                 </CardContent>
@@ -1079,21 +1077,19 @@ export default function ExecutionControlPage() {
 
               {/* Hybrid Mode */}
               <Card 
-                className={`cursor-pointer transition-all ${executionStrategy === "hybrid" ? "border-[#ee3224] shadow-md" : "hover:shadow-md"}`}
+                className="cursor-pointer transition-all border-[#ee3224] shadow-md"
                 onClick={() => setExecutionStrategy("hybrid")}
               >
                 <CardContent className="p-5 text-center">
                   <div className="flex justify-center mb-3">
-                    <ArrowLeftRight className={`h-10 w-10 ${executionStrategy === "hybrid" ? "text-[#ee3224]" : "text-[#6B7280]"}`} />
+                    <ArrowLeftRight className="h-10 w-10 text-[#ee3224]" />
                   </div>
                   <h4 className="font-semibold text-[#1F2937] mb-1">Hybrid Mode</h4>
                   <p className="text-sm text-[#6B7280] mb-3">Smart distribution between local and cloud</p>
-                  {executionStrategy === "hybrid" && (
-                    <Badge className="bg-[#22C55E] text-white">Active</Badge>
-                  )}
+                  <Badge className="bg-[#22C55E] text-white">Active</Badge>
                   <div className="mt-3 flex justify-center">
-                    <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${executionStrategy === "hybrid" ? "border-[#ee3224]" : "border-[#E5E7EB]"}`}>
-                      {executionStrategy === "hybrid" && <div className="h-3 w-3 rounded-full bg-[#ee3224]" />}
+                    <div className="h-5 w-5 rounded-full border-2 flex items-center justify-center border-[#ee3224]">
+                      <div className="h-3 w-3 rounded-full bg-[#ee3224]" />
                     </div>
                   </div>
                 </CardContent>
