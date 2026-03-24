@@ -208,6 +208,28 @@ const projects = [
     connections: 5,
     blockedReason: null,
   },
+  {
+    id: "proj-007",
+    name: "Code Review Agent",
+    description: "Automates PR checks against internal coding standards and triages bugs by severity",
+    mode: "workflow" as const,
+    owner: { name: "Zoey", initials: "ZD" },
+    environment: "production" as const,
+    status: "building" as const,
+    progress: 80,
+    nextMilestone: "Final Testing",
+    dueDate: "2025-03-28",
+    dueDateStatus: "upcoming" as const,
+    lastActivity: "1 hour ago",
+    lastActivityTimestamp: Date.now() - 1 * 60 * 60 * 1000,
+    members: [
+      { name: "Zoey", initials: "ZD" },
+      { name: "Sarah Chen", initials: "SC" },
+    ],
+    knowledgeBases: 2,
+    connections: 4,
+    blockedReason: null,
+  },
 ]
 
 // Activity timeline entries
