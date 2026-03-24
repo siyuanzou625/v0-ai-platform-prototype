@@ -705,7 +705,7 @@ export default function ProjectsPage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm text-blue-500 font-medium">Total Projects</p>
-                          <p className="text-3xl font-bold text-foreground">{totalProjects}</p>
+                          <p className="text-3xl font-bold text-foreground">6</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
                           <Briefcase className="h-6 w-6 text-blue-500" />
