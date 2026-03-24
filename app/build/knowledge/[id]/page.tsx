@@ -470,7 +470,7 @@ export default function KnowledgeDetailPage() {
             </div>
 
             {/* Tab Content */}
-            <div className="flex-1 overflow-auto bg-white">
+            <div className="flex-1 overflow-auto bg-[#F5F7FA]">
               {/* Overview Tab */}
               <TabsContent value="overview" className="m-0 px-6 py-4">
                 <div className="flex gap-6">
