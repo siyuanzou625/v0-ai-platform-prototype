@@ -81,8 +81,8 @@ const projects = [
     nextMilestone: "Deploy to Internal GitHub",
     dueDate: "2025-03-28",
     dueDateStatus: "upcoming" as const,
-    lastActivity: "20 minutes ago",
-    lastActivityTimestamp: Date.now() - 20 * 60 * 1000,
+    lastActivity: "Just now",
+    lastActivityTimestamp: Date.now(),
     members: [
       { name: "Zoey", initials: "ZD" },
       { name: "Sarah Chen", initials: "SC" },
