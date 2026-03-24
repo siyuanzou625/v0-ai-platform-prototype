@@ -228,6 +228,7 @@ const toolPaletteCategories = [
       { id: "http", name: "HTTP Request", icon: Globe, color: "bg-orange-500", description: "Make HTTP requests to external APIs" },
       { id: "email", name: "Email", icon: Mail, color: "bg-red-500", description: "Send and receive emails" },
       { id: "scheduler", name: "Scheduler", icon: Clock, color: "bg-indigo-500", description: "Schedule tasks to run at specific times" },
+      { id: "github", name: "GitHub", icon: Github, color: "bg-gray-800", description: "Connect to GitHub for PR reviews and commits" },
     ],
   },
 ]
@@ -257,6 +258,14 @@ const projectWorkflowNodes: Record<string, typeof defaultWorkflowNodes> = {
     { id: 4, type: "condition", name: "Amount > $10K?", x: 560, y: 180, color: "bg-emerald-500", inputs: ["amount"], outputs: ["approval", "auto"] },
     { id: 5, type: "email", name: "Request Approval", x: 800, y: 120, color: "bg-red-500", inputs: ["invoice", "approver"], outputs: ["sent"] },
     { id: 6, type: "http", name: "Process Payment", x: 800, y: 260, color: "bg-orange-500", inputs: ["invoice"], outputs: ["confirmation"] },
+  ],
+  "proj-007": [ // Code Review Agent
+    { id: 1, type: "start", name: "PR Webhook", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["trigger"] },
+    { id: 2, type: "http", name: "Fetch Code Diff", x: 300, y: 120, color: "bg-orange-500", inputs: ["pr_url"], outputs: ["diff", "files"] },
+    { id: 3, type: "llm", name: "Check Standards", x: 300, y: 280, color: "bg-purple-500", inputs: ["code"], outputs: ["violations", "suggestions"] },
+    { id: 4, type: "llm", name: "Security Scan", x: 560, y: 120, color: "bg-purple-500", inputs: ["code"], outputs: ["vulnerabilities", "severity"] },
+    { id: 5, type: "condition", name: "Critical Issues?", x: 560, y: 280, color: "bg-emerald-500", inputs: ["severity"], outputs: ["block", "pass"] },
+    { id: 6, type: "http", name: "Post Comments", x: 800, y: 180, color: "bg-orange-500", inputs: ["review"], outputs: ["posted"] },
   ],
 }
 
@@ -1159,6 +1168,17 @@ const projectBuildAIChat: Record<string, Array<{ role: string; content: string }
       content: "I've added duplicate detection to your workflow:\n\nNew Step 3: Duplicate Check\n- Compare invoice number, vendor, amount, date\n- Flag potential duplicates within 90 days\n- Auto-reject exact matches\n- Queue near-matches for manual review\n\nThis will help prevent double payments. Should I also add a quarterly audit report for flagged invoices?"
     },
   ],
+  "proj-007": [ // Code Review Agent
+    { 
+      role: "assistant", 
+      content: "I've created your Code Review Agent with 5 steps:\n\n1. Receive PR webhook (from GitHub/GitLab)\n2. Fetch code diff (analyze changed files)\n3. Check against coding standards (lint rules, naming conventions)\n4. Triage bugs by severity (critical, major, minor)\n5. Post review comments (inline suggestions on PR)\n\nWould you like to:\n- Add security vulnerability scanning?\n- Customize the coding standards rules?\n- Add Slack notification for critical issues?"
+    },
+    { role: "user", content: "Add security vulnerability scanning" },
+    { 
+      role: "assistant", 
+      content: "I've added security vulnerability scanning to your workflow:\n\nNew Step 4: Security Scan\n- Check for hardcoded secrets/API keys\n- Detect SQL injection patterns\n- Flag insecure dependencies\n- OWASP Top 10 vulnerability check\n\nCritical security issues will automatically block the PR merge. Want me to configure the severity thresholds?"
+    },
+  ],
   "new": [ // New project (no template)
     { 
       role: "assistant", 
@@ -1191,6 +1211,14 @@ const projectAgentSteps: Record<string, Array<{ id: string; name: string; icon: 
     { id: "step-4", name: "Validate against PO", icon: Check, type: "action", isNew: false },
     { id: "step-5", name: "Route for approval", icon: User, type: "output", isNew: false },
   ],
+  "proj-007": [ // Code Review Agent
+    { id: "step-1", name: "Receive PR webhook", icon: Github, type: "trigger", isNew: false },
+    { id: "step-2", name: "Fetch code diff", icon: GitCommit, type: "action", isNew: false },
+    { id: "step-3", name: "Check coding standards", icon: FileCode, type: "action", isNew: false },
+    { id: "step-4", name: "Security scan", icon: Shield, type: "action", isNew: true },
+    { id: "step-5", name: "Triage bugs by severity", icon: AlertTriangle, type: "action", isNew: false },
+    { id: "step-6", name: "Post review comments", icon: MessageSquare, type: "output", isNew: false },
+  ],
   "new": [],
 }
 
@@ -1210,6 +1238,11 @@ const projectPendingChanges: Record<string, Array<string>> = {
     "Add duplicate detection step",
     "Configure 90-day lookback window",
     "Set up manual review queue",
+  ],
+  "proj-007": [
+    "Add security vulnerability scanning",
+    "Configure OWASP Top 10 checks",
+    "Set up PR blocking for critical issues",
   ],
   "new": [],
 }
