@@ -86,6 +86,7 @@ const projectsData: Record<string, { name: string; type: ProjectType; descriptio
   "proj-004": { name: "Analytics Dashboard API", type: "code", description: "Backend API for real-time analytics dashboard" },
   "proj-005": { name: "Invoice Processor", type: "workflow", description: "Automated invoice processing and approval workflow" },
   "proj-006": { name: "Notification Service", type: "code", description: "Multi-channel notification microservice" },
+  "proj-007": { name: "Code Review Agent", type: "workflow", description: "Automates PR checks against internal coding standards and triages bugs by severity" },
   "new": { name: "New Project", type: "workflow", description: "A new project" },
 }
 
