@@ -234,13 +234,13 @@ const projects = [
 
 // Activity timeline entries
 const activityTimeline = [
-  { id: 1, user: "Zoey", initials: "ZD", action: "updated workflow in", project: "Enterprise Sales Agent", projectId: "proj-001", timestamp: "2 hours ago", isCurrentUser: true },
-  { id: 2, user: "Alex", initials: "AK", action: "deployed", project: "Customer Support Bot", projectId: "proj-003", timestamp: "1 day ago", isCurrentUser: false },
-  { id: 3, user: "Sarah", initials: "SC", action: "added knowledge base to", project: "Data Pipeline v2", projectId: "proj-002", timestamp: "5 hours ago", isCurrentUser: false },
-  { id: 4, user: "Michael", initials: "MJ", action: "created new API endpoint in", project: "Analytics Dashboard API", projectId: "proj-004", timestamp: "3 hours ago", isCurrentUser: false },
-  { id: 5, user: "Zoey", initials: "ZD", action: "commented on", project: "Invoice Processor", projectId: "proj-005", timestamp: "2 days ago", isCurrentUser: true },
-  { id: 6, user: "Alex", initials: "AK", action: "updated connections in", project: "Notification Service", projectId: "proj-006", timestamp: "30 minutes ago", isCurrentUser: false },
-  { id: 7, user: "Sarah", initials: "SC", action: "resolved bug in", project: "Data Pipeline v2", projectId: "proj-002", timestamp: "6 hours ago", isCurrentUser: false },
+  { id: 1, user: "Zoey", initials: "ZD", action: "pushed update to", project: "Code Review Agent", projectId: "proj-007", timestamp: "20 minutes ago", isCurrentUser: true },
+  { id: 2, user: "Michael", initials: "MJ", action: "commented \"This caught a bug I missed for weeks!\" on", project: "Code Review Agent", projectId: "proj-007", timestamp: "45 minutes ago", isCurrentUser: false },
+  { id: 3, user: "Alex", initials: "AK", action: "forked", project: "Code Review Agent", projectId: "proj-007", timestamp: "1 hour ago", isCurrentUser: false },
+  { id: 4, user: "Sarah", initials: "SC", action: "left a 5-star rating on", project: "Code Review Agent", projectId: "proj-007", timestamp: "2 hours ago", isCurrentUser: false },
+  { id: 5, user: "Tom", initials: "TS", action: "commented \"Can we extend this to Python files?\" on", project: "Code Review Agent", projectId: "proj-007", timestamp: "3 hours ago", isCurrentUser: false },
+  { id: 6, user: "Zoey", initials: "ZD", action: "updated workflow in", project: "Enterprise Sales Agent", projectId: "proj-001", timestamp: "2 hours ago", isCurrentUser: true },
+  { id: 7, user: "Alex", initials: "AK", action: "deployed", project: "Customer Support Bot", projectId: "proj-003", timestamp: "1 day ago", isCurrentUser: false },
 ]
 
 // Helper functions
