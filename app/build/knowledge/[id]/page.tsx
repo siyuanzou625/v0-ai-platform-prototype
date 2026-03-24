@@ -931,8 +931,8 @@ export default function KnowledgeDetailPage() {
                   </Card>
 
                   {/* Danger Zone */}
-                  <Card className="border border-red-200 shadow-sm">
-                    <CardHeader className="border-b border-red-200 pb-4 bg-red-50">
+                  <Card className="border border-red-200 shadow-sm pt-0 overflow-hidden">
+                    <CardHeader className="border-b border-red-200 pb-4 bg-red-50 pt-4">
                       <CardTitle className="text-base font-semibold text-red-600">Danger Zone</CardTitle>
                     </CardHeader>
                     <CardContent className="p-4">
