@@ -698,17 +698,17 @@ export default function ProjectsPage() {
                 {/* Summary Metrics */}
                 <div className="grid grid-cols-4 gap-2">
                   <Card 
-                    className="cursor-pointer border border-[#E5E7EB] hover:border-[#ee3224]/30 hover:shadow-md transition-all"
+                    className="cursor-pointer border border-[#E5E7EB] hover:border-blue-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("all")}
                   >
                     <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-[#ee3224] font-medium">Total Projects</p>
+                          <p className="text-sm text-blue-500 font-medium">Total Projects</p>
                           <p className="text-3xl font-bold text-foreground">{totalProjects}</p>
                         </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ee3224]/10">
-                          <Briefcase className="h-6 w-6 text-[#ee3224]" />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
+                          <Briefcase className="h-6 w-6 text-blue-500" />
                         </div>
                       </div>
                     </CardContent>
@@ -720,7 +720,7 @@ export default function ProjectsPage() {
                     <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-orange-500 font-medium">In Progress</p>
+                          <p className="text-sm text-orange-500 font-medium">Building</p>
                           <p className="text-3xl font-bold text-foreground">{inProgressCount}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
@@ -736,8 +736,8 @@ export default function ProjectsPage() {
                     <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-emerald-500 font-medium">Ready to Deploy</p>
-                          <p className="text-3xl font-bold text-foreground">{readyCount}</p>
+                          <p className="text-sm text-emerald-500 font-medium">Deployed</p>
+                          <p className="text-3xl font-bold text-foreground">2</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
                           <CheckCircle2 className="h-6 w-6 text-emerald-500" />
