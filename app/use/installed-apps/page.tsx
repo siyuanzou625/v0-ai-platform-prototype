@@ -60,6 +60,8 @@ import {
   Shield,
   BarChart3,
   Presentation,
+  Cpu,
+  RefreshCw,
 } from "lucide-react"
 
 // Type definitions
@@ -164,6 +166,30 @@ const builtInApps: AppData[] = [
     lastUsed: "4 days ago",
     quickActions: ["Convert Document to Slides", "Suggest Visuals", "Generate Speaker Notes", "Refine for Clarity"],
     welcomeMessage: "From notes to slides, instantly. What would you like to present?"
+  },
+  {
+    id: "app-007",
+    name: "ProcessBoost AI",
+    tagline: "Optimize your workflow performance.",
+    category: "Productivity",
+    source: "Built-In",
+    status: "ready",
+    icon: "Cpu",
+    lastUsed: "Just now",
+    quickActions: ["Analyze Workflow", "Optimize Process", "Track Performance", "Generate Report"],
+    welcomeMessage: "Ready to boost your productivity. What process would you like to optimize?"
+  },
+  {
+    id: "app-008",
+    name: "FeedbackSync AI",
+    tagline: "Learn from community insights.",
+    category: "Productivity",
+    source: "Built-In",
+    status: "updating",
+    icon: "RefreshCw",
+    lastUsed: "30 min ago",
+    quickActions: ["Sync Feedback", "Analyze Trends", "Apply Learnings", "Share Insights"],
+    welcomeMessage: "Syncing community feedback to improve your experience. What would you like to explore?"
   },
 ]
 
@@ -317,6 +343,8 @@ const enterpriseAgents: AppData[] = [
 
 // Recently Used Apps
 const recentlyUsed: RecentApp[] = [
+  { appId: "app-007", name: "ProcessBoost AI", lastUsed: "Just now", taskInProgress: "Meeting mode active", progress: 72, icon: "Cpu" },
+  { appId: "app-008", name: "FeedbackSync AI", lastUsed: "30 min ago", taskInProgress: "Retraining from community feedback", progress: 45, icon: "RefreshCw" },
   { appId: "app-001", name: "Briefly AI", lastUsed: "2 hours ago", taskInProgress: "Meeting summary in progress", progress: 65, icon: "Mic" },
   { appId: "app-002", name: "InboxIQ AI", lastUsed: "5 hours ago", taskInProgress: "3 drafts pending review", progress: null, icon: "Mail" },
   { appId: "app-003", name: "MindLink AI", lastUsed: "1 day ago", taskInProgress: "Knowledge graph updated", progress: 100, icon: "Network" },
@@ -345,6 +373,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   UserPlus,
   Shield,
   BarChart3,
+  Cpu,
+  RefreshCw,
 }
 
 // Get status color
