@@ -871,7 +871,7 @@ export default function ExecutionControlPage() {
                         <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
                       </TableCell>
                       {advancedMode && (
-                        <TableCell className="text-center bg-[#F5F7FA]">
+                        <TableCell className="text-center">
                           <Switch checked={agent.npu} className="data-[state=checked]:bg-[#ee3224]" />
                         </TableCell>
                       )}
