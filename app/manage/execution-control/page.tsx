@@ -601,7 +601,7 @@ export default function ExecutionControlPage() {
               </div>
             </div>
 
-            <Card>
+            <Card className="pt-0 overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[#F5F7FA]">
@@ -828,7 +828,7 @@ export default function ExecutionControlPage() {
               </div>
             </div>
 
-            <Card>
+            <Card className="pt-0 overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[#F5F7FA]">
