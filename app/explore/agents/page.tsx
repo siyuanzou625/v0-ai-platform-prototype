@@ -49,6 +49,15 @@ import {
   Pencil,
   Settings,
   AlertCircle,
+  Mic,
+  Mail,
+  Brain,
+  Target,
+  MapPin,
+  Presentation,
+  FileText,
+  Scale,
+  type LucideIcon,
 } from "lucide-react"
 
 // Creator data with follower info
@@ -213,6 +222,7 @@ const agents = [
     verified: true,
     featured: true,
     commentCount: 24,
+    icon: Mic,
   },
   {
     id: 2,
@@ -228,6 +238,7 @@ const agents = [
     verified: true,
     featured: true,
     commentCount: 31,
+    icon: Mail,
   },
   {
     id: 3,
@@ -243,6 +254,7 @@ const agents = [
     verified: true,
     featured: false,
     commentCount: 18,
+    icon: Brain,
   },
   {
     id: 4,
@@ -258,6 +270,7 @@ const agents = [
     verified: true,
     featured: true,
     commentCount: 12,
+    icon: Target,
   },
   {
     id: 5,
@@ -273,6 +286,7 @@ const agents = [
     verified: false,
     featured: false,
     commentCount: 8,
+    icon: MapPin,
   },
   {
     id: 6,
@@ -288,6 +302,7 @@ const agents = [
     verified: true,
     featured: true,
     commentCount: 27,
+    icon: Presentation,
   },
   {
     id: 7,
@@ -303,6 +318,7 @@ const agents = [
     verified: true,
     featured: false,
     commentCount: 42,
+    icon: FileText,
   },
   {
     id: 8,
@@ -318,6 +334,7 @@ const agents = [
     verified: true,
     featured: false,
     commentCount: 15,
+    icon: Scale,
   },
 ]
 
@@ -885,7 +902,7 @@ export default function ExploreAgentsPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
-                            <Bot className="h-4 w-4 text-slate-600" />
+                            {agent.icon ? <agent.icon className="h-4 w-4 text-slate-600" /> : <Bot className="h-4 w-4 text-slate-600" />}
                           </div>
                           <CardTitle className="card-title-text text-base transition-colors duration-150">
                             {agent.name}
@@ -1032,7 +1049,7 @@ export default function ExploreAgentsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
-                          <Bot className="h-4 w-4 text-slate-600" />
+                          {agent.icon ? <agent.icon className="h-4 w-4 text-slate-600" /> : <Bot className="h-4 w-4 text-slate-600" />}
                         </div>
                         <CardTitle className="card-title-text text-base transition-colors duration-150">
                           {agent.name}
@@ -1691,7 +1708,7 @@ export default function ExploreAgentsPage() {
                             <CardContent className="p-4">
                               <div className="flex items-center gap-2 mb-2">
                                 <div className="h-8 w-8 rounded-lg bg-[#F5F7FA] flex items-center justify-center">
-                                  <Bot className="h-4 w-4 text-[#6B7280]" />
+                                  {asset.icon ? <asset.icon className="h-4 w-4 text-[#6B7280]" /> : <Bot className="h-4 w-4 text-[#6B7280]" />}
                                 </div>
                                 <span className="card-title-text text-sm font-semibold text-[#1F2937] transition-colors duration-150 truncate">{asset.name}</span>
                               </div>
