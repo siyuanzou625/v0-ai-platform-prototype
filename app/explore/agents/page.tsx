@@ -903,14 +903,14 @@ export default function ExploreAgentsPage() {
                       </div>
                       <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
                       {/* Category and Version - Product Info */}
-                      <div className="flex items-center gap-2 mt-2.5">
+                      <div className="flex items-center gap-2 mt-2">
                         <StatusTag label={agent.category} variant="category" />
                         <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
                     </CardHeader>
 <CardContent className="pt-0 pb-2.5 px-5">
                       {/* Divider */}
-                      <div className="w-full border-t border-[#E5E7EB] my-2.5"></div>
+                      <div className="w-full border-t border-[#E5E7EB] mt-1 mb-2.5"></div>
                       {/* Creator row with follow button - Creator & Engagement Info */}
                       <div className="flex items-center justify-between mb-2.5">
                         <div className="flex items-center gap-2">
