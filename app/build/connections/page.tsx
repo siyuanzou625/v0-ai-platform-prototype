@@ -606,7 +606,7 @@ export default function ConnectionsPage() {
               ))}
             </div>
 
-            <ScrollArea className="flex-1 pr-4">
+            <ScrollArea className="flex-1 pr-4 max-h-[50vh] overflow-y-auto">
               {/* Step 1: Select Provider */}
               {createStep === 1 && (
                 <div className="space-y-4 py-4">
