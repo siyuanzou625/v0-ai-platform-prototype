@@ -60,6 +60,8 @@ import {
   Shield,
   BarChart3,
   Presentation,
+  Cpu,
+  RefreshCw,
 } from "lucide-react"
 
 // Type definitions
@@ -151,7 +153,7 @@ const builtInApps: AppData[] = [
     icon: "Search",
     lastUsed: "3 days ago",
     quickActions: ["Search Recent Files", "Find Photos from Last Month", "Locate Email Attachments", "Search Across All Apps"],
-    welcomeMessage: "Find anything. Privately. What are you looking for?"
+    welcomeMessage: "Find anything privately. What are you looking for?"
   },
   {
     id: "app-006",
@@ -164,6 +166,30 @@ const builtInApps: AppData[] = [
     lastUsed: "4 days ago",
     quickActions: ["Convert Document to Slides", "Suggest Visuals", "Generate Speaker Notes", "Refine for Clarity"],
     welcomeMessage: "From notes to slides, instantly. What would you like to present?"
+  },
+  {
+    id: "app-007",
+    name: "ProcessBoost AI",
+    tagline: "Allocates processors for active tasks",
+    category: "Productivity",
+    source: "Built-In",
+    status: "ready",
+    icon: "Cpu",
+    lastUsed: "Just now",
+    quickActions: ["Analyze Workflow", "Optimize Process", "Track Performance", "Generate Report"],
+    welcomeMessage: "Ready to boost your productivity. What process would you like to optimize?"
+  },
+  {
+    id: "app-008",
+    name: "FeedbackSync AI",
+    tagline: "Incorporates community feedback automatically",
+    category: "Productivity",
+    source: "Built-In",
+    status: "updating",
+    icon: "RefreshCw",
+    lastUsed: "30 min ago",
+    quickActions: ["Sync Feedback", "Analyze Trends", "Apply Learnings", "Share Insights"],
+    welcomeMessage: "Syncing community feedback to improve your experience. What would you like to explore?"
   },
 ]
 
@@ -317,6 +343,8 @@ const enterpriseAgents: AppData[] = [
 
 // Recently Used Apps
 const recentlyUsed: RecentApp[] = [
+  { appId: "app-007", name: "ProcessBoost AI", lastUsed: "Just now", taskInProgress: "Meeting mode active", progress: 72, icon: "Cpu" },
+  { appId: "app-008", name: "FeedbackSync AI", lastUsed: "30 min ago", taskInProgress: "Retraining from community feedback", progress: 45, icon: "RefreshCw" },
   { appId: "app-001", name: "Briefly AI", lastUsed: "2 hours ago", taskInProgress: "Meeting summary in progress", progress: 65, icon: "Mic" },
   { appId: "app-002", name: "InboxIQ AI", lastUsed: "5 hours ago", taskInProgress: "3 drafts pending review", progress: null, icon: "Mail" },
   { appId: "app-003", name: "MindLink AI", lastUsed: "1 day ago", taskInProgress: "Knowledge graph updated", progress: 100, icon: "Network" },
@@ -345,6 +373,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   UserPlus,
   Shield,
   BarChart3,
+  Cpu,
+  RefreshCw,
 }
 
 // Get status color
@@ -497,23 +527,19 @@ export default function MyAppsPage() {
     
     return (
       <Card 
-        className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224] hover:shadow-md"
+        className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm cursor-pointer hover:shadow-md hover:border-[#ee3224]/30 transition-all"
+        onClick={() => launchApp(app)}
       >
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between">
+        <CardContent className="py-3 px-5">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB] shadow-sm">
-                <IconComponent className="h-6 w-6 text-[#ee3224]" />
+              <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
+                <IconComponent className="h-4 w-4 text-slate-600" />
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-foreground truncate">{app.name}</h3>
-                  <div className={`h-2 w-2 rounded-full ${getStatusColor(app.status)}`} />
-                </div>
-                <p className="text-sm text-muted-foreground truncate">{app.tagline}</p>
-              </div>
+              <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{app.name}</h3>
             </div>
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-1">
+              <div className={`h-2 w-2 rounded-full ${getStatusColor(app.status)}`} />
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -534,25 +560,14 @@ export default function MyAppsPage() {
               )}
             </div>
           </div>
+          <p className="mt-3 text-sm text-muted-foreground truncate">{app.tagline}</p>
           
-          <div className="mt-3 flex items-center justify-between">
+          <div className="mt-3 flex items-center">
             <Badge variant="secondary" className={`text-xs ${getSourceBadgeStyle(app.source)}`}>
               {app.source}
             </Badge>
-            {app.owner && app.source === "Team" && (
-              <span className="text-xs text-muted-foreground">Owned by: {app.owner}</span>
-            )}
           </div>
-          
-          <div className="mt-4">
-            <Button 
-              className="w-full border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
-              variant="outline"
-              onClick={() => launchApp(app)}
-            >
-              {app.requiresAccess ? "Request Access" : "Launch"}
-            </Button>
-          </div>
+
         </CardContent>
       </Card>
     )
@@ -592,7 +607,7 @@ export default function MyAppsPage() {
         </button>
         
         {!isCollapsed && (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {apps.map(app => (
               <AppCard key={app.id} app={app} showEditButton={showEditButton} />
             ))}
@@ -604,127 +619,128 @@ export default function MyAppsPage() {
 
   return (
     <AppLayout>
-      <div className="flex flex-col h-full bg-[#F5F7FA]">
+      <>
         {/* Header */}
-        <div className="bg-white border-b border-[#E5E7EB] px-6 py-4">
-          {/* Title Row */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Installed Apps</h1>
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <LayoutGrid className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Installed Apps</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Launch and use your installed AI applications with one click.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Launch and use your installed AI applications with one click.
-            </p>
           </div>
           
           {/* Controls Row: Search + Filter Chips + View Toggle */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3 mt-4">
             {/* Search */}
-            <div className="relative flex-1 min-w-[50%]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                ref={searchInputRef}
-                placeholder="Search apps... (Cmd/Ctrl+K)"
-                className="pl-10 pr-8 border-[#E5E7EB]"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setShowRecentSearches(true)}
-                onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
-              />
-              {searchQuery && (
-                <button 
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                  onClick={() => setSearchQuery("")}
-                >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                </button>
-              )}
-              
-              {/* Recent Searches Dropdown */}
-              {showRecentSearches && recentSearches.length > 0 && !searchQuery && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#E5E7EB] rounded shadow-md z-10">
-                  <div className="p-2">
-                    <p className="text-xs text-muted-foreground px-2 mb-1">Recent Searches</p>
-                    {recentSearches.map((search, idx) => (
-                      <button
-                        key={idx}
-                        className="w-full text-left px-2 py-1.5 text-sm text-foreground hover:bg-[#F5F7FA] rounded"
-                        onClick={() => setSearchQuery(search)}
-                      >
-                        {search}
-                      </button>
-                    ))}
+            <div className="relative flex-1 min-w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  ref={searchInputRef}
+                  placeholder="Search apps... (Cmd/Ctrl+K)"
+                  className="pl-10 pr-8 bg-white border-[#E5E7EB]"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setShowRecentSearches(true)}
+                  onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
+                />
+                {searchQuery && (
+                  <button 
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    onClick={() => setSearchQuery("")}
+                  >
+                    <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                  </button>
+                )}
+                
+                {/* Recent Searches Dropdown */}
+                {showRecentSearches && recentSearches.length > 0 && !searchQuery && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#E5E7EB] rounded shadow-md z-10">
+                    <div className="p-2">
+                      <p className="text-xs text-muted-foreground px-2 mb-1">Recent Searches</p>
+                      {recentSearches.map((search, idx) => (
+                        <button
+                          key={idx}
+                          className="w-full text-left px-2 py-1.5 text-sm text-foreground hover:bg-[#F5F7FA] rounded"
+                          onClick={() => setSearchQuery(search)}
+                        >
+                          {search}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Filter Chips */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setActiveFilters([])}
-                className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
-                  activeFilters.length === 0
-                    ? "bg-[#ee3224] text-white"
-                    : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
-                }`}
-              >
-                All
-              </button>
-              {(["Built-In", "My Agent", "Team"] as AppSource[]).map(source => (
+                )}
+              </div>
+              
+              {/* Filter Chips */}
+              <div className="flex items-center gap-2">
                 <button
-                  key={source}
-                  onClick={() => toggleFilter(source)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
-                    activeFilters.includes(source)
-                      ? "bg-[#ee3224] text-white"
-                      : "bg-[#F5F7FA] text-[#333] hover:bg-[#E5E7EB]"
+                  onClick={() => setActiveFilters([])}
+                  className={`px-3 py-1.5 text-sm font-medium rounded border transition-colors ${
+                    activeFilters.length === 0
+                      ? "bg-[#ee3224] text-white border-[#ee3224]"
+                      : "bg-white text-[#333] border-[#E5E7EB] hover:bg-[#F5F7FA]"
                   }`}
                 >
-                  {source === "My Agent" ? "My Agents" : source === "Team" ? "Team Agents" : source}
+                  All
                 </button>
-              ))}
-              {activeFilters.length > 0 && (
-                <button 
-                  onClick={() => setActiveFilters([])}
-                  className="text-muted-foreground hover:text-foreground"
+                {(["Built-In", "My Agent", "Team"] as AppSource[]).map(source => (
+                  <button
+                    key={source}
+                    onClick={() => toggleFilter(source)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded border transition-colors ${
+                      activeFilters.includes(source)
+                        ? "bg-[#ee3224] text-white border-[#ee3224]"
+                        : "bg-white text-[#333] border-[#E5E7EB] hover:bg-[#F5F7FA]"
+                    }`}
+                  >
+                    {source === "My Agent" ? "My Agents" : source === "Team" ? "Team Agents" : source}
+                  </button>
+                ))}
+                {activeFilters.length > 0 && (
+                  <button 
+                    onClick={() => setActiveFilters([])}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              
+              {/* View Toggle */}
+              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 ml-auto">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "grid"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
+                  }`}
                 >
-                  <X className="h-4 w-4" />
+                  <LayoutGrid className="h-4 w-4" />
                 </button>
-              )}
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "list"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
+                  }`}
+                >
+                  <List className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-            
-            {/* View Toggle */}
-            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                  viewMode === "grid"
-                    ? "bg-white text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                  viewMode === "list"
-                    ? "bg-white text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <List className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
         </div>
         
         {/* Main Content */}
         <ScrollArea className="flex-1">
-          <div className="p-6">
+          <div className="px-8 py-6 space-y-6">
             {viewMode === "grid" ? (
               <>
                 {/* Continue Section (Recently Used) */}
@@ -734,39 +750,36 @@ export default function MyAppsPage() {
                       <Clock className="h-4 w-4 text-muted-foreground" />
                       <h2 className="text-lg font-semibold text-foreground">Continue</h2>
                     </div>
-                    <div className="flex gap-4 overflow-x-auto pb-2">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                       {recentlyUsed.map(recent => {
                         const app = allApps.find(a => a.id === recent.appId)
                         if (!app) return null
                         const IconComponent = iconMap[recent.icon] || Briefcase
                         
-                        return (
-                          <Card 
-                            key={recent.appId}
-                            className="flex-shrink-0 w-[280px] cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224] hover:shadow-md"
-                          >
-                            <CardContent className="p-4">
+return (
+                                          <Card 
+                                            key={recent.appId}
+                                            className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm cursor-pointer hover:shadow-md hover:border-[#ee3224]/30 transition-all"
+                                            onClick={() => launchApp(app)}
+                                          >
+                                            <CardContent className="py-3 px-5">
                               <div className="flex items-center gap-3">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-[#E5E7EB] shadow-sm">
-                                  <IconComponent className="h-6 w-6 text-[#ee3224]" />
+                                <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
+                                  <IconComponent className="h-4 w-4 text-slate-600" />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                  <h3 className="font-semibold text-foreground truncate">{recent.name}</h3>
+                                <div className="flex-1 min-w-0 space-y-1">
+                                  <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 truncate">{recent.name}</h3>
                                   <p className="text-xs text-muted-foreground">{recent.lastUsed}</p>
                                 </div>
                               </div>
-                              <p className="mt-2 text-sm text-muted-foreground truncate">{recent.taskInProgress}</p>
+                              <p className="mt-3 text-sm text-muted-foreground truncate">{recent.taskInProgress}</p>
                               {recent.progress !== null && recent.progress < 100 && (
-                                <Progress value={recent.progress} className="h-1 mt-2" />
+                                <div className="mt-3 flex items-center gap-2">
+                                  <Progress value={recent.progress} className="h-1.5 flex-1" />
+                                  <span className="text-xs font-medium text-muted-foreground w-8 text-right">{recent.progress}%</span>
+                                </div>
                               )}
-                              <Button 
-                                className="w-full mt-3 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224] hover:text-white"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => launchApp(app, true)}
-                              >
-                                Resume
-                              </Button>
+
                             </CardContent>
                           </Card>
                         )
@@ -1020,7 +1033,7 @@ export default function MyAppsPage() {
             )}
           </DialogContent>
         </Dialog>
-      </div>
+      </>
     </AppLayout>
   )
 }

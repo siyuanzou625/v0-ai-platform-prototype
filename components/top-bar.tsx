@@ -28,6 +28,7 @@ import {
   ArrowUp,
   ChevronRight,
   Package,
+  Sparkles,
   Users,
   CheckCircle,
 } from "lucide-react"
@@ -43,8 +44,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 
@@ -125,9 +125,6 @@ export function TopBar() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const [searchFocused, setSearchFocused] = useState(false)
-  const [communityOpen, setCommunityOpen] = useState(false)
-  const [communityTab, setCommunityTab] = useState("trending")
-  const [communitySearch, setCommunitySearch] = useState("")
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   // Keyboard shortcut: Cmd/Ctrl+K to focus search
@@ -147,37 +144,37 @@ export function TopBar() {
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [])
 
-  const filteredDiscussions = discussions.filter((d) =>
-    d.title.toLowerCase().includes(communitySearch.toLowerCase()) ||
-    d.assetBadge.toLowerCase().includes(communitySearch.toLowerCase())
-  )
-
-  const unreadCount = discussions.filter((d) => d.unread).length
-
   return (
     <>
       <header className="sticky top-0 z-[1000] flex h-16 items-center justify-between border-b border-[#E5E7EB] bg-white px-6">
-        {/* Left Section: Global Search Bar */}
-        <div className="relative flex-1 min-w-[50%] max-w-[60%]">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-          <Input
-            ref={searchInputRef}
-            type="search"
-            placeholder="Search assets, docs, discussions... (Cmd/Ctrl+K)"
-            className="h-10 w-full rounded border-[#E5E7EB] bg-[#F5F7FA] pl-10 pr-10 text-sm placeholder:text-[#6B7280] focus:border-[#ee3224] focus:ring-[#ee3224]"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
-          />
-          {searchQuery && (
-            <button
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#333]"
-              onClick={() => setSearchQuery("")}
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
+        {/* Left Section: Logo */}
+        <div className="flex w-64 items-center gap-2">
+          <Sparkles className="h-5 w-5 text-[#ee3224]" />
+          <span className="text-lg font-semibold text-[#ee3224]">AgentStudio</span>
+        </div>
+        {/* Right Section: Search + Actions */}
+        <div className="flex items-center gap-3">
+          {/* Compact Search Bar */}
+          <div className="relative w-64">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
+            <Input
+              ref={searchInputRef}
+              type="search"
+              placeholder="Search anything..."
+              className="h-9 w-full rounded border-[#E5E7EB] bg-[#F5F7FA] pl-9 pr-8 text-sm placeholder:text-[#6B7280] focus:border-[#ee3224] focus:ring-[#ee3224]"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
+            />
+            {searchQuery && (
+              <button
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#333]"
+                onClick={() => setSearchQuery("")}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
 
           {/* Search Dropdown */}
           {searchFocused && (
@@ -255,10 +252,8 @@ export function TopBar() {
               </div>
             </div>
           )}
-        </div>
+          </div>
 
-        {/* Right Section: Utility Icons */}
-        <div className="flex items-center gap-1">
           {/* Resources Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -298,26 +293,12 @@ export function TopBar() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Community Button */}
-          <Button
-            variant="ghost"
-            className="relative gap-2 px-3 text-[#333] hover:bg-[#F5F7FA] hover:text-[#ee3224]"
-            onClick={() => setCommunityOpen(true)}
-          >
-            <MessageSquare className="h-5 w-5" />
-            <span className="text-sm font-normal">Community</span>
-            {unreadCount > 0 && (
-              <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#ee3224] text-[10px] font-medium text-white">
-                {unreadCount}
-              </span>
-            )}
-          </Button>
-
           {/* Help Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-[#333] hover:bg-[#F5F7FA] hover:text-[#ee3224]">
+              <Button variant="ghost" className="gap-2 px-3 text-[#333] hover:bg-[#F5F7FA] hover:text-[#ee3224]">
                 <HelpCircle className="h-5 w-5" />
+                <span className="text-sm font-normal">Help Center</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[250px] rounded border-[#E5E7EB] p-2 shadow-lg">
@@ -486,84 +467,6 @@ export function TopBar() {
         </div>
       </header>
 
-      {/* Community Slide-Over Panel */}
-      <Sheet open={communityOpen} onOpenChange={setCommunityOpen}>
-        <SheetContent className="top-16 h-[calc(100vh-64px)] w-[450px] border-l border-[#E5E7EB] p-0 sm:max-w-[450px]">
-          <SheetHeader className="border-b border-[#E5E7EB] p-4">
-            <div className="flex items-center justify-between">
-              <SheetTitle className="text-lg font-semibold">Community Discussions</SheetTitle>
-            </div>
-            <div className="relative mt-3">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-              <Input
-                placeholder="Search discussions..."
-                className="h-8 bg-[#F5F7FA] pl-9"
-                value={communitySearch}
-                onChange={(e) => setCommunitySearch(e.target.value)}
-              />
-            </div>
-            <Tabs value={communityTab} onValueChange={setCommunityTab} className="mt-3">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="trending">Trending</TabsTrigger>
-                <TabsTrigger value="my">My Discussions</TabsTrigger>
-                <TabsTrigger value="following">Following</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </SheetHeader>
-
-          <ScrollArea className="h-[calc(100vh-64px-200px-140px)] overflow-y-auto">
-            <div className="p-4">
-              {filteredDiscussions.map((discussion) => (
-                <div
-                  key={discussion.id}
-                  className={cn(
-                    "mb-3 cursor-pointer rounded-lg border border-[#E5E7EB] p-3 transition-colors hover:bg-[#F5F7FA]",
-                    discussion.unread && "border-l-2 border-l-[#ee3224]"
-                  )}
-                >
-                  <div className="mb-2 flex items-start justify-between">
-                    <h4 className="line-clamp-1 text-sm font-semibold">{discussion.title}</h4>
-                    <Badge variant="secondary" className="ml-2 shrink-0 text-[10px]">{discussion.assetBadge}</Badge>
-                  </div>
-                  <p className="line-clamp-2 text-xs text-[#6B7280]">{discussion.excerpt}</p>
-                  <div className="mt-2 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-5 w-5">
-                        <AvatarFallback className="text-[10px]">{discussion.author.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                      </Avatar>
-                      <span className="text-xs text-[#6B7280]">{discussion.author}</span>
-                      <span className="text-xs text-[#6B7280]">{discussion.timestamp}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-xs text-[#6B7280]">
-                      <span className="flex items-center gap-1">
-                        <ArrowUp className="h-3 w-3" />
-                        {discussion.upvotes}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <MessageSquare className="h-3 w-3" />
-                        {discussion.replies}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-
-          {/* Panel Footer */}
-          <div className="absolute bottom-0 left-0 right-0 border-t border-[#E5E7EB] bg-white p-4">
-            <Button className="w-full bg-[#ee3224] hover:bg-[#cc2a1e]">
-              Start New Discussion
-            </Button>
-            <div className="mt-3 flex items-center justify-center gap-4 text-xs text-[#6B7280]">
-              <a href="#" className="hover:text-[#ee3224]">Documentation</a>
-              <a href="#" className="hover:text-[#ee3224]">Tutorials</a>
-              <a href="#" className="hover:text-[#ee3224]">Support Portal</a>
-            </div>
-            <p className="mt-2 text-center text-xs text-[#6B7280]">Press Escape to close</p>
-          </div>
-        </SheetContent>
-      </Sheet>
     </>
   )
 }

@@ -18,11 +18,41 @@ import {
   Users,
   Lock,
   AlertTriangle,
+  Github,
+  Link,
 } from "lucide-react"
 
 export default function SettingsPage() {
   const { toast } = useToast()
   const [enterpriseModalOpen, setEnterpriseModalOpen] = useState(false)
+  const [githubAccountType, setGithubAccountType] = useState<"personal" | "enterprise">("personal")
+  const [githubSwitchModalOpen, setGithubSwitchModalOpen] = useState(false)
+  const [pendingGithubAccountType, setPendingGithubAccountType] = useState<"personal" | "enterprise" | null>(null)
+
+  const handleGithubAccountChange = (newType: "personal" | "enterprise") => {
+    if (newType !== githubAccountType) {
+      setPendingGithubAccountType(newType)
+      setGithubSwitchModalOpen(true)
+    }
+  }
+
+  const confirmGithubSwitch = () => {
+    if (pendingGithubAccountType) {
+      setGithubAccountType(pendingGithubAccountType)
+      toast({
+        title: "Account Switched",
+        description: `Successfully switched to ${pendingGithubAccountType === "personal" ? "Personal" : "Enterprise"} Account.`,
+        duration: 3000,
+      })
+    }
+    setGithubSwitchModalOpen(false)
+    setPendingGithubAccountType(null)
+  }
+
+  const cancelGithubSwitch = () => {
+    setGithubSwitchModalOpen(false)
+    setPendingGithubAccountType(null)
+  }
   
   // Privacy Settings State
   const [privacySettings, setPrivacySettings] = useState({
@@ -226,6 +256,86 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
+        {/* Integrations Section */}
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2">
+              <Link className="h-5 w-5 text-[#1F2937]" />
+              <CardTitle className="text-lg font-semibold">Integrations</CardTitle>
+            </div>
+            <CardDescription>Manage your connected tools and external platforms</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* GitHub Connection */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Github className="h-5 w-5 text-[#1F2937]" />
+                <Label className="text-[14px] font-medium text-[#1F2937]">GitHub Connection</Label>
+              </div>
+              <p className="text-[13px] text-[#6B7280]">Connect your GitHub account to sync agents and collaborate on code</p>
+              
+              {/* Account Type Selection */}
+              <div className="space-y-3 pl-1">
+                <div className="flex items-start justify-between gap-4">
+                  <label className="flex items-start gap-3 cursor-pointer flex-1">
+                    <input
+                      type="radio"
+                      name="githubAccount"
+                      checked={githubAccountType === "personal"}
+                      onChange={() => handleGithubAccountChange("personal")}
+                      className="mt-1 h-4 w-4 accent-[#ee3224]"
+                    />
+                    <div className="space-y-0.5">
+                      <span className="text-[14px] font-medium text-[#1F2937]">Personal Account</span>
+                      <p className="text-[13px] text-[#6B7280]">Connect with your personal GitHub account for individual projects</p>
+                    </div>
+                  </label>
+                  <Button 
+                    className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white shrink-0"
+                    onClick={() => toast({
+                      title: "GitHub Connection",
+                      description: "Reconnecting to GitHub Personal account...",
+                      duration: 3000,
+                    })}
+                  >
+                    <Github className="h-4 w-4 mr-2" />
+                    Reconnect Account
+                  </Button>
+                </div>
+                
+                <div className="flex items-start justify-between gap-4">
+                  <label className="flex items-start gap-3 cursor-pointer flex-1">
+                    <input
+                      type="radio"
+                      name="githubAccount"
+                      checked={githubAccountType === "enterprise"}
+                      onChange={() => handleGithubAccountChange("enterprise")}
+                      className="mt-1 h-4 w-4 accent-[#ee3224]"
+                    />
+                    <div className="space-y-0.5">
+                      <span className="text-[14px] font-medium text-[#1F2937]">Enterprise Account</span>
+                      <p className="text-[13px] text-[#6B7280]">Connect with your organization's GitHub Enterprise for team collaboration</p>
+                    </div>
+                  </label>
+                  <Button 
+                    className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white shrink-0"
+                    onClick={() => toast({
+                      title: "GitHub Connection",
+                      description: "Reconnecting to GitHub Enterprise account...",
+                      duration: 3000,
+                    })}
+                  >
+                    <Github className="h-4 w-4 mr-2" />
+                    Reconnect Account
+                  </Button>
+                </div>
+              </div>
+              
+              <p className="text-[12px] text-[#9CA3AF]">You can switch between account types at any time</p>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Security Section */}
         <Card>
           <CardHeader className="pb-4">
@@ -284,6 +394,32 @@ export default function SettingsPage() {
             </Button>
             <Button className="bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={confirmEnterpriseMode}>
               Enable Enterprise Mode
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* GitHub Account Switch Confirmation Modal */}
+      <Dialog open={githubSwitchModalOpen} onOpenChange={setGithubSwitchModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-[#1F2937]">
+              {pendingGithubAccountType === "enterprise" 
+                ? "Switch to Enterprise Account?" 
+                : "Switch to Personal Account?"}
+            </DialogTitle>
+            <DialogDescription className="text-[#6B7280]">
+              {pendingGithubAccountType === "enterprise"
+                ? "Switching to Enterprise Account will disconnect your current personal GitHub connection. Your synced agents and repositories will need to be reconnected."
+                : "Switching to Personal Account will disconnect your current enterprise GitHub connection. Your synced agents and repositories will need to be reconnected."}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 sm:gap-0">
+            <Button variant="outline" onClick={cancelGithubSwitch}>
+              Cancel
+            </Button>
+            <Button className="bg-[#ee3224] hover:bg-[#cc2a1e] text-white" onClick={confirmGithubSwitch}>
+              Switch Account
             </Button>
           </DialogFooter>
         </DialogContent>

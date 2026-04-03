@@ -70,6 +70,28 @@ type SortDirection = "asc" | "desc"
 // Enhanced mock projects data
 const projects = [
   {
+    id: "proj-007",
+    name: "Code Review Agent",
+    description: "Automates PR checks against internal coding standards and triages bugs by severity",
+    mode: "workflow" as const,
+    owner: { name: "Zoey", initials: "ZD" },
+    environment: "production" as const,
+    status: "building" as const,
+    progress: 80,
+    nextMilestone: "Deploy to Internal GitHub",
+    dueDate: "2025-03-28",
+    dueDateStatus: "upcoming" as const,
+    lastActivity: "Just now",
+    lastActivityTimestamp: Date.now(),
+    members: [
+      { name: "Zoey", initials: "ZD" },
+      { name: "Sarah Chen", initials: "SC" },
+    ],
+    knowledgeBases: 2,
+    connections: 4,
+    blockedReason: null,
+  },
+  {
     id: "proj-001",
     name: "Enterprise Sales Agent",
     description: "Automating lead qualification and outreach for enterprise sales teams",
@@ -212,16 +234,30 @@ const projects = [
 
 // Activity timeline entries
 const activityTimeline = [
-  { id: 1, user: "Zoey", initials: "ZD", action: "updated workflow in", project: "Enterprise Sales Agent", projectId: "proj-001", timestamp: "2 hours ago", isCurrentUser: true },
-  { id: 2, user: "Alex", initials: "AK", action: "deployed", project: "Customer Support Bot", projectId: "proj-003", timestamp: "1 day ago", isCurrentUser: false },
-  { id: 3, user: "Sarah", initials: "SC", action: "added knowledge base to", project: "Data Pipeline v2", projectId: "proj-002", timestamp: "5 hours ago", isCurrentUser: false },
-  { id: 4, user: "Michael", initials: "MJ", action: "created new API endpoint in", project: "Analytics Dashboard API", projectId: "proj-004", timestamp: "3 hours ago", isCurrentUser: false },
-  { id: 5, user: "Zoey", initials: "ZD", action: "commented on", project: "Invoice Processor", projectId: "proj-005", timestamp: "2 days ago", isCurrentUser: true },
-  { id: 6, user: "Alex", initials: "AK", action: "updated connections in", project: "Notification Service", projectId: "proj-006", timestamp: "30 minutes ago", isCurrentUser: false },
-  { id: 7, user: "Sarah", initials: "SC", action: "resolved bug in", project: "Data Pipeline v2", projectId: "proj-002", timestamp: "6 hours ago", isCurrentUser: false },
+  { id: 1, user: "Zoey", initials: "ZD", action: "pushed update to", project: "Code Review Agent", projectId: "proj-007", timestamp: "20 minutes ago", isCurrentUser: true },
+  { id: 2, user: "Michael", initials: "MJ", action: "commented \"This caught a bug I missed for weeks!\" on", project: "Code Review Agent", projectId: "proj-007", timestamp: "45 minutes ago", isCurrentUser: false },
+  { id: 3, user: "Alex", initials: "AK", action: "forked", project: "Code Review Agent", projectId: "proj-007", timestamp: "1 hour ago", isCurrentUser: false },
+  { id: 4, user: "Sarah", initials: "SC", action: "left a 5-star rating on", project: "Code Review Agent", projectId: "proj-007", timestamp: "2 hours ago", isCurrentUser: false },
+  { id: 5, user: "Tom", initials: "TS", action: "commented \"Can we extend this to Python files?\" on", project: "Code Review Agent", projectId: "proj-007", timestamp: "3 hours ago", isCurrentUser: false },
+  { id: 6, user: "Zoey", initials: "ZD", action: "updated workflow in", project: "Enterprise Sales Agent", projectId: "proj-001", timestamp: "2 hours ago", isCurrentUser: true },
+  { id: 7, user: "Alex", initials: "AK", action: "deployed", project: "Customer Support Bot", projectId: "proj-003", timestamp: "1 day ago", isCurrentUser: false },
 ]
 
 // Helper functions
+const getProgressBarColor = (status: string) => {
+  switch (status) {
+    case "deployed":
+    case "ready":
+      return "[&>div]:bg-emerald-500"
+    case "building":
+      return "[&>div]:bg-orange-500"
+    case "blocked":
+      return "[&>div]:bg-red-500"
+    default:
+      return "[&>div]:bg-[#ee3224]"
+  }
+}
+
 const getStatusBadge = (status: string) => {
   switch (status) {
     case "deployed":
@@ -240,7 +276,7 @@ const getStatusBadge = (status: string) => {
       )
     case "building":
       return (
-        <Badge variant="secondary" className="bg-blue-50 text-blue-600 border border-blue-200">
+        <Badge variant="secondary" className="bg-orange-50 text-orange-600 border border-orange-200">
           <PlayCircle className="mr-1 h-3 w-3" />
           Building
         </Badge>
@@ -381,7 +417,7 @@ export default function ProjectsPage() {
   // Summary metrics
   const totalProjects = projects.length
   const inProgressCount = projects.filter(p => p.status === "building").length
-  const readyCount = projects.filter(p => p.status === "ready").length
+  const readyCount = projects.filter(p => p.status === "ready" || p.status === "deployed").length
   const blockedCount = projects.filter(p => p.status === "blocked").length
 
   const handleOpenProject = (projectId: string) => {
@@ -453,57 +489,18 @@ export default function ProjectsPage() {
     <AppLayout>
       <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-[#F5F7FA]">
         {/* Header */}
-        <div className="border-b border-border bg-card px-6 py-4">
-          {/* Row 1: Title & Description */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <FolderOpen className="h-5 w-5 text-[#ee3224]" />
-              <h1 className="text-xl font-semibold text-foreground">Projects</h1>
+        <div className="sticky top-0 z-10 bg-white border-b border-border px-6 py-6 shadow-sm">
+          {/* Row 1: Title, Description & New Agent Button */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <FolderOpen className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Projects</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Create and manage your AI agents and workflows in one place.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Create and manage your AI agents and workflows in one place.
-            </p>
-          </div>
-
-          {/* Row 2: Search + Filters + New Project Button */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="relative flex-1 min-w-[50%]">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search projects by name or owner..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Select value={environmentFilter} onValueChange={(v) => setEnvironmentFilter(v as Environment)}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Environment" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Environments</SelectItem>
-                <SelectItem value="development">Development</SelectItem>
-                <SelectItem value="staging">Staging</SelectItem>
-                <SelectItem value="production">Production</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as Status)}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="building">Building</SelectItem>
-                <SelectItem value="ready">Ready to Deploy</SelectItem>
-                <SelectItem value="deployed">Deployed</SelectItem>
-                <SelectItem value="blocked">Blocked</SelectItem>
-              </SelectContent>
-            </Select>
-            {(searchQuery || environmentFilter !== "all" || statusFilter !== "all") && (
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                Clear filters
-              </Button>
-            )}
             <Dialog open={showNewProject} onOpenChange={(open) => {
               setShowNewProject(open)
               if (!open) {
@@ -613,126 +610,161 @@ export default function ProjectsPage() {
             </Dialog>
           </div>
 
-          {/* Row 3: View Toggle */}
-          <div className="flex justify-center">
-            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
-            <button
-              onClick={() => handleViewChange("dashboard")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "dashboard"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <LayoutDashboard className="h-4 w-4" />
-              Dashboard
-            </button>
-            <button
-              onClick={() => handleViewChange("grid")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "grid"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <LayoutGrid className="h-4 w-4" />
-              Grid
-            </button>
-            <button
-              onClick={() => handleViewChange("list")}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
-                viewMode === "list"
-                  ? "bg-[#ee3224] text-white shadow-sm"
-                  : "text-[#333] hover:bg-white/50"
-              }`}
-            >
-              <List className="h-4 w-4" />
-              List
-            </button>
+          {/* Row 2: Search + Filters */}
+          <div className="flex items-center gap-3">
+            <div className="relative w-[280px]">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search projects..."
+                className="pl-9"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Select value={environmentFilter} onValueChange={(v) => setEnvironmentFilter(v as Environment)}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Environment" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Environments</SelectItem>
+                <SelectItem value="development">Development</SelectItem>
+                <SelectItem value="staging">Staging</SelectItem>
+                <SelectItem value="production">Production</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as Status)}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="building">Building</SelectItem>
+                <SelectItem value="ready">Ready to Deploy</SelectItem>
+                <SelectItem value="deployed">Deployed</SelectItem>
+                <SelectItem value="blocked">Blocked</SelectItem>
+              </SelectContent>
+            </Select>
+            {(searchQuery || environmentFilter !== "all" || statusFilter !== "all") && (
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                Clear filters
+              </Button>
+            )}
+            
+            {/* View Toggle */}
+            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 ml-auto">
+              <button
+                onClick={() => handleViewChange("dashboard")}
+                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "dashboard"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </button>
+              <button
+                onClick={() => handleViewChange("grid")}
+                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "grid"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+                Grid
+              </button>
+              <button
+                onClick={() => handleViewChange("list")}
+                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "list"
+                    ? "bg-[#ee3224] text-white shadow-sm"
+                    : "text-[#333] hover:bg-white/50"
+                }`}
+              >
+                <List className="h-4 w-4" />
+                List
+              </button>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-auto">
           <div className="p-6">
             {/* Dashboard View */}
             {viewMode === "dashboard" && (
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {/* Summary Metrics */}
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-2">
                   <Card 
-                    className="cursor-pointer border border-[#E5E7EB] hover:border-[#ee3224]/30 hover:shadow-md transition-all"
+                    className="cursor-pointer border border-[#E5E7EB] hover:border-blue-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("all")}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">Total Projects</p>
-                          <p className="text-3xl font-bold text-foreground">{totalProjects}</p>
+                          <p className="text-sm text-blue-500 font-medium">Total Projects</p>
+                          <p className="text-3xl font-bold text-foreground">6</p>
                         </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ee3224]/10">
-                          <Briefcase className="h-6 w-6 text-[#ee3224]" />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
+                          <Briefcase className="h-6 w-6 text-blue-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-[#ee3224] hover:underline">View all projects</p>
                     </CardContent>
                   </Card>
                   <Card 
-                    className="cursor-pointer border border-[#E5E7EB] hover:border-blue-500/30 hover:shadow-md transition-all"
+                    className="cursor-pointer border border-[#E5E7EB] hover:border-orange-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("building")}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">In Progress</p>
+                          <p className="text-sm text-orange-500 font-medium">Building</p>
                           <p className="text-3xl font-bold text-foreground">{inProgressCount}</p>
                         </div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
-                          <PlayCircle className="h-6 w-6 text-blue-500" />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
+                          <PlayCircle className="h-6 w-6 text-orange-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-blue-600 hover:underline">View building projects</p>
                     </CardContent>
                   </Card>
                   <Card 
                     className="cursor-pointer border border-[#E5E7EB] hover:border-emerald-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("ready")}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">Ready to Deploy</p>
-                          <p className="text-3xl font-bold text-foreground">{readyCount}</p>
+                          <p className="text-sm text-emerald-500 font-medium">Deployed</p>
+                          <p className="text-3xl font-bold text-foreground">2</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
                           <CheckCircle2 className="h-6 w-6 text-emerald-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-emerald-600 hover:underline">View ready projects</p>
                     </CardContent>
                   </Card>
                   <Card 
                     className="cursor-pointer border border-[#E5E7EB] hover:border-red-500/30 hover:shadow-md transition-all"
                     onClick={() => handleMetricClick("blocked")}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">Blocked</p>
+                          <p className="text-sm text-red-500 font-medium">Blocked</p>
                           <p className="text-3xl font-bold text-foreground">{blockedCount}</p>
                         </div>
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
                           <AlertCircle className="h-6 w-6 text-red-500" />
                         </div>
                       </div>
-                      <p className="mt-2 text-xs text-red-600 hover:underline">View blocked projects</p>
                     </CardContent>
                   </Card>
                 </div>
 
                 {/* Two Column Layout: Activity + Projects */}
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-3 gap-3">
                   {/* Team Activity Timeline */}
                   <Card className="col-span-1 border border-[#E5E7EB]">
                     <CardHeader className="pb-3">
@@ -777,7 +809,7 @@ export default function ProjectsPage() {
                         View all
                       </Button>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-2">
                       {filteredProjects.slice(0, 6).map((project) => (
                         <Card 
                           key={project.id}
@@ -805,41 +837,16 @@ export default function ProjectsPage() {
                               </div>
                               {getStatusBadge(project.status)}
                             </div>
-                            <div className="mt-3">
-                              <div className="flex items-center justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Progress</span>
-                                <span className="font-medium">{project.progress}%</span>
-                              </div>
-                              <Progress value={project.progress} className="h-1.5" />
+                            <div className="mt-3 flex items-center gap-2">
+                              <Progress value={project.progress} className={`h-1.5 flex-1 ${getProgressBarColor(project.status)}`} />
+                              <span className="text-xs font-medium w-8 text-right">{project.progress}%</span>
                             </div>
-                            <div className="mt-3 flex items-center justify-between">
-                              <div>
-                                <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
-                                <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
-                                  {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
-                                  Due {project.dueDate}
-                                </p>
-                              </div>
-                              <div className="flex gap-1">
-                                <Button 
-                                  size="sm" 
-                                  className="h-7 px-2 bg-[#ee3224] hover:bg-[#cc2a1e] text-xs"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleOpenProject(project.id)
-                                  }}
-                                >
-                                  Open
-                                </Button>
-                                <Button 
-                                  size="sm" 
-                                  variant="ghost" 
-                                  className="h-7 px-2 text-xs"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <Pencil className="h-3 w-3" />
-                                </Button>
-                              </div>
+                            <div className="mt-3">
+                              <p className="text-xs text-muted-foreground">Next: {project.nextMilestone}</p>
+                              <p className={`text-xs ${getDueDateColor(project.dueDateStatus)}`}>
+                                {project.dueDateStatus === "complete" && <Check className="inline h-3 w-3 mr-0.5" />}
+                                Due {project.dueDate}
+                              </p>
                             </div>
                           </CardContent>
                         </Card>
@@ -852,7 +859,7 @@ export default function ProjectsPage() {
 
             {/* Grid View */}
             {viewMode === "grid" && (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 {filteredProjects.map((project) => (
                   <Card
                     key={project.id}
@@ -925,7 +932,7 @@ export default function ProjectsPage() {
                             {getStatusBadge(project.status)}
                           </div>
                         </div>
-                        <Progress value={project.progress} className="h-1.5" />
+                        <Progress value={project.progress} className={`h-1.5 ${getProgressBarColor(project.status)}`} />
                       </div>
 
                       {/* Owner and Team */}
@@ -969,39 +976,7 @@ export default function ProjectsPage() {
                         </div>
                       )}
 
-                      {/* Actions */}
-                      <div className="mt-4 flex gap-2">
-                        <Button
-                          className="flex-1 bg-[#ee3224] hover:bg-[#cc2a1e]"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleOpenProject(project.id)
-                          }}
-                        >
-                          Open
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Share2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Rocket className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Settings className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      
                     </CardContent>
                   </Card>
                 ))}
@@ -1010,7 +985,7 @@ export default function ProjectsPage() {
 
             {/* List View */}
             {viewMode === "list" && (
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {/* Bulk Actions */}
                 {selectedProjects.length > 0 && (
                   <div className="flex items-center gap-3 rounded-lg bg-[#ee3224]/5 border border-[#ee3224]/20 p-3">
@@ -1093,13 +1068,13 @@ export default function ProjectsPage() {
                           className="cursor-pointer hover:bg-[#F5F7FA] group"
                           onClick={() => handleOpenProject(project.id)}
                         >
-                          <TableCell onClick={(e) => e.stopPropagation()}>
+                          <TableCell className="py-4" onClick={(e) => e.stopPropagation()}>
                             <Checkbox 
                               checked={selectedProjects.includes(project.id)}
                               onCheckedChange={() => handleSelectProject(project.id)}
                             />
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="py-4">
                             <div className="flex items-center gap-2">
                               <div className={`flex h-8 w-8 items-center justify-center rounded ${
                                 project.mode === "workflow" ? "bg-[#ee3224]/10" : "bg-blue-500/10"
@@ -1120,7 +1095,7 @@ export default function ProjectsPage() {
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="py-4">
                             <div className="flex items-center gap-2">
                               <Avatar className="h-6 w-6">
                                 <AvatarFallback className="text-xs bg-muted">{project.owner.initials}</AvatarFallback>
@@ -1128,14 +1103,14 @@ export default function ProjectsPage() {
                               <span className="text-sm">{project.owner.name}</span>
                             </div>
                           </TableCell>
-                          <TableCell>{getEnvironmentBadge(project.environment)}</TableCell>
-                          <TableCell>
+                          <TableCell className="py-4">{getEnvironmentBadge(project.environment)}</TableCell>
+                          <TableCell className="py-4">
                             <div className="flex items-center gap-2 w-32">
-                              <Progress value={project.progress} className="h-1.5 flex-1" />
+                              <Progress value={project.progress} className={`h-1.5 flex-1 ${getProgressBarColor(project.status)}`} />
                               <span className="text-xs font-medium w-8">{project.progress}%</span>
                             </div>
                           </TableCell>
-                          <TableCell onClick={(e) => e.stopPropagation()}>
+                          <TableCell className="py-4" onClick={(e) => e.stopPropagation()}>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <div className="cursor-pointer">
@@ -1248,7 +1223,7 @@ export default function ProjectsPage() {
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
       </div>
     </AppLayout>
   )

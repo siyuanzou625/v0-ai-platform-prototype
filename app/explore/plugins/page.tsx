@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -173,6 +174,30 @@ const mockFollowers = [
   { id: "user8", name: "Maria Garcia", username: "mariagarcia", verified: false },
 ]
 
+// Category color mapping (matches Templates/Agents pages)
+const getCategoryBadgeStyle = (category: string): string => {
+  switch (category) {
+    case "AI Models":
+      return "bg-purple-50 text-purple-700 border border-purple-200"
+    case "Databases":
+      return "bg-blue-50 text-blue-700 border border-blue-200"
+    case "Cloud":
+      return "bg-sky-50 text-sky-700 border border-sky-200"
+    case "Communication":
+      return "bg-teal-50 text-teal-700 border border-teal-200"
+    case "Productivity":
+      return "bg-violet-50 text-violet-700 border border-violet-200"
+    case "Analytics":
+      return "bg-amber-50 text-amber-700 border border-amber-200"
+    case "Security":
+      return "bg-red-50 text-red-700 border border-red-200"
+    case "DevOps":
+      return "bg-orange-50 text-orange-700 border border-orange-200"
+    default:
+      return "bg-slate-50 text-slate-700 border border-slate-200"
+  }
+}
+
 const plugins = [
   {
     id: 1,
@@ -182,6 +207,7 @@ const plugins = [
     authorId: "openai",
     category: "AI Models",
     icon: Code,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
     downloads: "125K",
     rating: 4.9,
     installed: true,
@@ -197,6 +223,7 @@ const plugins = [
     authorId: "anthropic",
     category: "AI Models",
     icon: Code,
+    logo: "https://www.anthropic.com/images/icons/apple-touch-icon.png",
     downloads: "89K",
     rating: 4.8,
     installed: true,
@@ -212,6 +239,7 @@ const plugins = [
     authorId: "dbtools",
     category: "Databases",
     icon: Database,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg",
     downloads: "67K",
     rating: 4.7,
     installed: true,
@@ -227,6 +255,7 @@ const plugins = [
     authorId: "aws",
     category: "Cloud",
     icon: Cloud,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg",
     downloads: "54K",
     rating: 4.6,
     installed: false,
@@ -242,6 +271,7 @@ const plugins = [
     authorId: "google",
     category: "Communication",
     icon: Mail,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg",
     downloads: "92K",
     rating: 4.8,
     installed: true,
@@ -257,6 +287,7 @@ const plugins = [
     authorId: "google",
     category: "Productivity",
     icon: Calendar,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg",
     downloads: "78K",
     rating: 4.7,
     installed: false,
@@ -272,6 +303,7 @@ const plugins = [
     authorId: "slack",
     category: "Communication",
     icon: MessageSquare,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg",
     downloads: "85K",
     rating: 4.8,
     installed: true,
@@ -287,6 +319,7 @@ const plugins = [
     authorId: "notion",
     category: "Productivity",
     icon: FileText,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
     downloads: "45K",
     rating: 4.6,
     installed: false,
@@ -302,6 +335,7 @@ const plugins = [
     authorId: "openai",
     category: "AI Models",
     icon: Image,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
     downloads: "112K",
     rating: 4.9,
     installed: true,
@@ -374,7 +408,7 @@ const categories = ["All", "AI Models", "Databases", "Cloud", "Communication", "
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
   qa: { bg: "bg-blue-100", text: "text-blue-700" },
-  bug: { bg: "bg-red-100", text: "text-red-700" },
+  bug: { bg: "bg-gray-100", text: "text-[#ee3224]" },
   idea: { bg: "bg-purple-100", text: "text-purple-700" },
   general: { bg: "bg-gray-100", text: "text-gray-700" },
 }
@@ -424,6 +458,16 @@ export default function PluginsPage() {
   const [followersModalType, setFollowersModalType] = useState<"followers" | "following">("followers")
   const [dailyFollowCount, setDailyFollowCount] = useState(0)
   const DAILY_FOLLOW_LIMIT = 50
+  const [favoritedPlugins, setFavoritedPlugins] = useState<number[]>([])
+  
+  const handleFavorite = (pluginId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setFavoritedPlugins(prev => 
+      prev.includes(pluginId) 
+        ? prev.filter(id => id !== pluginId)
+        : [...prev, pluginId]
+    )
+  }
 
   // Load follow state from localStorage
   useEffect(() => {
@@ -639,29 +683,32 @@ export default function PluginsPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
+      <>
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Plugins</h1>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Extend your agents with reusable components and integrations.
-            </p>
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Puzzle className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Plugins</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Extend your agents with reusable components and integrations.
+              </p>
+            </div>
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+              <Plus className="h-4 w-4" /> New Plugin
+            </Button>
           </div>
-          <Button className="gap-2">
-            <Puzzle className="h-4 w-4" /> Develop Plugin
-          </Button>
-        </div>
-
-        {/* Filters */}
-        <Card>
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+          
+          {/* Search and Filters */}
+          <div className="flex flex-wrap items-center gap-3 mt-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search plugins..." className="pl-10" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <Input placeholder="Search plugins..." className="pl-10 bg-white" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
             <Select value={activeCategory} onValueChange={setActiveCategory}>
-              <SelectTrigger className="w-40"><SelectValue placeholder="Category" /></SelectTrigger>
+              <SelectTrigger className="w-40 bg-white"><SelectValue placeholder="Category" /></SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>{category}</SelectItem>
@@ -669,7 +716,7 @@ export default function PluginsPage() {
               </SelectContent>
             </Select>
             <Select defaultValue="popular">
-              <SelectTrigger className="w-40"><SelectValue placeholder="Sort by" /></SelectTrigger>
+              <SelectTrigger className="w-40 bg-white"><SelectValue placeholder="Sort by" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="popular">Most Popular</SelectItem>
                 <SelectItem value="recent">Most Recent</SelectItem>
@@ -678,26 +725,29 @@ export default function PluginsPage() {
               </SelectContent>
             </Select>
             <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="px-8 py-6 space-y-6">
         {/* Installed Plugins */}
         <div>
           <h2 className="mb-4 text-lg font-semibold text-foreground">Installed Plugins</h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {plugins.filter((p) => p.installed).map((plugin) => (
-              <Card key={plugin.id} className="transition-all hover:border-primary cursor-pointer" onClick={() => openPluginModal(plugin)}>
-                <CardContent className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded bg-primary/10">
-                      <plugin.icon className="h-6 w-6 text-primary" />
+              <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
+                <CardContent className="flex items-center justify-between py-3 px-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-50 p-1.5">
+                      <img src={plugin.logo} alt={plugin.name} className="h-full w-full object-contain" />
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-foreground">{plugin.name}</h4>
+                        <h4 className="card-title-text font-medium text-foreground transition-colors duration-150">{plugin.name}</h4>
                         <Badge variant="secondary" className="text-xs">v{plugin.version}</Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">{plugin.description}</p>
+                      <p className="text-xs text-muted-foreground">{plugin.description}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -713,89 +763,100 @@ export default function PluginsPage() {
         {/* All Plugins */}
         <div>
           <h2 className="mb-4 text-lg font-semibold text-foreground">Available Plugins</h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredPlugins.map((plugin) => {
               const creator = creators[plugin.authorId]
               const isFollowing = followedCreators.has(plugin.authorId)
               const followerCount = creatorFollowerCounts[plugin.authorId] || creator?.followers || 0
 
               return (
-                <Card key={plugin.id} className="cursor-pointer transition-all hover:border-primary hover:shadow-md" onClick={() => openPluginModal(plugin)}>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex h-12 w-12 items-center justify-center rounded bg-primary/10">
-                        <plugin.icon className="h-6 w-6 text-primary" />
+                <Card key={plugin.id} className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm" onClick={() => openPluginModal(plugin)}>
+                  <CardHeader className="py-2.5 px-5 pb-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-50 p-1.5">
+                          <img src={plugin.logo} alt={plugin.name} className="h-full w-full object-contain" />
+                        </div>
+                        <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{plugin.name}</CardTitle>
                       </div>
-                      {plugin.installed ? (
-                        <Badge className="bg-chart-3"><CheckCircle className="mr-1 h-3 w-3" /> Installed</Badge>
-                      ) : (
-                        <Badge variant="secondary">Available</Badge>
-                      )}
-                    </div>
-                    <CardTitle className="text-base font-medium">{plugin.name}</CardTitle>
-                    <CardDescription className="text-sm">{plugin.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {/* Creator info with Follow button */}
-                    <div className="mb-3">
                       <div className="flex items-center gap-2">
                         <button
-                          className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
-                          onClick={(e) => openCreatorProfile(plugin.authorId, e)}
+                          onClick={(e) => handleFavorite(plugin.id, e)}
+                          className="p-1 rounded hover:bg-[#F5F7FA] transition-colors"
                         >
-                          by {plugin.author}
+                          <Star className={`h-4 w-4 ${favoritedPlugins.includes(plugin.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
                         </button>
+                        <StatusTag label={plugin.installed ? "Installed" : "Available"} />
+                      </div>
+                    </div>
+                    <CardDescription className="text-sm mt-2.5">{plugin.description}</CardDescription>
+                    {/* Category and Version - Product Info */}
+                    <div className="flex items-center gap-2 mt-2.5">
+                      <StatusTag label={plugin.category} variant="category" />
+                      <span className="text-xs text-muted-foreground">v{plugin.version}</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0 pb-2.5 px-5">
+                    {/* Divider */}
+                    <div className="w-full border-t border-[#E5E7EB] my-2.5"></div>
+                    {/* Creator info with Follow button - Creator & Engagement Info */}
+                    <div className="flex items-center justify-between mb-2.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-[#6B7280]">
+                          by{" "}
+                          <button
+                            onClick={(e) => openCreatorProfile(plugin.authorId, e)}
+                            className="underline decoration-[#6B7280]/50 hover:text-[#ee3224] hover:decoration-[#ee3224] transition-colors"
+                          >
+                            {plugin.author}
+                          </button>
+                        </span>
                         {creator?.verified && (
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">
                             Verified
                           </Badge>
                         )}
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              onClick={(e) => handleFollow(plugin.authorId, e)}
-                              className={`ml-auto px-2 py-0.5 text-[11px] font-medium rounded transition-all ${
-                                isFollowing
-                                  ? "bg-[#22C55E] text-white hover:bg-[#16A34A]"
-                                  : "border border-[#6B7280] text-[#6B7280] bg-transparent hover:border-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]"
-                              }`}
-                            >
-                              {isFollowing ? (
-                                <span className="flex items-center gap-1">
-                                  <Check className="h-3 w-3" /> Following
-                                </span>
-                              ) : (
-                                <span className="flex items-center gap-1">
-                                  <Plus className="h-3 w-3" /> Follow
-                                </span>
-                              )}
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {isFollowing ? `Unfollow ${plugin.author}` : `Follow ${plugin.author} for updates`}
-                          </TooltipContent>
-                        </Tooltip>
+                        <span className="text-[#E5E7EB]">·</span>
+                        <button
+                          className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
+                          onClick={(e) => openCreatorProfile(plugin.authorId, e)}
+                        >
+                          <Users className="h-3 w-3" />
+                          {formatFollowerCount(followerCount)}
+                        </button>
                       </div>
-                      {/* Follower count */}
-                      <button
-                        className="flex items-center gap-1 mt-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
-                        onClick={(e) => openCreatorProfile(plugin.authorId, e)}
-                      >
-                        <Users className="h-3 w-3" />
-                        {formatFollowerCount(followerCount)} followers
-                      </button>
-                    </div>
-
-                    <div className="mb-3 flex items-center gap-2">
-                      <Badge variant="secondary">{plugin.category}</Badge>
-                      <span className="text-xs text-muted-foreground">v{plugin.version}</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={(e) => handleFollow(plugin.authorId, e)}
+                            className={`px-2 py-0.5 text-[11px] font-medium rounded transition-all ${
+                              isFollowing
+                                ? "bg-[#22C55E] text-white hover:bg-[#16A34A]"
+                                : "border border-[#6B7280] text-[#6B7280] bg-transparent hover:border-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]"
+                            }`}
+                          >
+                            {isFollowing ? (
+                              <span className="flex items-center gap-1">
+                                <Check className="h-3 w-3" /> Following
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-1">
+                                <Plus className="h-3 w-3" /> Follow
+                              </span>
+                            )}
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {isFollowing ? `Unfollow ${plugin.author}` : `Follow ${plugin.author} for updates`}
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     {/* Metrics row with comment count */}
                     <div className="flex items-center gap-3 text-sm text-muted-foreground">
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" /> {plugin.rating}
+                            <Star className="h-3.5 w-3.5 text-[#9CA3AF]" /> {plugin.rating}
                           </span>
                         </TooltipTrigger>
                         <TooltipContent>Rating</TooltipContent>
@@ -825,20 +886,7 @@ export default function PluginsPage() {
                         <TooltipContent>Downloads</TooltipContent>
                       </Tooltip>
                     </div>
-                    <div className="mt-4 flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                        <ExternalLink className="h-3 w-3" /> Docs
-                      </Button>
-                      {plugin.installed ? (
-                        <Button size="sm" variant="secondary" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                          <Settings className="h-3 w-3" /> Configure
-                        </Button>
-                      ) : (
-                        <Button size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                          <Download className="h-3 w-3" /> Install
-                        </Button>
-                      )}
-                    </div>
+
                   </CardContent>
                 </Card>
               )
@@ -872,7 +920,7 @@ export default function PluginsPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-chart-4 text-chart-4" /> {selectedPlugin?.rating}
+                        <Star className="h-4 w-4 text-[#9CA3AF]" /> {selectedPlugin?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
@@ -919,7 +967,7 @@ export default function PluginsPage() {
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Rating</span>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3 w-3 fill-chart-4 text-chart-4" /> {selectedPlugin?.rating}
+                            <Star className="h-3 w-3 text-[#9CA3AF]" /> {selectedPlugin?.rating}
                           </span>
                         </div>
                       </CardContent>
@@ -1245,7 +1293,7 @@ export default function PluginsPage() {
                   <div className="text-xs text-[#6B7280]">Downloads</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
-                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline fill-chart-4 text-chart-4" /></div>
+                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline text-[#9CA3AF]" /></div>
                   <div className="text-xs text-[#6B7280]">Avg Rating</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
@@ -1257,7 +1305,7 @@ export default function PluginsPage() {
               {/* Published Assets */}
               <div>
                 <h4 className="text-sm font-semibold text-[#1F2937] mb-2">Published Plugins ({selectedCreatorData?.assetsPublished})</h4>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   {plugins.filter(p => p.authorId === selectedCreator).slice(0, 3).map(plugin => (
                     <div key={plugin.id} className="p-3 rounded-lg border hover:border-[#ee3224] cursor-pointer transition-colors" onClick={() => { setShowCreatorModal(false); openPluginModal(plugin); }}>
                       <div className="flex items-center gap-2 mb-1">
@@ -1265,7 +1313,7 @@ export default function PluginsPage() {
                         <span className="text-sm font-medium truncate">{plugin.name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[#6B7280]">
-                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 fill-chart-4 text-chart-4" /> {plugin.rating}</span>
+                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-[#9CA3AF]" /> {plugin.rating}</span>
                         <span className="flex items-center gap-0.5"><Download className="h-3 w-3" /> {plugin.downloads}</span>
                       </div>
                     </div>
@@ -1458,7 +1506,9 @@ export default function PluginsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
+          </div>
+        </div>
+      </>
     </AppLayout>
   )
 }

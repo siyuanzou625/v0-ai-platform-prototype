@@ -124,3 +124,27 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .card-interactive {
+    @apply transition-colors duration-150 ease-out cursor-pointer border border-transparent;
+  }
+  .card-interactive:hover {
+    @apply border-[#ee3224];
+  }
+  .card-interactive:hover [data-slot="card-title"],
+  .card-interactive:hover .card-title-text {
+    color: #ee3224 !important;
+  }
+  .card-title-text {
+    @apply text-[15px] font-semibold;
+  }
+  /* Primary red badge - for installed, active primary states */
+  .badge-primary {
+    @apply bg-[#ee3224]/10 text-[#ee3224] border-0;
+  }
+  /* Neutral badge - for available, secondary states */
+  .badge-neutral {
+    @apply bg-[#F5F7FA] text-[#6B7280] border-0;
+  }
+}

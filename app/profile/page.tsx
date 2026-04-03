@@ -329,7 +329,7 @@ export default function ProfilePage() {
               {filteredAssets.map((asset) => {
                 const IconComponent = getAssetIcon(asset.type)
                 return (
-                  <Card key={asset.id} className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card key={asset.id} className="border border-[#E5E7EB] bg-white shadow-sm">
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#ee3224]/10">

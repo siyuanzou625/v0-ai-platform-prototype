@@ -161,7 +161,7 @@ export default function EnterpriseHubPage() {
             {solutions.map((solution) => (
               <Card
                 key={solution.id}
-                className="cursor-pointer transition-all hover:border-primary hover:shadow-md"
+                className="border border-[#E5E7EB] bg-white shadow-sm"
               >
                 <CardHeader className="pb-3">
                   <div className="mb-3 flex h-12 w-12 items-center justify-center rounded bg-primary/10">

@@ -420,7 +420,7 @@ export default function NativeAppsDashboardPage() {
           ].map((metric) => (
             <Card
               key={metric.key}
-              className="cursor-pointer border-[#E5E7EB] transition-all hover:border-[#ee3224] hover:shadow-md"
+              className="border border-[#E5E7EB] bg-white shadow-sm"
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -657,7 +657,7 @@ export default function NativeAppsDashboardPage() {
 
           {/* Engagement Metrics Row */}
           <div className="grid grid-cols-4 gap-4">
-            <Card className="border-[#E5E7EB] cursor-pointer hover:border-[#ee3224] transition-colors">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">7-Day Retention</p>
                 <p className="text-2xl font-bold text-foreground mt-1">68.4%</p>
@@ -667,14 +667,14 @@ export default function NativeAppsDashboardPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card className="border-[#E5E7EB] cursor-pointer hover:border-[#ee3224] transition-colors">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">Top Feature Adoption</p>
                 <p className="text-2xl font-bold text-foreground mt-1">AI Query: 82%</p>
                 <p className="text-xs text-muted-foreground mt-1">Search: 76%</p>
               </CardContent>
             </Card>
-            <Card className="border-[#E5E7EB] cursor-pointer hover:border-[#ee3224] transition-colors">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">Avg Session Duration</p>
                 <p className="text-2xl font-bold text-foreground mt-1">4m 32s</p>
@@ -684,7 +684,7 @@ export default function NativeAppsDashboardPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card className="border-[#E5E7EB] cursor-pointer hover:border-[#ee3224] transition-colors">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">Funnel Completion</p>
                 <p className="text-2xl font-bold text-foreground mt-1">34.2%</p>

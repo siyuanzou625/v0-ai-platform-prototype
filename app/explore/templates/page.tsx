@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -16,7 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useToast } from "@/hooks/use-toast"
 import {
   Search,
-  FileCode,
+  FileText,
   Download,
   Star,
   Copy,
@@ -180,6 +181,28 @@ const mockFollowers = [
   { id: "user7", name: "John Doe", username: "johndoe", verified: false },
   { id: "user8", name: "Maria Garcia", username: "mariagarcia", verified: false },
 ]
+
+// Category color mapping
+const getCategoryBadgeStyle = (category: string): string => {
+  switch (category) {
+    case "Productivity":
+      return "bg-violet-50 text-violet-700 border border-violet-200"
+    case "Support":
+      return "bg-teal-50 text-teal-700 border border-teal-200"
+    case "Data":
+      return "bg-blue-50 text-blue-700 border border-blue-200"
+    case "Marketing":
+      return "bg-pink-50 text-pink-700 border border-pink-200"
+    case "Sales":
+      return "bg-orange-50 text-orange-700 border border-orange-200"
+    case "HR":
+      return "bg-cyan-50 text-cyan-700 border border-cyan-200"
+    case "Knowledge":
+      return "bg-indigo-50 text-indigo-700 border border-indigo-200"
+    default:
+      return "bg-slate-50 text-slate-700 border border-slate-200"
+  }
+}
 
 const templates = [
   {
@@ -359,7 +382,7 @@ const categories = ["All", "Productivity", "Support", "Data", "Marketing", "Sale
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
   qa: { bg: "bg-blue-100", text: "text-blue-700" },
-  bug: { bg: "bg-red-100", text: "text-red-700" },
+  bug: { bg: "bg-gray-100", text: "text-[#ee3224]" },
   idea: { bg: "bg-purple-100", text: "text-purple-700" },
   general: { bg: "bg-gray-100", text: "text-gray-700" },
 }
@@ -409,6 +432,16 @@ export default function TemplatesPage() {
   const [followersModalType, setFollowersModalType] = useState<"followers" | "following">("followers")
   const [dailyFollowCount, setDailyFollowCount] = useState(0)
   const DAILY_FOLLOW_LIMIT = 50
+  const [favoritedTemplates, setFavoritedTemplates] = useState<number[]>([])
+  
+  const handleFavorite = (templateId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setFavoritedTemplates(prev => 
+      prev.includes(templateId) 
+        ? prev.filter(id => id !== templateId)
+        : [...prev, templateId]
+    )
+  }
 
   // Load follow state from localStorage
   useEffect(() => {
@@ -624,34 +657,37 @@ export default function TemplatesPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
+      <>
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Templates</h1>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Browse ready-made workflows to accelerate your agent development.
-            </p>
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Templates</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Browse ready-made workflows to accelerate your agent development.
+              </p>
+            </div>
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+              <Plus className="h-4 w-4" /> New Template
+            </Button>
           </div>
-          <Button className="gap-2">
-            <FileCode className="h-4 w-4" /> Submit Template
-          </Button>
-        </div>
-
-        {/* Search and Filters */}
-        <Card>
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+          
+          {/* Search and Filters */}
+          <div className="flex flex-wrap items-center gap-3 mt-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search templates..."
-                className="pl-10"
+                className="pl-10 bg-white"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <Select value={activeCategory} onValueChange={setActiveCategory}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 bg-white">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -663,7 +699,7 @@ export default function TemplatesPage() {
               </SelectContent>
             </Select>
             <Select defaultValue="popular">
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 bg-white">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -676,11 +712,14 @@ export default function TemplatesPage() {
             <Button variant="outline" size="icon">
               <Filter className="h-4 w-4" />
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="px-8 py-6 space-y-6">
         {/* Template Grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredTemplates.map((template) => {
             const creator = creators[template.authorId]
             const isFollowing = followedCreators.has(template.authorId)
@@ -689,36 +728,69 @@ export default function TemplatesPage() {
             return (
               <Card
                 key={template.id}
-                className="group cursor-pointer transition-all hover:border-primary hover:shadow-md"
+                className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openTemplateModal(template)}
               >
-                <CardHeader className="pb-3">
-                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded bg-primary/10">
-                    <FileCode className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-base font-medium">{template.name}</CardTitle>
-                  <CardDescription className="text-sm line-clamp-2">{template.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {/* Creator info with Follow button */}
-                  <div className="mb-3">
+                <CardHeader className="py-2.5 px-5 pb-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100">
+                        <FileText className="h-4 w-4 text-slate-600" />
+                      </div>
+                      <CardTitle className="card-title-text text-base font-medium transition-colors duration-150">{template.name}</CardTitle>
+                    </div>
                     <div className="flex items-center gap-2">
                       <button
-                        className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
-                        onClick={(e) => openCreatorProfile(template.authorId, e)}
+                        onClick={(e) => handleFavorite(template.id, e)}
+                        className="p-1 rounded hover:bg-[#F5F7FA] transition-colors"
                       >
-                        by {template.author}
+                        <Star className={`h-4 w-4 ${favoritedTemplates.includes(template.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
                       </button>
+                      <StatusTag label={template.category} variant="category" />
+                    </div>
+                  </div>
+                  <CardDescription className="text-sm line-clamp-2 mt-2.5">{template.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0 pb-2.5 px-5">
+                  {/* Level and Version - Plain text with vertical divider */}
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground py-2.5">
+                    <span>{template.complexity}</span>
+                    <span className="text-[#E5E7EB]">|</span>
+                    <span>v{template.version || "1.0.0"}</span>
+                  </div>
+                  {/* Divider */}
+                  <div className="w-full border-t border-[#E5E7EB] mb-2.5"></div>
+                  {/* Creator info with Follow button - Creator & Engagement Info */}
+                  <div className="flex items-center justify-between mb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-[#6B7280]">
+                        by{" "}
+                        <button
+                          onClick={(e) => openCreatorProfile(template.authorId, e)}
+                          className="underline decoration-[#6B7280]/50 hover:text-[#ee3224] hover:decoration-[#ee3224] transition-colors"
+                        >
+                          {template.author}
+                        </button>
+                      </span>
                       {creator?.verified && (
                         <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">
                           Verified
                         </Badge>
                       )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
+                        onClick={(e) => openCreatorProfile(template.authorId, e)}
+                      >
+                        <Users className="h-3 w-3" />
+                        {formatFollowerCount(followerCount)}
+                      </button>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
                             onClick={(e) => handleFollow(template.authorId, e)}
-                            className={`ml-auto px-2 py-0.5 text-[11px] font-medium rounded transition-all ${
+                            className={`px-2 py-0.5 text-[11px] font-medium rounded transition-all ${
                               isFollowing
                                 ? "bg-[#22C55E] text-white hover:bg-[#16A34A]"
                                 : "border border-[#6B7280] text-[#6B7280] bg-transparent hover:border-[#ee3224] hover:text-[#ee3224] hover:bg-[#F5F7FA]"
@@ -740,38 +812,13 @@ export default function TemplatesPage() {
                         </TooltipContent>
                       </Tooltip>
                     </div>
-                    {/* Follower count */}
-                    <button
-                      className="flex items-center gap-1 mt-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
-                      onClick={(e) => openCreatorProfile(template.authorId, e)}
-                    >
-                      <Users className="h-3 w-3" />
-                      {formatFollowerCount(followerCount)} followers
-                    </button>
-                  </div>
-
-                  <div className="mb-3 flex items-center gap-2">
-                    <Badge variant="secondary">{template.category}</Badge>
-                    <Badge
-                      variant="outline"
-                      className={
-                        template.complexity === "Beginner"
-                          ? "border-chart-3 text-chart-3"
-                          : template.complexity === "Intermediate"
-                          ? "border-chart-4 text-chart-4"
-                          : "border-primary text-primary"
-                      }
-                    >
-                      {template.complexity}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">v{template.version || "1.0.0"}</span>
                   </div>
                   {/* Metrics row with comment count */}
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className="flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" /> {template.rating}
+                          <Star className="h-3.5 w-3.5 text-[#9CA3AF]" /> {template.rating}
                         </span>
                       </TooltipTrigger>
                       <TooltipContent>Rating</TooltipContent>
@@ -801,33 +848,26 @@ export default function TemplatesPage() {
                       <TooltipContent>Downloads</TooltipContent>
                     </Tooltip>
                   </div>
-                  <div className="mt-4 flex gap-2">
-                    <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                      <Eye className="h-3 w-3" /> Preview
-                    </Button>
-                    <Button size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                      <Copy className="h-3 w-3" /> Use
-                    </Button>
-                  </div>
+
                 </CardContent>
               </Card>
             )
           })}
         </div>
 
-        {/* Featured Templates Banner */}
-        <Card className="border-primary bg-primary/5">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary">
-                <Sparkles className="h-7 w-7 text-primary-foreground" />
+        {/* Create Template CTA */}
+        <Card className="border-[#ee3224]/20 bg-[#ee3224]/10">
+          <CardContent className="flex items-center justify-between py-3 px-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ee3224]">
+                <Sparkles className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-foreground">Create Your Own Template</h3>
-                <p className="text-muted-foreground">Share your workflows with the community and earn recognition</p>
+                <h3 className="text-base font-semibold text-foreground">Create Your Own Template</h3>
+                <p className="text-sm text-muted-foreground">Share your workflows with the community and earn recognition</p>
               </div>
             </div>
-            <Button size="lg" className="gap-2">
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
               Start Building <ArrowRight className="h-4 w-4" />
             </Button>
           </CardContent>
@@ -843,7 +883,7 @@ export default function TemplatesPage() {
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
                   <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10">
-                    <FileCode className="h-8 w-8 text-primary" />
+                    <FileText className="h-8 w-8 text-primary" />
                   </div>
                   <div>
                     <DialogTitle className="text-xl">{selectedTemplate?.name}</DialogTitle>
@@ -857,7 +897,7 @@ export default function TemplatesPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-chart-4 text-chart-4" /> {selectedTemplate?.rating}
+                        <Star className="h-4 w-4 text-[#9CA3AF]" /> {selectedTemplate?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
@@ -1057,7 +1097,7 @@ export default function TemplatesPage() {
                               </div>
 
                               {/* Actions */}
-                              <div className="flex items-center gap-2 mt-3">
+                              <div className="flex items-center gap-2 mt-2">
                                 <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => setReplyingTo(discussion.id)}>
                                   <Reply className="h-3 w-3" /> Reply
                                 </Button>
@@ -1073,7 +1113,7 @@ export default function TemplatesPage() {
 
                               {/* Reply input */}
                               {replyingTo === discussion.id && (
-                                <div className="mt-3 flex gap-2">
+                                <div className="mt-2 flex gap-2">
                                   <Input
                                     placeholder="Write a reply..."
                                     value={replyContent}
@@ -1087,7 +1127,7 @@ export default function TemplatesPage() {
 
                               {/* Replies */}
                               {discussion.replies.length > 0 && (
-                                <div className="mt-3">
+                                <div className="mt-2">
                                   <button
                                     className="text-xs text-[#ee3224] hover:underline flex items-center gap-1"
                                     onClick={() => {
@@ -1223,7 +1263,7 @@ export default function TemplatesPage() {
                   <div className="text-xs text-[#6B7280]">Downloads</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
-                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline fill-chart-4 text-chart-4" /></div>
+                  <div className="text-2xl font-bold text-[#1F2937]">{selectedCreatorData?.avgRating} <Star className="h-4 w-4 inline text-[#9CA3AF]" /></div>
                   <div className="text-xs text-[#6B7280]">Avg Rating</div>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-[#F5F7FA]">
@@ -1235,15 +1275,15 @@ export default function TemplatesPage() {
               {/* Published Assets */}
               <div>
                 <h4 className="text-sm font-semibold text-[#1F2937] mb-2">Published Templates ({selectedCreatorData?.assetsPublished})</h4>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   {templates.filter(t => t.authorId === selectedCreator).slice(0, 3).map(template => (
                     <div key={template.id} className="p-3 rounded-lg border hover:border-[#ee3224] cursor-pointer transition-colors" onClick={() => { setShowCreatorModal(false); openTemplateModal(template); }}>
                       <div className="flex items-center gap-2 mb-1">
-                        <FileCode className="h-4 w-4 text-[#ee3224]" />
+                        <FileText className="h-4 w-4 text-[#ee3224]" />
                         <span className="text-sm font-medium truncate">{template.name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[#6B7280]">
-                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 fill-chart-4 text-chart-4" /> {template.rating}</span>
+                        <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-[#9CA3AF]" /> {template.rating}</span>
                         <span className="flex items-center gap-0.5"><Download className="h-3 w-3" /> {template.downloads}</span>
                       </div>
                     </div>
@@ -1436,7 +1476,9 @@ export default function TemplatesPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
+          </div>
+        </div>
+      </>
     </AppLayout>
   )
 }

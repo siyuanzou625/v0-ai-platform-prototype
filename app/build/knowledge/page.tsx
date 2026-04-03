@@ -6,6 +6,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -155,50 +156,29 @@ const getKnowledgeIcon = (type: string) => {
   }
 }
 
-// Get icon color based on content type
-const getKnowledgeIconColor = (type: string) => {
-  switch (type) {
-    case "document": return "bg-blue-500/10 text-blue-500"
-    case "spreadsheet": return "bg-emerald-500/10 text-emerald-500"
-    case "video": return "bg-purple-500/10 text-purple-500"
-    case "audio": return "bg-amber-500/10 text-amber-500"
-    case "image": return "bg-pink-500/10 text-pink-500"
-    default: return "bg-blue-500/10 text-blue-500"
-  }
+// Get icon color based on content type - standardized to neutral
+const getKnowledgeIconColor = () => {
+  return "bg-slate-100 text-slate-600"
 }
 
 // Get status badge
 const getStatusBadge = (status: string) => {
-  switch (status) {
-    case "ready":
-      return (
-        <Badge variant="secondary" className="bg-emerald-50 text-emerald-600 border border-emerald-200">
-          <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block" />
-          Ready
-        </Badge>
-      )
-    case "processing":
-      return (
-        <Badge variant="secondary" className="bg-amber-50 text-amber-600 border border-amber-200">
-          <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse inline-block" />
-          Processing
-        </Badge>
-      )
-    case "failed":
-      return (
-        <Badge variant="secondary" className="bg-red-50 text-red-600 border border-red-200">
-          <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-red-500 inline-block" />
-          Failed
-        </Badge>
-      )
-    default:
-      return null
+  const statusMap: Record<string, string> = {
+    ready: "Ready",
+    processing: "Processing",
+    failed: "Failed",
   }
+  const label = statusMap[status]
+  return label ? <StatusTag label={label} /> : null
 }
 
 export default function KnowledgePage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
+  const [typeFilter, setTypeFilter] = useState("all")
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [ownerFilter, setOwnerFilter] = useState("all")
+  const [sortBy, setSortBy] = useState("recent")
 
   // Knowledge base creation states
   const [showNewKnowledge, setShowNewKnowledge] = useState(false)
@@ -213,11 +193,30 @@ export default function KnowledgePage() {
   const [kbEmbeddingModel, setKbEmbeddingModel] = useState("text-embedding-3-large")
   const [kbVisibility, setKbVisibility] = useState("private")
 
-  const filteredKnowledgeBases = knowledgeBases.filter(
-    (kb) =>
-      kb.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      kb.description.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredKnowledgeBases = knowledgeBases
+    .filter((kb) => {
+      const matchesSearch = kb.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        kb.description.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesType = typeFilter === "all" || kb.primaryType === typeFilter
+      const matchesStatus = statusFilter === "all" || kb.status === statusFilter
+      return matchesSearch && matchesType && matchesStatus
+    })
+    .sort((a, b) => {
+      if (sortBy === "recent") return 0 // Keep original order (mock data already sorted)
+      if (sortBy === "name") return a.name.localeCompare(b.name)
+      if (sortBy === "used") return b.usedByAgents - a.usedByAgents
+      return 0
+    })
+
+  const clearFilters = () => {
+    setSearchQuery("")
+    setTypeFilter("all")
+    setStatusFilter("all")
+    setOwnerFilter("all")
+    setSortBy("recent")
+  }
+
+  const hasActiveFilters = searchQuery || typeFilter !== "all" || statusFilter !== "all" || ownerFilter !== "all"
 
   const handleOpenKnowledge = (kbId: string) => {
     router.push(`/build/knowledge/${kbId}`)
@@ -262,27 +261,18 @@ export default function KnowledgePage() {
 
   return (
     <AppLayout>
-      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-auto bg-[#F5F7FA]">
+      <>
         {/* Header */}
-        <div className="border-b border-border bg-card px-6 py-4">
-          {/* Title Row */}
-          <div className="mb-4">
-            <h1 className="text-xl font-semibold text-foreground">Knowledge</h1>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Upload and organize documents to give your agents context and expertise.
-            </p>
-          </div>
-          
-          {/* Controls Row: Search + Button */}
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1 min-w-[50%]">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search knowledge bases..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Database className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Knowledge</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Upload and organize documents to give your agents context and expertise.
+              </p>
             </div>
             <Dialog open={showNewKnowledge} onOpenChange={setShowNewKnowledge}>
               <DialogTrigger asChild>
@@ -568,11 +558,73 @@ export default function KnowledgePage() {
                 </DialogContent>
               </Dialog>
           </div>
+          
+          {/* Search and Filters */}
+          <div className="flex flex-wrap items-center gap-3 mt-4">
+            <div className="relative flex-1 min-w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search knowledge bases..."
+                className="pl-9 bg-white"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-36 bg-white">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="document">Documents</SelectItem>
+                <SelectItem value="spreadsheet">Datasets</SelectItem>
+                <SelectItem value="video">Media</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-36 bg-white">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="ready">Ready</SelectItem>
+                <SelectItem value="processing">Processing</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={ownerFilter} onValueChange={setOwnerFilter}>
+              <SelectTrigger className="w-32 bg-white">
+                <SelectValue placeholder="Owner" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="me">Me</SelectItem>
+                <SelectItem value="team">Team</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-36 bg-white">
+                <SelectValue placeholder="Sort" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Most Recent</SelectItem>
+                <SelectItem value="used">Most Used</SelectItem>
+                <SelectItem value="name">Name</SelectItem>
+              </SelectContent>
+            </Select>
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                Clear filters
+              </Button>
+            )}
+          </div>
         </div>
 
-        {/* Knowledge Base Grid */}
-        <div className="p-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="px-8 py-6 space-y-6">
+          {/* Knowledge Base Grid */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredKnowledgeBases.map((kb) => {
               const KbIcon = getKnowledgeIcon(kb.primaryType)
               const iconColorClass = getKnowledgeIconColor(kb.primaryType)
@@ -580,34 +632,34 @@ export default function KnowledgePage() {
               return (
                 <Card
                   key={kb.id}
-                  className="group cursor-pointer border border-[#E5E7EB] bg-white shadow-sm transition-all hover:border-[#ee3224]/30 hover:shadow-md"
+                  className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                   onClick={() => handleOpenKnowledge(kb.id)}
                 >
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between">
+                  <CardContent className="py-3 px-5">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded ${iconColorClass}`}>
-                          <KbIcon className="h-5 w-5" />
+                        <div className={`flex h-9 w-9 items-center justify-center rounded ${iconColorClass}`}>
+                          <KbIcon className="h-4 w-4" />
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-foreground group-hover:text-[#ee3224] transition-colors line-clamp-1">
-                            {kb.name}
-                          </h3>
-                          {getStatusBadge(kb.status)}
-                        </div>
+                        <h3 className="card-title-text font-semibold text-foreground transition-colors duration-150 line-clamp-1">
+                          {kb.name}
+                        </h3>
                       </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                          <DropdownMenuItem>Export</DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div className="flex items-center gap-2">
+                        {getStatusBadge(kb.status)}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                            <DropdownMenuItem>Export</DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
 
                     <p className="mt-3 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
@@ -615,69 +667,48 @@ export default function KnowledgePage() {
                     </p>
 
                     {/* Metadata */}
-                    <div className="mt-3 space-y-1.5 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-4">
-                        <span>{kb.documentCount} documents</span>
-                        <span>{kb.chunkCount.toLocaleString()} chunks</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="font-mono">{kb.embeddingModel}</span>
-                      </div>
+                    <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+                      <span>{kb.documentCount} documents</span>
+                      <span>{kb.chunkCount.toLocaleString()} chunks</span>
+                      <span className="font-mono">{kb.embeddingModel}</span>
                     </div>
 
-                    <div className="mt-4 flex items-center justify-between">
+                    <div className="mt-2 flex items-center justify-between">
                       <div className="flex items-center -space-x-2">
                         {kb.members.slice(0, 3).map((member, idx) => (
-                          <Avatar key={idx} className="h-7 w-7 border-2 border-white">
-                            <AvatarFallback className="text-xs bg-muted text-muted-foreground">
+                          <Avatar key={idx} className="h-6 w-6 border-2 border-white">
+                            <AvatarFallback className="text-[10px] bg-muted text-muted-foreground">
                               {member.initials}
                             </AvatarFallback>
                           </Avatar>
                         ))}
                         {kb.members.length > 3 && (
-                          <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-muted text-xs font-medium text-muted-foreground">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-muted text-[10px] font-medium text-muted-foreground">
                             +{kb.members.length - 3}
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        {kb.lastUpdated}
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Bot className="h-3 w-3" />
+                          <span>{kb.usedByAgents} agents</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {kb.lastUpdated}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Agent Usage */}
-                    <div className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Bot className="h-3.5 w-3.5" />
-                      <span>Used by {kb.usedByAgents} agents</span>
-                    </div>
 
-                    <div className="mt-4 flex gap-2">
-                      <Button
-                        className="flex-1 bg-[#ee3224] hover:bg-[#cc2a1e]"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleOpenKnowledge(kb.id)
-                        }}
-                      >
-                        Open
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-9 w-9"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Share2 className="h-4 w-4" />
-                      </Button>
-                    </div>
                   </CardContent>
                 </Card>
               )
             })}
           </div>
+          </div>
         </div>
-      </div>
+      </>
     </AppLayout>
   )
 }

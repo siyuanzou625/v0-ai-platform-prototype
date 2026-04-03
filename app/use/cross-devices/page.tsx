@@ -86,25 +86,33 @@ const crossDeviceFeatures = [
 export default function CrossDevicePage() {
   return (
     <AppLayout>
-      <div className="space-y-6">
+      <>
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Cross Devices</h1>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Seamlessly continue your tasks across phone, tablet, and computer.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <RefreshCw className="mr-1 h-4 w-4" /> Sync All
-            </Button>
-            <Button size="sm" className="gap-2">
-              <Smartphone className="h-4 w-4" /> Add Device
-            </Button>
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <RefreshCw className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Cross Devices</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Seamlessly continue your tasks across phone, tablet, and computer.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm">
+                <RefreshCw className="mr-1 h-4 w-4" /> Sync All
+              </Button>
+              <Button size="sm" className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+                <Smartphone className="h-4 w-4" /> Add Device
+              </Button>
+            </div>
           </div>
         </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="px-8 py-6 space-y-6">
         {/* Connected Devices */}
         <Card>
           <CardHeader>
@@ -118,42 +126,38 @@ export default function CrossDevicePage() {
               {devices.map((device) => (
                 <div
                   key={device.id}
-                  className={`relative rounded border p-4 transition-all ${
+                  className={`group relative rounded-lg border p-4 transition-colors duration-150 ease-out ${
                     device.status === "online"
-                      ? "border-border hover:border-primary"
+                      ? "border-[#E5E7EB] cursor-pointer hover:border-[#ee3224] bg-white"
                       : "border-dashed border-border bg-secondary/30"
                   }`}
                 >
                   <div className="flex flex-col items-center text-center">
-                    <div
-                      className={`mb-3 flex h-14 w-14 items-center justify-center rounded-full ${
-                        device.status === "online" ? "bg-primary/10" : "bg-secondary"
-                      }`}
-                    >
+                    <div className="mb-3">
                       <device.icon
-                        className={`h-7 w-7 ${
-                          device.status === "online" ? "text-primary" : "text-muted-foreground"
+                        className={`h-10 w-10 ${
+                          device.status === "online" ? "text-[#333]" : "text-muted-foreground/50"
                         }`}
+                        strokeWidth={1.5}
                       />
                     </div>
-                    <h4 className="font-medium text-foreground">{device.name}</h4>
-                    <div className="mt-2 flex items-center gap-1">
+                    <h4 className={`font-medium text-foreground transition-colors duration-150 ${device.status === "online" ? "group-hover:text-[#ee3224]" : ""}`}>{device.name}</h4>
+                    <div className="mt-2 flex items-center gap-1.5">
                       {device.status === "online" ? (
-                        <Wifi className="h-3 w-3 text-chart-3" />
+                        <>
+                          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                          <span className="text-xs text-emerald-600 font-medium capitalize">{device.status}</span>
+                        </>
                       ) : (
-                        <WifiOff className="h-3 w-3 text-muted-foreground" />
+                        <>
+                          <WifiOff className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground capitalize">{device.status}</span>
+                        </>
                       )}
-                      <span
-                        className={`text-xs ${
-                          device.status === "online" ? "text-chart-3" : "text-muted-foreground"
-                        }`}
-                      >
-                        {device.status}
-                      </span>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">{device.lastSync}</p>
                   </div>
-                  <Button variant="ghost" size="icon" className="absolute right-2 top-2 h-6 w-6">
+                  <Button variant="ghost" size="icon" className="absolute right-2 top-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Settings className="h-3 w-3" />
                   </Button>
                 </div>
@@ -221,13 +225,13 @@ export default function CrossDevicePage() {
                 {crossDeviceFeatures.map((feature) => (
                   <div
                     key={feature.name}
-                    className="flex items-center gap-4 rounded border border-border p-4 transition-colors hover:border-primary"
+                    className="group flex items-center gap-4 rounded border border-[#E5E7EB] p-4 cursor-pointer transition-colors duration-150 ease-out hover:border-[#ee3224]"
                   >
                     <div className="flex h-12 w-12 items-center justify-center rounded bg-primary/10">
                       <feature.icon className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-foreground">{feature.name}</h4>
+                      <h4 className="font-medium text-foreground transition-colors duration-150 group-hover:text-[#ee3224]">{feature.name}</h4>
                       <p className="text-sm text-muted-foreground">{feature.description}</p>
                     </div>
                   </div>
@@ -237,26 +241,26 @@ export default function CrossDevicePage() {
           </Card>
         </div>
 
-        {/* Cross-Device Demo Modal */}
-        <Card className="border-primary">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary">
-                <Zap className="h-7 w-7 text-primary-foreground" />
+        {/* Cross-Device Demo CTA */}
+        <Card className="border-[#ee3224]/20 bg-[#ee3224]/10">
+          <CardContent className="flex items-center justify-between py-3 px-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ee3224]">
+                <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-foreground">Try Cross-Device Handoff</h3>
-                <p className="text-muted-foreground">
-                  Start a task on one device and seamlessly continue on another
-                </p>
+                <h3 className="text-base font-semibold text-foreground">Try Cross-Device Handoff</h3>
+                <p className="text-sm text-muted-foreground">Start a task on one device and seamlessly continue on another</p>
               </div>
             </div>
-            <Button size="lg" className="gap-2">
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
               Start Demo <ArrowRight className="h-4 w-4" />
             </Button>
           </CardContent>
         </Card>
-      </div>
+          </div>
+        </div>
+      </>
     </AppLayout>
   )
 }

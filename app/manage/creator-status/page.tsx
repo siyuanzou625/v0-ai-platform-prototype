@@ -99,6 +99,7 @@ const impactStats = [
   { id: "users", icon: Users, value: "45.2K", label: "Users Reached", trend: "+12%", clickable: false },
   { id: "rating", icon: Star, value: "4.6", label: "Avg Rating", trend: "+0.2", clickable: false },
   { id: "followers", icon: Users, value: "1.2K", label: "Followers", trend: "+156 this month", clickable: true },
+  { id: "leaderboard", icon: Trophy, value: "#47", label: "Leaderboard Position", trend: "+12 positions", clickable: false },
 ]
 
 const followersData = [
@@ -145,98 +146,109 @@ export default function CreatorStatusPage() {
   return (
     <AppLayout>
       <TooltipProvider>
-        <div className="space-y-6 p-6">
+        <>
           {/* Page Header */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <Award className="h-6 w-6 text-[#ee3224]" />
-                <h1 className="text-xl font-semibold text-foreground">Creator Status</h1>
-              </div>
-              <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-                Track your achievements, tier progress, and earnings as a creator.
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center rounded-lg border border-[#E5E7EB] p-1">
-                <Button
-                  variant={viewMode === "personal" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setViewMode("personal")}
-                  className={viewMode === "personal" ? "bg-[#ee3224] hover:bg-[#cc2a1e]" : ""}
-                >
-                  Personal
-                </Button>
-                <Button
-                  variant={viewMode === "team" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setViewMode("team")}
-                  className={viewMode === "team" ? "bg-[#ee3224] hover:bg-[#cc2a1e]" : ""}
-                >
-                  Team
-                </Button>
+          <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Award className="h-5 w-5 text-[#ee3224]" />
+                  <h1 className="text-2xl font-semibold text-foreground">Creator Status</h1>
+                </div>
+                <p className="mt-1 text-sm text-[#6B7280]">
+                  Track your achievements, tier progress, and earnings as a creator.
+                </p>
               </div>
               <Button variant="link" className="text-[#ee3224] gap-1">
                 <HelpCircle className="h-4 w-4" />
                 How tiers work
               </Button>
             </div>
+            
+            {/* View Toggle */}
+            <div className="flex items-center gap-3 mt-4">
+              <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1">
+                <button
+                  onClick={() => setViewMode("personal")}
+                  className={`px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "personal"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
+                  }`}
+                >
+                  Personal
+                </button>
+                <button
+                  onClick={() => setViewMode("team")}
+                  className={`px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                    viewMode === "team"
+                      ? "bg-white text-[#333] shadow-sm"
+                      : "text-[#6B7280] hover:text-[#333]"
+                  }`}
+                >
+                  Team
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Tier Status Hero Card */}
-          <Card className="bg-gradient-to-r from-[#F5F7FA] to-white">
-            <CardContent className="p-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                {/* Left: Tier Badge */}
-                <div className="flex flex-col items-center justify-center text-center">
+          {/* Content */}
+          <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+            <div className="px-8 py-6 space-y-6">
+            {/* Tier Status and Badges - Side by Side */}
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Left: Current Tier Card - Takes 1 column */}
+            <Card className="bg-gradient-to-r from-[#F5F7FA] to-white flex flex-col lg:col-span-1">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg font-semibold">Current Tier</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 pt-2 flex-1 flex flex-col">
+                {/* Tier Badge - Centered */}
+                <div className="flex flex-col items-center justify-center text-center flex-1">
                   <div 
                     className="flex h-20 w-20 items-center justify-center rounded-full border-4 shadow-lg"
                     style={{ borderColor: tierData.currentColor, backgroundColor: `${tierData.currentColor}20` }}
                   >
                     <Trophy className="h-10 w-10" style={{ color: tierData.currentColor }} />
                   </div>
-                  <p className="mt-4 text-xl font-semibold">Current Tier: {tierData.current.toUpperCase()}</p>
+                  <p className="mt-4 text-xl font-semibold">{tierData.current.toUpperCase()}</p>
                   <p className="text-sm text-muted-foreground">Member since Jan 2025</p>
                 </div>
 
-                {/* Right: Progress & Benefits */}
-                <div className="space-y-4">
-                  {/* Progress Section */}
-                  <div>
-                    <p className="text-sm text-muted-foreground">Progress to {tierData.next}</p>
-                    <div className="mt-2">
-                      <Progress value={tierData.progress.percentage} className="h-3" />
-                    </div>
-                    <p className="mt-2 font-mono text-sm">
-                      {tierData.progress.installs.toLocaleString()} / {tierData.progress.installsRequired.toLocaleString()} installs
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Requirements remaining: +{(tierData.progress.installsRequired - tierData.progress.installs).toLocaleString()} installs, +{(tierData.progress.ratingRequired - tierData.progress.rating).toFixed(1)} avg rating
-                    </p>
+                {/* Progress Section */}
+                <div className="mt-6 pt-4 border-t">
+                  <p className="text-sm text-muted-foreground">Progress to {tierData.next}</p>
+                  <div className="mt-2">
+                    <Progress value={tierData.progress.percentage} className="h-3" />
                   </div>
-
-                  {/* Benefits Section */}
-                  <div>
-                    <p className="font-semibold text-sm">Unlocked Benefits:</p>
-                    <ul className="mt-2 space-y-1">
-                      {tierData.benefits.map((benefit, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm">
-                          <Check className="h-4 w-4 text-emerald-500" />
-                          {benefit}
-                        </li>
-                      ))}
-                    </ul>
-                    <Button variant="link" className="text-[#ee3224] p-0 h-auto mt-2">
-                      View All Benefits
-                    </Button>
-                  </div>
+                  <p className="mt-2 font-mono text-sm">
+                    {tierData.progress.installs.toLocaleString()} / {tierData.progress.installsRequired.toLocaleString()} installs
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Requirements remaining: +{(tierData.progress.installsRequired - tierData.progress.installs).toLocaleString()} installs, +{(tierData.progress.ratingRequired - tierData.progress.rating).toFixed(1)} avg rating
+                  </p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Badges Earned Grid */}
-          <Card>
+                {/* Benefits Section */}
+                <div className="mt-4">
+                  <p className="font-semibold text-sm">Unlocked Benefits:</p>
+                  <ul className="mt-2 space-y-1">
+                    {tierData.benefits.map((benefit, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-sm">
+                        <Check className="h-4 w-4 text-emerald-500" />
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button variant="link" className="text-[#ee3224] p-0 h-auto mt-2">
+                    View All Benefits
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Right: Badges Earned Card - Takes 2 columns */}
+            <Card className="flex flex-col lg:col-span-2">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -272,35 +284,33 @@ export default function CreatorStatusPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {filteredBadges.slice(0, 8).map((badge) => {
+              <div className="grid grid-cols-3 gap-3">
+                {filteredBadges.slice(0, 6).map((badge) => {
                   const IconComponent = badge.icon
                   return (
                     <Tooltip key={badge.id}>
                       <TooltipTrigger asChild>
-                        <Card className={`cursor-pointer transition-all hover:shadow-md ${!badge.earned ? "opacity-50" : ""}`}>
-                          <CardContent className="p-4">
-                            <div className="flex items-start gap-3">
-                              <div
-                                className="flex h-12 w-12 items-center justify-center rounded-full relative"
-                                style={{ backgroundColor: `${getTierColor(badge.tier)}20` }}
-                              >
-                                <IconComponent className="h-6 w-6" style={{ color: getTierColor(badge.tier) }} />
-                                {!badge.earned && (
-                                  <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-full">
-                                    <Lock className="h-4 w-4 text-muted-foreground" />
-                                  </div>
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="font-semibold text-sm truncate">{badge.name}</p>
-                                <p className="text-xs text-muted-foreground line-clamp-2">{badge.description}</p>
-                                {badge.earned ? (
-                                  <p className="text-xs text-muted-foreground mt-1">Earned {badge.earnedDate}</p>
-                                ) : (
-                                  <Badge variant="outline" className="mt-1 text-xs">Locked</Badge>
-                                )}
-                              </div>
+                        <Card className={`border border-[#E5E7EB] bg-white shadow-sm ${!badge.earned ? "opacity-50" : ""}`}>
+                          <CardContent className="p-4 flex flex-col items-center text-center">
+                            <div
+                              className="flex h-10 w-10 items-center justify-center rounded-full relative mb-2"
+                              style={{ backgroundColor: `${getTierColor(badge.tier)}20` }}
+                            >
+                              <IconComponent className="h-5 w-5" style={{ color: getTierColor(badge.tier) }} />
+                              {!badge.earned && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-full">
+                                  <Lock className="h-3 w-3 text-muted-foreground" />
+                                </div>
+                              )}
+                            </div>
+                            <p className="font-semibold text-sm">{badge.name}</p>
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{badge.description}</p>
+                            <div className="mt-2">
+                              {badge.earned ? (
+                                <p className="text-xs text-muted-foreground">{badge.earnedDate}</p>
+                              ) : (
+                                <Badge variant="outline" className="text-xs">Locked</Badge>
+                              )}
                             </div>
                           </CardContent>
                         </Card>
@@ -321,6 +331,7 @@ export default function CreatorStatusPage() {
               </div>
             </CardContent>
           </Card>
+          </div>
 
           {/* Revenue Summary Card */}
           <Card>
@@ -398,11 +409,11 @@ export default function CreatorStatusPage() {
 
           {/* Your Impact Section */}
           <Card>
-            <CardHeader className="pb-2">
+            <CardHeader className="py-3 px-5 pb-1">
               <CardTitle className="text-lg font-semibold">Your Impact</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <CardContent className="py-3 px-5">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 {impactStats.map((stat) => {
                   const IconComponent = stat.icon
                   const isClickable = stat.clickable
@@ -410,16 +421,16 @@ export default function CreatorStatusPage() {
                     <Tooltip key={stat.id}>
                       <TooltipTrigger asChild>
                         <Card 
-                          className={`transition-all ${isClickable ? "cursor-pointer hover:shadow-md hover:border-[#ee3224]" : ""}`}
+                          className={`border border-[#E5E7EB] bg-white shadow-sm ${isClickable ? "card-interactive group" : ""}`}
                           onClick={() => isClickable && setFollowersModalOpen(true)}
                         >
-                          <CardContent className="p-5">
+                          <CardContent className="py-3 px-5">
                             <div className="flex items-center gap-3">
                               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#ee3224]/10">
                                 <IconComponent className="h-6 w-6 text-[#ee3224]" />
                               </div>
                               <div>
-                                <p className="text-[28px] font-bold text-[#1F2937]">{stat.value}</p>
+                                <p className={`text-[28px] font-bold text-[#1F2937] ${isClickable ? "card-title-text transition-colors duration-150" : ""}`}>{stat.value}</p>
                                 <p className="text-[13px] text-[#6B7280]">{stat.label}</p>
                                 <div className="flex items-center gap-1 text-xs text-[#22C55E] mt-1">
                                   <TrendingUp className="h-3 w-3" />
@@ -439,32 +450,6 @@ export default function CreatorStatusPage() {
                   )
                 })}
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Leaderboard Position */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-semibold">Leaderboard Position</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-3xl font-bold text-[#ee3224]">#47</p>
-                  <p className="text-sm text-muted-foreground">out of 1,234 creators</p>
-                </div>
-                <div className="text-right">
-                  <Badge className="bg-emerald-500">Top 4%</Badge>
-                  <div className="flex items-center gap-1 mt-2 text-sm text-emerald-600">
-                    <TrendingUp className="h-4 w-4" />
-                    +12 positions from last month
-                  </div>
-                </div>
-              </div>
-              <Button variant="link" className="text-[#ee3224] p-0 h-auto mt-3">
-                View Full Leaderboard
-                <ExternalLink className="h-4 w-4 ml-1" />
-              </Button>
             </CardContent>
           </Card>
 
@@ -644,7 +629,9 @@ export default function CreatorStatusPage() {
               </div>
             </DialogContent>
           </Dialog>
-        </div>
+            </div>
+          </div>
+        </>
       </TooltipProvider>
     </AppLayout>
   )

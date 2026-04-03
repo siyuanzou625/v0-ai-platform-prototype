@@ -161,7 +161,7 @@ function StatusBadge({ status }: { status: string }) {
     running: { bg: "bg-[#DCFCE7]", text: "text-[#166534]", dot: "bg-[#22C55E]" },
     idle: { bg: "bg-[#F3F4F6]", text: "text-[#374151]", dot: "bg-[#6B7280]" },
     paused: { bg: "bg-[#FEF3C7]", text: "text-[#92400E]", dot: "bg-[#F59E0B]" },
-    overloaded: { bg: "bg-[#FEE2E2]", text: "text-[#991B1B]", dot: "bg-[#ee3224]" },
+    overloaded: { bg: "bg-[#F5F7FA]", text: "text-[#ee3224]", dot: "bg-[#ee3224]" },
   }
   const style = styles[status] || styles.idle
   
@@ -176,7 +176,7 @@ function StatusBadge({ status }: { status: string }) {
 // Priority Badge Component
 function PriorityBadge({ priority }: { priority: string }) {
   const styles: Record<string, string> = {
-    high: "bg-[#FEE2E2] text-[#991B1B]",
+    high: "bg-[#F5F7FA] text-[#ee3224]",
     medium: "bg-[#FEF3C7] text-[#92400E]",
     low: "bg-[#F3F4F6] text-[#374151]",
   }
@@ -276,26 +276,32 @@ export default function ExecutionControlPage() {
   return (
     <AppLayout>
       <TooltipProvider delayDuration={500}>
-        <div className="space-y-8 p-6">
+        <>
           {/* Page Header */}
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <Cpu className="h-6 w-6 text-[#ee3224]" />
-                <h1 className="text-2xl font-semibold text-[#1F2937]">Execution Control</h1>
+          <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Cpu className="h-5 w-5 text-[#ee3224]" />
+                  <h1 className="text-2xl font-semibold text-[#1F2937]">Execution Control</h1>
+                </div>
+                <p className="mt-1 text-sm text-[#6B7280]">
+                  Manage compute resources and runtime behavior of AI agents
+                </p>
               </div>
-              <p className="mt-2 text-sm text-[#6B7280]">
-                Manage compute resources and runtime behavior of AI agents
-              </p>
             </div>
-            
-            {/* Header Controls */}
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+            <div className="px-8 py-6 space-y-8">
+            {/* Controls */}
             <div className="flex flex-wrap items-center gap-6">
               {/* Execution Mode */}
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-[#6B7280]">Execution Mode</label>
                 <Select value={executionMode} onValueChange={setExecutionMode}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-40 bg-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -354,9 +360,8 @@ export default function ExecutionControlPage() {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Section A: System Overview */}
+            {/* Section A: System Overview */}
           <section aria-hidden={false}>
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -375,7 +380,7 @@ export default function ExecutionControlPage() {
             {/* Metric Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 mb-6">
               {/* CPU Usage */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -403,7 +408,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* GPU Usage */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -431,7 +436,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* NPU Usage */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -459,7 +464,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Memory Usage */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -495,7 +500,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Idle Capacity */}
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
@@ -596,7 +601,7 @@ export default function ExecutionControlPage() {
               </div>
             </div>
 
-            <Card>
+            <Card className="pt-0 overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[#F5F7FA]">
@@ -614,7 +619,7 @@ export default function ExecutionControlPage() {
                       <>
                         <TableHead className="font-semibold text-[#333]">CPU %</TableHead>
                         <TableHead className="font-semibold text-[#333]">GPU %</TableHead>
-                        <TableHead className="font-semibold text-[#333] bg-[#FEF2F2]/50">NPU %</TableHead>
+                        <TableHead className="font-semibold text-[#333]">NPU %</TableHead>
                       </>
                     )}
                     <TableHead className="font-semibold text-[#333]">Priority</TableHead>
@@ -652,7 +657,7 @@ export default function ExecutionControlPage() {
                             {agent.gpu}%
                             <MiniSparkline data={sparklineData[agent.id].map(v => v * 1.5)} />
                           </TableCell>
-                          <TableCell className={`${getUsageColor(agent.npu)} bg-[#FEF2F2]/30`}>
+                          <TableCell className={getUsageColor(agent.npu)}>
                             {agent.npu}%
                             <MiniSparkline data={sparklineData[agent.id].map(v => v * 2)} />
                           </TableCell>
@@ -823,7 +828,7 @@ export default function ExecutionControlPage() {
               </div>
             </div>
 
-            <Card>
+            <Card className="pt-0 overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[#F5F7FA]">
@@ -831,7 +836,7 @@ export default function ExecutionControlPage() {
                     <TableHead className="font-semibold text-[#333] text-center">CPU Access</TableHead>
                     <TableHead className="font-semibold text-[#333] text-center">GPU Access</TableHead>
                     {advancedMode && (
-                      <TableHead className="font-semibold text-[#333] text-center bg-[#FEF2F2]/50">NPU Access</TableHead>
+                      <TableHead className="font-semibold text-[#333] text-center">NPU Access</TableHead>
                     )}
                     {advancedMode && (
                       <>
@@ -866,7 +871,7 @@ export default function ExecutionControlPage() {
                         <Switch checked={agent.gpu} className="data-[state=checked]:bg-[#ee3224]" />
                       </TableCell>
                       {advancedMode && (
-                        <TableCell className="text-center bg-[#FEF2F2]/30">
+                        <TableCell className="text-center">
                           <Switch checked={agent.npu} className="data-[state=checked]:bg-[#ee3224]" />
                         </TableCell>
                       )}
@@ -932,10 +937,10 @@ export default function ExecutionControlPage() {
 
             <div className="grid gap-4 lg:grid-cols-3">
               {/* Optimization Suggestion */}
-              <Card className="hover:shadow-md hover:border-[#ee3224] transition-all">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
-                    <div className="h-12 w-12 rounded-full bg-[#FEF2F2] flex items-center justify-center">
+                    <div className="h-12 w-12 rounded-full bg-[#F5F7FA] flex items-center justify-center">
                       <Zap className="h-6 w-6 text-[#ee3224]" />
                     </div>
                     <Badge className="bg-[#22C55E] text-white text-[10px]">High Impact</Badge>
@@ -959,7 +964,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Resource Conflict */}
-              <Card className="hover:shadow-md hover:border-[#F59E0B] transition-all">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="h-12 w-12 rounded-full bg-[#FFFBEB] flex items-center justify-center">
@@ -986,7 +991,7 @@ export default function ExecutionControlPage() {
               </Card>
 
               {/* Efficiency Tip */}
-              <Card className="hover:shadow-md hover:border-[#3B82F6] transition-all">
+              <Card className="border border-[#E5E7EB] bg-white shadow-sm">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="h-12 w-12 rounded-full bg-[#EFF6FF] flex items-center justify-center">
@@ -1052,36 +1057,40 @@ export default function ExecutionControlPage() {
 
               {/* Run on Cloud */}
               <Card 
-                className="cursor-not-allowed opacity-60"
-                onClick={() => toast({ title: "Coming Soon", description: "Cloud execution will be available in a future update." })}
+                className="cursor-pointer transition-all border-[#ee3224] shadow-md"
+                onClick={() => setExecutionStrategy("cloud")}
               >
                 <CardContent className="p-5 text-center">
                   <div className="flex justify-center mb-3">
-                    <Cloud className="h-10 w-10 text-[#6B7280]" />
+                    <Cloud className="h-10 w-10 text-[#ee3224]" />
                   </div>
-                  <h4 className="font-semibold text-[#6B7280] mb-1">Run on Cloud</h4>
-                  <p className="text-sm text-[#9CA3AF] mb-3">Agents execute on cloud infrastructure</p>
-                  <Badge className="bg-[#6B7280] text-white">Coming Soon</Badge>
+                  <h4 className="font-semibold text-[#1F2937] mb-1">Run on Cloud</h4>
+                  <p className="text-sm text-[#6B7280] mb-3">Agents execute on cloud infrastructure</p>
+                  <Badge className="bg-[#22C55E] text-white">Active</Badge>
                   <div className="mt-3 flex justify-center">
-                    <div className="h-5 w-5 rounded-full border-2 border-[#E5E7EB]" />
+                    <div className="h-5 w-5 rounded-full border-2 flex items-center justify-center border-[#ee3224]">
+                      <div className="h-3 w-3 rounded-full bg-[#ee3224]" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Hybrid Mode */}
               <Card 
-                className="cursor-not-allowed opacity-60"
-                onClick={() => toast({ title: "Coming Soon", description: "Hybrid mode will be available in a future update." })}
+                className="cursor-pointer transition-all border-[#ee3224] shadow-md"
+                onClick={() => setExecutionStrategy("hybrid")}
               >
                 <CardContent className="p-5 text-center">
                   <div className="flex justify-center mb-3">
-                    <ArrowLeftRight className="h-10 w-10 text-[#6B7280]" />
+                    <ArrowLeftRight className="h-10 w-10 text-[#ee3224]" />
                   </div>
-                  <h4 className="font-semibold text-[#6B7280] mb-1">Hybrid Mode</h4>
-                  <p className="text-sm text-[#9CA3AF] mb-3">Smart distribution between local and cloud</p>
-                  <Badge className="bg-[#6B7280] text-white">Coming Soon</Badge>
+                  <h4 className="font-semibold text-[#1F2937] mb-1">Hybrid Mode</h4>
+                  <p className="text-sm text-[#6B7280] mb-3">Smart distribution between local and cloud</p>
+                  <Badge className="bg-[#22C55E] text-white">Active</Badge>
                   <div className="mt-3 flex justify-center">
-                    <div className="h-5 w-5 rounded-full border-2 border-[#E5E7EB]" />
+                    <div className="h-5 w-5 rounded-full border-2 flex items-center justify-center border-[#ee3224]">
+                      <div className="h-3 w-3 rounded-full bg-[#ee3224]" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1119,7 +1128,9 @@ export default function ExecutionControlPage() {
               </CardContent>
             </Card>
           </section>
-        </div>
+            </div>
+          </div>
+        </>
       </TooltipProvider>
     </AppLayout>
   )

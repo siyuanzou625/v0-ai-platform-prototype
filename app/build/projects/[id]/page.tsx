@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useParams, useRouter } from "next/navigation"
 import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -22,11 +23,23 @@ import {
   Square,
   Diamond,
   ArrowRight,
+  ArrowLeft,
   Settings,
   Trash2,
   Copy,
   Plus,
+  FolderKanban,
 } from "lucide-react"
+
+// Project data
+const PROJECT_DATA: Record<string, { name: string; status: string; environment: string }> = {
+  "proj-001": { name: "Customer Support Bot", status: "active", environment: "Production" },
+  "proj-002": { name: "Sales Assistant", status: "draft", environment: "Development" },
+  "proj-003": { name: "HR Onboarding Agent", status: "active", environment: "Staging" },
+  "proj-004": { name: "Data Analyzer", status: "paused", environment: "Production" },
+  "proj-005": { name: "Marketing Automation", status: "active", environment: "Production" },
+  "proj-006": { name: "Enterprise Sales Agent", status: "active", environment: "Production" },
+}
 
 const nodeTypes = [
   { name: "Trigger", icon: Circle, bgColor: "bg-amber-50", iconColor: "text-amber-600" },
@@ -43,19 +56,54 @@ const workflowNodes = [
   { id: 5, type: "Output", name: "Send Notification", x: 700, y: 150, bgColor: "bg-emerald-50", iconColor: "text-emerald-600" },
 ]
 
-export default function WorkflowBuilderPage() {
+export default function ProjectWorkflowPage() {
+  const params = useParams()
+  const router = useRouter()
+  const projectId = typeof params.id === "string" ? params.id : ""
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
+  
+  const project = PROJECT_DATA[projectId] || { name: "Visual Workflow Builder", status: "active", environment: "Production" }
+
+  // Project not found
+  if (!PROJECT_DATA[projectId] && projectId !== "") {
+    return (
+      <AppLayout>
+        <div className="flex flex-col items-center justify-center h-[60vh] p-8">
+          <FolderKanban className="h-16 w-16 text-muted-foreground mb-4" />
+          <h2 className="text-xl font-semibold text-foreground">Project Not Found</h2>
+          <p className="text-muted-foreground mt-2">The project you are looking for does not exist.</p>
+          <Button 
+            variant="outline" 
+            className="mt-4"
+            onClick={() => router.push("/build/projects")}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Projects
+          </Button>
+        </div>
+      </AppLayout>
+    )
+  }
 
   return (
     <AppLayout>
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-foreground">Visual Workflow Builder</h1>
-            <p className="text-muted-foreground">
-              Drag and drop nodes to create automated workflows
-            </p>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => router.push("/build/projects")}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground">{project.name}</h1>
+              <p className="text-muted-foreground">
+                Drag and drop nodes to create automated workflows
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm">
@@ -67,7 +115,7 @@ export default function WorkflowBuilderPage() {
             <Button variant="outline" size="sm">
               <Save className="mr-1 h-4 w-4" /> Save
             </Button>
-            <Button size="sm" className="gap-1">
+            <Button size="sm" className="gap-1 bg-[#ee3224] hover:bg-[#cc2a1e]">
               <Play className="h-4 w-4" /> Run
             </Button>
           </div>

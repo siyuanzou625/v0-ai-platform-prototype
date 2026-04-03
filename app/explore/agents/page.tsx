@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/app-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -48,6 +49,15 @@ import {
   Pencil,
   Settings,
   AlertCircle,
+  Mic,
+  Mail,
+  Brain,
+  Target,
+  MapPin,
+  Presentation,
+  FileText,
+  Scale,
+  type LucideIcon,
 } from "lucide-react"
 
 // Creator data with follower info
@@ -170,6 +180,32 @@ const creators: Record<string, {
   },
 }
 
+// Category color mapping (matches Templates page)
+const getCategoryBadgeStyle = (category: string): string => {
+  switch (category) {
+    case "Productivity":
+      return "bg-violet-50 text-violet-700 border border-violet-200"
+    case "Support":
+      return "bg-teal-50 text-teal-700 border border-teal-200"
+    case "Data":
+      return "bg-blue-50 text-blue-700 border border-blue-200"
+    case "Marketing":
+      return "bg-pink-50 text-pink-700 border border-pink-200"
+    case "Sales":
+      return "bg-orange-50 text-orange-700 border border-orange-200"
+    case "HR":
+      return "bg-cyan-50 text-cyan-700 border border-cyan-200"
+    case "Knowledge":
+      return "bg-indigo-50 text-indigo-700 border border-indigo-200"
+    case "Research":
+      return "bg-amber-50 text-amber-700 border border-amber-200"
+    case "Content":
+      return "bg-rose-50 text-rose-700 border border-rose-200"
+    default:
+      return "bg-slate-50 text-slate-700 border border-slate-200"
+  }
+}
+
 // Agent data with creator info
 const agents = [
   {
@@ -186,6 +222,7 @@ const agents = [
     verified: true,
     featured: true,
     commentCount: 24,
+    icon: Mic,
   },
   {
     id: 2,
@@ -201,6 +238,7 @@ const agents = [
     verified: true,
     featured: true,
     commentCount: 31,
+    icon: Mail,
   },
   {
     id: 3,
@@ -216,6 +254,7 @@ const agents = [
     verified: true,
     featured: false,
     commentCount: 18,
+    icon: Brain,
   },
   {
     id: 4,
@@ -231,6 +270,7 @@ const agents = [
     verified: true,
     featured: true,
     commentCount: 12,
+    icon: Target,
   },
   {
     id: 5,
@@ -246,6 +286,7 @@ const agents = [
     verified: false,
     featured: false,
     commentCount: 8,
+    icon: MapPin,
   },
   {
     id: 6,
@@ -261,6 +302,7 @@ const agents = [
     verified: true,
     featured: true,
     commentCount: 27,
+    icon: Presentation,
   },
   {
     id: 7,
@@ -276,6 +318,7 @@ const agents = [
     verified: true,
     featured: false,
     commentCount: 42,
+    icon: FileText,
   },
   {
     id: 8,
@@ -291,6 +334,7 @@ const agents = [
     verified: true,
     featured: false,
     commentCount: 15,
+    icon: Scale,
   },
 ]
 
@@ -562,6 +606,16 @@ export default function ExploreAgentsPage() {
   const [isLoadingDiscussions, setIsLoadingDiscussions] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const discussionsPerPage = 5
+  const [favoritedAgents, setFavoritedAgents] = useState<number[]>([])
+  
+  const handleFavorite = (agentId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setFavoritedAgents(prev => 
+      prev.includes(agentId) 
+        ? prev.filter(id => id !== agentId)
+        : [...prev, agentId]
+    )
+  }
 
   // Initialize follower counts from creator data
   useEffect(() => {
@@ -738,7 +792,7 @@ export default function ExploreAgentsPage() {
   const getCategoryBadge = (category: string) => {
     const styles: Record<string, string> = {
       qa: "bg-blue-100 text-blue-700",
-      bug: "bg-red-100 text-red-700",
+      bug: "bg-gray-100 text-[#ee3224]",
       idea: "bg-purple-100 text-purple-700",
       general: "bg-gray-100 text-gray-700",
     }
@@ -764,34 +818,37 @@ export default function ExploreAgentsPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
+      <>
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Agents</h1>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Discover and install AI agents from our marketplace.
-            </p>
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Bot className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Agents</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Discover and install AI agents from our marketplace.
+              </p>
+            </div>
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+              <Bot className="h-4 w-4" /> Build Agent
+            </Button>
           </div>
-          <Button className="gap-2">
-            <Bot className="h-4 w-4" /> Build Agent
-          </Button>
-        </div>
-
-        {/* Search and Filters */}
-        <Card>
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+          
+          {/* Search and Filters */}
+          <div className="flex flex-wrap items-center gap-3 mt-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search agents..."
-                className="pl-10"
+                className="pl-10 bg-white"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 bg-white">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -803,7 +860,7 @@ export default function ExploreAgentsPage() {
               </SelectContent>
             </Select>
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 bg-white">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -815,16 +872,16 @@ export default function ExploreAgentsPage() {
             <Button variant="outline" size="icon">
               <Filter className="h-4 w-4" />
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="px-8 py-6 space-y-6">
         {/* Featured Agents */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-[#1F2937] flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-[#ee3224]" />
-            Featured Agents
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <h2 className="text-lg font-semibold text-[#1F2937]">Featured Agents</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAgents
               .filter((a) => a.featured)
               .map((agent) => {
@@ -835,43 +892,66 @@ export default function ExploreAgentsPage() {
                 return (
                   <Card
                     key={agent.id}
-                    className="hover:shadow-md hover:border-[#ee3224] transition-all cursor-pointer group"
+                    className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                     onClick={() => {
                       setSelectedAgent(agent)
                       setActiveTab("overview")
                     }}
                   >
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
+                    <CardHeader className="py-2.5 px-5 pb-1">
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Bot className="h-6 w-6 text-primary" />
+                          <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
+                            {agent.icon ? <agent.icon className="h-4 w-4 text-slate-600" /> : <Bot className="h-4 w-4 text-slate-600" />}
                           </div>
-                          <div>
-                            <CardTitle className="text-base">
-                              {agent.name}
-                            </CardTitle>
-                          </div>
+                          <CardTitle className="card-title-text text-base transition-colors duration-150">
+                            {agent.name}
+                          </CardTitle>
                         </div>
-                        <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
-                          {agent.price}
-                        </Badge>
-                      </div>
-                      <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0 space-y-3">
-                      {/* Creator row with follow button */}
-                      <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={(e) => openCreatorProfile(agent.authorId, e)}
-                            className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
+                            onClick={(e) => handleFavorite(agent.id, e)}
+                            className="p-1 rounded hover:bg-[#F5F7FA] transition-colors"
                           >
-                            by {agent.author}
+                            <Star className={`h-4 w-4 ${favoritedAgents.includes(agent.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
                           </button>
+                          <StatusTag label={agent.price} />
+                        </div>
+                      </div>
+                      <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
+                      {/* Category and Version - Product Info */}
+                      <div className="flex items-center gap-2 mt-2">
+                        <StatusTag label={agent.category} variant="category" />
+                        <span className="text-xs text-muted-foreground">{agent.version}</span>
+                      </div>
+                    </CardHeader>
+<CardContent className="pt-0 pb-2.5 px-5">
+                      {/* Divider */}
+                      <div className="w-full border-t border-[#E5E7EB] mt-1 mb-2.5"></div>
+                      {/* Creator row with follow button - Creator & Engagement Info */}
+                      <div className="flex items-center justify-between mb-2.5">
+                        <div className="flex items-center gap-2">
+<span className="text-xs text-[#6B7280]">
+                          by{" "}
+                          <button
+                            onClick={(e) => openCreatorProfile(agent.authorId, e)}
+                            className="underline decoration-[#6B7280]/50 hover:text-[#ee3224] hover:decoration-[#ee3224] transition-colors"
+                          >
+                            {agent.author}
+                          </button>
+                        </span>
                           {creator?.verified && (
                             <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">Verified</Badge>
                           )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => openCreatorProfile(agent.authorId, e)}
+                            className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
+                          >
+                            <Users className="h-3 w-3" />
+                            {formatFollowers(followerCount)}
+                          </button>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
@@ -898,19 +978,6 @@ export default function ExploreAgentsPage() {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                        <button
-                          onClick={(e) => openCreatorProfile(agent.authorId, e)}
-                          className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
-                        >
-                          <Users className="h-3 w-3" />
-                          {formatFollowers(followerCount)} followers
-                        </button>
-                      </div>
-                      
-                      {/* Category and Version */}
-                      <div className="flex items-center gap-2 mt-2">
-                        <Badge variant="secondary">{agent.category}</Badge>
-                        <span className="text-xs text-muted-foreground">{agent.version}</span>
                       </div>
                       
                       {/* Stats row */}
@@ -918,7 +985,7 @@ export default function ExploreAgentsPage() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="flex items-center gap-1">
-                              <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" />
+                              <Star className="h-3.5 w-3.5 text-[#9CA3AF]" />
                               {agent.rating}
                             </span>
                           </TooltipTrigger>
@@ -952,15 +1019,7 @@ export default function ExploreAgentsPage() {
                           <TooltipContent>Total downloads</TooltipContent>
                         </Tooltip>
                       </div>
-                      {/* Action buttons */}
-                      <div className="mt-4 flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                          <Eye className="h-3 w-3" /> Preview
-                        </Button>
-                        <Button size="sm" className="flex-1 gap-1 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={(e) => e.stopPropagation()}>
-                          <ArrowRight className="h-3 w-3" /> Install
-                        </Button>
-                      </div>
+
                     </CardContent>
                   </Card>
                 )
@@ -971,7 +1030,7 @@ export default function ExploreAgentsPage() {
         {/* All Agents */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-[#1F2937]">All Agents</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAgents.map((agent) => {
               const creator = creators[agent.authorId]
               const isFollowing = followedCreators.includes(agent.authorId)
@@ -980,43 +1039,66 @@ export default function ExploreAgentsPage() {
               return (
                 <Card
                   key={agent.id}
-                  className="hover:shadow-md hover:border-[#ee3224] transition-all cursor-pointer"
+                  className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                   onClick={() => {
                     setSelectedAgent(agent)
                     setActiveTab("overview")
                   }}
                 >
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between">
+                  <CardHeader className="py-2.5 px-5 pb-1">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Bot className="h-6 w-6 text-primary" />
+                        <div className="h-9 w-9 rounded bg-slate-100 flex items-center justify-center">
+                          {agent.icon ? <agent.icon className="h-4 w-4 text-slate-600" /> : <Bot className="h-4 w-4 text-slate-600" />}
                         </div>
-                        <div>
-                          <CardTitle className="text-base">
-                            {agent.name}
-                          </CardTitle>
-                        </div>
+                        <CardTitle className="card-title-text text-base transition-colors duration-150">
+                          {agent.name}
+                        </CardTitle>
                       </div>
-                      <Badge variant={agent.price === "Free" ? "secondary" : "default"} className="text-xs">
-                        {agent.price}
-                      </Badge>
-                    </div>
-                    <CardDescription className="text-xs mt-2 line-clamp-2">{agent.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-0 space-y-3">
-                    {/* Creator row with follow button */}
-                    <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={(e) => openCreatorProfile(agent.authorId, e)}
-                          className="text-xs text-[#6B7280] hover:text-[#ee3224] hover:underline transition-colors"
+                          onClick={(e) => handleFavorite(agent.id, e)}
+                          className="p-1 rounded hover:bg-[#F5F7FA] transition-colors"
                         >
-                          by {agent.author}
+                          <Star className={`h-4 w-4 ${favoritedAgents.includes(agent.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
                         </button>
+                        <StatusTag label={agent.price} />
+                      </div>
+                    </div>
+                    <CardDescription className="text-xs mt-2.5 line-clamp-2">{agent.description}</CardDescription>
+                    {/* Category and Version - Product Info */}
+                    <div className="flex items-center gap-2 mt-2.5">
+                      <StatusTag label={agent.category} variant="category" />
+                      <span className="text-xs text-muted-foreground">{agent.version}</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0 pb-2.5 px-5">
+                    {/* Divider */}
+                    <div className="w-full border-t border-[#E5E7EB] my-2.5"></div>
+                    {/* Creator row with follow button - Creator & Engagement Info */}
+                    <div className="flex items-center justify-between mb-2.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-[#6B7280]">
+                          by{" "}
+                          <button
+                            onClick={(e) => openCreatorProfile(agent.authorId, e)}
+                            className="underline decoration-[#6B7280]/50 hover:text-[#ee3224] hover:decoration-[#ee3224] transition-colors"
+                          >
+                            {agent.author}
+                          </button>
+                        </span>
                         {creator?.verified && (
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#22C55E]/10 text-[#22C55E] border-0">Verified</Badge>
                         )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => openCreatorProfile(agent.authorId, e)}
+                          className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
+                        >
+                          <Users className="h-3 w-3" />
+                          {formatFollowers(followerCount)}
+                        </button>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
@@ -1043,19 +1125,6 @@ export default function ExploreAgentsPage() {
                           </TooltipContent>
                         </Tooltip>
                       </div>
-                      <button
-                        onClick={(e) => openCreatorProfile(agent.authorId, e)}
-                        className="flex items-center gap-1 text-[11px] text-[#6B7280] hover:text-[#ee3224] transition-colors"
-                      >
-                        <Users className="h-3 w-3" />
-                        {formatFollowers(followerCount)} followers
-                      </button>
-                    </div>
-                    
-                    {/* Category and Version */}
-                    <div className="flex items-center gap-2 mt-2">
-                      <Badge variant="secondary">{agent.category}</Badge>
-                      <span className="text-xs text-muted-foreground">{agent.version}</span>
                     </div>
                     
                     {/* Stats row */}
@@ -1063,7 +1132,7 @@ export default function ExploreAgentsPage() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-chart-4 text-chart-4" />
+                            <Star className="h-3.5 w-3.5 text-[#9CA3AF]" />
                             {agent.rating}
                           </span>
                         </TooltipTrigger>
@@ -1097,21 +1166,31 @@ export default function ExploreAgentsPage() {
                         <TooltipContent>Total downloads</TooltipContent>
                       </Tooltip>
                     </div>
-                    {/* Action buttons */}
-                    <div className="mt-4 flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => e.stopPropagation()}>
-                        <Eye className="h-3 w-3" /> Preview
-                      </Button>
-                      <Button size="sm" className="flex-1 gap-1 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={(e) => e.stopPropagation()}>
-                        <ArrowRight className="h-3 w-3" /> Install
-                      </Button>
-                    </div>
+
                   </CardContent>
                 </Card>
               )
             })}
           </div>
         </div>
+
+        {/* Create Agent CTA */}
+        <Card className="border-[#ee3224]/20 bg-[#ee3224]/10">
+          <CardContent className="flex items-center justify-between py-3 px-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ee3224]">
+                <Bot className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-foreground">Create Your Own Agent</h3>
+                <p className="text-sm text-muted-foreground">Build custom AI agents and share them with the community</p>
+              </div>
+            </div>
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]">
+              Start Building <ArrowRight className="h-4 w-4" />
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Agent Detail Modal */}
         <Dialog open={!!selectedAgent} onOpenChange={() => setSelectedAgent(null)}>
@@ -1137,7 +1216,7 @@ export default function ExploreAgentsPage() {
                       </button>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-chart-4 text-chart-4" /> {selectedAgent?.rating}
+                        <Star className="h-4 w-4 text-[#9CA3AF]" /> {selectedAgent?.rating}
                       </span>
                       <span className="text-[#E5E7EB]">|</span>
                       <span className="flex items-center gap-1">
@@ -1294,7 +1373,7 @@ export default function ExploreAgentsPage() {
                         {paginatedDiscussions.map((discussion) => (
                           <Card
                             key={discussion.id}
-                            className={`hover:shadow-md transition-shadow ${
+                            className={`card-interactive group border border-[#E5E7EB] bg-white shadow-sm ${
                               expandedDiscussion === discussion.id ? "border-[#ee3224]" : ""
                             }`}
                           >
@@ -1367,7 +1446,7 @@ export default function ExploreAgentsPage() {
 
                                   {/* Expanded content */}
                                   {expandedDiscussion === discussion.id && (
-                                    <div className="mt-3 space-y-4">
+                                    <div className="mt-2 space-y-4">
                                       <p className="text-sm text-[#333]">{discussion.content}</p>
 
                                       {/* Actions */}
@@ -1400,7 +1479,7 @@ export default function ExploreAgentsPage() {
                                             <div
                                               key={reply.id}
                                               className={`${
-                                                reply.author.isCreator ? "border-l-2 border-[#ee3224] pl-3 bg-[#FEF2F2]/50 rounded-r-lg py-2" : ""
+                                                reply.author.isCreator ? "border-l-2 border-[#ee3224] pl-3 bg-[#F5F7FA] rounded-r-lg py-2" : ""
                                               }`}
                                             >
                                               <div className="flex items-center gap-2 mb-1">
@@ -1515,7 +1594,7 @@ export default function ExploreAgentsPage() {
                 <DialogHeader className="pb-4 border-b">
                   <div className="flex items-start gap-4">
                     <Avatar className="h-20 w-20 border-2 border-[#E5E7EB]">
-                      <AvatarFallback className="bg-[#FEF2F2] text-[#ee3224] text-2xl font-semibold">
+                      <AvatarFallback className="bg-[#F5F7FA] text-[#ee3224] text-2xl font-semibold">
                         {currentCreator.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
@@ -1615,23 +1694,23 @@ export default function ExploreAgentsPage() {
                         </h3>
                         <button className="text-sm text-[#ee3224] hover:underline">View All Assets</button>
                       </div>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-3 gap-4">
                         {getCreatorAssets(currentCreator.id).map((asset) => (
                           <Card
                             key={asset.id}
-                            className="hover:shadow-md hover:border-[#ee3224] transition-all cursor-pointer"
+                            className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                             onClick={() => {
                               setShowCreatorModal(false)
                               setSelectedAgent(asset)
                               setActiveTab("overview")
                             }}
                           >
-                            <CardContent className="p-3">
+                            <CardContent className="p-4">
                               <div className="flex items-center gap-2 mb-2">
                                 <div className="h-8 w-8 rounded-lg bg-[#F5F7FA] flex items-center justify-center">
-                                  <Bot className="h-4 w-4 text-[#6B7280]" />
+                                  {asset.icon ? <asset.icon className="h-4 w-4 text-[#6B7280]" /> : <Bot className="h-4 w-4 text-[#6B7280]" />}
                                 </div>
-                                <span className="text-sm font-semibold text-[#1F2937] truncate">{asset.name}</span>
+                                <span className="card-title-text text-sm font-semibold text-[#1F2937] transition-colors duration-150 truncate">{asset.name}</span>
                               </div>
                               <div className="flex items-center gap-2 text-xs text-[#6B7280]">
                                 <span className="flex items-center gap-1">
@@ -1879,7 +1958,9 @@ export default function ExploreAgentsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
+          </div>
+        </div>
+      </>
     </AppLayout>
   )
 }

@@ -472,7 +472,7 @@ export default function KnowledgeDetailPage() {
             {/* Tab Content */}
             <div className="flex-1 overflow-auto bg-[#F5F7FA]">
               {/* Overview Tab */}
-              <TabsContent value="overview" className="m-0 p-6">
+              <TabsContent value="overview" className="m-0 px-6 py-4">
                 <div className="flex gap-6">
                   {/* Left Panel - Document List */}
                   <div className="flex-1">
@@ -616,7 +616,7 @@ export default function KnowledgeDetailPage() {
               </TabsContent>
 
               {/* Documents Tab */}
-              <TabsContent value="documents" className="m-0 p-6">
+              <TabsContent value="documents" className="m-0 px-6 py-4">
                 <Card className="border border-[#E5E7EB] shadow-sm">
                   <CardHeader className="border-b border-[#E5E7EB] pb-4">
                     <div className="flex items-center justify-between">
@@ -730,7 +730,7 @@ export default function KnowledgeDetailPage() {
               </TabsContent>
 
               {/* Chunks Tab */}
-              <TabsContent value="chunks" className="m-0 p-6">
+              <TabsContent value="chunks" className="m-0 px-6 py-4">
                 <div className="mb-4">
                   <div className="relative max-w-md">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -814,7 +814,7 @@ export default function KnowledgeDetailPage() {
               </TabsContent>
 
               {/* Settings Tab */}
-              <TabsContent value="settings" className="m-0 p-6">
+              <TabsContent value="settings" className="m-0 px-6 py-4">
                 <div className="max-w-2xl space-y-6">
                   {/* Basic Info */}
                   <Card className="border border-[#E5E7EB] shadow-sm">
@@ -931,8 +931,8 @@ export default function KnowledgeDetailPage() {
                   </Card>
 
                   {/* Danger Zone */}
-                  <Card className="border border-red-200 shadow-sm">
-                    <CardHeader className="border-b border-red-200 pb-4 bg-red-50">
+                  <Card className="border border-red-200 shadow-sm pt-0 overflow-hidden">
+                    <CardHeader className="border-b border-red-200 pb-4 bg-red-50 pt-4">
                       <CardTitle className="text-base font-semibold text-red-600">Danger Zone</CardTitle>
                     </CardHeader>
                     <CardContent className="p-4">
@@ -953,7 +953,7 @@ export default function KnowledgeDetailPage() {
               </TabsContent>
 
               {/* Hit Test Tab */}
-              <TabsContent value="hit-test" className="m-0 p-6">
+              <TabsContent value="hit-test" className="m-0 px-6 py-4">
                 <div className="grid grid-cols-2 gap-6">
                   {/* Query Input */}
                   <Card className="border border-[#E5E7EB] shadow-sm">

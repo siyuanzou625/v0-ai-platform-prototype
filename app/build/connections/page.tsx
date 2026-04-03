@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { StatusTag } from "@/components/ui/status-tag"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -256,17 +257,17 @@ export default function ConnectionsPage() {
     }
   }
 
-  const getStatusBadgeVariant = (status: string) => {
+  const getStatusLabel = (status: string) => {
     switch (status) {
-      case "connected": return "default"
-      case "warning": return "secondary"
-      case "expired": return "destructive"
-      case "error": return "destructive"
-      default: return "outline"
+      case "connected": return "Connected"
+      case "warning": return "Warning"
+      case "expired": return "Expired"
+      case "error": return "Error"
+      default: return status
     }
   }
 
-  const getTypeBadge = (type: string) => {
+  const getTypeLabel = (type: string) => {
     switch (type) {
       case "oauth2": return "OAuth 2.0"
       case "api-key": return "API Key"
@@ -276,12 +277,12 @@ export default function ConnectionsPage() {
     }
   }
 
-  const getEnvironmentColor = (env: string) => {
+  const getEnvironmentLabel = (env: string) => {
     switch (env) {
-      case "production": return "bg-green-100 text-green-800"
-      case "staging": return "bg-orange-100 text-orange-800"
-      case "development": return "bg-blue-100 text-blue-800"
-      default: return "bg-gray-100 text-gray-800"
+      case "production": return "Production"
+      case "staging": return "Staging"
+      case "development": return "Development"
+      default: return env
     }
   }
 
@@ -300,37 +301,38 @@ export default function ConnectionsPage() {
 
   return (
     <AppLayout>
-      <div className="flex flex-col gap-6 p-6">
+      <>
         {/* Page Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-semibold text-foreground">Connections</h1>
+        <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Link2 className="h-5 w-5 text-[#ee3224]" />
+                <h1 className="text-2xl font-semibold text-foreground">Connections</h1>
+              </div>
+              <p className="mt-1 text-sm text-[#6B7280]">
+                Securely connect your favorite tools and services to power your workflows.
+              </p>
             </div>
-            <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-              Securely connect your favorite tools and services to power your workflows.
-            </p>
+            <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={() => { setCreateModalOpen(true); setCreateStep(1); setSelectedProvider(null); }}>
+              <Plus className="h-4 w-4" />
+              New Connection
+            </Button>
           </div>
-          <Button className="gap-2 bg-[#ee3224] hover:bg-[#cc2a1e]" onClick={() => { setCreateModalOpen(true); setCreateStep(1); setSelectedProvider(null); }}>
-            <Plus className="h-4 w-4" />
-            New Connection
-          </Button>
-        </div>
-
-        {/* Filter Bar */}
-        <Card>
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
+          
+          {/* Search and Filters */}
+          <div className="flex flex-wrap items-center gap-3 mt-4">
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search connections..."
-                className="pl-10"
+                className="pl-10 bg-white"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 bg-white">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -342,7 +344,7 @@ export default function ConnectionsPage() {
               </SelectContent>
             </Select>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 bg-white">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
@@ -353,101 +355,84 @@ export default function ConnectionsPage() {
                 <SelectItem value="database">Database</SelectItem>
               </SelectContent>
             </Select>
-            <div className="flex items-center gap-1 border rounded-md">
-              <Button
-                variant={viewMode === "grid" ? "secondary" : "ghost"}
-                size="sm"
-                className="rounded-r-none"
+            <div className="flex items-center rounded-lg bg-[#F5F7FA] p-1 ml-auto">
+              <button
                 onClick={() => setViewMode("grid")}
+                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "grid"
+                    ? "bg-white text-[#333] shadow-sm"
+                    : "text-[#6B7280] hover:text-[#333]"
+                }`}
               >
                 <LayoutGrid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "secondary" : "ghost"}
-                size="sm"
-                className="rounded-l-none"
+              </button>
+              <button
                 onClick={() => setViewMode("list")}
+                className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-all rounded-md ${
+                  viewMode === "list"
+                    ? "bg-white text-[#333] shadow-sm"
+                    : "text-[#6B7280] hover:text-[#333]"
+                }`}
               >
                 <List className="h-4 w-4" />
-              </Button>
+              </button>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Connection Count */}
-        <div className="text-sm text-muted-foreground">
-          {filteredConnections.length} connection{filteredConnections.length !== 1 ? "s" : ""}
+          </div>
         </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+          <div className="px-8 py-6 space-y-6">
         {/* Grid View */}
         {viewMode === "grid" && (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredConnections.map((conn) => (
               <Card
                 key={conn.id}
-                className="cursor-pointer transition-all hover:shadow-md hover:border-[#ee3224]"
+                className="card-interactive group border border-[#E5E7EB] bg-white shadow-sm"
                 onClick={() => openDetailView(conn)}
               >
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
+                <CardContent className="py-3 px-5 space-y-2">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-lg font-semibold">
+                      <div className="flex h-9 w-9 items-center justify-center rounded bg-slate-100 text-sm font-semibold text-slate-600">
                         {conn.provider === "custom-webhook" ? (
-                          <Link2 className="h-6 w-6 text-muted-foreground" />
+                          <Link2 className="h-4 w-4 text-slate-600" />
                         ) : (
                           conn.provider.charAt(0).toUpperCase()
                         )}
                       </div>
-                      <div>
-                        <h3 className="font-medium text-foreground">{conn.displayName}</h3>
-                        <div className={`h-2 w-2 rounded-full inline-block mr-1.5 ${getStatusColor(conn.status)}`} />
-                        <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
-                      </div>
+                      <h3 className="card-title-text font-medium text-foreground transition-colors duration-150">{conn.displayName}</h3>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`h-2 w-2 rounded-full ${getStatusColor(conn.status)}`} />
+                      <span className="text-xs text-muted-foreground capitalize">{conn.status}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="text-xs">{getTypeBadge(conn.type)}</Badge>
-                    <Badge className={`text-xs ${getEnvironmentColor(conn.environment)}`}>
-                      {conn.environment.charAt(0).toUpperCase() + conn.environment.slice(1)}
-                    </Badge>
+                  <div className="flex items-center gap-2 mt-2">
+                    <StatusTag label={getTypeLabel(conn.type)} />
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F5F7FA] text-[#6B7280]">
+                            <Lock className="h-3 w-3" />
+                            <span className="text-[11px]">Never in Git</span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Credentials are encrypted and never synced to version control</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
-                  {/* Never in Git Badge */}
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F5F7FA] text-[#6B7280] mb-2">
-                          <Lock className="h-3 w-3" />
-                          <span className="text-[11px]">Never in Git</span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Credentials are encrypted and never synced to version control</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {conn.lastUsed}
                     </span>
-                    <span>{conn.usedByWorkflows} workflow{conn.usedByWorkflows !== 1 ? "s" : ""}</span>
+                    <span>{conn.usedByWorkflows} workflow{conn.usedByWorkflows !== 1 ? "s" : ""} · {conn.scopes.length} permission{conn.scopes.length !== 1 ? "s" : ""}</span>
                   </div>
-                  <div className="text-xs text-muted-foreground mb-3">
-                    {conn.scopes.length} permission{conn.scopes.length !== 1 ? "s" : ""}
-                  </div>
-                  <div className="flex items-center gap-2 pt-3 border-t border-[#E5E7EB]">
-                    <Button variant="ghost" size="sm" className="flex-1" onClick={(e) => { e.stopPropagation(); handleTestConnection(); }}>
-                      <Play className="h-3 w-3 mr-1" />
-                      Test
-                    </Button>
-                    <Button variant="ghost" size="sm" className="flex-1" onClick={(e) => { e.stopPropagation(); openDetailView(conn); }}>
-                      <Edit className="h-3 w-3 mr-1" />
-                      Edit
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-[#ee3224] hover:text-[#ee3224] hover:bg-red-50" onClick={(e) => e.stopPropagation()}>
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
+
                 </CardContent>
               </Card>
             ))}
@@ -510,7 +495,7 @@ export default function ConnectionsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-xs">{getTypeBadge(conn.type)}</Badge>
+                      <StatusTag label={getTypeLabel(conn.type)} />
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1.5">
@@ -534,9 +519,7 @@ export default function ConnectionsPage() {
                       </TooltipProvider>
                     </TableCell>
                     <TableCell>
-                      <Badge className={`text-xs ${getEnvironmentColor(conn.environment)}`}>
-                        {conn.environment.charAt(0).toUpperCase() + conn.environment.slice(1)}
-                      </Badge>
+                      <StatusTag label={getEnvironmentLabel(conn.environment)} />
                     </TableCell>
                     <TableCell className="text-muted-foreground">{conn.lastUsed}</TableCell>
                     <TableCell className="text-muted-foreground">{conn.usedByWorkflows} workflow{conn.usedByWorkflows !== 1 ? "s" : ""}</TableCell>
@@ -623,7 +606,7 @@ export default function ConnectionsPage() {
               ))}
             </div>
 
-            <ScrollArea className="flex-1 pr-4">
+            <ScrollArea className="flex-1 pr-4 max-h-[50vh] overflow-y-auto">
               {/* Step 1: Select Provider */}
               {createStep === 1 && (
                 <div className="space-y-4 py-4">
@@ -631,12 +614,12 @@ export default function ConnectionsPage() {
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input placeholder="Search providers..." className="pl-10" />
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-4">
                     {popularProviders.map((provider) => (
                       <Card
                         key={provider.id}
-                        className={`cursor-pointer p-4 transition-all hover:border-[#ee3224] ${
-                          selectedProvider === provider.id ? "border-[#ee3224] bg-red-50" : ""
+                        className={`cursor-pointer p-4 transition-all duration-150 ease-out border border-[#E5E7EB] bg-white hover:border-[#ee3224] hover:shadow-md hover:-translate-y-0.5 ${
+                          selectedProvider === provider.id ? "border-[#ee3224] bg-[#F5F7FA]" : ""
                         }`}
                         onClick={() => setSelectedProvider(provider.id)}
                       >
@@ -665,8 +648,8 @@ export default function ConnectionsPage() {
                     ].map((method) => (
                       <Card
                         key={method.value}
-                        className={`cursor-pointer p-4 transition-all hover:border-[#ee3224] ${
-                          authMethod === method.value ? "border-[#ee3224] bg-red-50" : ""
+                        className={`cursor-pointer p-4 transition-all duration-150 ease-out border border-[#E5E7EB] bg-white hover:border-[#ee3224] hover:shadow-md hover:-translate-y-0.5 ${
+                          authMethod === method.value ? "border-[#ee3224] bg-[#F5F7FA]" : ""
                         }`}
                         onClick={() => setAuthMethod(method.value)}
                       >
@@ -811,7 +794,7 @@ export default function ConnectionsPage() {
                   <div className="text-center py-8">
                     <Button
                       variant="outline"
-                      className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-red-50"
+                      className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-[#F5F7FA]"
                       onClick={handleTestConnection}
                       disabled={testResult === "testing"}
                     >
@@ -833,11 +816,11 @@ export default function ConnectionsPage() {
                     </div>
                   )}
                   {testResult === "failure" && (
-                    <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <XCircle className="h-5 w-5 text-red-600" />
+                    <div className="flex items-center gap-3 p-4 bg-[#F5F7FA] border border-[#E5E7EB] rounded-lg">
+                      <XCircle className="h-5 w-5 text-[#ee3224]" />
                       <div className="flex-1">
-                        <p className="font-medium text-red-800">Connection failed</p>
-                        <p className="text-sm text-red-700">Invalid credentials or service unavailable</p>
+                        <p className="font-medium text-[#333]">Connection failed</p>
+                        <p className="text-sm text-[#6B7280]">Invalid credentials or service unavailable</p>
                       </div>
                       <Button variant="outline" size="sm" onClick={handleTestConnection}>Retry</Button>
                     </div>
@@ -942,9 +925,7 @@ export default function ConnectionsPage() {
                           <Edit className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground flex-shrink-0" />
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge variant={getStatusBadgeVariant(selectedConnection.status)} className="capitalize">
-                            {selectedConnection.status}
-                          </Badge>
+                          <StatusTag label={getStatusLabel(selectedConnection.status)} />
                           <span className="text-xs text-muted-foreground whitespace-nowrap">Last checked: 5 min ago</span>
                         </div>
                       </div>
@@ -954,11 +935,11 @@ export default function ConnectionsPage() {
                         <Edit className="h-4 w-4 mr-1" />
                         Edit
                       </Button>
-                      <Button variant="outline" size="sm" className="border-[#ee3224] text-[#ee3224] hover:bg-red-50">
+                      <Button variant="outline" size="sm" className="border-[#ee3224] text-[#ee3224] hover:bg-[#F5F7FA]">
                         <Play className="h-4 w-4 mr-1" />
                         Test
                       </Button>
-                      <Button variant="outline" size="sm" className="text-[#ee3224] hover:bg-red-50">
+                      <Button variant="outline" size="sm" className="text-[#ee3224] hover:bg-[#F5F7FA]">
                         <Trash2 className="h-4 w-4 mr-1" />
                         Revoke
                       </Button>
@@ -1018,13 +999,11 @@ export default function ConnectionsPage() {
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-muted-foreground">Auth Method</span>
-                              <span className="font-medium">{getTypeBadge(selectedConnection.type)}</span>
+                              <StatusTag label={getTypeLabel(selectedConnection.type)} />
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-muted-foreground">Environment</span>
-                              <Badge className={`text-xs ${getEnvironmentColor(selectedConnection.environment)}`}>
-                                {selectedConnection.environment}
-                              </Badge>
+                              <StatusTag label={getEnvironmentLabel(selectedConnection.environment)} />
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-muted-foreground">Created</span>
@@ -1366,7 +1345,9 @@ export default function ConnectionsPage() {
             )}
           </DialogContent>
         </Dialog>
-      </div>
+          </div>
+        </div>
+      </>
     </AppLayout>
   )
 }

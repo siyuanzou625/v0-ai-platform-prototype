@@ -86,6 +86,7 @@ const projectsData: Record<string, { name: string; type: ProjectType; descriptio
   "proj-004": { name: "Analytics Dashboard API", type: "code", description: "Backend API for real-time analytics dashboard" },
   "proj-005": { name: "Invoice Processor", type: "workflow", description: "Automated invoice processing and approval workflow" },
   "proj-006": { name: "Notification Service", type: "code", description: "Multi-channel notification microservice" },
+  "proj-007": { name: "Code Review Agent", type: "workflow", description: "Automates PR checks against internal coding standards and triages bugs by severity" },
   "new": { name: "New Project", type: "workflow", description: "A new project" },
 }
 
@@ -227,6 +228,7 @@ const toolPaletteCategories = [
       { id: "http", name: "HTTP Request", icon: Globe, color: "bg-orange-500", description: "Make HTTP requests to external APIs" },
       { id: "email", name: "Email", icon: Mail, color: "bg-red-500", description: "Send and receive emails" },
       { id: "scheduler", name: "Scheduler", icon: Clock, color: "bg-indigo-500", description: "Schedule tasks to run at specific times" },
+      { id: "github", name: "GitHub", icon: Github, color: "bg-gray-800", description: "Connect to GitHub for PR reviews and commits" },
     ],
   },
 ]
@@ -256,6 +258,14 @@ const projectWorkflowNodes: Record<string, typeof defaultWorkflowNodes> = {
     { id: 4, type: "condition", name: "Amount > $10K?", x: 560, y: 180, color: "bg-emerald-500", inputs: ["amount"], outputs: ["approval", "auto"] },
     { id: 5, type: "email", name: "Request Approval", x: 800, y: 120, color: "bg-red-500", inputs: ["invoice", "approver"], outputs: ["sent"] },
     { id: 6, type: "http", name: "Process Payment", x: 800, y: 260, color: "bg-orange-500", inputs: ["invoice"], outputs: ["confirmation"] },
+  ],
+  "proj-007": [ // Code Review Agent
+    { id: 1, type: "start", name: "PR Webhook", x: 80, y: 180, color: "bg-emerald-500", inputs: [], outputs: ["trigger"] },
+    { id: 2, type: "http", name: "Fetch Code Diff", x: 300, y: 120, color: "bg-orange-500", inputs: ["pr_url"], outputs: ["diff", "files"] },
+    { id: 3, type: "llm", name: "Check Standards", x: 300, y: 280, color: "bg-purple-500", inputs: ["code"], outputs: ["violations", "suggestions"] },
+    { id: 4, type: "llm", name: "Security Scan", x: 560, y: 120, color: "bg-purple-500", inputs: ["code"], outputs: ["vulnerabilities", "severity"] },
+    { id: 5, type: "condition", name: "Critical Issues?", x: 560, y: 280, color: "bg-emerald-500", inputs: ["severity"], outputs: ["block", "pass"] },
+    { id: 6, type: "http", name: "Post Comments", x: 800, y: 180, color: "bg-orange-500", inputs: ["review"], outputs: ["posted"] },
   ],
 }
 
@@ -1158,6 +1168,17 @@ const projectBuildAIChat: Record<string, Array<{ role: string; content: string }
       content: "I've added duplicate detection to your workflow:\n\nNew Step 3: Duplicate Check\n- Compare invoice number, vendor, amount, date\n- Flag potential duplicates within 90 days\n- Auto-reject exact matches\n- Queue near-matches for manual review\n\nThis will help prevent double payments. Should I also add a quarterly audit report for flagged invoices?"
     },
   ],
+  "proj-007": [ // Code Review Agent
+    { 
+      role: "assistant", 
+      content: "I've created your Code Review Agent with 5 steps:\n\n1. Receive PR webhook (from GitHub/GitLab)\n2. Fetch code diff (analyze changed files)\n3. Check against coding standards (lint rules, naming conventions)\n4. Triage bugs by severity (critical, major, minor)\n5. Post review comments (inline suggestions on PR)\n\nWould you like to:\n- Add security vulnerability scanning?\n- Customize the coding standards rules?\n- Add Slack notification for critical issues?"
+    },
+    { role: "user", content: "Add security vulnerability scanning" },
+    { 
+      role: "assistant", 
+      content: "I've added security vulnerability scanning to your workflow:\n\nNew Step 4: Security Scan\n- Check for hardcoded secrets/API keys\n- Detect SQL injection patterns\n- Flag insecure dependencies\n- OWASP Top 10 vulnerability check\n\nCritical security issues will automatically block the PR merge. Want me to configure the severity thresholds?"
+    },
+  ],
   "new": [ // New project (no template)
     { 
       role: "assistant", 
@@ -1190,6 +1211,14 @@ const projectAgentSteps: Record<string, Array<{ id: string; name: string; icon: 
     { id: "step-4", name: "Validate against PO", icon: Check, type: "action", isNew: false },
     { id: "step-5", name: "Route for approval", icon: User, type: "output", isNew: false },
   ],
+  "proj-007": [ // Code Review Agent
+    { id: "step-1", name: "Receive PR webhook", icon: Github, type: "trigger", isNew: false },
+    { id: "step-2", name: "Fetch code diff", icon: GitCommit, type: "action", isNew: false },
+    { id: "step-3", name: "Check coding standards", icon: FileCode, type: "action", isNew: false },
+    { id: "step-4", name: "Security scan", icon: Shield, type: "action", isNew: true },
+    { id: "step-5", name: "Triage bugs by severity", icon: AlertTriangle, type: "action", isNew: false },
+    { id: "step-6", name: "Post review comments", icon: MessageSquare, type: "output", isNew: false },
+  ],
   "new": [],
 }
 
@@ -1209,6 +1238,11 @@ const projectPendingChanges: Record<string, Array<string>> = {
     "Add duplicate detection step",
     "Configure 90-day lookback window",
     "Set up manual review queue",
+  ],
+  "proj-007": [
+    "Add security vulnerability scanning",
+    "Configure OWASP Top 10 checks",
+    "Set up PR blocking for critical issues",
   ],
   "new": [],
 }
@@ -2563,7 +2597,7 @@ export default function ProjectWorkspacePage() {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex-1 overflow-auto px-6 py-4 min-h-0">
+          <div className="flex-1 overflow-hidden px-6 py-4 min-h-0">
             {projectType === "code" ? (
               /* Code Diff View for code-based projects */
               <div className="rounded-lg border border-[#E5E7EB] bg-[#1E1E1E] overflow-hidden h-[320px] flex flex-col">
@@ -2579,7 +2613,7 @@ export default function ProjectWorkspacePage() {
                   </div>
                 </div>
                 {/* Code Diff Content */}
-                <div className="flex-1 overflow-auto font-mono text-xs">
+                <div className="flex-1 overflow-hidden font-mono text-xs">
                   {/* Unchanged lines */}
                   <div className="flex">
                     <div className="w-12 text-right pr-3 py-0.5 text-[#6B7280] bg-[#1E1E1E] select-none border-r border-[#404040]">14</div>
@@ -3250,7 +3284,7 @@ export class MyAgent {
         </div>
 
         {/* Code Editor */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-hidden">
           <div className="flex h-full">
             {/* Line Numbers */}
             <div className="flex-shrink-0 select-none bg-zinc-900 py-4 text-right font-mono text-xs text-zinc-500">
@@ -3259,7 +3293,7 @@ export class MyAgent {
               ))}
             </div>
             {/* Code */}
-            <pre className="flex-1 overflow-auto bg-zinc-900 p-4 font-mono text-xs text-zinc-100 leading-5">
+            <pre className="flex-1 overflow-hidden bg-zinc-900 p-4 font-mono text-xs text-zinc-100 leading-5">
               <code>{codeContent}</code>
             </pre>
           </div>
@@ -3276,7 +3310,7 @@ export class MyAgent {
             <ChevronDown className={`ml-auto h-3 w-3 text-zinc-400 transition-transform ${!terminalExpanded ? "-rotate-90" : ""}`} />
           </div>
           {terminalExpanded && (
-            <div className="h-[calc(100%-32px)] overflow-auto bg-zinc-900 p-3 font-mono text-xs">
+            <div className="h-[calc(100%-32px)] overflow-hidden bg-zinc-900 p-3 font-mono text-xs">
               {consoleOutput.map((line, index) => (
                 <div key={index} className="flex items-start gap-2">
                   <span className="text-zinc-500">{line.time}</span>

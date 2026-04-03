@@ -138,21 +138,29 @@ export default function PulsePage() {
   return (
     <AppLayout>
       <TooltipProvider>
-        <div className="space-y-6 p-6">
+        <>
           {/* Page Header */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <Activity className="h-6 w-6 text-[#ee3224]" />
-                <h1 className="text-xl font-semibold text-foreground">Pulse Check</h1>
+          <div className="sticky top-0 z-10 bg-white px-8 py-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-[#ee3224]" />
+                  <h1 className="text-2xl font-semibold text-foreground">Pulse Check</h1>
+                </div>
+                <p className="mt-1 text-sm text-[#6B7280]">
+                  Monitor the performance and health of your deployed agents.
+                </p>
               </div>
-              <p className="mt-2 text-sm text-[#6B7280] max-w-[600px]">
-                Monitor the performance and health of your deployed agents.
-              </p>
+              <Button variant="outline" className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/10">
+                <FileText className="h-4 w-4" />
+                Export Report
+              </Button>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            
+            {/* Filters */}
+            <div className="flex flex-wrap items-center gap-3 mt-4">
               <Select value={selectedAsset} onValueChange={setSelectedAsset}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-40 bg-white">
                   <SelectValue placeholder="All Assets" />
                 </SelectTrigger>
                 <SelectContent>
@@ -163,7 +171,7 @@ export default function PulsePage() {
                 </SelectContent>
               </Select>
               <Select value={dateRange} onValueChange={setDateRange}>
-                <SelectTrigger className="w-36">
+                <SelectTrigger className="w-36 bg-white">
                   <SelectValue placeholder="Date Range" />
                 </SelectTrigger>
                 <SelectContent>
@@ -173,16 +181,15 @@ export default function PulsePage() {
                   <SelectItem value="custom">Custom</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" className="gap-2 border-[#ee3224] text-[#ee3224] hover:bg-[#ee3224]/10">
-                <FileText className="h-4 w-4" />
-                Export Report
-              </Button>
             </div>
           </div>
 
-          {/* Portfolio Summary Cards */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            <Card className="cursor-pointer transition-shadow hover:shadow-md">
+          {/* Content */}
+          <div className="flex-1 overflow-auto bg-[#F5F7FA]">
+            <div className="px-8 py-6 space-y-6">
+            {/* Portfolio Summary Cards */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Download className="h-5 w-5 text-muted-foreground" />
@@ -196,7 +203,7 @@ export default function PulsePage() {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer transition-shadow hover:shadow-md">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Users className="h-5 w-5 text-muted-foreground" />
@@ -210,7 +217,7 @@ export default function PulsePage() {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer transition-shadow hover:shadow-md">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Users className="h-5 w-5 text-muted-foreground" />
@@ -224,7 +231,7 @@ export default function PulsePage() {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer transition-shadow hover:shadow-md">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Clock className="h-5 w-5 text-muted-foreground" />
@@ -238,7 +245,7 @@ export default function PulsePage() {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer transition-shadow hover:shadow-md">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <AlertTriangle className="h-5 w-5 text-muted-foreground" />
@@ -252,7 +259,7 @@ export default function PulsePage() {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer transition-shadow hover:shadow-md">
+            <Card className="border border-[#E5E7EB] bg-white shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <Activity className="h-5 w-5 text-muted-foreground" />
@@ -771,7 +778,7 @@ export default function PulsePage() {
                 <Button variant="outline" className="border-[#ee3224] text-[#ee3224]">
                   Edit in Builder
                 </Button>
-                <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-50">
+                <Button variant="outline" className="border-[#ee3224] text-[#ee3224] hover:bg-[#F5F7FA]">
                   Pause Asset
                 </Button>
                 <Button variant="ghost" onClick={() => setAssetDetailOpen(false)}>
@@ -780,7 +787,9 @@ export default function PulsePage() {
               </div>
             </DialogContent>
           </Dialog>
-        </div>
+            </div>
+          </div>
+        </>
       </TooltipProvider>
     </AppLayout>
   )
